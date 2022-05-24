@@ -1,5 +1,5 @@
 # own lib imports
-from GEMAIM.src.tools import MathFunctions as GMP_MF
+from GMAP.src.tools import MathFunctions as GMP_MF
 
 # 3rd party lib imports
 import numpy as np
