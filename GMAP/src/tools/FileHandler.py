@@ -20,7 +20,6 @@ class FileLocations:
         self.mapdir_hc = self.script_dir / "maps"
 
 
-
 def FindExOs():
     exec_os = None
 
@@ -35,7 +34,8 @@ def FindExOs():
                 "Environment was determined to be windows, but it is neither a"
                 "32, nor 64 bit version. It appears to be "
                 + str(bits) + " bit. Please contact the developers to "
-                "solve this."
+                "solve this.",
+                True
             )
     elif sys.platform == "darwin":
         exec_os = "MacOS"
@@ -45,7 +45,8 @@ def FindExOs():
         GM_WS.Warning(
             "executing OS not recognised... sys.platform ="
             + str(sys.platform)
-            + ". Please contact the developers to solve this. "
+            + ". Please contact the developers to solve this. ",
+            True
         )
-        
+
     return exec_os

@@ -1,5 +1,4 @@
 """
-
 Usage:
 
     GMAP GEM
@@ -10,7 +9,7 @@ prints this help
 Launches GEM in demo-mode. Performs a basic calculation to demonstrate basic
 use and to verify the program is installed correctly.
 
-    GMAP GEM [name of input file]
+    GMAP GEM run [name of input file]
 Performs a run of GEM using the parameters specified in the included file.
 
 
@@ -21,7 +20,7 @@ to deal with specific chromophores have to be included in the corresponding
 
 For more information, check the manual on N/A.
 """
- 
+
 
 # standard lib imports
 import sys
@@ -30,10 +29,11 @@ import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.ParameterParser as GM_PP
 
 
-def get_parameters(callcommand):
-    FILES = GM_FH.FileLocations()
-    job, in_parfile, argslist = GM_PP.parse_commandline(FILES, callcommand)
-    
+def get_parameters(callcommand, FILES):
+    job, in_parfile, argslist = GM_PP.parse_commandline(
+        FILES, callcommand, alljobs, "GMAP GEM"
+    )
+
     cmd_pardict = GM_PP.get_pardict(argslist)
     if in_parfile:
         with open(in_parfile) as file:
@@ -43,9 +43,9 @@ def get_parameters(callcommand):
         )
     else:
         def_parfile = get_def_parfile(FILES, cmd_pardict)
-    
+
     print(def_parfile)
-    
+
 
 def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
     for pardict in [cmd_pardict, in_pardict]:
@@ -66,7 +66,7 @@ def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
     )
     if defpath:
         return defpath
-    
+
     return None
 
 
@@ -87,9 +87,15 @@ def get_def_parfile_core(
     return None
 
 
-def main(callcommand):
-    get_parameters(callcommand)
+def main(callcommand, FILES):
+    get_parameters(callcommand, FILES)
     print("entered main of GEM - yet to be constructed")
+
+
+alljobs = [
+    "demo",
+    "run"
+]
 
 
 if __name__ == "__main__":
@@ -97,4 +103,5 @@ if __name__ == "__main__":
     if len(callcommand) == 1:
         print(__doc__)
     else:
-        main(callcommand)
+        FILES = GM_FH.FileLocations()
+        main(callcommand, FILES)

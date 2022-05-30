@@ -1,3 +1,4 @@
 **egg-info/**
 env_**
 **.pyc
+**.DS_Store

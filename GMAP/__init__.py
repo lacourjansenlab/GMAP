@@ -1,16 +1,4 @@
 r"""
-
-  .-_'''-.                ,---.    ,---.   ____   .-------.  
- '_( )_   \               |    \  /    | .'  __ `.\  _(`)_ \ 
-|(_ o _)|  '              |  ,  \/  ,  |/   '  \  \ (_ o._)| 
-. (_,_)/___|   _ _    _ _ |  |\_   /|  ||___|  /  |  (_,_) / 
-|  |  .-----. ( ' )--( ' )|  _( )_/ |  |   _.-`   |   '-.-'  
-'  \  '-   .'(_{;}_)(_{;}_) (_ o _) |  |.'   _    |   |      
- \  `-'`   |  (_,_)--(_,_)|  (_,_)  |  ||  _( )_  |   |      
-  \        /              |  |      |  |\ (_ o _) /   )      
-   `'-...-'               '--'      '--' '.(_,_).'`---'      
-
-
 Welcome to the G-MAP package. Currently, this is a work in progress. The
 following options are available:
 
@@ -28,7 +16,6 @@ This program will create the required files for calculating infrared spectra.
 This program will create the required files for calculating electronic spectra.
 
 """
-
 
 
 from .src.programs import AIM

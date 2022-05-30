@@ -2,7 +2,7 @@
 import GMAP.src.tools.WarnSys as GM_WS
 
 
-def parse_commandline(FILES, callcommand):
+def parse_commandline(FILES, callcommand, alljobs, helpcall):
     """
     Given the input from the command line, finds out the meaning of each part.
     Returns the job, the path of the input parameter filename, and the
@@ -11,7 +11,14 @@ def parse_commandline(FILES, callcommand):
     preceded with '@'.
     """
     job = callcommand[1]
-    
+
+    if job not in alljobs:
+        GM_WS.Warning(
+            "\nChoice '" + str(job) +
+            "' was not recognized. Please type the following to see all "
+            "available options:\n\n" + helpcall + "\n", True
+        )
+
     args = callcommand[2:]
 
     # interpret the command line. parameters specified on the command line
@@ -24,17 +31,18 @@ def parse_commandline(FILES, callcommand):
             in_parfile = (FILES.cwd / args[0]).resolve()
             if len(args) > 1 and args[1][0] == "@":
                 cmd_pars = " ".join(args[1:])
-    
+
     if cmd_pars:
         # now, cmd_pars is iter (list) of strings, just like for line in file
         cmd_pars = cmd_pars.split("@")[1:]
-    
+
     if in_parfile and (not in_parfile.exists() or not in_parfile.is_file()):
         GM_WS.Warning(
-            "The requested file "
+            "\nThe requested file "
             + str(in_parfile) +
             " could not be found, or is not a file. "
-            "Please make sure you specified it correctly."
+            "Please make sure you specified it correctly.\n",
+            True
         )
 
     return job, in_parfile, cmd_pars
