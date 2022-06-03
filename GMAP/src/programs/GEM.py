@@ -38,53 +38,22 @@ def get_parameters(callcommand, FILES):
     if in_parfile:
         with open(in_parfile) as file:
             in_pardict = GM_PP.get_pardict(file)
-        def_parfile = get_def_parfile(
+        def_parfile = GM_FH.get_def_parfile(
             FILES, cmd_pardict, in_parfile, in_pardict
         )
     else:
-        def_parfile = get_def_parfile(FILES, cmd_pardict)
+        def_parfile = GM_FH.get_def_parfile(FILES, cmd_pardict)
+
+    ref_parfile = FILES.sourcedir_hc / FILES.refparfilename_hc
+    ref_pars = GM_PP.RefPars(ref_parfile)
+
+    # if def_parfile is of .ref format, update the ref_pars class to change the
+    # allowed options (should only be more limiting??) ?
+    # Also, add chosen parameter defaults to def_pars object (dict or class?)
+
+    # if def_parfile is of .txt format, only do the latter.
 
     print(def_parfile)
-
-
-def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
-    for pardict in [cmd_pardict, in_pardict]:
-        if "defparfilename" in pardict:
-            try:
-                defname = pardict["defparfilename"][0]
-            except Exception:
-                continue
-            defpath = get_def_parfile_core(
-                defname, FILES, cmd_pardict, in_parfile, in_pardict
-            )
-            if defpath:
-                return defpath
-
-    defname = "default_parameters.txt"
-    defpath = get_def_parfile_core(
-        defname, FILES, cmd_pardict, in_parfile, in_pardict
-    )
-    if defpath:
-        return defpath
-
-    return None
-
-
-def get_def_parfile_core(
-    defname, FILES, cmd_pardict, in_parfile=None, in_pardict={}
-):
-    if "sourcedir" in cmd_pardict and len(cmd_pardict["sourcedir"]) > 0:
-        defpath = FILES.cwd / cmd_pardict["sourcedir"][0] / defname
-        if defpath.is_file():
-            return defpath.resolve()
-    if "sourcedir" in in_pardict:
-        defpath = in_parfile.parent / defname
-        if defpath.is_file():
-            return defpath.resolve()
-    defpath = FILES.sourcedir_hc / defname
-    if defpath.is_file():
-        return defpath.resolve()
-    return None
 
 
 def main(callcommand, FILES):

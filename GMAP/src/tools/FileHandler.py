@@ -18,9 +18,13 @@ class FileLocations:
 
         self.sourcedir_hc = self.script_dir / "sourcefiles"
         self.mapdir_hc = self.script_dir / "maps"
+        self.refparfilename_hc = "default_parameters.ref"
 
 
 def FindExOs():
+    """
+    Determines with os the system is running on.
+    """
     exec_os = None
 
     if sys.platform == "win32":
@@ -50,3 +54,83 @@ def FindExOs():
         )
 
     return exec_os
+
+
+def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
+    """
+    Given the parameter information on the command line, a new FILES instance,
+    and, optionally, an input parameters file and its contents, finds out
+    the location of the default parameters file.
+
+    If the user specified anything (either the sourcedir or the name of the
+    default parameter file), the program checks that. If nothing is present
+    there or if it isn't a file, an error is raised, and the program quits.
+    """
+    file_is_hc = False
+    if "sourcedir" in cmd_pardict:
+        dirname = FILES.cwd / cmd_pardict["sourcedir"][0]
+        if "defparfilename" in cmd_pardict:
+            name = dirname / cmd_pardict["defparfilename"][0]
+        elif "defparfilename" in in_pardict:
+            name = dirname / in_pardict["defparfilename"][0]
+        else:
+            name = dirname / FILES.refparfilename_hc
+
+    elif "defparfilename" in cmd_pardict:
+        name = FILES.cwd / cmd_pardict["defparfilename"][0]
+
+    # now, no info in the cmd line, only in files
+    elif "sourcedir" in in_pardict:
+        dirname = in_parfile / in_pardict["sourcedir"][0]
+        if "defparfilename" in in_pardict:
+            name = dirname / in_pardict["defparfilename"][0]
+        else:
+            name = dirname / FILES.refparfilename_hc
+
+    elif "defparfilename" in in_pardict:
+        name = in_parfile / in_pardict["defparfilename"][0]
+
+    # now, no info in input file either - grab default from installation
+    else:
+        name = FILES.sourcedir_hc / FILES.refparfilename_hc
+        file_is_hc = True
+
+    file_found = try_file(name)
+
+    if not file_found:
+        GM_WS.Warning(
+            "\nThe requested default parameter file "
+            + str(name) +
+            " could not be found, or is not a file. "
+            "Please make sure you specified it correctly.\n",
+            True
+        )
+
+    # We need a file to check if the default file is complete (AIM did this
+    # using )
+    if file_is_hc:
+        check_file_found = file_found
+    else:
+        name = FILES.sourcedir_hc / FILES.refparfilename_hc
+        check_file_found = try_file(name)
+        if not check_file_found:
+            GM_WS.Warning(
+                "\nThe requested default parameter file requires the presence "
+                "of the file " + str(name) +
+                " , but this file could not be found. "
+                "Please make sure you specified it correctly.\n",
+                True
+            )
+
+    return file_found
+
+
+def try_file(fname):
+    """
+    Checks if the given location is a file. If so,
+    returns pathlib.Path.resolve(location), otherwise, returns None.
+    """
+    if fname.is_file():
+        return fname.resolve()
+    else:
+        return None
