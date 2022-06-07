@@ -27,6 +27,7 @@ import sys
 
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.ParameterParser as GM_PP
+import GMAP.src.tools.WarnSys as GM_WS
 
 
 def get_parameters(callcommand, FILES):
@@ -44,16 +45,39 @@ def get_parameters(callcommand, FILES):
     else:
         def_parfile = GM_FH.get_def_parfile(FILES, cmd_pardict)
 
+    # as get_def_parfile also checks for the presence of the hard-coded default
+    # parameter file (regardless of program flow), no need to do it again.
     ref_parfile = FILES.sourcedir_hc / FILES.refparfilename_hc
     ref_pars = GM_PP.RefPars(ref_parfile)
 
-    # if def_parfile is of .ref format, update the ref_pars class to change the
-    # allowed options (should only be more limiting??) ?
-    # Also, add chosen parameter defaults to def_pars object (dict or class?)
+    if def_parfile.suffix == ".txt":
+        def_pars = GM_PP.RawPars.from_file(def_parfile, ref_pars, True)
+    elif def_parfile == ref_parfile:
+        def_pars = ref_pars
+    elif def_parfile.suffix == ".ref":
+        def_pars = GM_PP.RefPars.add_reffile(def_parfile, ref_pars)
+    else:
+        GM_WS.Warning(
+            "The requested default parameter file " + str(def_parfile) +
+            " is of the wrong file format. Please refer to the manual to see "
+            "what file types are supported."
+        )
 
-    # if def_parfile is of .txt format, only do the latter.
+    if in_parfile:
+        in_pars = GM_PP.RawPars.from_dict(
+            in_parfile, in_pardict, ref_pars, False)
+
+    run_pars = GM_PP.RunPars(FILES, ref_pars, def_pars, in_pars)
 
     print(def_parfile)
+    print(ref_pars)
+    print(ref_pars.fname)
+    print(ref_pars.options)
+    print(ref_pars.choices)
+    print(type(ref_pars.fname))
+    print(def_pars)
+    print(in_pars)
+    print(run_pars)
 
 
 def main(callcommand, FILES):
