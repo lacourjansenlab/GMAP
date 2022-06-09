@@ -1,4 +1,4 @@
-AIM.egg-info/**
-GEMAIM.egg-info/**
-env_GEMAIM/**
+**egg-info/**
+env_**
 **.pyc
+**.DS_Store
