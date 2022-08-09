@@ -443,8 +443,10 @@ def get_pardict(iterable):
     return outdict
 
 
-def cleanline(line):
+def cleanline(line, escape_char="#"):
     """
-    Removes any '#' and text following it (i.e., get rid of comments)
+    Removes any escape character and text following it (i.e., get rid of
+    comments).
+    Default escape character is '#'
     """
-    return line.split("#")[0]
+    return line.split(escape_char)[0]

@@ -12,7 +12,7 @@ def _report_unknown_choice():
         "\nChoice of program wasn't recognized. Please type the following "
         "for more\ninformation on how to use this package:\n\nGMP\n\n",
         True
-        )
+    )
 
 
 def main():
