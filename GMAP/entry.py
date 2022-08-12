@@ -46,7 +46,8 @@ def main():
         if subch.lower() in allhelps:
             print(modch.__doc__)
         else:
-            modch.main(callcommand[1:], FILES)
+            getattr(modch, modch)(callcommand[1:], FILES)
+            # modch.main(callcommand[1:], FILES)
 
     else:
         _report_unknown_choice()
