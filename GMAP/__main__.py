@@ -48,7 +48,6 @@ def main():
         else:
             getattr(modch, modch)(callcommand[1:], FILES)
             # modch.main(callcommand[1:], FILES)
-
     else:
         _report_unknown_choice()
 

@@ -66,6 +66,8 @@ def get_parameters(callcommand, FILES):
     if in_parfile:
         in_pars = GM_PP.RawPars.from_dict(
             in_parfile, in_pardict, ref_pars, False)
+    else:
+        in_pars = {}
 
     run_pars = GM_PP.RunPars(FILES, ref_pars, def_pars, in_pars)
 
