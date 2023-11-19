@@ -9,7 +9,7 @@ prints this help
 Launches GEM in demo-mode. Performs a basic calculation to demonstrate basic
 use and to verify the program is installed correctly.
 
-    GMAP GEM run [name of input file]
+    GMAP GEM run [name of input file] [optional parameters]
 Performs a run of GEM using the parameters specified in the included file.
 
 
@@ -82,7 +82,7 @@ def get_parameters(callcommand, FILES):
     print(run_pars)
 
 
-def main(callcommand, FILES):
+def GEM(callcommand, FILES):
     get_parameters(callcommand, FILES)
     print("entered main of GEM - yet to be constructed")
 
@@ -93,10 +93,14 @@ alljobs = [
 ]
 
 
-if __name__ == "__main__":
+def main():
     callcommand = sys.argv
     if len(callcommand) == 1:
         print(__doc__)
     else:
         FILES = GM_FH.FileLocations()
-        main(callcommand, FILES)
+        GEM(callcommand, FILES)
+
+
+if __name__ == "__main__":
+    main()

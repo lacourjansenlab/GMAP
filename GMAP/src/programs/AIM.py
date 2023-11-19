@@ -10,7 +10,7 @@ prints this help
 Launches AIM in demo-mode. Performs a basic calculation to demonstrate basic
 use and to verify the program is installed correctly.
 
-    GMAP AIM [name of input file]
+    GMAP AIM run [name of input file]
 Performs a run of AIM using the parameters specified in the included file.
 
 
@@ -27,13 +27,17 @@ For more information, check the manual on github.com/Kimvana/AIM.
 import sys
 
 
-def main(callcommand):
+def AIM(callcommand):
     print("entered main of AIM - yet to be constructed")
 
 
-if __name__ == "__main__":
+def main():
     callcommand = sys.argv
     if len(callcommand) == 1:
         print(__doc__)
     else:
-        main(callcommand)
+        AIM(callcommand)
+
+
+if __name__ == "__main__":
+    main()

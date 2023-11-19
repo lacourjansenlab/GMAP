@@ -12,7 +12,7 @@ def _report_unknown_choice():
         "\nChoice of program wasn't recognized. Please type the following "
         "for more\ninformation on how to use this package:\n\nGMP\n\n",
         True
-        )
+    )
 
 
 def main():
@@ -46,8 +46,8 @@ def main():
         if subch.lower() in allhelps:
             print(modch.__doc__)
         else:
-            modch.main(callcommand[1:], FILES)
-
+            getattr(modch, modch)(callcommand[1:], FILES)
+            # modch.main(callcommand[1:], FILES)
     else:
         _report_unknown_choice()
 
