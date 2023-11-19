@@ -9,7 +9,7 @@ prints this help
 Launches GEM in demo-mode. Performs a basic calculation to demonstrate basic
 use and to verify the program is installed correctly.
 
-    GMAP GEM run [name of input file]
+    GMAP GEM run [name of input file] [optional parameters]
 Performs a run of GEM using the parameters specified in the included file.
 
 
