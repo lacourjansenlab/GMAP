@@ -1,14 +1,14 @@
 
 # support files location
 
-sourcedir[path_dir_sd]      ../sourcefiles
-defparfilename[path_rel_sd]      [N/A]
+source_directory[path_dir_sd]                ../sourcefiles
+default_parameter_filename[path_rel_sd]      [N/A]
 
-logdir[path_dir_lg]         [N/A]
-logfilename[path_rel_lg]    log.log
+log_directory[path_dir_lg]                   [N/A]
+log_filename[path_rel_lg]                    log.log
 
-mapdir[list_path_dir_mp]      ../../maps
+map_directory[list_path_dir_mp]              ../../maps
 
-verbose[int]        0 1 [2] 3 4
+verbose[int]                                 0 1 [2] 3 4
 
 

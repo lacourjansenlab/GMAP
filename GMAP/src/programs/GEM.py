@@ -31,24 +31,45 @@ import GMAP.src.tools.WarnSys as GM_WS
 
 
 def get_parameters(callcommand, FILES):
+    # very basic parsing of cmd
+    if callcommand[1] in ("demo"):
+        exp_inpfile = False
+    else:
+        exp_inpfile = True
     job, in_parfile, argslist = GM_PP.parse_commandline(
-        FILES, callcommand, alljobs, "GMAP GEM"
+        FILES, callcommand, alljobs, "GMAP GEM", exp_inpfile, True
     )
 
-    cmd_pardict = GM_PP.get_pardict(argslist)
+    # before we can parse the command line, or the input parameter file,
+    # we have to know what parameter names to expect. However, to know
+    # this, we need to open the default parameter file, but we don't
+    # know where it is, before parsing command line and input parameter
+    # file.
+
+    # solution: only look for sourcedir and defparfilename in command
+    # line and input parameter file, do further parsing later.
+
+    temp_cmd_pardict = GM_PP.find_defparfile_in_cmd(argslist)
+
     if in_parfile:
         with open(in_parfile) as file:
             in_pardict = GM_PP.get_pardict(file)
         def_parfile = GM_FH.get_def_parfile(
-            FILES, cmd_pardict, in_parfile, in_pardict
+            FILES, temp_cmd_pardict, in_parfile, in_pardict
         )
     else:
-        def_parfile = GM_FH.get_def_parfile(FILES, cmd_pardict)
+        def_parfile = GM_FH.get_def_parfile(FILES, temp_cmd_pardict)
 
-    # as get_def_parfile also checks for the presence of the hard-coded default
-    # parameter file (regardless of program flow), no need to do it again.
+    # as get_def_parfile also checks for the presence of the hard-coded
+    # default parameter file (regardless of program flow), no need to do
+    # it again.
     ref_parfile = FILES.sourcedir_hc / FILES.refparfilename_hc
     ref_pars = GM_PP.RefPars(ref_parfile)
+
+    # now, we know what the parameters look like. Use this information
+    # to properly parse commandline
+
+    # ADD THAT CODE!!!!!!!!!!!!!!
 
     if def_parfile.suffix == ".txt":
         def_pars = GM_PP.RawPars.from_file(def_parfile, ref_pars, True)

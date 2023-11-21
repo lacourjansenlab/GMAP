@@ -30,7 +30,8 @@ class RefPars:
 
     def add_groups(self):
         self.options = {}  # key = parname, val = possible options
-        self.choices = {}  # key = parname, val = choice
+        self.choices = {}  # key = parname, val = actual choice
+
         # -----
         # Path-type parameters
         # -----
@@ -209,20 +210,22 @@ class RefPars:
 class RawPars:
     def __init__(self, fname, given_dict, refpars, is_default):
         """
-        Takes a dictionary from the format created by get_pardict, and parses
-        it:
-        For each parameter, see if it is in the refpars object. if not, it is
-        either a typo, or a map-specific parameter. If former, raise error,
-        if latter, save for later (2nd pass done by the .... function).
-        If it is in refpars, see if choice is valid (one of the allowed choices
-        and/or of correct datatype).
+        Takes a dictionary from the format created by get_pardict, and
+        parses it:
+        For each parameter, see if it is in the refpars object. if not,
+        it is either a typo, or a map-specific parameter. If former,
+        raise error, if latter, save for later (2nd pass done by the
+        .... function).
+        If it is in refpars, see if choice is valid (one of the allowed
+        choices and/or of correct datatype).
         All choices are saved in self.choices, in the same format as the
         refpars object.
 
-        If is_default is True, the file is assumed a default file, and must
-        contain a choice for each and every parameter (except for those flagged
-        as not expected in default file).
-        If it is False, the file is assumed an input file, and may miss some.
+        If is_default is True, the file is assumed a default file, and
+        must contain a choice for each and every parameter (except for
+        those flagged as not expected in default file).
+        If it is False, the file is assumed an input file, and may miss
+        some.
         """
 
         self.fname = fname
@@ -376,50 +379,115 @@ class RunPars:
         # then (finally!), search through mapdir to find any maps to apply.
 
 
-def parse_commandline(FILES, callcommand, alljobs, helpcall):
+def parse_commandline(
+    FILES, callcommand, alljobs, helpcall, expect_inputfile=False,
+    expect_parameters=False
+):
     """
-    Given the input from the command line, finds out the meaning of each part.
-    Returns the job, the path of the input parameter filename, and the
-    parameters specified on the command line.
+    Parses a command stored in a list, to return and check different
+    parts. Expects the following items:
+    [0] should contain the name of the tool used. eg. GEM, AIM.
+    [1] should contain the requested job from the tool. eg. run, demo.
+    (if expect_inputfile == True) the filename of the input file to use
+    (if expect_parameters == True) the further parameters to use. Optional
+
     Parameters specified on the command line must have the parameter name
-    preceded with '@'.
+    preceded with '-'.
     """
+
     job = callcommand[1]
 
-    if job not in alljobs:
+    if job.lower() not in alljobs:
         GM_WS.Warning(
             "\nChoice '" + str(job) +
             "' was not recognized. Please type the following to see all "
             "available options:\n\n" + helpcall + "\n", True
         )
 
-    args = callcommand[2:]
+    if expect_inputfile:
+        # if we expect an input filename, but it isn't there, error!
+        if len(callcommand) < 3:
+            GM_WS.Warning(
+                str(job) + " requires an input file. Quitting!", True
+            )
 
-    # interpret the command line. parameters specified on the command line
-    in_parfile = None
-    cmd_pars = ""
-    if len(args) != 0:
-        if args[0][0] == "@":
-            cmd_pars = " ".join(args[0:])
-        else:
-            in_parfile = (FILES.cwd / args[0]).resolve()
-            if len(args) > 1 and args[1][0] == "@":
-                cmd_pars = " ".join(args[1:])
+        in_parfile = (FILES.cwd / callcommand[2]).resolve()
+        if not (in_parfile.exists() and in_parfile.is_file()):
+            GM_WS.Warning(
+                "\nThe requested input parameter file "
+                + str(in_parfile) +
+                " could not be found, or is not a file. "
+                "Please make sure you specified it correctly.\n",
+                True
+            )
+        args_list = callcommand[3:]
+    else:
+        in_parfile = None
+        args_list = callcommand[2:]
 
-    if cmd_pars:
-        # now, cmd_pars is iter (list) of strings, just like for line in file
-        cmd_pars = cmd_pars.split("@")[1:]
-
-    if in_parfile and (not in_parfile.exists() or not in_parfile.is_file()):
-        GM_WS.Warning(
-            "\nThe requested input parameter file "
-            + str(in_parfile) +
-            " could not be found, or is not a file. "
-            "Please make sure you specified it correctly.\n",
-            True
-        )
+    if expect_parameters:
+        cmd_pars = args_list
+    else:
+        cmd_pars = None
 
     return job, in_parfile, cmd_pars
+
+
+def find_defparfile_in_cmd(argslist):
+    """
+    Given an argslist (the part of sys.argv that should/could contain
+    arguments), see if there is anything hinting at a default parameter
+    file there.
+    """
+    pardict = {}
+
+    srcdir_names = ("--source_directory", "-sd")
+    srcdir = find_par_in_cmd(argslist, srcdir_names, "source_directory")
+    if srcdir:
+        pardict["source_directory"] = srcdir
+
+    defparfile_names = ("--default_parameter_filename", "-dpf")
+    defparfile = find_par_in_cmd(
+        argslist, defparfile_names, "default_parameter_filename"
+    )
+    if defparfile:
+        pardict["default_parameter_filename"] = defparfile
+
+    return pardict
+
+
+def find_par_in_cmd(argslist, flags, parname):
+    if any(item in argslist for item in flags):
+        totalcount = 0
+        for item in flags:
+            totalcount += argslist.count(item)
+            try:
+                ix = argslist.index(item)
+                used_flag = item
+            except ValueError:
+                pass
+
+        if totalcount > 1:
+            GM_WS.Warning(
+                "The program was called with more than one setting for "
+                + parname + ". Please make sure your command "
+                "contains this parameter at most once."
+            )
+
+        try:
+            choice = argslist[ix + 1]
+        except IndexError:
+            GM_WS.Warning(
+                used_flag + " requires a file name to be specified.",
+                True
+            )
+        if choice.startswith("-"):
+            GM_WS.Warning(
+                used_flag + " requires a file name to be specified.",
+                True
+            )
+
+        return choice
 
 
 def get_pardict(iterable):

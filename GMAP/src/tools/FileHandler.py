@@ -67,28 +67,28 @@ def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
     there or if it isn't a file, an error is raised, and the program quits.
     """
     file_is_hc = False
-    if "sourcedir" in cmd_pardict:
-        dirname = FILES.cwd / cmd_pardict["sourcedir"][0]
-        if "defparfilename" in cmd_pardict:
-            name = dirname / cmd_pardict["defparfilename"][0]
-        elif "defparfilename" in in_pardict:
-            name = dirname / in_pardict["defparfilename"][0]
+    if "source_directory" in cmd_pardict:
+        dirname = FILES.cwd / cmd_pardict["source_directory"][0]
+        if "default_parameter_filename" in cmd_pardict:
+            name = dirname / cmd_pardict["default_parameter_filename"][0]
+        elif "default_parameter_filename" in in_pardict:
+            name = dirname / in_pardict["default_parameter_filename"][0]
         else:
             name = dirname / FILES.refparfilename_hc
 
-    elif "defparfilename" in cmd_pardict:
-        name = FILES.cwd / cmd_pardict["defparfilename"][0]
+    elif "default_parameter_filename" in cmd_pardict:
+        name = FILES.cwd / cmd_pardict["default_parameter_filename"][0]
 
     # now, no info in the cmd line, only in files
-    elif "sourcedir" in in_pardict:
-        dirname = in_parfile / in_pardict["sourcedir"][0]
-        if "defparfilename" in in_pardict:
-            name = dirname / in_pardict["defparfilename"][0]
+    elif "source_directory" in in_pardict:
+        dirname = in_parfile / in_pardict["source_directory"][0]
+        if "default_parameter_filename" in in_pardict:
+            name = dirname / in_pardict["default_parameter_filename"][0]
         else:
             name = dirname / FILES.refparfilename_hc
 
-    elif "defparfilename" in in_pardict:
-        name = in_parfile / in_pardict["defparfilename"][0]
+    elif "default_parameter_filename" in in_pardict:
+        name = in_parfile / in_pardict["default_parameter_filename"][0]
 
     # now, no info in input file either - grab default from installation
     else:

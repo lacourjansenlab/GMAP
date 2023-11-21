@@ -27,7 +27,7 @@ For more information, check the manual on github.com/Kimvana/AIM.
 import sys
 
 
-def AIM(callcommand):
+def AIM(callcommand, FILES):
     print("entered main of AIM - yet to be constructed")
 
 
