@@ -1,9 +1,23 @@
+# Quick menu
+- [General rules for code](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-rules-for-code)
+- [General code-related remarks](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-code-related-remarks)
+- [wishlist](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#wishlist)
+- [Package structure](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#package-structure)
+- [notes](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#notes)
+- [structure/concepts of maps in/for GEM](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#structureconcept-of-maps-infor-gem)
+- [How GEM looks for/through parameter files to obtain runpar](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#how-gem-looks-forthrough-parameter-files-to-obtain-runpar)
+- [To discuss](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#to-discuss)
+- [Dump section](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#dump-section)
+- [Old notes/goals/thoughts/etc](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#old-notesgoalsthoughtsetc)
+
+
+
 # General rules for code
 - Follow the TOCM group python style guidelines (which are heavily based on PEP8), can be found [here](https://github.com/lacourjansenlab/CoffeeCodeClub/tree/master/ProgramStyle)
 - Make use of comments when function of code isn't easily discernable!
 - Its the modern era, we have storage space! Code does not need to be compactly written, legibility is the most important in this project
 - Don't worry about efficiency/speed of a function if it doesnt take more than 1% of total calculation time. This doesn't mean we should aim for blatantly needlessly expensive code.
-- Document the choices/assumptions/etc you make, so they can be put in a (dev)manual later. There is a 'dump' section further down in this file.
+- Document the choices/assumptions/etc you make, so they can be put in a (dev)manual later. If it's too much to immediately write them down neatly, put them over [here](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#dump-section)
 - Printing should always be done with a custom print command (except when defining this), not the python default print.
 - When creating strings for printing, f-strings are the preferred method.
 
@@ -90,7 +104,7 @@ to do (not yet implemented)
   1. Not just in order (fill in gaps with lower order) also take into account possible conflicts arising from this
   2. check whether requested files exist, are of correct format, etc.
 
-# thoughts
+# To discuss
 (discuss, then put in relevant section)
 
 ### discuss soon
