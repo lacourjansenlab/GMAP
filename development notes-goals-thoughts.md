@@ -97,12 +97,12 @@ As of writing this, this is still a work-in-progress. A (rough) sketch. Will be 
 8. parse inparfile (at least, start it, we can only finish after having read the maps)
 
 to do (not yet implemented)
-9. find mapdir in cmdline > inparfile > defparfile > refparfile
-10. for each maps, see if there is a parameters.ref. If so, parse it.
-11. now, knowing all refparfiles, finish parsing cmdline, inparfile, defparfile
-12. combine cmdline, inparfile, defparfile choices into runpar
-  1. Not just in order (fill in gaps with lower order) also take into account possible conflicts arising from this
-  2. check whether requested files exist, are of correct format, etc.
+1. find mapdir in cmdline > inparfile > defparfile > refparfile
+2. for each maps, see if there is a parameters.ref. If so, parse it.
+3. now, knowing all refparfiles, finish parsing cmdline, inparfile, defparfile
+4. combine cmdline, inparfile, defparfile choices into runpar
+   1. Not just in order (fill in gaps with lower order) also take into account possible conflicts arising from this
+   2. check whether requested files exist, are of correct format, etc.
 
 # To discuss
 (discuss, then put in relevant section)
