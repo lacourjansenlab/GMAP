@@ -1,1 +1,6 @@
-test
+source_directory      GMAP/sourcefiles
+log_filename          log.log
+map_directory         GMAP/maps
+
+verbose 3
+testmap2.par1 4

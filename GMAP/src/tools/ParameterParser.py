@@ -1,7 +1,8 @@
 
 from pathlib import Path
 
-import GMAP.src.tools.WarnSys as GM_WS
+import GMAP.src.tools.PrintTools as GM_PT
+from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class RefPars:
@@ -23,7 +24,7 @@ class RefPars:
            also stores the allowed options. This would allow users to impose
            stricter limits. Is this actually useful???
         """
-        GM_WS.Warning(
+        GM_PT.Warning(
             "Not implemented yet!",
             True
         )
@@ -31,6 +32,7 @@ class RefPars:
     def add_groups(self):
         self.options = {}  # key = parname, val = possible options
         self.choices = {}  # key = parname, val = actual choice
+        self.shorthands = {}  # key = shorthand, val = actual parname
 
         # -----
         # Path-type parameters
@@ -69,9 +71,9 @@ class RefPars:
 
                 linelist = line.split()
                 if len(linelist) == 1:
-                    GM_WS.Warning(
+                    GM_PT.Warning(
                         "The following problem occured when reading the "
-                        "default parameter file " + str(self.fname) +
+                        f"default parameter file {self.fname}"
                         "\n\nOne of the lines contains only one item, while "
                         "pairs are expected. Quitting!",
                         True
@@ -84,20 +86,20 @@ class RefPars:
         try:
             self.parse_line_type(linelist)
         except (TypeError, KeyError):
-            GM_WS.Warning(
+            GM_PT.Warning(
                 "Could not interpret the parameter name on the following "
-                "line:\n" + line +
+                f"line:\n{line}"
                 "\nwhile reading the following file as reference "
-                "file:\n" + str(self.fname) +
+                f"file:\n{self.fname}"
                 "\nQuitting!",
                 True
             )
         except Exception:
-            GM_WS.Warning(
+            GM_PT.Warning(
                 "Encountered an error while parsing the parameter name on the "
-                "following line:\n" + line +
+                f"following line:\n{line}"
                 "\nwhile reading the following file as reference "
-                "file:\n" + str(self.fname) +
+                f"file:\n{self.fname}"
                 "\nQuitting!",
                 True
             )
@@ -106,7 +108,9 @@ class RefPars:
         parname_raw = linelist[0]
         parchoice_raw = linelist[1:]
 
-        parname, partype = self.parse_key(parname_raw)
+        parname, shorthand, partype = self.parse_key(parname_raw)
+        if shorthand:
+            self.shorthands[shorthand] = parname
 
         if parchoice_raw[0] == "[N/A]":
             self.not_expected_in_deffile.append(parname)
@@ -138,20 +142,20 @@ class RefPars:
         try:
             self.parse_line_choice(linelist)
         except (TypeError, IndexError):
-            GM_WS.Warning(
+            GM_PT.Warning(
                 "Could not interpret the parameter choice on the following "
-                "line:\n" + line +
+                f"line:\n{line}"
                 "\nwhile reading the following file as reference "
-                "file:\n" + str(self.fname) +
+                f"file:\n{self.fname}"
                 "\nQuitting!",
                 True
             )
         except Exception:
-            GM_WS.Warning(
+            GM_PT.Warning(
                 "Encountered an error while parsing the parameter choice on "
-                "the following line:\n" + line +
+                f"the following line:\n{line}"
                 "\nwhile reading the following file as reference "
-                "file:\n" + str(self.fname) +
+                f"file:\n{self.fname}"
                 "\nQuitting!",
                 True
             )
@@ -202,13 +206,19 @@ class RefPars:
 
     @staticmethod
     def parse_key(string):
-        key_name, key_dtype = string.split("[")
+        if "(" in string:
+            key_name, temp = string.split("(")
+            key_shorthand, key_dtype = temp.split(")")
+            key_dtype = key_dtype[1:]
+        else:
+            key_name, key_dtype = string.split("[")
+            key_shorthand = ""
         key_dtype = key_dtype.strip("]").split("_")
-        return key_name, key_dtype
+        return key_name, key_shorthand, key_dtype
 
 
 class RawPars:
-    def __init__(self, fname, given_dict, refpars, is_default):
+    def __init__(self, fname, is_default):
         """
         Takes a dictionary from the format created by get_pardict, and
         parses it:
@@ -230,20 +240,125 @@ class RawPars:
 
         self.fname = fname
         self.is_default = is_default
-        self.extract_choices(given_dict, refpars)
-        if is_default:
-            self.check_completeness(refpars)
 
     @classmethod
     def from_dict(cls, fname, given_dict, refpars, is_default):
-        return cls(fname, given_dict, refpars, is_default)
+        instance = cls(fname, is_default)
+
+        instance.extract_choices(given_dict, refpars)
+        if is_default:
+            instance.check_completeness(refpars)
+        return instance
 
     @classmethod
     def from_file(cls, fname, refpars, is_default):
         with open(fname) as file:
             given_dict = get_pardict(file)
 
-        return cls.__init__(fname, given_dict, refpars, is_default)
+        instance = cls(fname, is_default)
+
+        instance.extract_choices(given_dict, refpars)
+        if is_default:
+            instance.check_completeness(refpars)
+        return instance
+
+    @classmethod
+    def from_cmdline(cls, cmdargs, refpars, maprefpars_dict, is_default):
+        instance = cls("command line", is_default)
+        pardict = {}
+
+        while len(cmdargs) > 0:
+            if not cmdargs[0].startswith("-"):
+                GM_PT.Warning(
+                    "The name of a parameter specified on the command line "
+                    "should be preceeded with '-'.",
+                    True
+                )
+            curparraw = cmdargs.pop(0)
+            curpar = curparraw.strip("-")
+            hyphno = len(curparraw) - len(curpar)
+            if hyphno == 1:
+                expect_shorthand = True
+            else:
+                expect_shorthand = False
+
+            if '.' in curpar:
+                warntext = (
+                    f"The parameter {curpar} as specified on the command "
+                    "line is not recognised. Please make sure you spelled "
+                    "it correctly."
+                )
+                curpar_list = curpar.split('.')
+                try:
+                    refpars_to_use = maprefpars_dict[curpar_list[0]]
+                    curpar_tocheck = curpar_list[1]
+                except KeyError:
+                    GM_PT.Warning(warntext, True)
+
+            else:
+                refpars_to_use = refpars
+                curpar_tocheck = curpar
+
+            if expect_shorthand:
+                curpar_tocheck = refpars_to_use.shorthands[curpar_tocheck]
+                if "." in curpar:
+                    curpar = curpar_list[0] + "." + curpar_tocheck
+                else:
+                    curpar = curpar_tocheck
+            dpr(curpar_tocheck)
+
+            found = instance.check_par_existence(
+                curpar, curpar_tocheck, refpars_to_use, None, False
+            )[1]
+
+            if not found:
+                GM_PT.Warning(warntext, True)
+
+            # now, we know the parameter exists. Next is to see how many
+            # choices to look for!
+            if curpar_tocheck in refpars_to_use.maybe_list:
+                try:
+                    choice = [cmdargs.pop(0)]
+                except IndexError:
+                    GM_PT.Warning(
+                        f"The parameter {curpar} specified in the command "
+                        "line requires a choice to be given.",
+                        True
+                    )
+                warntext = (
+                    f"The parameter {curpar} specified in the command line "
+                    "requires the last choice to be appended with '\\;'."
+                )
+                while not choice[-1].endswith("\\;"):
+                    try:
+                        choice.append[cmdargs.pop(0)]
+                    except IndexError:
+                        GM_PT.Warning(warntext, True)
+
+                    if choice[-1].startswith("-"):
+                        GM_PT.Warning(warntext, True)
+                choice[-1] = choice[-1][:-2]
+            else:
+                try:
+                    choice = [cmdargs.pop(0)]
+                except IndexError:
+                    GM_PT.Warning(
+                        f"The parameter {curpar} specified in the command "
+                        "line requires a choice to be given.",
+                        True
+                    )
+
+            pardict[curpar] = choice
+
+        instance.extract_choices(pardict, refpars)
+        if is_default:
+            instance.check_completeness(refpars)
+
+        for name, maprefpar in maprefpars_dict.items():
+            instance.extract_choices_map(name, maprefpar)
+        instance.finalize_map_pars()
+
+        return instance
 
     def extract_choices(self, given_dict, refpars):
         self.choices = {}
@@ -252,31 +367,36 @@ class RawPars:
         # lets find out about each parameter!
         for parname, choice in given_dict.items():
 
-            # if parameter is known
-            if parname in refpars.choices:
-                choice = self.verify_choice(parname, choice, refpars)
-                if choice is None:
-                    continue
-                self.choices[parname] = choice
+            # # if parameter is known
+            # if parname in refpars.choices:
+            #     choice = self.verify_choice(parname, choice, refpars)
+            #     if choice is None:
+            #         continue
+            #     self.choices[parname] = choice
 
-            # if parameter is known, but shouldn't be in default parfiles
-            elif parname in refpars.not_expected_in_deffile:
-                if self.is_default and len(choice) != 0:
-                    GM_WS.Warning(
-                        "A choice for the parameter " + parname +
-                        " is specified in the default parameter file "
-                        + str(self.fname) +
-                        ". However, default files cannot contain a choice for "
-                        "this parameter. Please remove the parameter from the "
-                        "file.", True
-                    )
-                elif self.is_default:
-                    continue
-                else:
-                    choice = self.verify_choice(parname, choice, refpars)
-                    if choice is None:
-                        continue
-                    self.choices[parname] = choice
+            # # if parameter is known, but shouldn't be in default parfiles
+            # elif parname in refpars.not_expected_in_deffile:
+            #     if self.is_default and len(choice) != 0:
+            #         GM_PT.Warning(
+            #             f"A choice for the parameter {parname} is specified "
+            #             f"in the default parameter file {self.fname}. "
+            #             "However, default files cannot contain a choice for "
+            #           "this parameter. Please remove the parameter from the "
+            #             "file.",
+            #             True
+            #         )
+            #     elif self.is_default:
+            #         continue
+            #     else:
+            #         choice = self.verify_choice(parname, choice, refpars)
+            #         if choice is None:
+            #             continue
+            #         self.choices[parname] = choice
+            choice, found = self.check_par_existence(
+                parname, parname, refpars, choice
+            )
+            if found:
+                continue
 
             # anything that's left, is not part of base program
 
@@ -286,10 +406,10 @@ class RawPars:
 
             # parameter should belong to core, but isn't recognized
             else:
-                GM_WS.Warning(
-                    "Unknown parameter " + parname +
-                    " found in the file " + str(self.fname) +
-                    ". Please make sure you spelled it correctly.",
+                GM_PT.Warning(
+                    f"Unknown parameter {parname} found in the file "
+                    f"{self.fname}. "
+                    "Please make sure you spelled it correctly.",
                     True
                 )
 
@@ -297,49 +417,48 @@ class RawPars:
         # currently, all parameters must take an argument (no bools yet)
         if len(choice) == 0:
             if self.is_default:
-                GM_WS.Warning(
-                    "No choice detected for the parameter " + parname +
-                    " specified in the file " + str(self.fname) +
-                    ". All parameters must be specified for the file to be "
+                GM_PT.Warning(
+                    f"No choice detected for the parameter {parname} "
+                    f"specified in the file {self.fname}. "
+                    "All parameters must be specified for the file to be "
                     "used.",
                     True
                 )
             else:
-                GM_WS.Warning(
-                    "No choice detected for the parameter " + parname +
-                    " specified in the file " + str(self.fname) +
-                    ". Either remove the parameter line, or make a choice.",
+                GM_PT.Warning(
+                    f"No choice detected for the parameter {parname} "
+                    f"specified in the file {self.fname}. "
+                    "Either remove the parameter line, or make a choice.",
                     True
                 )
                 return
 
         # if we expect a single choice, but multiple were given
         elif len(choice) > 1 and parname not in refpars.maybe_list:
-            GM_WS.Warning(
-                "Too many choices given for the parameter " + parname +
-                " specified in the file " + str(self.fname) +
-                ". Please only specify one.",
+            GM_PT.Warning(
+                f"Too many choices given for the parameter {parname} "
+                f"specified in the file {self.fname}. "
+                "Please only specify one.",
                 True
             )
 
         # now, correct amount of arguments.
         errortext1 = (
-            "Invalid choice given for the parameter " + parname +
-            " specified in the file " + str(self.fname) +
-            ". Please refer to the manual for the allowed options."
+            f"Invalid choice given for the parameter {parname} "
+            f"specified in the file {self.fname}. "
+            "Please refer to the manual for the allowed options."
         )
         errortext2 = (
-            "Choice given for the parameter " + parname +
-            " specified in the file " + str(self.fname) +
-            " is of the wrong type. Please refer to the manual for the "
-            "expected type."
+            f"Choice given for the parameter {parname} specified in the file "
+            f"{self.fname} is of the wrong type. "
+            "Please refer to the manual for the expected type."
         )
 
         if parname in refpars.intpars:
             try:
                 choice = [int(x) for x in choice]
             except Exception:
-                GM_WS.Warning(errortext2, True)
+                GM_PT.Warning(errortext2, True)
 
         if parname not in refpars.options:
             return choice
@@ -347,24 +466,127 @@ class RawPars:
         if any(
             opt not in refpars.options[parname] for opt in choice
         ):
-            GM_WS.Warning(errortext1, True)
+            GM_PT.Warning(errortext1, True)
         else:
             return choice
+
+    def extract_choices_map(self, mapname, maprefpars):
+        to_del = []
+        for parname, choice in self.not_found.items():
+            parnamelist = parname.split(".")
+            if len(parnamelist) != 2:
+                GM_PT.Warning(
+                    "Names of map-specific parameters cannot contain a '.'.",
+                    True
+                )
+            if parnamelist[0] != mapname:
+                continue
+
+            # now, we know that this parameter (supposedly) belongs to this map
+            # if parnamelist[1] in maprefpars.choices:
+            #   choice = self.verify_choice(parnamelist[1], choice, maprefpars)
+            #     if choice is None:
+            #         continue
+            #     self.choices[parname] = choice
+
+            # elif parnamelist[1] in maprefpars.not_expected_in_deffile:
+            #     if self.is_default and len(choice) != 0:
+            #         GM_PT.Warning(
+            #             f"A choice for the parameter {parname} is specified "
+            #             f"in the default parameter file {self.fname}. "
+            #             "However, default files cannot contain a choice for "
+            #           "this parameter. Please remove the parameter from the "
+            #             "file.",
+            #             True
+            #         )
+            #     elif self.is_default:
+            #         continue
+            #     else:
+            #         choice = self.verify_choice(
+            #             parnamelist[1], choice, maprefpars
+            #         )
+            #         if choice is None:
+            #             continue
+            #         self.choices[parname] = choice
+            choice, found = self.check_par_existence(
+                parname, parnamelist[1], maprefpars, choice
+            )
+
+            # parameter is not recognized
+            if not found:
+                GM_PT.Warning(
+                    f"Unknown parameter {parname} found in the file "
+                    f"{self.fname}. "
+                    "Please make sure you spelled it correctly.",
+                    True
+                )
+
+            to_del.append(parname)
+
+        for parname in to_del:
+            del self.not_found[parname]
+
+    def check_par_existence(
+        self, parname_full, parname_refpars, refpars, choice, do_verify=True
+    ):
+        found = False
+        if parname_refpars in refpars.choices:
+            found = True
+            if do_verify:
+                choice = self.verify_choice(parname_refpars, choice, refpars)
+            if not do_verify or choice is None:
+                return None, found
+            else:
+                self.choices[parname_full] = choice
+
+        elif parname_refpars in refpars.not_expected_in_deffile:
+            found = True
+            if self.is_default and len(choice) != 0:
+                GM_PT.Warning(
+                    f"A choice for the parameter {parname_full} is specified "
+                    f"in the default parameter file {self.fname}. "
+                    "However, default files cannot contain a choice for "
+                    "this parameter. Please remove the parameter from the "
+                    "file.",
+                    True
+                )
+            elif self.is_default:
+                return None, found
+            else:
+                if do_verify:
+                    choice = self.verify_choice(
+                        parname_refpars, choice, refpars
+                    )
+                if not do_verify or choice is None:
+                    return None, found
+                else:
+                    self.choices[parname_full] = choice
+
+        return choice, found
 
     def check_completeness(self, refpars):
         for parname in refpars.choices.keys():
             if parname not in self.choices:
-                GM_WS.Warning(
-                    "No entry found for the parameter " + parname +
-                    " in the default parameter file " + str(self.fname) +
-                    ". All parameters must be specified for default files to "
+                GM_PT.Warning(
+                    f"No entry found for the parameter {parname} in the "
+                    f"default parameter file {self.fname}. "
+                    "All parameters must be specified for default files to "
                     "be used.",
                     True
                 )
 
+    def finalize_map_pars(self):
+        if len(self.not_found.keys()) != 0:
+            GM_PT.Warning(
+                f"Unknown parameter {self.not_found.keys()[0]} found in the "
+                f"file {self.fname}. "
+                "Please make sure you spelled it correctly.",
+                True
+            )
+
 
 class RunPars:
-    def __init__(self, FILES, ref_pars, def_pars, in_pars):
+    def __init__(self, FILES, cmd_pars, in_pars, def_pars, ref_pars):
         pass
 
         # first, find logfile location (so we can swith to that for output
@@ -398,25 +620,23 @@ def parse_commandline(
     job = callcommand[1]
 
     if job.lower() not in alljobs:
-        GM_WS.Warning(
-            "\nChoice '" + str(job) +
-            "' was not recognized. Please type the following to see all "
-            "available options:\n\n" + helpcall + "\n", True
+        GM_PT.Warning(
+            f"\nChoice '{job}' was not recognized. "
+            "Please type the following to see all available options:"
+            f"\n\n{helpcall}\n",
+            True
         )
 
     if expect_inputfile:
         # if we expect an input filename, but it isn't there, error!
         if len(callcommand) < 3:
-            GM_WS.Warning(
-                str(job) + " requires an input file. Quitting!", True
-            )
+            GM_PT.Warning(f"{job} requires an input file. Quitting!", True)
 
         in_parfile = (FILES.cwd / callcommand[2]).resolve()
         if not (in_parfile.exists() and in_parfile.is_file()):
-            GM_WS.Warning(
-                "\nThe requested input parameter file "
-                + str(in_parfile) +
-                " could not be found, or is not a file. "
+            GM_PT.Warning(
+                f"\nThe requested input parameter file {in_parfile} could not "
+                "be found, or is not a file. "
                 "Please make sure you specified it correctly.\n",
                 True
             )
@@ -456,7 +676,7 @@ def find_defparfile_in_cmd(argslist):
     return pardict
 
 
-def find_par_in_cmd(argslist, flags, parname):
+def find_par_in_cmd(argslist, flags, parname, is_list=False):
     if any(item in argslist for item in flags):
         totalcount = 0
         for item in flags:
@@ -468,26 +688,85 @@ def find_par_in_cmd(argslist, flags, parname):
                 pass
 
         if totalcount > 1:
-            GM_WS.Warning(
-                "The program was called with more than one setting for "
-                + parname + ". Please make sure your command "
-                "contains this parameter at most once."
+            GM_PT.Warning(
+                "The program was called with more than one setting "
+                f"for {parname}. "
+                "Please make sure your command contains this parameter at "
+                "most once.",
+                True
             )
 
+        warntext = f"{used_flag} requires a file name to be specified.",
         try:
-            choice = argslist[ix + 1]
+            choice = [argslist[ix + 1]]
         except IndexError:
-            GM_WS.Warning(
-                used_flag + " requires a file name to be specified.",
-                True
+            GM_PT.Warning(warntext, True)
+        if choice[0].startswith("-"):
+            GM_PT.Warning(warntext, True)
+
+        if is_list:
+            adder = 2
+            warntext = (
+                f"{used_flag} requires the last choice to be appended with "
+                "'\\;'."
             )
-        if choice.startswith("-"):
-            GM_WS.Warning(
-                used_flag + " requires a file name to be specified.",
-                True
-            )
+            while not choice[-1].endswith("\\;"):
+                try:
+                    choice.append(argslist[ix + adder])
+                    adder += 1
+                except IndexError:
+                    GM_PT.Warning(warntext, True)
+                if choice[-1].startswith("-"):
+                    GM_PT.Warning(warntext, True)
+            choice[-1] = choice[-1][:-2]
 
         return choice
+
+
+def find_mapdir(argslist, FILES, in_pars, def_pars):
+    map_flags = ("--map_directory", "-md")
+    cmd_mapdir = find_par_in_cmd(
+        argslist, map_flags, "map_directory", is_list=True
+    )
+    # if cmd supplied, check if exists
+    if cmd_mapdir:
+        mapdirs = directory_list_checker(
+            FILES.cwd, cmd_mapdir, "map_directory", "the command line"
+        )
+
+    elif in_pars and "map_directory" in in_pars.choices:
+        mapdirs = directory_list_checker(
+            in_pars.fname.parent,
+            in_pars.choices["map_directory"],
+            "map_directory",
+            in_pars.fname
+        )
+
+    else:
+        mapdirs = directory_list_checker(
+            def_pars.fname.parent,
+            def_pars.choices["map_directory"],
+            "map_directory",
+            def_pars.fname
+        )
+
+    return mapdirs
+
+
+def directory_list_checker(parent, direclist, parname, source):
+    dirs = [parent / direc for direc in direclist]
+    failed = [str(direc.resolve()) for direc in dirs if not direc.is_dir()]
+    if len(failed) > 0:
+        # not using fstrings here, as backslashes arent supported in
+        # fstrings before python 3.12.
+        GM_PT.Warning(
+            f"The following choice(s) for {parname} found in {source} either "
+            "do not exist, or are not directories:\n"
+            + "\n".join(failed),
+            True
+        )
+    dirs = [loc.resolve() for loc in dirs]
+    return dirs
 
 
 def get_pardict(iterable):

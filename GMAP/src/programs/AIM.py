@@ -26,9 +26,12 @@ For more information, check the manual on github.com/Kimvana/AIM.
 # standard lib imports
 import sys
 
+# imports from this package
+import GMAP.src.tools.PrintTools as GM_PT
+
 
 def AIM(callcommand, FILES):
-    print("entered main of AIM - yet to be constructed")
+    GM_PT.devprint("entered main of AIM - yet to be constructed")
 
 
 def main():

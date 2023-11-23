@@ -5,7 +5,7 @@ from pathlib import Path
 import datetime
 
 import GMAP
-import GMAP.src.tools.WarnSys as GM_WS
+import GMAP.src.tools.PrintTools as GM_PT
 
 
 class FileLocations:
@@ -34,11 +34,10 @@ def FindExOs():
         elif bits == 64:
             exec_os = "Win64bit"
         else:
-            GM_WS.Warning(
+            GM_PT.Warning(
                 "Environment was determined to be windows, but it is neither a"
-                "32, nor 64 bit version. It appears to be "
-                + str(bits) + " bit. Please contact the developers to "
-                "solve this.",
+                f" 32, nor 64 bit version. It appears to be {bits} bit. Please"
+                " contact the developers to solve this.",
                 True
             )
     elif sys.platform == "darwin":
@@ -46,10 +45,9 @@ def FindExOs():
     elif sys.platform == "linux":
         exec_os = "Linux"
     else:
-        GM_WS.Warning(
-            "executing OS not recognised... sys.platform ="
-            + str(sys.platform)
-            + ". Please contact the developers to solve this. ",
+        GM_PT.Warning(
+            f"executing OS not recognised... sys.platform = {sys.platform}. "
+            "Please contact the developers to solve this. ",
             True
         )
 
@@ -98,10 +96,9 @@ def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
     file_found = try_file(name)
 
     if not file_found:
-        GM_WS.Warning(
-            "\nThe requested default parameter file "
-            + str(name) +
-            " could not be found, or is not a file. "
+        GM_PT.Warning(
+            f"\nThe requested default parameter file {name} could not be "
+            "found, or is not a file. "
             "Please make sure you specified it correctly.\n",
             True
         )
@@ -114,10 +111,9 @@ def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
         name = FILES.sourcedir_hc / FILES.refparfilename_hc
         check_file_found = try_file(name)
         if not check_file_found:
-            GM_WS.Warning(
+            GM_PT.Warning(
                 "\nThe requested default parameter file requires the presence "
-                "of the file " + str(name) +
-                " , but this file could not be found. "
+                f"of the file {name}, but this file could not be found. "
                 "Please make sure you specified it correctly.\n",
                 True
             )
