@@ -18,7 +18,7 @@
 - Its the modern era, we have storage space! Code does not need to be compactly written, legibility is the most important in this project
 - Don't worry about efficiency/speed of a function if it doesnt take more than 1% of total calculation time. This doesn't mean we should aim for blatantly needlessly expensive code.
 - Document the choices/assumptions/etc you make, so they can be put in a (dev)manual later. If it's too much to immediately write them down neatly, put them over [here](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#dump-section)
-- Printing should always be done with a custom print command (except when defining this), not the python default print.
+- Printing should *_always_* be done with a custom print command (except when defining these), not the python default print. if you want to temporarily print something during development, use ```GMAP.src.tools.PrintTools.devprint()``` instead. It behaves _EXACTLY_ like print does, but adds a linenumber and name of file/function to the print - this way, it is easy to find it back, and remove it.
 - When creating strings for printing, f-strings are the preferred method.
 
 # General code-related remarks
@@ -94,13 +94,14 @@ As of writing this, this is still a work-in-progress. A (rough) sketch. Will be 
 | No             | No             | No               | No               | FILES.srcdir_hc/FILES.refpar_hc    |
 6. Find refparfile
 7. parse refparfile
-8. parse inparfile (at least, start it, we can only finish after having read the maps)
+8. parse defparfile
+9. parse inparfile (at least, start it, we can only finish after having read the maps)
 
 to do (not yet implemented)
 1. find mapdir in cmdline > inparfile > defparfile > refparfile
-2. for each maps, see if there is a parameters.ref. If so, parse it.
+2. for each map, see if there is a parameters.ref. If so, parse it.
 3. now, knowing all refparfiles, finish parsing cmdline, inparfile, defparfile
-4. combine cmdline, inparfile, defparfile choices into runpar
+4. combine cmdline, inparfile, defparfile, refparfile (and maprefparfile) choices into runpar
    1. Not just in order (fill in gaps with lower order) also take into account possible conflicts arising from this
    2. check whether requested files exist, are of correct format, etc.
 
@@ -143,6 +144,18 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) Refparfile currently doesn't indicate whether a parameter is optional, or MUST be given by the user. Or is the N/A choice sufficient?
 - (KvA) Chosen map structure forces coupling maps to be complex? At some point, discuss coupling maps more?
 - (KvA) Verbose??? logfiles??? for when finding/parsing files? Or use buffer + errorfile?
+- (KvA) the inpar and temp_cmd dictionaries have a list with choices as the value, even if only a single choice is expected. This is because at the time of creating these objects, we cannot yet know whether we expect a single, or multiple choices.
+- (KvA) I've added some shorthands for cmdlinepars:
+  | parameter name in refparfile | full command line parameter name | shorthand command line parameter name |
+  |------------------------------|----------------------------------|---------------------------------------|
+  | source_directory             | --source_directory               | -sd                                   |
+  | default_parameter_filename   | --default_parameter_filename     | -dpf                                  |
+  | map_directory                | --map_directory                  | -md                                   |
+- (KvA) in spirit of the above, how about -v for verbose=2 (or whatever would be nice/common to use as verbose), -vv for verbose=4 (very verbose), and -nov for verbose=0 (making use of the 'no' prefix we want to include anyways)
+- (KvA) what if a parameter check fails? currently, all warnings have an exitbool=True, but is this always necessary/desired?
+- (KvA) currently, cmd line parser assumes a variable has either 1 assigned choice, or a variable amount.
+- (KvA) currently, code to create a RawPars instance for command line input is one big function, not the prettiest - needs tidying up? - maybe other functs, too?
+- (KvA) Clearly state/explain somewhere what the syntax (/ rules) for command line parameters is.
 
 
 ### ===============================
@@ -201,6 +214,7 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - Using cat. 1 pars, read all maps in extra_mapdir. Only complete maps are saved, cat.1 pars may influence?
   - includes interpreting map-specific pars from cmdline & inpar (but NOT defpar, maps have their own defpar) (what if, just as for program, users would like to use a separate defpar from what was supplied with the map?)
 
+
 ## questions from tsjerk
 (old ones, early '22?)
 These are to aid code development
@@ -212,6 +226,7 @@ These are to aid code development
   - code formatting/style
   - API
   - more!
+
 
 ## questions from kim
 (old ones, early '22?)
