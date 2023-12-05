@@ -79,7 +79,7 @@ def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
 
     # now, no info in the cmd line, only in files
     elif "source_directory" in in_pardict:
-        dirname = in_parfile / in_pardict["source_directory"][0]
+        dirname = in_parfile.parent / in_pardict["source_directory"][0]
         if "default_parameter_filename" in in_pardict:
             name = dirname / in_pardict["default_parameter_filename"][0]
         else:
