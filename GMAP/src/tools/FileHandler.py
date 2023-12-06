@@ -130,3 +130,16 @@ def try_file(fname):
         return fname.resolve()
     else:
         return None
+
+
+def check_file_readability(fname):
+    try:
+        with open(fname) as file:
+            for _ in file:
+                pass
+    except UnicodeDecodeError:
+        GM_PT.Warning(
+            f"\n The file {fname} is of the wrong type, please make sure "
+            "it is a plain text file. ",
+            True
+        )

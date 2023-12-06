@@ -59,6 +59,7 @@ def get_parameters(callcommand, FILES):
 
     if in_parfile:
         # step 4 (very basic inpar file parser)
+        GM_FH.check_file_readability(in_parfile)  # check if file is UTF8
         with open(in_parfile) as file:
             in_pardict = GM_PP.get_pardict(file)
         # step 5 (find which defpar to use)
@@ -75,10 +76,12 @@ def get_parameters(callcommand, FILES):
     # step 6 (find refparfile)
     ref_parfile = FILES.sourcedir_hc / FILES.refparfilename_hc
     # step 7 (parse refparfile)
+    GM_FH.check_file_readability(ref_parfile)  # check if file is UTF8
     ref_pars = GM_PP.RefPars(ref_parfile)
 
     # step 8 (parse defparfile)
     if def_parfile.suffix == ".txt":
+        GM_FH.check_file_readability(def_parfile)  # check if file is UTF8
         def_pars = GM_PP.RawPars.from_file(def_parfile, ref_pars, True)
     elif def_parfile == ref_parfile:
         def_pars = ref_pars
