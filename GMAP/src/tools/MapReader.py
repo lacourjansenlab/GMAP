@@ -25,7 +25,7 @@ def scan_mapdirs(mapdirs):
     all_maps = {}
     for direc in mapdirs:
         subdirs = [item for item in [*direc.iterdir()] if item.is_dir()]
-        lookfor = ("Frequency", "Coupling")
+        lookfor = ("Singles", "Pairs")
 
         for subdir in subdirs:
             if subdir.name in lookfor:
