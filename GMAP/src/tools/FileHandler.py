@@ -5,7 +5,7 @@ from pathlib import Path
 import datetime
 
 import GMAP
-import GMAP.src.tools.WarnSys as GM_WS
+import GMAP.src.tools.PrintTools as GM_PT
 
 
 class FileLocations:
@@ -34,11 +34,10 @@ def FindExOs():
         elif bits == 64:
             exec_os = "Win64bit"
         else:
-            GM_WS.Warning(
+            GM_PT.Warning(
                 "Environment was determined to be windows, but it is neither a"
-                "32, nor 64 bit version. It appears to be "
-                + str(bits) + " bit. Please contact the developers to "
-                "solve this.",
+                f" 32, nor 64 bit version. It appears to be {bits} bit. Please"
+                " contact the developers to solve this.",
                 True
             )
     elif sys.platform == "darwin":
@@ -46,10 +45,9 @@ def FindExOs():
     elif sys.platform == "linux":
         exec_os = "Linux"
     else:
-        GM_WS.Warning(
-            "executing OS not recognised... sys.platform ="
-            + str(sys.platform)
-            + ". Please contact the developers to solve this. ",
+        GM_PT.Warning(
+            f"executing OS not recognised... sys.platform = {sys.platform}. "
+            "Please contact the developers to solve this. ",
             True
         )
 
@@ -67,28 +65,28 @@ def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
     there or if it isn't a file, an error is raised, and the program quits.
     """
     file_is_hc = False
-    if "sourcedir" in cmd_pardict:
-        dirname = FILES.cwd / cmd_pardict["sourcedir"][0]
-        if "defparfilename" in cmd_pardict:
-            name = dirname / cmd_pardict["defparfilename"][0]
-        elif "defparfilename" in in_pardict:
-            name = dirname / in_pardict["defparfilename"][0]
+    if "source_directory" in cmd_pardict:
+        dirname = FILES.cwd / cmd_pardict["source_directory"][0]
+        if "default_parameter_filename" in cmd_pardict:
+            name = dirname / cmd_pardict["default_parameter_filename"][0]
+        elif "default_parameter_filename" in in_pardict:
+            name = dirname / in_pardict["default_parameter_filename"][0]
         else:
             name = dirname / FILES.refparfilename_hc
 
-    elif "defparfilename" in cmd_pardict:
-        name = FILES.cwd / cmd_pardict["defparfilename"][0]
+    elif "default_parameter_filename" in cmd_pardict:
+        name = FILES.cwd / cmd_pardict["default_parameter_filename"][0]
 
     # now, no info in the cmd line, only in files
-    elif "sourcedir" in in_pardict:
-        dirname = in_parfile / in_pardict["sourcedir"][0]
-        if "defparfilename" in in_pardict:
-            name = dirname / in_pardict["defparfilename"][0]
+    elif "source_directory" in in_pardict:
+        dirname = in_parfile.parent / in_pardict["source_directory"][0]
+        if "default_parameter_filename" in in_pardict:
+            name = dirname / in_pardict["default_parameter_filename"][0]
         else:
             name = dirname / FILES.refparfilename_hc
 
-    elif "defparfilename" in in_pardict:
-        name = in_parfile / in_pardict["defparfilename"][0]
+    elif "default_parameter_filename" in in_pardict:
+        name = in_parfile / in_pardict["default_parameter_filename"][0]
 
     # now, no info in input file either - grab default from installation
     else:
@@ -98,10 +96,9 @@ def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
     file_found = try_file(name)
 
     if not file_found:
-        GM_WS.Warning(
-            "\nThe requested default parameter file "
-            + str(name) +
-            " could not be found, or is not a file. "
+        GM_PT.Warning(
+            f"\nThe requested default parameter file {name} could not be "
+            "found, or is not a file. "
             "Please make sure you specified it correctly.\n",
             True
         )
@@ -114,10 +111,9 @@ def get_def_parfile(FILES, cmd_pardict, in_parfile=None, in_pardict={}):
         name = FILES.sourcedir_hc / FILES.refparfilename_hc
         check_file_found = try_file(name)
         if not check_file_found:
-            GM_WS.Warning(
+            GM_PT.Warning(
                 "\nThe requested default parameter file requires the presence "
-                "of the file " + str(name) +
-                " , but this file could not be found. "
+                f"of the file {name}, but this file could not be found. "
                 "Please make sure you specified it correctly.\n",
                 True
             )
@@ -134,3 +130,16 @@ def try_file(fname):
         return fname.resolve()
     else:
         return None
+
+
+def check_file_readability(fname):
+    try:
+        with open(fname) as file:
+            for _ in file:
+                pass
+    except UnicodeDecodeError:
+        GM_PT.Warning(
+            f"\n The file {fname} is of the wrong type, please make sure "
+            "it is a plain text file. ",
+            True
+        )

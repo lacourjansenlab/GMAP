@@ -1,4 +1,6 @@
 import sys
+import inspect
+import pathlib
 
 
 def Warning(message, exitbool=False):
@@ -29,3 +31,17 @@ def prettifier(str, deslen=79):
             endlst.append(item)
 
     return "\n".join(endlst)
+
+
+def devprint(*args, **kwargs):
+    cf = inspect.currentframe().f_back
+    lineno = cf.f_lineno
+    cf_i = inspect.getframeinfo(cf)
+    filename = pathlib.Path(cf_i.filename).name
+    funcname = cf_i.function
+    print(
+        f"(line {lineno:4d})",
+        *args,
+        f"(from {funcname} in {filename})",
+        **kwargs
+    )

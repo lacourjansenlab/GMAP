@@ -26,65 +26,136 @@ For more information, check the manual on N/A.
 import sys
 
 import GMAP.src.tools.FileHandler as GM_FH
+import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
-import GMAP.src.tools.WarnSys as GM_WS
+import GMAP.src.tools.PrintTools as GM_PT
+from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 def get_parameters(callcommand, FILES):
+    # very basic parsing of cmd
+
+    # step 1 (is GEM in demo mode?)
+    if callcommand[1] in ("demo"):
+        exp_inpfile = False
+    else:
+        exp_inpfile = True
+    # step 2 (very basic cmd line parse)
     job, in_parfile, argslist = GM_PP.parse_commandline(
-        FILES, callcommand, alljobs, "GMAP GEM"
+        FILES, callcommand, alljobs, "GMAP GEM", exp_inpfile, True
     )
 
-    cmd_pardict = GM_PP.get_pardict(argslist)
+    # before we can parse the command line, or the input parameter file,
+    # we have to know what parameter names to expect. However, to know
+    # this, we need to open the default parameter file, but we don't
+    # know where it is, before parsing command line and input parameter
+    # file.
+
+    # solution: only look for sourcedir and defparfilename in command
+    # line and input parameter file, do further parsing later.
+
+    # step 3 (See if the arg from cmdline have anything on srcdir or defpar)
+    temp_cmd_pardict = GM_PP.find_defparfile_in_cmd(argslist)
+
     if in_parfile:
+        # step 4 (very basic inpar file parser)
+        GM_FH.check_file_readability(in_parfile)  # check if file is UTF8
         with open(in_parfile) as file:
             in_pardict = GM_PP.get_pardict(file)
+        # step 5 (find which defpar to use)
         def_parfile = GM_FH.get_def_parfile(
-            FILES, cmd_pardict, in_parfile, in_pardict
+            FILES, temp_cmd_pardict, in_parfile, in_pardict
         )
     else:
-        def_parfile = GM_FH.get_def_parfile(FILES, cmd_pardict)
+        # step 5 (find which defpar to use)
+        def_parfile = GM_FH.get_def_parfile(FILES, temp_cmd_pardict)
 
-    # as get_def_parfile also checks for the presence of the hard-coded default
-    # parameter file (regardless of program flow), no need to do it again.
+    # as get_def_parfile also checks for the presence of the hard-coded
+    # default parameter file (regardless of program flow), no need to do
+    # it again.
+    # step 6 (find refparfile)
     ref_parfile = FILES.sourcedir_hc / FILES.refparfilename_hc
+    # step 7 (parse refparfile)
+    GM_FH.check_file_readability(ref_parfile)  # check if file is UTF8
     ref_pars = GM_PP.RefPars(ref_parfile)
 
+    # step 8 (parse defparfile)
     if def_parfile.suffix == ".txt":
+        GM_FH.check_file_readability(def_parfile)  # check if file is UTF8
         def_pars = GM_PP.RawPars.from_file(def_parfile, ref_pars, True)
     elif def_parfile == ref_parfile:
         def_pars = ref_pars
+        setattr(def_pars, "not_found", {})
     elif def_parfile.suffix == ".ref":
         def_pars = GM_PP.RefPars.add_reffile(def_parfile, ref_pars)
     else:
-        GM_WS.Warning(
-            "The requested default parameter file " + str(def_parfile) +
-            " is of the wrong file format. Please refer to the manual to see "
-            "what file types are supported."
+        GM_PT.Warning(
+            f"The requested default parameter file {def_parfile} is of the "
+            "wrong file format. "
+            "Please refer to the manual to see what file types are supported.",
+            True
         )
 
+    # step 9 (parse inparfile, not map part)
     if in_parfile:
         in_pars = GM_PP.RawPars.from_dict(
             in_parfile, in_pardict, ref_pars, False)
     else:
         in_pars = {}
 
-    run_pars = GM_PP.RunPars(FILES, ref_pars, def_pars, in_pars)
+    # step 10 (find mapdir in cmdline > inparfile > defparfile)
+    mapdirs = GM_PP.find_mapdir(argslist, FILES, in_pars, def_pars)
 
-    print(def_parfile)
-    print(ref_pars)
-    print(ref_pars.fname)
-    print(ref_pars.options)
-    print(ref_pars.choices)
-    print(type(ref_pars.fname))
-    print(def_pars)
-    print(in_pars)
-    print(run_pars)
+    # step 11 (for each map, parse parameters.ref, if present)
+    mapdict = GM_MR.scan_mapdirs(mapdirs)
+    for mapp in mapdict.values():
+        mapp.find_refpars()
+        dpr(mapp.RefPars.choices)
+
+    # step 12 (finish parsing cmdline, inparfile, defparfile)
+
+    # cmdline
+    cmd_pars = GM_PP.RawPars.from_cmdline(
+        argslist, ref_pars,
+        {name: mapp.RefPars for name, mapp in mapdict.items()},
+        False
+    )
+
+    # inparfile
+    if in_pars:
+        for name, mapp in mapdict.items():
+            in_pars.extract_choices_map(name, mapp.RefPars)
+        in_pars.finalize_map_pars()
+
+    # defparfile??
+
+    # --------
+    # TO DO
+    # --------
+
+    # step 3 (finish parsing defparfile??)
+    # step 4 (combine cmdline, inparfile, defparfile, refparfile into runpar)
+    #       take into account possible conflicts
+    #       Check whether requested files exist, (are of correct format?), etc.
+
+    run_pars = GM_PP.RunPars(FILES, cmd_pars, in_pars, def_pars, ref_pars)
+
+    GM_PT.devprint(def_parfile)
+    GM_PT.devprint(ref_pars)
+    GM_PT.devprint(ref_pars.fname)
+    GM_PT.devprint(ref_pars.options)
+    GM_PT.devprint(ref_pars.choices)
+    GM_PT.devprint(type(ref_pars.fname))
+    GM_PT.devprint(def_pars.choices)
+    GM_PT.devprint(def_pars.not_found)
+    GM_PT.devprint(in_pars.choices)
+    GM_PT.devprint(in_pars.not_found)
+    GM_PT.devprint(run_pars)
 
 
 def GEM(callcommand, FILES):
     get_parameters(callcommand, FILES)
-    print("entered main of GEM - yet to be constructed")
+    GM_PT.devprint("entered main of GEM - yet to be constructed")
 
 
 alljobs = [
