@@ -1,17 +1,19 @@
 
 import GMAP.src.tools.ParameterParser as GM_PP
 from GMAP.src.tools.PrintTools import devprint as dpr
+dpr("", end="")  # to disable error of dpr unused
 
 
 class Map():
     def __init__(self, mapdir):
         self.directory = mapdir
         self.name = mapdir.name
+        self.type = mapdir.parent.name
 
-    def find_refpars(self):
+    def find_refpars(self, Printer):
         refparfilename = self.directory / "parameters.ref"
         if refparfilename.is_file():
-            self.RefPars = GM_PP.RefPars(refparfilename)
+            self.RefPars = GM_PP.RefPars(Printer, refparfilename)
         else:
             self.RefPars = None
 

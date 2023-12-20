@@ -96,14 +96,31 @@ As of writing this, this is still a work-in-progress. A (rough) sketch. Will be 
 7. parse refparfile
 8. parse defparfile
 9. parse inparfile (at least, start it, we can only finish after having read the maps)
+10. find mapdir in cmdline > inparfile > defparfile > refparfile
+11. for each map, see if there is a parameters.ref. If so, parse it.
+12. now, knowing all refparfiles, finish parsing cmdline, inparfile
 
 to do (not yet implemented)
-1. find mapdir in cmdline > inparfile > defparfile > refparfile
-2. for each map, see if there is a parameters.ref. If so, parse it.
-3. now, knowing all refparfiles, finish parsing cmdline, inparfile, defparfile
-4. combine cmdline, inparfile, defparfile, refparfile (and maprefparfile) choices into runpar
+1. now, knowing all refparfiles, finish parsing defparfile (part of step 12)
+2. combine cmdline, inparfile, defparfile, refparfile choices into runpar
    1. Not just in order (fill in gaps with lower order) also take into account possible conflicts arising from this
    2. check whether requested files exist, are of correct format, etc.
+| cmd<br>dir | cmd<br>file | inp<br>dir | inp<br>file | def<br>dir | def<br>file | final file used               |
+|------------|-------------|------------|-------------|------------|-------------|-------------------------------|
+| Yes        | Yes         | Any        | Any         | Any        | Any         | cwd/cmd.dir/cmd.file          |
+| Yes        | No          | Any        | Yes         | Any        | Any         | cwd/cmd.dir/inpar.file        |
+| Yes        | No          | Any        | No          | Any        | Yes         | cwd/cmd.dir/defpar.file       |
+| Yes        | No          | Any        | No          | Any        | No          | cwd/cmd.dir/refpar.file       |
+| No         | Yes         | Any        | Any         | Any        | Any         | cwd/cmd.file                  |
+| No         | No          | Yes        | Yes         | Any        | Any         | inpar/inpar.dir/inpar.file    |
+| No         | No          | Yes        | No          | Any        | Yes         | inpar/inpar.dir/defpar.file   |
+| No         | No          | Yes        | No          | Any        | No          | inpar/inpar.dir/refpar.file   |
+| No         | No          | No         | Yes         | Any        | Any         | inpar/inpar.file              |
+| No         | No          | No         | No          | Yes        | Yes         | defpar/defpar.dir/defpar.file |
+| No         | No          | No         | No          | Yes        | No          | defpar/defpar.dir/refpar.file |
+| No         | No          | No         | No          | No         | Yes         | defpar/defpar.file            |
+| No         | No          | No         | No          | No         | No          | refpar/refpar.dir/refpar.file |
+3. step 2, but for maps
 
 # To discuss
 (discuss, then put in relevant section)
@@ -136,6 +153,14 @@ to do (not yet implemented)
 
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
+- (KvA) TO DO:
+  - In case of creating path-type parameters, at least check if their parent exists!
+  - let RunPar deal with verbose, and make Printer switch to running instead of startup
+  - When choosing filename to write to, what to do if filename already exists? Make this dependent on parameter?
+  - In line of the above, add bool type parameter support
+  - Why not complete, and also add string type parameter support
+  - let RunPar deal with all other pars (both base, and maps)
+  - After RunPar is complete, start test suite, capable of testing runpar, ready for testing all else, too.
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
@@ -156,6 +181,7 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) currently, cmd line parser assumes a variable has either 1 assigned choice, or a variable amount.
 - (KvA) currently, code to create a RawPars instance for command line input is one big function, not the prettiest - needs tidying up? - maybe other functs, too?
 - (KvA) Clearly state/explain somewhere what the syntax (/ rules) for command line parameters is.
+
 
 
 ### ===============================
