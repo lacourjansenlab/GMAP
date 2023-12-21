@@ -113,32 +113,38 @@ def get_parameters(callcommand, Files, Printer):
 
     # step 11 (for each map, parse parameters.ref, if present)
     mapdict = GM_MR.scan_mapdirs(mapdirs)
-    for mapp in mapdict.values():
-        mapp.find_refpars(Printer)
-        dpr(mapp.RefPars.choices)
+    for _map in mapdict.values():
+        _map.find_refpars(Printer)
+        dpr(_map.RefPars.choices)
 
     # step 12 (finish parsing cmdline, inparfile, defparfile)
 
     # cmdline
     CmdPars = GM_PP.RawPars.from_cmdline(
         Printer, argslist, RefPars,
-        {name: mapp.RefPars for name, mapp in mapdict.items()},
+        {name: _map.RefPars for name, _map in mapdict.items()},
         False
     )
 
     # inparfile
     if InPars:
-        for name, mapp in mapdict.items():
-            InPars.extract_choices_map(Printer, name, mapp.RefPars)
+        for name, _map in mapdict.items():
+            InPars.extract_choices_map(Printer, name, _map.RefPars)
         InPars.finalize_map_pars(Printer)
 
-    # defparfile??
+    # defparfile - _if_ it contains anything from a certain map, it must
+    # contain all from that map
+    if def_parfile != ref_parfile:
+        for name, _map in mapdict.items():
+            present = DefPars.extract_choices_map(Printer, name, _map.RefPars)
+            if present and DefPars.is_default:
+                DefPars.check_completeness(Printer, _map.RefPars)
+        DefPars.finalize_map_pars(Printer)
 
     # --------
     # TO DO
     # --------
 
-    # step 3 (finish parsing defparfile??)
     # step 4 (combine cmdline, inparfile, defparfile, base refparfile
     #         into runpar)
     #       take into account possible conflicts

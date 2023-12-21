@@ -154,11 +154,7 @@ to do (not yet implemented)
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
 - (KvA) TO DO:
-  - In case of creating path-type parameters, at least check if their parent exists!
-  - let RunPar deal with verbose, and make Printer switch to running instead of startup
   - When choosing filename to write to, what to do if filename already exists? Make this dependent on parameter?
-  - In line of the above, add bool type parameter support
-  - Why not complete, and also add string type parameter support
   - let RunPar deal with all other pars (both base, and maps)
   - After RunPar is complete, start test suite, capable of testing runpar, ready for testing all else, too.
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)

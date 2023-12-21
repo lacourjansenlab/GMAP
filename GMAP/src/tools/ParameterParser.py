@@ -52,6 +52,9 @@ class RefPars:
         # other-type parameters
         # -----
         self.intpars = []
+        self.floatpars = []
+        self.boolpars = []
+        self.strpars = []
 
         # -----
         # special parameter-type groups
@@ -120,31 +123,37 @@ class RefPars:
             self.not_expected_in_deffile.append(parname)
 
         # see if parameter might accept choice as list
+
         if partype[0] == "list":
             self.maybe_list.append(parname)
             del partype[0]
 
-        if partype[0] == "path":
-            self.allfilepars.append(parname)
-            if partype[1] == "dir":
-                self.organized_filepars_id[partype[2]] = parname
-                self.organized_filepars[parname] = []
-            elif partype[1] == "rel":
-                parent_dir = self.organized_filepars_id[partype[2]]
-                if partype[3] == "c":
-                    self.filepars_create.append(parname)
-                self.organized_filepars[parent_dir].append(parname)
-            elif partype[1] == "sep":
-                if partype[2] == "c":
-                    self.filepars_create.append(parname)
-            else:
-                raise KeyError
-
-        elif partype[0] == "int":
-            self.intpars.append(parname)
-
-        else:
-            raise TypeError
+        match partype[0]:
+            case "path":
+                self.allfilepars.append(parname)
+                if partype[1] == "dir":
+                    self.organized_filepars_id[partype[2]] = parname
+                    self.organized_filepars[parname] = []
+                elif partype[1] == "rel":
+                    parent_dir = self.organized_filepars_id[partype[2]]
+                    if partype[3] == "c":
+                        self.filepars_create.append(parname)
+                    self.organized_filepars[parent_dir].append(parname)
+                elif partype[1] == "sep":
+                    if partype[2] == "c":
+                        self.filepars_create.append(parname)
+                else:
+                    raise KeyError
+            case "int":
+                self.intpars.append(parname)
+            case "float":
+                self.floatpars.append(parname)
+            case "bool":
+                self.boolpars.append(parname)
+            case "str":
+                self.strpars.append(parname)
+            case _:
+                raise TypeError
 
     def parse_line_choice_protected(self, Printer, line, linelist):
         # self.parse_line_choice(linelist)
@@ -194,8 +203,26 @@ class RefPars:
             usetype = Path
         elif parname in self.intpars:
             usetype = int
+        elif parname in self.floatpars:
+            usetype = float
+        elif parname in self.boolpars:
+            usetype = bool
+        elif parname in self.strpars:
+            usetype = str
         else:
             raise TypeError
+
+        # bools need special care
+        trueicators = ("true", "t")
+        falseicators = ("false", "f")
+        if usetype == bool:
+            if any(
+                x.lower() not in trueicators and x.lower() not in falseicators
+                for x in options+choices
+            ):
+                raise TypeError
+            options = [1 if x.lower() in trueicators else 0 for x in options]
+            choices = [1 if x.lower() in trueicators else 0 for x in choices]
 
         options = [usetype(x) for x in options]
         choices = [usetype(x) for x in choices]
@@ -439,6 +466,9 @@ class RawPars:
                     "used.",
                     True
                 )
+            # This is a bool-type par - presence means 'True'
+            elif parname in refpars.boolpars:
+                choice.append("true")
             else:
                 Printer.warning(
                     f"No choice detected for the parameter {parname} "
@@ -446,7 +476,6 @@ class RawPars:
                     "Either remove the parameter line, or make a choice.",
                     True
                 )
-                return
 
         # if we expect a single choice, but multiple were given
         elif len(choice) > 1 and parname not in refpars.maybe_list:
@@ -474,6 +503,22 @@ class RawPars:
                 choice = [int(x) for x in choice]
             except Exception:
                 Printer.warning(errortext2, True)
+
+        elif parname in refpars.floatpars:
+            try:
+                choice = [float(x) for x in choice]
+            except Exception:
+                Printer.warning(errortext2, True)
+
+        elif parname in refpars.boolpars:
+            trueicators = ("true", "t")
+            falseicators = ("false", "f")
+            if any(
+                x.lower() not in trueicators and x.lower() not in falseicators
+                for x in choice
+            ):
+                Printer.warning(errortext1, True)
+            choice = [1 if x.lower() in trueicators else 0 for x in choice]
 
         if parname not in refpars.options:
             return choice
@@ -541,6 +586,9 @@ class RawPars:
         for parname in to_del:
             del self.not_found[parname]
 
+        if to_del:
+            return True
+
     def check_par_existence(
         self, Printer, parname_full, parname_refpars, refpars, choice,
         do_verify=True
@@ -580,6 +628,23 @@ class RawPars:
                 else:
                     self.choices[parname_full] = choice
 
+        # nobool format?
+        elif (
+            parname_refpars[:2].lower() == "no"
+            and parname_refpars[2:] in refpars.boolpars
+        ):
+            if not choice:
+                newchoice = ["false"]
+            else:
+                trueicators = ("true", "t")
+                newchoice = [
+                    "false" if x.lower() in trueicators else "true"
+                    for x in choice
+                ]
+                choice, found = self.check_par_existence(
+                    Printer, parname_full, parname_refpars, refpars, newchoice
+                )
+
         return choice, found
 
     def check_completeness(self, Printer, refpars):
@@ -607,15 +672,40 @@ class RunPars:
     def __init__(self, Files, Printer, CmdPars, InPars, DefPars, RefPars):
 
         # Extract all 'normal' parameters
-        self.get_pars(Files, Printer, CmdPars, InPars, DefPars, RefPars)
+        self.get_pars(Printer, CmdPars, InPars, DefPars, RefPars)
 
         # Extract all parameters that are a file
         self.get_files(Files, Printer, CmdPars, InPars, DefPars, RefPars)
 
-        # Extract all remaining choices
+        Printer.set_state(
+            "running", self.verbose[0], self.verbose_logfile[0],
+            self.log_filename
+        )
 
         # Resolve conflicts due to choices, change any settings that need to
         # be changed, due to parameters
+
+    def get_pars(self, Printer, CmdPars, InPars, DefPars, RefPars):
+        # This should be all parameters except path-type ones
+        allpars = (
+            RefPars.intpars + RefPars.floatpars + RefPars.boolpars
+            + RefPars.strpars
+        )
+        sources = [CmdPars, InPars, DefPars, RefPars]
+        for parname in allpars:
+            choice = None
+            for source in sources[::-1]:
+                if parname in source.choices:
+                    choice = source.choices[parname]
+            if choice is None:
+                Printer.warning(
+                    f"No choice for the parameter {parname} could be found. "
+                    "Please specify a choice on either the command line, or "
+                    "in the input file. ",
+                    True
+                )
+
+            setattr(self, parname, choice)
 
     def get_files(self, Files, Printer, CmdPars, InPars, DefPars, RefPars):
         # deal with all files that are organized
@@ -678,6 +768,9 @@ class RunPars:
                     file_found = GM_FH.try_file(name)
                 else:
                     file_found = name.resolve()
+                    par_dir = name.parent
+                    if not par_dir.is_dir():
+                        file_found = None
 
                 if not file_found:
                     Printer.warning(
@@ -689,9 +782,6 @@ class RunPars:
                     )
 
                 setattr(self, file_parname, file_found)
-
-    def get_pars(self, Files, Printer, CmdPars, InPars, DefPars, RefPars):
-        pass
 
 
 def parse_commandline(
