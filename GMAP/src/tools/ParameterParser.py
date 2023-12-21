@@ -754,6 +754,22 @@ def find_mapdir(argslist, FILES, in_pars, def_pars):
 
 
 def directory_list_checker(parent, direclist, parname, source):
+    """This function does something.
+
+    Parameters
+    ----------
+    var1 : array_like
+        This is a type.
+    var2 : int
+        This is another var.
+    Long_variable_name : {'hi', 'ho'}, optional
+        Choices in brackets, default first when optional.
+
+    Returns
+    -------
+    describe : type
+        Explanation
+    """
     dirs = [parent / direc for direc in direclist]
     failed = [str(direc.resolve()) for direc in dirs if not direc.is_dir()]
     if len(failed) > 0:
