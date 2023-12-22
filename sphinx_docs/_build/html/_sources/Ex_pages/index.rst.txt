@@ -1,0 +1,10 @@
+===========
+Extra pages
+===========
+
+This could become a hub for human-written pages, perhaps a manual, or
+other explanations?
+
+.. toctree::
+
+    text

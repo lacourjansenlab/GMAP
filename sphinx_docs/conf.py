@@ -30,3 +30,6 @@ sys.path.append(str(Path(__file__).parent.parent.resolve()))
 # html_theme = 'alabaster'
 html_theme = 'pydata_sphinx_theme'
 html_static_path = ['_static']
+
+# -- Other options -----------------------------------------------------------
+numpydoc_class_members_toctree = False

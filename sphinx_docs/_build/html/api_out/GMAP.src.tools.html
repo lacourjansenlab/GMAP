@@ -134,6 +134,12 @@
   </p>
   <ul class="bd-navbar-elements navbar-nav">
     
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
+                        Adding a new map
+                      </a>
+                    </li>
+                
   </ul>
 </nav></div>
       
@@ -219,6 +225,12 @@ document.write(`
   </p>
   <ul class="bd-navbar-elements navbar-nav">
     
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
+                        Adding a new map
+                      </a>
+                    </li>
+                
   </ul>
 </nav></div>
         
@@ -251,11 +263,25 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="GMAP.src.html">GMAP.src package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="GMAP.src.programs.html">GMAP.src.programs package</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">GMAP.src.tools package</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="GMAP.src.programs.html">GMAP.src.programs package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.programs.AIM.html">GMAP.src.programs.AIM module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.programs.GEM.html">GMAP.src.programs.GEM module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="GMAP.tests.html">GMAP.tests package</a></li>
+<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">GMAP.src.tools package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.FileHandler.html">GMAP.src.tools.FileHandler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.MapReader.html">GMAP.src.tools.MapReader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html">GMAP.src.tools.MathFunctions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html">GMAP.src.tools.ParameterParser module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.PrintTools.html">GMAP.src.tools.PrintTools module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="GMAP.tests.html">GMAP.tests package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.tests.test_MathFunctions.html">GMAP.tests.test_MathFunctions module</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </nav></div>
@@ -314,419 +340,73 @@ document.write(`
 <h1>GMAP.src.tools package<a class="headerlink" href="#gmap-src-tools-package" title="Link to this heading">#</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
-</section>
-<section id="module-GMAP.src.tools.FileHandler">
-<span id="gmap-src-tools-filehandler-module"></span><h2>GMAP.src.tools.FileHandler module<a class="headerlink" href="#module-GMAP.src.tools.FileHandler" title="Link to this heading">#</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.FileLocations">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">FileLocations</span></span><a class="headerlink" href="#GMAP.src.tools.FileHandler.FileLocations" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.FindExOs">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">FindExOs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.FindExOs" title="Link to this definition">#</a></dt>
-<dd><p>Determines with os the system is running on.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.check_file_readability">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">check_file_readability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.check_file_readability" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.get_def_parfile">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">get_def_parfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FILES</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_parfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pardict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.get_def_parfile" title="Link to this definition">#</a></dt>
-<dd><p>Given the parameter information on the command line, a new FILES instance,
-and, optionally, an input parameters file and its contents, finds out
-the location of the default parameters file.</p>
-<p>If the user specified anything (either the sourcedir or the name of the
-default parameter file), the program checks that. If nothing is present
-there or if it isn’t a file, an error is raised, and the program quits.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.try_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">try_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.try_file" title="Link to this definition">#</a></dt>
-<dd><p>Checks if the given location is a file. If so,
-returns pathlib.Path.resolve(location), otherwise, returns None.</p>
-</dd></dl>
-
-</section>
-<section id="module-GMAP.src.tools.MapReader">
-<span id="gmap-src-tools-mapreader-module"></span><h2>GMAP.src.tools.MapReader module<a class="headerlink" href="#module-GMAP.src.tools.MapReader" title="Link to this heading">#</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Map">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MapReader.</span></span><span class="sig-name descname"><span class="pre">Map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapdir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Map" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Contains all information regarding a single map</p>
-<p>In this context, a map is as defined in the computational spectroscopy
-community - a way of estimating the properties of a functional group. It
-is not a python object.</p>
-<dl class="field-list">
-<dt class="field-odd">Attributes<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>directory</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The directory where the files defining this map can be found.</p>
-</dd>
-<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>The name of this map. Often indicates the functional group modelled.</p>
-</dd>
-<dt><strong>RefPars</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a></span></dt><dd><p>The parameters defined and used by this map. Does not contain
-parameters used by this map, but defined elsewhere.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Methods</p>
-<table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>find_refpars</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Map.find_refpars">
-<span class="sig-name descname"><span class="pre">find_refpars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Map.find_refpars" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.MapReader.scan_mapdirs">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MapReader.</span></span><span class="sig-name descname"><span class="pre">scan_mapdirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapdirs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.scan_mapdirs" title="Link to this definition">#</a></dt>
-<dd><p>gives a list of newly-generated Map objects</p>
-<p>Given a list of paths (each representing a map directory), create a Map
-object for each map found, which will be filled later.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>mapdirs</strong><span class="classifier">list of pathlib.Path</span></dt><dd><p>A list of directories which should be scanned for maps. This object
-is created by <a class="reference internal" href="#GMAP.src.tools.ParameterParser.find_mapdir" title="GMAP.src.tools.ParameterParser.find_mapdir"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_mapdir()</span></code></a>.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl>
-<dt><strong>all_maps</strong><span class="classifier">list of <a class="reference internal" href="#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd></dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-GMAP.src.tools.MathFunctions">
-<span id="gmap-src-tools-mathfunctions-module"></span><h2>GMAP.src.tools.MathFunctions module<a class="headerlink" href="#module-GMAP.src.tools.MathFunctions" title="Link to this heading">#</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.crossprod">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">crossprod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vect2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.crossprod" title="Link to this definition">#</a></dt>
-<dd><p>Calculates the cross product between two vectors of size 3. This is
-faster than the dedicated np method, as there are no checks for the
-correctness of the provided vectors.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.dotprod">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">dotprod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vect2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.dotprod" title="Link to this definition">#</a></dt>
-<dd><p>Calculates the dot product between two vectors of size 3. This is faster
-than the dedicated np method, as there are no checks for the correctness
-of the provided vectors.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.project">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vect2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.project" title="Link to this definition">#</a></dt>
-<dd><p>Calculates the part of vector vect2 that is orthogonal to the vector vect1
-(i.e. it subtracts from vect2 the part that is along vect1, and returns the
-result).
-Be aware that because of how numba works, both vect1 and vect2 should have
-float32 as the dtype.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.vec3_len">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">vec3_len</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.vec3_len" title="Link to this definition">#</a></dt>
-<dd><p>Calculates the norm (length) of a vector of size 3. This is faster than the
-dedicated np method, as there are no checks for the correctness of the
-provided vectors.</p>
-</dd></dl>
-
-</section>
-<section id="module-GMAP.src.tools.ParameterParser">
-<span id="gmap-src-tools-parameterparser-module"></span><h2>GMAP.src.tools.ParameterParser module<a class="headerlink" href="#module-GMAP.src.tools.ParameterParser" title="Link to this heading">#</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">RawPars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p class="rubric">Methods</p>
-<table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>check_completeness</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>check_par_existence</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>extract_choices</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>extract_choices_map</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>finalize_map_pars</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>from_cmdline</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>from_dict</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>from_file</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>verify_choice</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.check_completeness">
-<span class="sig-name descname"><span class="pre">check_completeness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.check_completeness" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.check_par_existence">
-<span class="sig-name descname"><span class="pre">check_par_existence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parname_full</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname_refpars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_verify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.check_par_existence" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.extract_choices">
-<span class="sig-name descname"><span class="pre">extract_choices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">given_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.extract_choices_map">
-<span class="sig-name descname"><span class="pre">extract_choices_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maprefpars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars">
-<span class="sig-name descname"><span class="pre">finalize_map_pars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.from_cmdline">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_cmdline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmdargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maprefpars_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.from_cmdline" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.from_dict">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">given_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.from_dict" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.from_file">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.from_file" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.verify_choice">
-<span class="sig-name descname"><span class="pre">verify_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.verify_choice" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">RefPars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p class="rubric">Methods</p>
-<table class="autosummary longtable table autosummary">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars.add_reffile" title="GMAP.src.tools.ParameterParser.RefPars.add_reffile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_reffile</span></code></a>(fname, base_refpars)</p></td>
-<td><p>When the default parameter file given by the user is of .ref format instead of .txt, it ends up here. How are .ref files treated different?  - most importantly: format! A .ref file is formatted differently from    a .txt. - While a .txt only stores the choice for each parameter, the .ref    also stores the allowed options. This would allow users to impose    stricter limits. Is this actually useful???.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars.parse_refparfile" title="GMAP.src.tools.ParameterParser.RefPars.parse_refparfile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_refparfile</span></code></a>(func)</p></td>
-<td><p>Loops through lines of given file.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>add_groups</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>parse_key</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>parse_line_choice</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>parse_line_choice_protected</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>parse_line_type</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>parse_line_type_protected</strong></p></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars.add_groups">
-<span class="sig-name descname"><span class="pre">add_groups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars.add_groups" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars.add_reffile">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_reffile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_refpars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars.add_reffile" title="Link to this definition">#</a></dt>
-<dd><p>When the default parameter file given by the user is of .ref format
-instead of .txt, it ends up here. How are .ref files treated different?</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>most importantly: format! A .ref file is formatted differently from
-a .txt.</p></li>
-<li><p>While a .txt only stores the choice for each parameter, the .ref
-also stores the allowed options. This would allow users to impose
-stricter limits. Is this actually useful???</p></li>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="GMAP.src.tools.FileHandler.html">GMAP.src.tools.FileHandler module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations"><code class="docutils literal notranslate"><span class="pre">FileLocations</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FindExOs"><code class="docutils literal notranslate"><span class="pre">FindExOs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.check_file_readability"><code class="docutils literal notranslate"><span class="pre">check_file_readability()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.get_def_parfile"><code class="docutils literal notranslate"><span class="pre">get_def_parfile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.try_file"><code class="docutils literal notranslate"><span class="pre">try_file()</span></code></a></li>
 </ul>
-</div></blockquote>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars.parse_key">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars.parse_key" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars.parse_line_choice">
-<span class="sig-name descname"><span class="pre">parse_line_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_choice" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars.parse_line_choice_protected">
-<span class="sig-name descname"><span class="pre">parse_line_choice_protected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_choice_protected" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars.parse_line_type">
-<span class="sig-name descname"><span class="pre">parse_line_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_type" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars.parse_line_type_protected">
-<span class="sig-name descname"><span class="pre">parse_line_type_protected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_type_protected" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars.parse_refparfile">
-<span class="sig-name descname"><span class="pre">parse_refparfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars.parse_refparfile" title="Link to this definition">#</a></dt>
-<dd><p>Loops through lines of given file. Each line is stripped of comments,
-and empty lines are ignored. For each remaining line, the function
-func is called.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RunPars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">RunPars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FILES</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RunPars" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.cleanline">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">cleanline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">escape_char</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.cleanline" title="Link to this definition">#</a></dt>
-<dd><p>Removes any escape character and text following it (i.e., get rid of
-comments).
-Default escape character is ‘#’</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.directory_list_checker">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">directory_list_checker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direclist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.directory_list_checker" title="Link to this definition">#</a></dt>
-<dd><p>This function does something.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>var1</strong><span class="classifier">array_like</span></dt><dd><p>This is a type.</p>
-</dd>
-<dt><strong>var2</strong><span class="classifier">int</span></dt><dd><p>This is another var.</p>
-</dd>
-<dt><strong>Long_variable_name</strong><span class="classifier">{‘hi’, ‘ho’}, optional</span></dt><dd><p>Choices in brackets, default first when optional.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><strong>describe</strong><span class="classifier">type</span></dt><dd><p>Explanation</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.find_defparfile_in_cmd">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">find_defparfile_in_cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argslist</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.find_defparfile_in_cmd" title="Link to this definition">#</a></dt>
-<dd><p>Given an argslist (the part of sys.argv that should/could contain
-arguments), see if there is anything hinting at a default parameter
-file there.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.find_mapdir">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">find_mapdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argslist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">FILES</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.find_mapdir" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.find_par_in_cmd">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">find_par_in_cmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argslist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.find_par_in_cmd" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.get_pardict">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">get_pardict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.get_pardict" title="Link to this definition">#</a></dt>
-<dd><p>Takes an iterable, and returns it as dict form.
-Each iteration of the iterable is subjected to .split(); the zeroeth item
-becomes the key, the list of the remaining items (or empty list) becomes
-the value.
-All keys and items in value lists are strings - the contents are NOT
-interpreted, and converted to correct datatypes.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.parse_commandline">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">parse_commandline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FILES</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alljobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">helpcall</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expect_inputfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expect_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.parse_commandline" title="Link to this definition">#</a></dt>
-<dd><p>Parses a command stored in a list, to return and check different
-parts. Expects the following items:
-[0] should contain the name of the tool used. eg. GEM, AIM.
-[1] should contain the requested job from the tool. eg. run, demo.
-(if expect_inputfile == True) the filename of the input file to use
-(if expect_parameters == True) the further parameters to use. Optional</p>
-<p>Parameters specified on the command line must have the parameter name
-preceded with ‘-‘.</p>
-</dd></dl>
-
-</section>
-<section id="module-GMAP.src.tools.PrintTools">
-<span id="gmap-src-tools-printtools-module"></span><h2>GMAP.src.tools.PrintTools module<a class="headerlink" href="#module-GMAP.src.tools.PrintTools" title="Link to this heading">#</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Warning">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">Warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exitbool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Warning" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.devprint">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">devprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.devprint" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.prettifier">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">prettifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deslen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">79</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.prettifier" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GMAP.src.tools.MapReader.html">GMAP.src.tools.MapReader module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map.find_refpars"><code class="docutils literal notranslate"><span class="pre">Map.find_refpars()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.scan_mapdirs"><code class="docutils literal notranslate"><span class="pre">scan_mapdirs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html">GMAP.src.tools.MathFunctions module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html#GMAP.src.tools.MathFunctions.crossprod"><code class="docutils literal notranslate"><span class="pre">crossprod()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html#GMAP.src.tools.MathFunctions.dotprod"><code class="docutils literal notranslate"><span class="pre">dotprod()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html#GMAP.src.tools.MathFunctions.project"><code class="docutils literal notranslate"><span class="pre">project()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html#GMAP.src.tools.MathFunctions.vec3_len"><code class="docutils literal notranslate"><span class="pre">vec3_len()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html">GMAP.src.tools.ParameterParser module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars"><code class="docutils literal notranslate"><span class="pre">RawPars</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.check_completeness"><code class="docutils literal notranslate"><span class="pre">RawPars.check_completeness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.check_par_existence"><code class="docutils literal notranslate"><span class="pre">RawPars.check_par_existence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.extract_choices"><code class="docutils literal notranslate"><span class="pre">RawPars.extract_choices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map"><code class="docutils literal notranslate"><span class="pre">RawPars.extract_choices_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars"><code class="docutils literal notranslate"><span class="pre">RawPars.finalize_map_pars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.from_cmdline"><code class="docutils literal notranslate"><span class="pre">RawPars.from_cmdline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.from_dict"><code class="docutils literal notranslate"><span class="pre">RawPars.from_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.from_file"><code class="docutils literal notranslate"><span class="pre">RawPars.from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.verify_choice"><code class="docutils literal notranslate"><span class="pre">RawPars.verify_choice()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars"><code class="docutils literal notranslate"><span class="pre">RefPars</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars.add_groups"><code class="docutils literal notranslate"><span class="pre">RefPars.add_groups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars.add_reffile"><code class="docutils literal notranslate"><span class="pre">RefPars.add_reffile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars.parse_key"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars.parse_line_choice"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_line_choice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars.parse_line_choice_protected"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_line_choice_protected()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars.parse_line_type"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_line_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars.parse_line_type_protected"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_line_type_protected()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars.parse_refparfile"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_refparfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars"><code class="docutils literal notranslate"><span class="pre">RunPars</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.cleanline"><code class="docutils literal notranslate"><span class="pre">cleanline()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.directory_list_checker"><code class="docutils literal notranslate"><span class="pre">directory_list_checker()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.find_defparfile_in_cmd"><code class="docutils literal notranslate"><span class="pre">find_defparfile_in_cmd()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.find_mapdir"><code class="docutils literal notranslate"><span class="pre">find_mapdir()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.find_par_in_cmd"><code class="docutils literal notranslate"><span class="pre">find_par_in_cmd()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.get_pardict"><code class="docutils literal notranslate"><span class="pre">get_pardict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.parse_commandline"><code class="docutils literal notranslate"><span class="pre">parse_commandline()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="GMAP.src.tools.PrintTools.html">GMAP.src.tools.PrintTools module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Warning"><code class="docutils literal notranslate"><span class="pre">Warning()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.devprint"><code class="docutils literal notranslate"><span class="pre">devprint()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.prettifier"><code class="docutils literal notranslate"><span class="pre">prettifier()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 <section id="module-GMAP.src.tools">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-GMAP.src.tools" title="Link to this heading">#</a></h2>
@@ -760,69 +440,6 @@ preceded with ‘-‘.</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-GMAP.src.tools.FileHandler">GMAP.src.tools.FileHandler module</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.FileLocations"><code class="docutils literal notranslate"><span class="pre">FileLocations</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.FindExOs"><code class="docutils literal notranslate"><span class="pre">FindExOs()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.check_file_readability"><code class="docutils literal notranslate"><span class="pre">check_file_readability()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.get_def_parfile"><code class="docutils literal notranslate"><span class="pre">get_def_parfile()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.try_file"><code class="docutils literal notranslate"><span class="pre">try_file()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-GMAP.src.tools.MapReader">GMAP.src.tools.MapReader module</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Map"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Map.find_refpars"><code class="docutils literal notranslate"><span class="pre">Map.find_refpars()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.scan_mapdirs"><code class="docutils literal notranslate"><span class="pre">scan_mapdirs()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-GMAP.src.tools.MathFunctions">GMAP.src.tools.MathFunctions module</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.crossprod"><code class="docutils literal notranslate"><span class="pre">crossprod()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.dotprod"><code class="docutils literal notranslate"><span class="pre">dotprod()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.project"><code class="docutils literal notranslate"><span class="pre">project()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.vec3_len"><code class="docutils literal notranslate"><span class="pre">vec3_len()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-GMAP.src.tools.ParameterParser">GMAP.src.tools.ParameterParser module</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars"><code class="docutils literal notranslate"><span class="pre">RawPars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.check_completeness"><code class="docutils literal notranslate"><span class="pre">RawPars.check_completeness()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.check_par_existence"><code class="docutils literal notranslate"><span class="pre">RawPars.check_par_existence()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices"><code class="docutils literal notranslate"><span class="pre">RawPars.extract_choices()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map"><code class="docutils literal notranslate"><span class="pre">RawPars.extract_choices_map()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars"><code class="docutils literal notranslate"><span class="pre">RawPars.finalize_map_pars()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.from_cmdline"><code class="docutils literal notranslate"><span class="pre">RawPars.from_cmdline()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.from_dict"><code class="docutils literal notranslate"><span class="pre">RawPars.from_dict()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.from_file"><code class="docutils literal notranslate"><span class="pre">RawPars.from_file()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.verify_choice"><code class="docutils literal notranslate"><span class="pre">RawPars.verify_choice()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RefPars"><code class="docutils literal notranslate"><span class="pre">RefPars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RefPars.add_groups"><code class="docutils literal notranslate"><span class="pre">RefPars.add_groups()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RefPars.add_reffile"><code class="docutils literal notranslate"><span class="pre">RefPars.add_reffile()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RefPars.parse_key"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_key()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_choice"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_line_choice()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_choice_protected"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_line_choice_protected()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_type"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_line_type()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_type_protected"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_line_type_protected()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RefPars.parse_refparfile"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_refparfile()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RunPars"><code class="docutils literal notranslate"><span class="pre">RunPars</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.cleanline"><code class="docutils literal notranslate"><span class="pre">cleanline()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.directory_list_checker"><code class="docutils literal notranslate"><span class="pre">directory_list_checker()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.find_defparfile_in_cmd"><code class="docutils literal notranslate"><span class="pre">find_defparfile_in_cmd()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.find_mapdir"><code class="docutils literal notranslate"><span class="pre">find_mapdir()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.find_par_in_cmd"><code class="docutils literal notranslate"><span class="pre">find_par_in_cmd()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.get_pardict"><code class="docutils literal notranslate"><span class="pre">get_pardict()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.parse_commandline"><code class="docutils literal notranslate"><span class="pre">parse_commandline()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-GMAP.src.tools.PrintTools">GMAP.src.tools.PrintTools module</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Warning"><code class="docutils literal notranslate"><span class="pre">Warning()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.devprint"><code class="docutils literal notranslate"><span class="pre">devprint()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.prettifier"><code class="docutils literal notranslate"><span class="pre">prettifier()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-GMAP.src.tools">Module contents</a></li>
 </ul>
   </nav></div>

@@ -13,6 +13,16 @@ Welcome to GMAP's documentation!
 
     api_out/**.rst
 
+Adding a new map
+================
+
+.. toctree::
+    :maxdepth: 4
+    :caption: Adding a new map:
+
+    Adding_a_new_map/index
+
+
 Indices and tables
 ==================
 

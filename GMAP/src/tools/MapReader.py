@@ -5,11 +5,21 @@ dpr("", end="")
 
 
 class Map():
-    """Contains all information regarding a single map
+    """Contains all information regarding a single map.
 
     In this context, a map is as defined in the computational spectroscopy
     community - a way of estimating the properties of a functional group. It
     is not a python object.
+
+    .. note ::
+        Users of the program are probably looking for the
+        :ref:`adding a new map<UserGuide_page_adding_map>` page.
+
+    Parameters
+    ----------
+    mapdir : pathlib.Path
+        The absolute path to the directory on the users system that
+        contains the files for this specific map
 
     Attributes
     ----------
@@ -21,6 +31,12 @@ class Map():
         The parameters defined and used by this map. Does not contain
         parameters used by this map, but defined elsewhere.
 
+    Notes
+    -----
+
+    .. seealso ::
+        :class:`~GMAP.src.tools.ParameterParser.RefPars`
+
     """
 
     def __init__(self, mapdir):
@@ -28,6 +44,18 @@ class Map():
         self.name = mapdir.name
 
     def find_refpars(self):
+        """Creates a RefPars object for the map-specific parameters
+
+        A map is not required to have any specific parameters. But if it
+        has them, they are supposed to be in a reference parameter file
+        of the same format as the one of GEM itself.
+
+        Looks inside `self.directory` for a file of the name `parameters.ref`,
+        If found, the resulting
+        :class:`~GMAP.src.tools.ParameterParser.RefPars` object is stored as
+        the `self.RefPars` attribute.
+
+        """
         refparfilename = self.directory / "parameters.ref"
         if refparfilename.is_file():
             self.RefPars = GM_PP.RefPars(refparfilename)

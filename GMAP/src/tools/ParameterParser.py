@@ -6,6 +6,84 @@ from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class RefPars:
+    """Deals with reference parameters
+
+    To allow for easier use of the program, users are not required to specify
+    a choice for
+    each separate parameter. However, the program needs a default choice for
+    each parameter. Instead of hard-coding these choices (or parameters in
+    general), they are specified in a file. The reference file not only
+    contains default choices, but also defines what the expected datatype
+    for each choice is.
+
+    Each map (see :ref:`adding a new map<UserGuide_page_adding_map>`) can
+    also have it's own selection of parameters, stored in its own parameter
+    file. See :ref:`parameters.ref<UserGuide_page_map_parameters>` for
+    an explanation of the expected format.
+
+    .. note ::
+        Users of the program are probably looking for the
+        :ref:`parameters.ref<UserGuide_page_map_parameters>` page.
+
+    Parameters
+    ----------
+    fname : pathlib.Path
+        The absolute path to the file that contains all desired parameters
+
+    See Also
+    --------
+    RawPars
+        The class containing parameter choices from other sources
+    RunPars
+        The class containing the final parameter choices after combining all
+        input sources.
+
+    Attributes
+    ----------
+    fname : pathlib.Path
+        The absolute path to the file that contains all desired parameters
+    options : dict
+        Some parameters don't allow free choice, but instead require you
+        to pick from a certain list. `options` contains that list. Its
+        keys are the parameter names, the values are the choices available
+        for that specific parameter.
+    choices : dict
+        Each parameter requires a choice. Default choices are stored in here.
+        The keys are the parameter names, the values are the default choice(s)
+        for each parameter. Note that for some parameters, it doesn't make
+        sense for there to be a default choice, these are excluded from this
+        dict, and can be found in the attribute `not_expected_in_deffile`.
+    shorthands : dict
+        Some parameters have very long names, which makes them annoying to
+        specify on the command line. In the reffile a shorthand version of
+        their name can be supplied, which the user can use instead. This dict
+        stores the given shorthands as keys, the corresponding parameters they
+        belong to are stored as values.
+    organized_filepars : dict
+        Some file paths are expected relative to their corresponding directory
+        (although this behaviour can always be omitted by using absolute
+        paths for the files). This dict stores for each directory-specifying
+        parameter (keys) which file-specifying paramters are expected relative
+        to it (values)
+    organized_filepars_id : dict
+        The behaviour described under the attribute `organized_filepars` is
+        made possible by supplying each directory (and its files) an
+        identifying shorthand. This dict stores the ids as keys, and their
+        respective directory-specifying parameter as values.
+    allfilepars : list of str
+        contains all parameters of type path.
+    intpars : list of str
+        contains all parameters of type int.
+    not_expected_in_deffile : list of str
+        A list of parameters which are not expected (and allowed) to define a
+        choice in reference (or default) parameter files.
+    maybe_list : list of str
+        Some parameters allow more than one choice to be given. All these
+        parameters are stored in this list, but must also be stored depending
+        on the expected type of the items in the list.
+
+    """
+
     def __init__(self, fname):
         self.fname = fname
         self.add_groups()
@@ -16,13 +94,13 @@ class RefPars:
     @classmethod
     def add_reffile(cls, fname, base_refpars):
         """
-        When the default parameter file given by the user is of .ref format
+        When the default parameter file given by the user is of .ref format\
         instead of .txt, it ends up here. How are .ref files treated different?
-         - most importantly: format! A .ref file is formatted differently from
-           a .txt.
-         - While a .txt only stores the choice for each parameter, the .ref
-           also stores the allowed options. This would allow users to impose
-           stricter limits. Is this actually useful???
+            - most importantly: format! A .ref file is formatted differently
+              from a .txt.
+            - While a .txt only stores the choice for each parameter, the .ref
+              also stores the allowed options. This would allow users to impose
+              stricter limits. Is this actually useful???
         """
         GM_PT.Warning(
             "Not implemented yet!",
@@ -30,6 +108,13 @@ class RefPars:
         )
 
     def add_groups(self):
+        """ Initializes all attributes collecting parameter names
+
+        This method is called by self.__init__. For explanation/list of the
+        generated attributes, see :class:`RefPars`
+
+        """
+
         self.options = {}  # key = parname, val = possible options
         self.choices = {}  # key = parname, val = actual choice
         self.shorthands = {}  # key = shorthand, val = actual parname
@@ -58,11 +143,19 @@ class RefPars:
         self.maybe_list = []
 
     def parse_refparfile(self, func):
-        """
+        """ Apply provided function on each line of the file
+
         Loops through lines of given file. Each line is stripped of comments,
         and empty lines are ignored. For each remaining line, the function
         func is called.
+
+        Parameters
+        ----------
+        func : function or method
+            The function that is applied on each line of the file (after
+            cleaning that line)
         """
+
         with open(self.fname) as file:
             for line in file:
                 line = cleanline(line).strip()  # remove all comments
@@ -83,6 +176,20 @@ class RefPars:
                 func(line, linelist)
 
     def parse_line_type_protected(self, line, linelist):
+        """Wrapper for parse_line_type
+
+        Also triggers any errors stopping the program when needed.
+
+        Parameters
+        ----------
+        line : str
+            The line of text that must be parsed - just here for printing
+            purposes.
+        linelist : list of str
+            same contents as line, but processed and split into a format
+            usable for :meth:`parse_line_type`.
+        """
+
         try:
             self.parse_line_type(linelist)
         except (TypeError, KeyError):
@@ -105,6 +212,20 @@ class RefPars:
             )
 
     def parse_line_type(self, linelist):
+        """Extracts the type of the parameter specified on the given line
+
+        By analyzing the type-code specified in the parameter.ref file,
+        figures out what type is expected, and adds the (also extracted)
+        parameter name to the correct list/dict attributes of this class
+        for later use.
+
+        Parameters
+        ----------
+        linelist : list of str
+            The contents of a single line in the parameters.ref file, but
+            processed and split into a usable format.
+        """
+
         parname_raw = linelist[0]
         parchoice_raw = linelist[1:]
 
@@ -138,6 +259,20 @@ class RefPars:
             raise TypeError
 
     def parse_line_choice_protected(self, line, linelist):
+        """Wrapper for parse_line_choice
+
+        Also triggers any errors stopping the program when needed.
+
+        Parameters
+        ----------
+        line : str
+            The line of text that must be parsed - just here for printing
+            purposes.
+        linelist : list of str
+            same contents as line, but processed and split into a format
+            usable for :meth:`parse_line_choice`.
+        """
+
         # self.parse_line_choice(linelist)
         try:
             self.parse_line_choice(linelist)
@@ -161,6 +296,18 @@ class RefPars:
             )
 
     def parse_line_choice(self, linelist):
+        """Extract the choice for a parameter specified on the given line
+
+        Analizes all information regarding the choice and options. Also
+        converts any choice/option into the datatype recognized by
+        :meth:`parse_line_type`
+
+        Parameters
+        ----------
+        linelist : list of str
+            The contents of a single line in the parameters.ref file, but
+            processed and split into a usable format.
+        """
         parname_raw = linelist[0]
         parchoice_raw = linelist[1:]
 
@@ -206,6 +353,32 @@ class RefPars:
 
     @staticmethod
     def parse_key(string):
+        """Extracts parameter name, shorthand and type from key in file
+
+        The key (first part of a line) in the file storing the reference
+        parameters has a more complex shape, so it can also encode a shorthand
+        if needed, and the type the choice for this parameter is expected to
+        have. This method extracts those parts.
+
+        Parameters
+        ----------
+        string : str
+            The text to extract a name, shorthand and type from
+
+        Returns
+        -------
+        key_name : str
+            The actual parameter name (the one users will provide when
+            providing inputs)
+        key_shorthand : str
+            The shorthand that can be used on the command line for providing
+            a choice for this parameter
+        key_dtype : list of str
+            The datatype expected for this parameter. See
+            :ref:`parameters.ref<UserGuide_page_map_parameters>` for more
+            explanation on datatypes.
+        """
+
         if "(" in string:
             key_name, temp = string.split("(")
             key_shorthand, key_dtype = temp.split(")")
@@ -218,31 +391,99 @@ class RefPars:
 
 
 class RawPars:
+    """Stores a set of choices from a single source
+
+    Choices can be specified in multiple places. Command line, input parameter
+    file, or a default parameter file. Each of those sources gets its own
+    instance of this class, storing the choices specified in that source.
+
+    .. warning ::
+        The basic __init__ of this class is not meant to be used standalone.
+        Instead, this class is supposed to be used through any of the following
+        constructing classmethods:
+        :meth:`from_dict`, :meth:`from_file`, :meth:`from_cmdline`
+
+    Parameters
+    ----------
+    fname : str
+        The name of the file whose contents are stored
+    is_default : bool
+        Whether the file is a default parameter file. In other words, the file
+        is expected to be complete.
+
+            Note that 'Complete' can mean multiple things. Here, we expect
+            only that all
+            parameters given in the GMAP reference parameter file are present
+            (except those marked as not being allowed to be in there).
+            However, if even a single parameter from a certain map is included
+            in the file, *all* parameters from that specific map must be
+            present.
+
+    See Also
+    --------
+    RefPars
+        The class containing all available parameters, and extra information
+        about them
+    RunPars
+        The class containing the final parameters choices after combining all
+        input sources.
+
+    Attributes
+    ----------
+    fname : pathlib.Path or str
+        The absolute path to the file that contains the parameter choices. In
+        case the source is not a file but the command line, the path is the
+        string 'command line' instead.
+    is_default : bool
+        Whether the set of parameter choices is supposed to be complete.
+    choices : dict
+        Stores parameter names as keys, and the choice for the parameter as
+        values. Beware the exact typing: **all** parameters (not only
+        list-type ones) have their choice stored as a list. The items in the
+        list are of the correct type.
+    not_found : dict
+        When a source is first analyzed for parameters, only the GMAP-based
+        parameters are known. Therefore, inherently, any map-specific
+        parameters cannot be recognized/identified, and parsed. During the
+        first pass, any map-specific-looking parameters are stored in here,
+        so they can be analyzed during a second pass. Keys in this dictionary
+        are the full parameter names (including the map-name), values are the
+        not-so-parsed choices.
+
+    """
+
     def __init__(self, fname, is_default):
-        """
-        Takes a dictionary from the format created by get_pardict, and
-        parses it:
-        For each parameter, see if it is in the refpars object. if not,
-        it is either a typo, or a map-specific parameter. If former,
-        raise error, if latter, save for later (2nd pass done by the
-        .... function).
-        If it is in refpars, see if choice is valid (one of the allowed
-        choices and/or of correct datatype).
-        All choices are saved in self.choices, in the same format as the
-        refpars object.
-
-        If is_default is True, the file is assumed a default file, and
-        must contain a choice for each and every parameter (except for
-        those flagged as not expected in default file).
-        If it is False, the file is assumed an input file, and may miss
-        some.
-        """
-
         self.fname = fname
         self.is_default = is_default
 
     @classmethod
     def from_dict(cls, fname, given_dict, refpars, is_default):
+        """Create an instance of this class for parameters stored in a dict.
+
+        .. seealso ::
+            :meth:`from_file`, :meth:`from_cmdline`
+
+        Parameters
+        ----------
+        fname : pathlib.Path
+            The name of the file from which the data in `given_dict` was
+            obtained
+        given_dict : dict
+            Contains parameter choices. Keys are the parameter names (str),
+            values are lists containing all choices (str). Lists are still
+            expected when there are 0 or 1 choices.
+        refpars : `RefPars`
+            Contains all parameters that might be found in `given_dict`.
+        is_default : bool
+            Whether this is a default file (i.e. complete, see
+            :class:`RawPars`)
+
+        Returns
+        -------
+        instance : `RawPars`
+            A newly generated instance with all choices parsed and stored.
+        """
+
         instance = cls(fname, is_default)
 
         instance.extract_choices(given_dict, refpars)
@@ -252,6 +493,28 @@ class RawPars:
 
     @classmethod
     def from_file(cls, fname, refpars, is_default):
+        """Create an instance of this class for parameters stored in a file.
+
+        First obtains a dict from the file, then uses :meth:`from_dict`
+
+        .. seealso ::
+            :meth:`from_dict`, :meth:`from_cmdline`
+
+        Parameters
+        ----------
+        fname : pathlib.Path
+            The name of the file from which to obtain the parameters
+        refpars : `RefPars`
+            Contains all parameters that might be found in `given_dict`.
+        is_default : bool
+            Whether this is a default file (i.e. complete, see
+            :class:`RawPars`)
+
+        Returns
+        -------
+        instance : `RawPars`
+            A newly generated instance with all choices parsed and stored.
+        """
         with open(fname) as file:
             given_dict = get_pardict(file)
 
@@ -264,6 +527,34 @@ class RawPars:
 
     @classmethod
     def from_cmdline(cls, cmdargs, refpars, maprefpars_dict, is_default):
+        """Create an instance of this class for parameters in the command line
+
+        A method more different from the others, as it has to do some parsing,
+        too. Also immediately deals with map-specific parameters, while
+        instances created from other sources need an extra pass for those.
+
+        .. seealso ::
+            :meth:`from_dict`, :meth:`from_file`
+
+        Parameters
+        ----------
+        cmdargs : list of str
+            A slice from the list generated using sys.argv
+        refpars : `RefPars`
+            Contains all parameters that might be found in `given_dict`.
+        maprefpars_dict : dict
+            A dictionary containing the RefPars objects for all recognized
+            maps. Keys are the map names, values are their RefPars object.
+        is_default : bool
+            Whether this is a default file (i.e. complete, see
+            :class:`RawPars`)
+
+        Returns
+        -------
+        instance : `RawPars`
+            A newly generated instance with all choices parsed and stored.
+        """
+
         instance = cls("command line", is_default)
         pardict = {}
 
@@ -361,6 +652,21 @@ class RawPars:
         return instance
 
     def extract_choices(self, given_dict, refpars):
+        """Takes each parameter and their choice from the dict for parsing
+
+        Each pair is forwarded to the correct location for further parsing.
+        Does not deal in-depth with map-specific parameters.
+        :meth:`extract_choices_map` does.
+
+        Parameters
+        ----------
+        given_dict : dict
+            Contains parameter choices. Keys are the parameter names (str),
+            values are lists containing all choices (str). Lists are still
+            expected when there are 0 or 1 choices.
+        refpars : `RefPars`
+            Contains all parameters that might be found in `given_dict`.
+        """
         self.choices = {}
         self.not_found = {}
 
