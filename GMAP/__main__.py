@@ -7,8 +7,8 @@ import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.PrintTools as GM_PT
 
 
-def _report_unknown_choice():
-    GM_PT.Warning(
+def _report_unknown_choice(Printer):
+    Printer.warning(
         "\nChoice of program wasn't recognized. Please type the following "
         "for more\ninformation on how to use this package:\n\nGMP\n\n",
         True
@@ -16,11 +16,12 @@ def _report_unknown_choice():
 
 
 def main():
-    FILES = GM_FH.FileLocations()
-    with open(FILES.script_dir / "logo.txt") as lfile:
+    Files = GM_FH.FileLocations()
+    Printer = GM_PT.Printer(Files)
+    with open(Files.script_dir / "logo.txt") as lfile:
         logostr = lfile.read()
 
-    print(logostr)
+    Printer.print(1, logostr)
 
     allhelps = ["help", "h", "-h"]
     callcommand = sys.argv
@@ -34,22 +35,24 @@ def main():
 
     if choice.lower() in allhelps:
         if subch.lower() in allhelps:
-            print(GMAP.__doc__)
+            Printer.print(GMAP.__doc__)
+            Printer.quit_early()
         elif subch in GMAP.alltools:
             modch = getattr(GMAP, subch)
-            print(modch.__doc__)
+            Printer.print(modch.__doc__)
+            Printer.quit_early()
         else:
-            _report_unknown_choice()
+            _report_unknown_choice(Printer)
 
     elif choice in GMAP.alltools:
         modch = getattr(GMAP, choice)
         if subch.lower() in allhelps:
             print(modch.__doc__)
         else:
-            getattr(modch, choice)(callcommand[1:], FILES)
+            getattr(modch, choice)(callcommand[1:], Files, Printer)
             # modch.main(callcommand[1:], FILES)
     else:
-        _report_unknown_choice()
+        _report_unknown_choice(Printer)
 
 
 if __name__ == "__main__":

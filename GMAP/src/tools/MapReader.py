@@ -1,7 +1,7 @@
 
 import GMAP.src.tools.ParameterParser as GM_PP
 from GMAP.src.tools.PrintTools import devprint as dpr
-dpr("", end="")
+dpr("", end="")  # to disable error of dpr unused
 
 
 class Map():
@@ -42,8 +42,9 @@ class Map():
     def __init__(self, mapdir):
         self.directory = mapdir
         self.name = mapdir.name
+        self.type = mapdir.parent.name
 
-    def find_refpars(self):
+    def find_refpars(self, Printer):
         """Creates a RefPars object for the map-specific parameters
 
         A map is not required to have any specific parameters. But if it
@@ -54,11 +55,17 @@ class Map():
         If found, the resulting
         :class:`~GMAP.src.tools.ParameterParser.RefPars` object is stored as
         the `self.RefPars` attribute.
-
+        
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
         """
+
         refparfilename = self.directory / "parameters.ref"
         if refparfilename.is_file():
-            self.RefPars = GM_PP.RefPars(refparfilename)
+            self.RefPars = GM_PP.RefPars(Printer, refparfilename)
         else:
             self.RefPars = None
 

@@ -27,10 +27,11 @@ For more information, check the manual on github.com/Kimvana/AIM.
 import sys
 
 # imports from this package
+import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.PrintTools as GM_PT
 
 
-def AIM(callcommand, FILES):
+def AIM(callcommand, Files, Printer):
     GM_PT.devprint("entered main of AIM - yet to be constructed")
 
 
@@ -39,7 +40,9 @@ def main():
     if len(callcommand) == 1:
         print(__doc__)
     else:
-        AIM(callcommand)
+        Files = GM_FH.FileLocations()
+        Printer = GM_PT.Printer(Files)
+        AIM(callcommand, Files, Printer)
 
 
 if __name__ == "__main__":
