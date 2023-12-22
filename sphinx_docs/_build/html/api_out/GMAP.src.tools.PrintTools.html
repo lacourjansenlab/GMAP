@@ -338,10 +338,56 @@ document.write(`
                   
   <section id="module-GMAP.src.tools.PrintTools">
 <span id="gmap-src-tools-printtools-module"></span><h1>GMAP.src.tools.PrintTools module<a class="headerlink" href="#module-GMAP.src.tools.PrintTools" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Warning">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">Warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exitbool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Warning" title="Link to this definition">#</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">Printer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p class="rubric">Methods</p>
+<table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>print</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>print_backlog</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>quit_early</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>set_state</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>warning</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.print">
+<span class="sig-name descname"><span class="pre">print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toprint</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.print" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.print_backlog">
+<span class="sig-name descname"><span class="pre">print_backlog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.print_backlog" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.quit_early">
+<span class="sig-name descname"><span class="pre">quit_early</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.quit_early" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_logfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.set_state" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.warning">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exitbool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.warning" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.devprint">
@@ -381,7 +427,14 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Warning"><code class="docutils literal notranslate"><span class="pre">Warning()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer"><code class="docutils literal notranslate"><span class="pre">Printer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.print"><code class="docutils literal notranslate"><span class="pre">Printer.print()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.print_backlog"><code class="docutils literal notranslate"><span class="pre">Printer.print_backlog()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.quit_early"><code class="docutils literal notranslate"><span class="pre">Printer.quit_early()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.set_state"><code class="docutils literal notranslate"><span class="pre">Printer.set_state()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.warning"><code class="docutils literal notranslate"><span class="pre">Printer.warning()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.devprint"><code class="docutils literal notranslate"><span class="pre">devprint()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.prettifier"><code class="docutils literal notranslate"><span class="pre">prettifier()</span></code></a></li>
 </ul>

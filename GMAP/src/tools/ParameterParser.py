@@ -75,8 +75,18 @@ class RefPars:
         respective directory-specifying parameter as values.
     allfilepars : list of str
         contains all parameters of type path.
+    filepars_create : list of str
+        Contains the parameters which have a path/filename that is not
+        expected to exist when first starting the program, but rather will be
+        created during runtime
     intpars : list of str
-        contains all parameters of type int.
+        contains all parameters with a choice of type int.
+    floatpars : list of str
+        contains all parameters with a choice of type float.
+    boolpars : list of str
+        contains all parameters with a choice of type bool.
+    strpars : list of str
+        contains all parameters with a choice of type str.
     not_expected_in_deffile : list of str
         A list of parameters which are not expected (and allowed) to define a
         choice in reference (or default) parameter files.
@@ -95,7 +105,7 @@ class RefPars:
         self.parse_refparfile(Printer, self.parse_line_choice_protected)
 
     @classmethod
-    def add_reffile(cls, Printer, fname, base_refpars):
+    def add_reffile(cls, Printer, fname, base_RefPars):
         """
         When the default parameter file given by the user is of .ref format\
         instead of .txt, it ends up here. How are .ref files treated different?
@@ -506,6 +516,16 @@ class RawPars:
 
     @classmethod
     def create_empty(cls):
+        """Create an instance of this class without any data
+
+        .. seealso ::
+            :meth:`from_dict`, :meth:`from_file`, :meth:`from_cmdline`
+
+        Returns
+        -------
+        instance : `RawPars`
+            A newly generated instance.
+        """
         instance = cls(None, False)
         instance.extract_choices({}, {})
         return instance
@@ -515,7 +535,7 @@ class RawPars:
         """Create an instance of this class for parameters stored in a dict.
 
         .. seealso ::
-            :meth:`from_file`, :meth:`from_cmdline`
+            :meth:`create_empty`, :meth:`from_file`, :meth:`from_cmdline`
 
         Parameters
         ----------
@@ -555,7 +575,7 @@ class RawPars:
         First obtains a dict from the file, then uses :meth:`from_dict`
 
         .. seealso ::
-            :meth:`from_dict`, :meth:`from_cmdline`
+            :meth:`create_empty`, :meth:`from_dict`, :meth:`from_cmdline`
 
         Parameters
         ----------
@@ -595,7 +615,7 @@ class RawPars:
         instances created from other sources need an extra pass for those.
 
         .. seealso ::
-            :meth:`from_dict`, :meth:`from_file`
+            :meth:`create_empty`, :meth:`from_dict`, :meth:`from_file`
 
         Parameters
         ----------
@@ -787,8 +807,35 @@ class RawPars:
                     True
                 )
 
-    def verify_choice(self, Printer, parname, choice, refpars):
-        # currently, all parameters must take an argument (no bools yet)
+    def verify_choice(self, Printer, parname, choice, RefPars):
+        """Check if the supplied choice is valid
+
+        Checks performed:
+            - Are there exactly enough choices given?
+            - Can all choices be converted into the correct datatype?
+            - If there is a limited set of options to chose from - is the\
+            provided choice allowed?
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        parname : str
+            The name of the parameter whose choice is verified.
+        choice : list of str
+            The given choice.
+        RefPars : `RefPars`
+            If the parameter has any available options, they are stored
+            in here.
+
+        Returns
+        -------
+        choice : list of any
+            A homogenous list, containing the same information as supplied
+            as the parameter `choice`, but converted to the correct datatype.
+        """
+
         if len(choice) == 0:
             if self.is_default:
                 Printer.warning(
@@ -799,7 +846,7 @@ class RawPars:
                     True
                 )
             # This is a bool-type par - presence means 'True'
-            elif parname in refpars.boolpars:
+            elif parname in RefPars.boolpars:
                 choice.append("true")
             else:
                 Printer.warning(
@@ -810,7 +857,7 @@ class RawPars:
                 )
 
         # if we expect a single choice, but multiple were given
-        elif len(choice) > 1 and parname not in refpars.maybe_list:
+        elif len(choice) > 1 and parname not in RefPars.maybe_list:
             Printer.warning(
                 f"Too many choices given for the parameter {parname} "
                 f"specified in the file {self.fname}. "
@@ -830,19 +877,19 @@ class RawPars:
             "Please refer to the manual for the expected type."
         )
 
-        if parname in refpars.intpars:
+        if parname in RefPars.intpars:
             try:
                 choice = [int(x) for x in choice]
             except Exception:
                 Printer.warning(errortext2, True)
 
-        elif parname in refpars.floatpars:
+        elif parname in RefPars.floatpars:
             try:
                 choice = [float(x) for x in choice]
             except Exception:
                 Printer.warning(errortext2, True)
 
-        elif parname in refpars.boolpars:
+        elif parname in RefPars.boolpars:
             trueicators = ("true", "t")
             falseicators = ("false", "f")
             if any(
@@ -852,17 +899,39 @@ class RawPars:
                 Printer.warning(errortext1, True)
             choice = [1 if x.lower() in trueicators else 0 for x in choice]
 
-        if parname not in refpars.options:
+        if parname not in RefPars.options:
             return choice
 
         if any(
-            opt not in refpars.options[parname] for opt in choice
+            opt not in RefPars.options[parname] for opt in choice
         ):
             Printer.warning(errortext1, True)
         else:
             return choice
 
-    def extract_choices_map(self, Printer, mapname, maprefpars):
+    def extract_choices_map(self, Printer, mapname, MapRefPars):
+        """Parses each `not_found` item using a given map
+
+        `Extract_choices` will not have dealt succesfully with any map specific
+        parameters that might have been there, but instead have added them to
+        the `not_found` dictionary. Now (slightly further in initialization),
+        we have the map parameters available, so this dictionary can be dealt
+        with.
+        This is done with a separate call to this function for every map that
+        we want to check against.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        mapname : str
+            The name of the map whose parameters will be checked against
+        MapRefPars : `RefPars`
+            Contains all parameters available for this map
+
+        """
+
         to_del = []
         for parname, choice in self.not_found.items():
             parnamelist = parname.split(".")
@@ -901,7 +970,7 @@ class RawPars:
             #             continue
             #         self.choices[parname] = choice
             choice, found = self.check_par_existence(
-                Printer, parname, parnamelist[1], maprefpars, choice
+                Printer, parname, parnamelist[1], MapRefPars, choice
             )
 
             # parameter is not recognized
@@ -925,6 +994,39 @@ class RawPars:
         self, Printer, parname_full, parname_refpars, refpars, choice,
         do_verify=True
     ):
+        """See if the given parameter exists within the supplied RefPars.
+
+        After :meth:`extract_choices` or :meth:`extract_choices_map` found a
+        parameter/choice pair that says it should be present in the supplied
+        RefPars, it is given to this function to see whether it actually does.
+        If so (and if requested), :meth:`verify_choice` is called to see if
+        the supplied choice is valid, too.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        parname_full : str
+            The complete parameter name, needed for reporting errors.
+        parname_refpars : str
+            The parameter name as we expect to find it within RefPars
+        RefPars : `RefPars`
+            The reference parameters in which the given parameter should occur
+        choice : list
+            The choice supplied as input
+        do_verify : bool, default=True
+            Whether the supplied choice should be verified.
+
+        Returns
+        -------
+        choice : list
+            The choice as returned by :meth:`verify_choice` if requested,
+            otherwise as supplied
+        found : bool
+            Whether the requested parameter was found to exist.
+        """
+
         found = False
         if parname_refpars in refpars.choices:
             found = True
@@ -980,6 +1082,24 @@ class RawPars:
         return choice, found
 
     def check_completeness(self, Printer, refpars):
+        """Check if all required parameters are present
+
+        When the file is marked as being default, this method makes sure that
+        all parameters are present.
+
+        If a default parameter file contains any map-related choices, then
+        this function is called with the RefPars of that specific map, as it
+        then must contain all choices for that map.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        RefPars : `RefPars`
+            Contains all parameters that should be present here.
+        """
+
         for parname in refpars.choices.keys():
             if parname not in self.choices:
                 Printer.warning(
@@ -991,6 +1111,19 @@ class RawPars:
                 )
 
     def finalize_map_pars(self, Printer):
+        """Check whether `not_found` is empty
+
+        This method is called after :meth:`extract_choices_map` is run for
+        every available map. Any parameters recognised there were removed from
+        the `not_found` dictionary, so it should be empty, if all parameters
+        were understood. Here we check if that is indeed the case.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
         if len(self.not_found.keys()) != 0:
             Printer.warning(
                 f"Unknown parameter {self.not_found.keys()[0]} found in the "
@@ -1001,6 +1134,55 @@ class RawPars:
 
 
 class RunPars:
+    """Stores the final choices used for the calculation
+
+    Choices can be specified in multiple places. In the end, they have to be
+    combined into a single set containing all parameters. This might mean
+    that a single parameter is defined multiple times, each different. This
+    is the intended order of places to look for choices: choices from the
+    command line go first. Anything not specified there will be attempted to
+    be retrieved from the input parameter file. Anything that is still missing
+    will be retrieved from the default parameter file, and the final missing
+    values will be retrieved from the reference parameter file.
+
+    But shouldn't the default file contain all parameters, making the choices
+    in the reference file redundant? Yes, for GMAP parameters, but no, not
+    necessarily for map parameters. The default file doesn't have to contain
+    any of those, so those still have to be retrieved from the (map specific)
+    reference parameter file.
+
+    .. note::
+        This class has many attributes, all variable: each parameter in RefPars
+        becomes an attribute. Same name, same capitalization, same everything.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.Files`
+        Contains all currently known paths and other file-related properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    CmdPars : `RawPars`
+        Contains any parameter choices made on the command line
+    InPars : `RawPars`
+        Contains any parameter choices made in the input parameter file
+    DefPars : `RawPars` or `RefPars`
+        Contains all default parameter choices. Might be RefPars, might be
+        from a separate default parameters file.
+    RefPars : `RefPars`
+        Contains all available parameters from GMAP itself (not map-specific)
+
+    See Also
+    --------
+    RefPars
+        The class containing all available parameters, and extra information
+        about them
+    RawPars
+        The class containing parameter choices from other sources
+
+    """
+
     def __init__(self, Files, Printer, CmdPars, InPars, DefPars, RefPars):
 
         # Extract all 'normal' parameters
@@ -1010,7 +1192,7 @@ class RunPars:
         self.get_files(Files, Printer, CmdPars, InPars, DefPars, RefPars)
 
         Printer.set_state(
-            "running", self.verbose[0], self.verbose_logfile[0],
+            "running", self.verbose, self.verbose_logfile,
             self.log_filename
         )
 
@@ -1018,6 +1200,34 @@ class RunPars:
         # be changed, due to parameters
 
     def get_pars(self, Printer, CmdPars, InPars, DefPars, RefPars):
+        """Sets attribute for each non-path parameter.
+
+        Following the order mentioned in `RunPars`, extracts the choice for
+        each non-path type parameter found in RefPars. For each of these
+        parameters which is not allowed to have multiple choices, the choice
+        is extracted from the list and stored without that list.
+
+        .. seealso::
+            get_files
+                does the same, but for path type parameters
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        CmdPars : `RawPars`
+            Contains any parameter choices made on the command line
+        InPars : `RawPars`
+            Contains any parameter choices made in the input parameter file
+        DefPars : `RawPars` or `RefPars`
+            Contains all default parameter choices. Might be RefPars, might be
+            from a separate default parameters file.
+        RefPars : `RefPars`
+            Contains all available parameters from GMAP itself (not
+            map-specific)
+        """
+
         # This should be all parameters except path-type ones
         allpars = (
             RefPars.intpars + RefPars.floatpars + RefPars.boolpars
@@ -1036,10 +1246,42 @@ class RunPars:
                     "in the input file. ",
                     True
                 )
+            if parname not in RefPars.maybe_list:
+                choice = choice[0]
 
             setattr(self, parname, choice)
 
     def get_files(self, Files, Printer, CmdPars, InPars, DefPars, RefPars):
+        """Sets attribute for each path parameter
+
+        Following the order mentioned in `RunPars`, extracts the choice for
+        each path type parameter found in RefPars.
+
+        .. seealso::
+            get_pars
+                does the same, but for non-path type parameters
+
+        Parameters
+        ----------
+        Files : :class:`~GMAP.src.tools.FileHandler.Files`
+            Contains all currently known paths and other file-related
+            properties.
+            Has to be updated after RunPars is finalized.
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        CmdPars : `RawPars`
+            Contains any parameter choices made on the command line
+        InPars : `RawPars`
+            Contains any parameter choices made in the input parameter file
+        DefPars : `RawPars` or `RefPars`
+            Contains all default parameter choices. Might be RefPars, might be
+            from a separate default parameters file.
+        RefPars : `RefPars`
+            Contains all available parameters from GMAP itself (not
+            map-specific)
+        """
+
         # deal with all files that are organized
         self.get_ordered_files(
             Files, Printer, CmdPars, InPars, DefPars, RefPars
@@ -1078,6 +1320,37 @@ class RunPars:
     def get_ordered_files(
         self, Files, Printer, CmdPars, InPars, DefPars, RefPars
     ):
+        """Sets attribute for each ordered-path parameter
+
+        The paths to these files are more complicated, as they are relative
+        to a directory, but it is not required for both the directory-, and
+        file-specifying parameters to be present. For an overview how the
+        files are selected, see the development-notes file.
+
+        .. seealso::
+            get_files
+                does the same for non-ordered path type parameters
+
+        Parameters
+        ----------
+        Files : :class:`~GMAP.src.tools.FileHandler.Files`
+            Contains all currently known paths and other file-related
+            properties.
+            Has to be updated after RunPars is finalized.
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        CmdPars : `RawPars`
+            Contains any parameter choices made on the command line
+        InPars : `RawPars`
+            Contains any parameter choices made in the input parameter file
+        DefPars : `RawPars` or `RefPars`
+            Contains all default parameter choices. Might be RefPars, might be
+            from a separate default parameters file.
+        RefPars : `RefPars`
+            Contains all available parameters from GMAP itself (not
+            map-specific)
+        """
         for dir_parname, file_parnames in RefPars.organized_filepars.items():
             setattr(self, dir_parname, None)
             for file_parname in file_parnames:
@@ -1120,16 +1393,49 @@ def parse_commandline(
     Files, Printer, callcommand, alljobs, helpcall, expect_inputfile=False,
     expect_parameters=False
 ):
-    """
+    """Extracts the groups of information from the command line.
+
     Parses a command stored in a list, to return and check different
     parts. Expects the following items:
     [0] should contain the name of the tool used. eg. GEM, AIM.
     [1] should contain the requested job from the tool. eg. run, demo.
     (if expect_inputfile == True) the filename of the input file to use
     (if expect_parameters == True) the further parameters to use. Optional
-
     Parameters specified on the command line must have the parameter name
     preceded with '-'.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.Files`
+        Contains all currently known paths and other file-related properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    callcommand : list
+        A slice from the output of sys.argv
+    alljobs : list of str
+        The kind of jobs the program is able to do
+    helpcall : str
+        Example of how to call the program to get the help, to help the user
+        getting the command parsed here correct.
+    expect_inputfile : bool, default=False
+        Whether the supplied command will contain the path to an input file,
+        too.
+    expect_parameters : bool, default=False
+        Whether the supplied command is allowed to have extra parameters. If
+        it is not, any that might be present will just be ignored. If it is,
+        it is not required to have any.
+
+    Returns
+    -------
+    job : str
+        The type of job the user requested.
+    in_parfile : pathlib.Path
+        The path to the input file given.
+    cmd_pars :
+        The part of the command that should contain information on
+        parameter choices - to be parsed later.
     """
 
     job = callcommand[1]
@@ -1169,10 +1475,25 @@ def parse_commandline(
 
 
 def find_defparfile_in_cmd(Printer, argslist):
-    """
+    """ Finds any parameters pertaining to default parfile in command line
+
     Given an argslist (the part of sys.argv that should/could contain
     arguments), see if there is anything hinting at a default parameter
     file there.
+
+    Parameters:
+    -----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    argslist : list of str
+        The part of the output of sys.argv that contains parameter choices
+
+    Returns
+    -------
+    pardict : dict
+        The dictionary containing all relevant parameter choices. Keys are the
+        parameter names, values are their choices.
     """
     pardict = {}
 
@@ -1194,6 +1515,27 @@ def find_defparfile_in_cmd(Printer, argslist):
 
 
 def find_par_in_cmd(Printer, argslist, flags, parname, is_list=False):
+    """Searches for a given parameter in the command line
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    argslist : list of str
+        The part of the output of sys.argv that contains parameter choices
+    flags : tup of str
+        The parameter names that might be used for this parameter
+    parname : str
+        The parameter name to be used in the rest of the program
+    is_list : bool, default=False
+        Whether the desired parameter might accept multiple choices.
+
+    Returns
+    -------
+    choice : list
+        The found choice for the parameter.
+    """
     if any(item in argslist for item in flags):
         totalcount = 0
         for item in flags:
@@ -1241,6 +1583,33 @@ def find_par_in_cmd(Printer, argslist, flags, parname, is_list=False):
 
 
 def find_mapdir(Files, Printer, argslist, in_pars, def_pars):
+    """Extracts choice for the parameter map_directory from the command line.
+
+    If the choice has been found, checks whether it exists. If it does not,
+    triggers warning and stops the program.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.Files`
+        Contains all currently known paths and other file-related properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    argslist : list of str
+        The part of the output of sys.argv that contains parameter choices.
+    in_pars : dict
+        All parameter choices given in the input parameter file. Keys are
+        parameter names, values are the choices.
+    def_pars : dict
+        All parameter choices given in the default parameter file. Keys are
+        parameter names, values are the choices.
+
+    Returns
+    -------
+    map_dirs : list of pathlib.Path
+        All locations that were requested.
+    """
     map_flags = ("--map_directory", "-md")
     cmd_mapdir = find_par_in_cmd(
         Printer, argslist, map_flags, "map_directory", is_list=True
@@ -1271,8 +1640,30 @@ def find_mapdir(Files, Printer, argslist, in_pars, def_pars):
 
     return mapdirs
 
-  
+
 def directory_list_checker(Printer, parent, direclist, parname, source):
+    """Checks whether each of the given paths exists, and is a directory.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    parent : pathlib.Path
+        The location to which the provided paths are relative.
+    direclist : list of pathlib.Path
+        The locations provided
+    parname : str
+        The parameter for which the locations were provided.
+    source : str
+        Where this choice for parameter was made.
+
+    Returns
+    -------
+    dirs : list of pathlib.Path
+        The same paths as provided using the parameter `direclist`, but now
+        absolute.
+    """
     dirs = [parent / direc for direc in direclist]
     failed = [str(direc.resolve()) for direc in dirs if not direc.is_dir()]
     if len(failed) > 0:
@@ -1289,13 +1680,24 @@ def directory_list_checker(Printer, parent, direclist, parname, source):
 
 
 def get_pardict(iterable):
-    """
-    Takes an iterable, and returns it as dict form.
+    """Takes an iterable, and returns it in dict form.
+
     Each iteration of the iterable is subjected to .split(); the zeroeth item
     becomes the key, the list of the remaining items (or empty list) becomes
     the value.
     All keys and items in value lists are strings - the contents are NOT
     interpreted, and converted to correct datatypes.
+
+    Parameters
+    ----------
+    iterable : any iterable
+        Contains the information to be converted to a dict.
+
+    Returns
+    -------
+    outdict : dict
+        The new information. Keys are the zeroeth item, values are lists of the
+        remaining items.
 
     """
     outdict = {}
@@ -1310,9 +1712,16 @@ def get_pardict(iterable):
 
 
 def cleanline(line, escape_char="#"):
-    """
-    Removes any escape character and text following it (i.e., get rid of
-    comments).
+    """Removes any escape character and text following it
+
+    In other words, get rid of comments.
     Default escape character is '#'
+
+    Parameters
+    ----------
+    line : str
+        The line to remove any comments from
+    escape_char : str, default="#"
+        The character that indicates that a comment started.
     """
     return line.split(escape_char)[0]

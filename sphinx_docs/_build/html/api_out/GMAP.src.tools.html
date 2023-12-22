@@ -343,10 +343,15 @@ document.write(`
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="GMAP.src.tools.FileHandler.html">GMAP.src.tools.FileHandler module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations"><code class="docutils literal notranslate"><span class="pre">FileLocations</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FindExOs"><code class="docutils literal notranslate"><span class="pre">FindExOs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations"><code class="docutils literal notranslate"><span class="pre">FileLocations</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations.set_exec_os"><code class="docutils literal notranslate"><span class="pre">FileLocations.set_exec_os()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.check_file_readability"><code class="docutils literal notranslate"><span class="pre">check_file_readability()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.find_exec_os"><code class="docutils literal notranslate"><span class="pre">find_exec_os()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.get_bare_file"><code class="docutils literal notranslate"><span class="pre">get_bare_file()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.get_def_parfile"><code class="docutils literal notranslate"><span class="pre">get_def_parfile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.get_file"><code class="docutils literal notranslate"><span class="pre">get_file()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.try_file"><code class="docutils literal notranslate"><span class="pre">try_file()</span></code></a></li>
 </ul>
 </li>
@@ -369,6 +374,7 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars"><code class="docutils literal notranslate"><span class="pre">RawPars</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.check_completeness"><code class="docutils literal notranslate"><span class="pre">RawPars.check_completeness()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.check_par_existence"><code class="docutils literal notranslate"><span class="pre">RawPars.check_par_existence()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.create_empty"><code class="docutils literal notranslate"><span class="pre">RawPars.create_empty()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.extract_choices"><code class="docutils literal notranslate"><span class="pre">RawPars.extract_choices()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map"><code class="docutils literal notranslate"><span class="pre">RawPars.extract_choices_map()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars"><code class="docutils literal notranslate"><span class="pre">RawPars.finalize_map_pars()</span></code></a></li>
@@ -389,7 +395,12 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars.parse_refparfile"><code class="docutils literal notranslate"><span class="pre">RefPars.parse_refparfile()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars"><code class="docutils literal notranslate"><span class="pre">RunPars</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars"><code class="docutils literal notranslate"><span class="pre">RunPars</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars.get_files"><code class="docutils literal notranslate"><span class="pre">RunPars.get_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars.get_ordered_files"><code class="docutils literal notranslate"><span class="pre">RunPars.get_ordered_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars.get_pars"><code class="docutils literal notranslate"><span class="pre">RunPars.get_pars()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.cleanline"><code class="docutils literal notranslate"><span class="pre">cleanline()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.directory_list_checker"><code class="docutils literal notranslate"><span class="pre">directory_list_checker()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.find_defparfile_in_cmd"><code class="docutils literal notranslate"><span class="pre">find_defparfile_in_cmd()</span></code></a></li>
@@ -400,7 +411,14 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="GMAP.src.tools.PrintTools.html">GMAP.src.tools.PrintTools module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Warning"><code class="docutils literal notranslate"><span class="pre">Warning()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer"><code class="docutils literal notranslate"><span class="pre">Printer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer.print"><code class="docutils literal notranslate"><span class="pre">Printer.print()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer.print_backlog"><code class="docutils literal notranslate"><span class="pre">Printer.print_backlog()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer.quit_early"><code class="docutils literal notranslate"><span class="pre">Printer.quit_early()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer.set_state"><code class="docutils literal notranslate"><span class="pre">Printer.set_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer.warning"><code class="docutils literal notranslate"><span class="pre">Printer.warning()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.devprint"><code class="docutils literal notranslate"><span class="pre">devprint()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.prettifier"><code class="docutils literal notranslate"><span class="pre">prettifier()</span></code></a></li>
 </ul>

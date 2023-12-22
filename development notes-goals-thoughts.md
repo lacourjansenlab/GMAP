@@ -105,6 +105,7 @@ to do (not yet implemented)
 2. combine cmdline, inparfile, defparfile, refparfile choices into runpar
    1. Not just in order (fill in gaps with lower order) also take into account possible conflicts arising from this
    2. check whether requested files exist, are of correct format, etc.
+
 | cmd<br>dir | cmd<br>file | inp<br>dir | inp<br>file | def<br>dir | def<br>file | final file used               |
 |------------|-------------|------------|-------------|------------|-------------|-------------------------------|
 | Yes        | Yes         | Any        | Any         | Any        | Any         | cwd/cmd.dir/cmd.file          |
