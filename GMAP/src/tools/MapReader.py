@@ -5,12 +5,64 @@ dpr("", end="")  # to disable error of dpr unused
 
 
 class Map():
+    """Contains all information regarding a single map.
+
+    In this context, a map is as defined in the computational spectroscopy
+    community - a way of estimating the properties of a functional group. It
+    is not a python object.
+
+    .. note ::
+        Users of the program are probably looking for the
+        :ref:`adding a new map<UserGuide_page_adding_map>` page.
+
+    Parameters
+    ----------
+    mapdir : pathlib.Path
+        The absolute path to the directory on the users system that
+        contains the files for this specific map
+
+    Attributes
+    ----------
+    directory : pathlib.Path
+        The directory where the files defining this map can be found.
+    name : str
+        The name of this map. Often indicates the functional group modelled.
+    RefPars : :class:`~GMAP.src.tools.ParameterParser.RefPars`
+        The parameters defined and used by this map. Does not contain
+        parameters used by this map, but defined elsewhere.
+
+    Notes
+    -----
+
+    .. seealso ::
+        :class:`~GMAP.src.tools.ParameterParser.RefPars`
+
+    """
+
     def __init__(self, mapdir):
         self.directory = mapdir
         self.name = mapdir.name
         self.type = mapdir.parent.name
 
     def find_refpars(self, Printer):
+        """Creates a RefPars object for the map-specific parameters
+
+        A map is not required to have any specific parameters. But if it
+        has them, they are supposed to be in a reference parameter file
+        of the same format as the one of GEM itself.
+
+        Looks inside `self.directory` for a file of the name `parameters.ref`,
+        If found, the resulting
+        :class:`~GMAP.src.tools.ParameterParser.RefPars` object is stored as
+        the `self.RefPars` attribute.
+        
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
+
         refparfilename = self.directory / "parameters.ref"
         if refparfilename.is_file():
             self.RefPars = GM_PP.RefPars(Printer, refparfilename)
@@ -19,9 +71,21 @@ class Map():
 
 
 def scan_mapdirs(mapdirs):
-    """
+    """ gives a list of newly-generated Map objects
+
     Given a list of paths (each representing a map directory), create a Map
-    object for each map, which will be filled later.
+    object for each map found, which will be filled later.
+
+    Parameters
+    ----------
+    mapdirs : list of pathlib.Path
+        A list of directories which should be scanned for maps. This object
+        is created by :func:`~GMAP.src.tools.ParameterParser.find_mapdir`.
+
+    Returns
+    -------
+    all_maps : list of :class:`Map`
+
     """
 
     all_maps = {}
