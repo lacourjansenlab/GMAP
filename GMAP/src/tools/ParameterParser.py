@@ -523,7 +523,7 @@ class RawPars:
 
         Returns
         -------
-        instance : `RawPars`
+        instance : :class:`RawPars`
             A newly generated instance.
         """
         instance = cls(None, False)
@@ -549,7 +549,7 @@ class RawPars:
             Contains parameter choices. Keys are the parameter names (str),
             values are lists containing all choices (str). Lists are still
             expected when there are 0 or 1 choices.
-        refpars : `RefPars`
+        refpars : :class:`RefPars`
             Contains all parameters that might be found in `given_dict`.
         is_default : bool
             Whether this is a default file (i.e. complete, see
@@ -557,7 +557,7 @@ class RawPars:
 
         Returns
         -------
-        instance : `RawPars`
+        instance : :class:`RawPars`
             A newly generated instance with all choices parsed and stored.
         """
 
@@ -584,7 +584,7 @@ class RawPars:
             and handle errors.
         fname : pathlib.Path
             The name of the file from which to obtain the parameters
-        refpars : `RefPars`
+        refpars : :class:`RefPars`
             Contains all parameters that might be found in `given_dict`.
         is_default : bool
             Whether this is a default file (i.e. complete, see
@@ -592,7 +592,7 @@ class RawPars:
 
         Returns
         -------
-        instance : `RawPars`
+        instance : :class:`RawPars`
             A newly generated instance with all choices parsed and stored.
         """
 
@@ -624,7 +624,7 @@ class RawPars:
             and handle errors.
         cmdargs : list of str
             A slice from the list generated using sys.argv
-        refpars : `RefPars`
+        refpars : :class:`RefPars`
             Contains all parameters that might be found in `given_dict`.
         maprefpars_dict : dict
             A dictionary containing the RefPars objects for all recognized
@@ -635,7 +635,7 @@ class RawPars:
 
         Returns
         -------
-        instance : `RawPars`
+        instance : :class:`RawPars`
             A newly generated instance with all choices parsed and stored.
         """
 
@@ -751,7 +751,7 @@ class RawPars:
             Contains parameter choices. Keys are the parameter names (str),
             values are lists containing all choices (str). Lists are still
             expected when there are 0 or 1 choices.
-        refpars : `RefPars`
+        refpars : :class:`RefPars`
             Contains all parameters that might be found in `given_dict`.
         """
 
@@ -825,7 +825,7 @@ class RawPars:
             The name of the parameter whose choice is verified.
         choice : list of str
             The given choice.
-        RefPars : `RefPars`
+        RefPars : :class:`RefPars`
             If the parameter has any available options, they are stored
             in here.
 
@@ -927,7 +927,7 @@ class RawPars:
             and handle errors.
         mapname : str
             The name of the map whose parameters will be checked against
-        MapRefPars : `RefPars`
+        MapRefPars : :class:`RefPars`
             Contains all parameters available for this map
 
         """
@@ -1011,7 +1011,7 @@ class RawPars:
             The complete parameter name, needed for reporting errors.
         parname_refpars : str
             The parameter name as we expect to find it within RefPars
-        RefPars : `RefPars`
+        RefPars : :class:`RefPars`
             The reference parameters in which the given parameter should occur
         choice : list
             The choice supplied as input
@@ -1096,7 +1096,7 @@ class RawPars:
         Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
             The object that allows to cleanly log and print during runtime,
             and handle errors.
-        RefPars : `RefPars`
+        RefPars : :class:`RefPars`
             Contains all parameters that should be present here.
         """
 
@@ -1157,20 +1157,20 @@ class RunPars:
 
     Parameters
     ----------
-    Files : :class:`~GMAP.src.tools.FileHandler.Files`
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
         Contains all currently known paths and other file-related properties.
         Has to be updated after RunPars is finalized.
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    CmdPars : `RawPars`
+    CmdPars : :class:`RawPars`
         Contains any parameter choices made on the command line
-    InPars : `RawPars`
+    InPars : :class:`RawPars`
         Contains any parameter choices made in the input parameter file
-    DefPars : `RawPars` or `RefPars`
+    DefPars : :class:`RawPars` or :class:`RefPars`
         Contains all default parameter choices. Might be RefPars, might be
         from a separate default parameters file.
-    RefPars : `RefPars`
+    RefPars : :class:`RefPars`
         Contains all available parameters from GMAP itself (not map-specific)
 
     See Also
@@ -1208,7 +1208,7 @@ class RunPars:
         is extracted from the list and stored without that list.
 
         .. seealso::
-            get_files
+            :meth:`get_files`
                 does the same, but for path type parameters
 
         Parameters
@@ -1216,14 +1216,14 @@ class RunPars:
         Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
             The object that allows to cleanly log and print during runtime,
             and handle errors.
-        CmdPars : `RawPars`
+        CmdPars : :class:`RawPars`
             Contains any parameter choices made on the command line
-        InPars : `RawPars`
+        InPars : :class:`RawPars`
             Contains any parameter choices made in the input parameter file
-        DefPars : `RawPars` or `RefPars`
+        DefPars : :class:`RawPars` or :class:`RefPars`
             Contains all default parameter choices. Might be RefPars, might be
             from a separate default parameters file.
-        RefPars : `RefPars`
+        RefPars : :class:`RefPars`
             Contains all available parameters from GMAP itself (not
             map-specific)
         """
@@ -1258,26 +1258,26 @@ class RunPars:
         each path type parameter found in RefPars.
 
         .. seealso::
-            get_pars
+            :meth:`get_pars`
                 does the same, but for non-path type parameters
 
         Parameters
         ----------
-        Files : :class:`~GMAP.src.tools.FileHandler.Files`
+        Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
             Contains all currently known paths and other file-related
             properties.
             Has to be updated after RunPars is finalized.
         Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
             The object that allows to cleanly log and print during runtime,
             and handle errors.
-        CmdPars : `RawPars`
+        CmdPars : :class:`RawPars`
             Contains any parameter choices made on the command line
-        InPars : `RawPars`
+        InPars : :class:`RawPars`
             Contains any parameter choices made in the input parameter file
-        DefPars : `RawPars` or `RefPars`
+        DefPars : :class:`RawPars` or :class:`RefPars`
             Contains all default parameter choices. Might be RefPars, might be
             from a separate default parameters file.
-        RefPars : `RefPars`
+        RefPars : :class:`RefPars`
             Contains all available parameters from GMAP itself (not
             map-specific)
         """
@@ -1328,26 +1328,26 @@ class RunPars:
         files are selected, see the development-notes file.
 
         .. seealso::
-            get_files
+            :meth:`get_files`
                 does the same for non-ordered path type parameters
 
         Parameters
         ----------
-        Files : :class:`~GMAP.src.tools.FileHandler.Files`
+        Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
             Contains all currently known paths and other file-related
             properties.
             Has to be updated after RunPars is finalized.
         Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
             The object that allows to cleanly log and print during runtime,
             and handle errors.
-        CmdPars : `RawPars`
+        CmdPars : :class:`RawPars`
             Contains any parameter choices made on the command line
-        InPars : `RawPars`
+        InPars : :class:`RawPars`
             Contains any parameter choices made in the input parameter file
-        DefPars : `RawPars` or `RefPars`
+        DefPars : :class:`RawPars` or :class:`RefPars`
             Contains all default parameter choices. Might be RefPars, might be
             from a separate default parameters file.
-        RefPars : `RefPars`
+        RefPars : :class:`RefPars`
             Contains all available parameters from GMAP itself (not
             map-specific)
         """
@@ -1406,7 +1406,7 @@ def parse_commandline(
 
     Parameters
     ----------
-    Files : :class:`~GMAP.src.tools.FileHandler.Files`
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
         Contains all currently known paths and other file-related properties.
         Has to be updated after RunPars is finalized.
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
@@ -1433,7 +1433,7 @@ def parse_commandline(
         The type of job the user requested.
     in_parfile : pathlib.Path
         The path to the input file given.
-    cmd_pars :
+    cmd_pars : list of str or None
         The part of the command that should contain information on
         parameter choices - to be parsed later.
     """
@@ -1590,7 +1590,7 @@ def find_mapdir(Files, Printer, argslist, in_pars, def_pars):
 
     Parameters
     ----------
-    Files : :class:`~GMAP.src.tools.FileHandler.Files`
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
         Contains all currently known paths and other file-related properties.
         Has to be updated after RunPars is finalized.
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
