@@ -527,7 +527,7 @@ class RawPars:
             A newly generated instance.
         """
         instance = cls(None, False)
-        instance.extract_choices({}, {})
+        instance.extract_choices(None, {}, {})
         return instance
 
     @classmethod
@@ -560,6 +560,10 @@ class RawPars:
         instance : :class:`RawPars`
             A newly generated instance with all choices parsed and stored.
         """
+
+        if len(given_dict) == 0:
+            instance = cls.create_empty()
+            return instance
 
         instance = cls(fname, is_default)
 
@@ -729,9 +733,9 @@ class RawPars:
         if is_default:
             instance.check_completeness(Printer, refpars)
 
-        for name, maprefpar in maprefpars_dict.items():
-            instance.extract_choices_map(name, Printer, maprefpar)
-        instance.finalize_map_pars(Printer)
+        # for name, maprefpar in maprefpars_dict.items():
+        #     instance.extract_choices_map(name, Printer, maprefpar)
+        # instance.finalize_map_pars(Printer)
 
         return instance
 
@@ -1183,7 +1187,10 @@ class RunPars:
 
     """
 
-    def __init__(self, Files, Printer, CmdPars, InPars, DefPars, RefPars):
+    def __init__(
+        self, Files, Printer, CmdPars, InPars, DefPars, RefPars, is_main
+    ):
+        self.is_main = is_main
 
         # Extract all 'normal' parameters
         self.get_pars(Printer, CmdPars, InPars, DefPars, RefPars)
@@ -1191,10 +1198,11 @@ class RunPars:
         # Extract all parameters that are a file
         self.get_files(Files, Printer, CmdPars, InPars, DefPars, RefPars)
 
-        Printer.set_state(
-            "running", self.verbose, self.verbose_logfile,
-            self.log_filename
-        )
+        if self.is_main:
+            Printer.set_state(
+                "running", self.verbose, self.verbose_logfile,
+                self.log_filename
+            )
 
         # Resolve conflicts due to choices, change any settings that need to
         # be changed, due to parameters
@@ -1351,27 +1359,39 @@ class RunPars:
             Contains all available parameters from GMAP itself (not
             map-specific)
         """
+
+        dirlist = [InPars.choices]
+        fnamelist = [InPars.fname]
+        if not DefPars.fname == RefPars.fname:
+            dirlist.append(DefPars.choices)
+            fnamelist.append(DefPars.fname)
+
         for dir_parname, file_parnames in RefPars.organized_filepars.items():
             setattr(self, dir_parname, None)
             for file_parname in file_parnames:
-                if file_parname == "default_parameter_filename":
+                if (
+                    self.is_main
+                    and file_parname == "default_parameter_filename"
+                ):
                     setattr(self, file_parname, DefPars.fname)
                     continue  # This parameter has been dealt with separately
                 try:
-                    dir_hc = RefPars.choices[dir_parname]
+                    dir_hc = RefPars.choices[dir_parname][0]
                 except Exception:
                     dir_hc = Files.cwd
-                file_hc = RefPars.choices[file_parname]
+                file_hc = RefPars.choices[file_parname][0]
+
                 name = GM_FH.get_file(
                     Files, dir_parname, file_parname, dir_hc, file_hc,
-                    CmdPars.choices, [InPars.choices, DefPars.choices],
-                    [InPars.fname, DefPars.fname]
+                    CmdPars.choices, dirlist, fnamelist
                 )[0]
 
                 if file_parname not in RefPars.filepars_create:
                     # if name doesnt exist, returns None
                     file_found = GM_FH.try_file(name)
                 else:
+                    # If a new file is made, we only have to see if the parent
+                    # directory exists.
                     file_found = name.resolve()
                     par_dir = name.parent
                     if not par_dir.is_dir():
@@ -1385,6 +1405,26 @@ class RunPars:
                         "This error could also be triggered by a mistake in "
                         f"the choice for {dir_parname}.\n", True
                     )
+
+                if (
+                    file_parname in RefPars.filepars_create
+                    and self.prevent_overwrite
+                    and file_found.is_file()
+                ):
+                    # A new file should be made, but if a file of the same
+                    # name already exists, it shouldn't be replaced.
+                    # We already know that the parent directory of the
+                    # requested path exists.
+                    rawname = file_found.name
+                    backup_path = file_found.resolve()
+
+                    addnum = 0
+                    while backup_path.is_file():
+                        addnum += 1
+                        backup_path = file_found.parent.resolve()
+                        backup_path /= f"#{rawname}.{addnum}#"
+
+                    file_found.rename(backup_path)
 
                 setattr(self, file_parname, file_found)
 

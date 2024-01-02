@@ -126,20 +126,28 @@ def get_parameters(callcommand, Files, Printer):
         False
     )
 
-    # inparfile
-    if InPars:
-        for name, _map in mapdict.items():
-            InPars.extract_choices_map(Printer, name, _map.RefPars)
-        InPars.finalize_map_pars(Printer)
+    for _map in mapdict.values():
+        _map.find_rawpars(Printer, CmdPars, InPars, DefPars)
 
-    # defparfile - _if_ it contains anything from a certain map, it must
-    # contain all from that map
+    CmdPars.finalize_map_pars(Printer)
+    InPars.finalize_map_pars(Printer)
     if def_parfile != ref_parfile:
-        for name, _map in mapdict.items():
-            present = DefPars.extract_choices_map(Printer, name, _map.RefPars)
-            if present and DefPars.is_default:
-                DefPars.check_completeness(Printer, _map.RefPars)
         DefPars.finalize_map_pars(Printer)
+
+    # # inparfile
+    # if InPars:
+    #     for name, _map in mapdict.items():
+    #         InPars.extract_choices_map(Printer, name, _map.RefPars)
+    #     InPars.finalize_map_pars(Printer)
+
+    # # defparfile - _if_ it contains anything from a certain map, it must
+    # # contain all from that map
+    # if def_parfile != ref_parfile:
+    #     for name, _map in mapdict.items():
+    #        present = DefPars.extract_choices_map(Printer, name, _map.RefPars)
+    #         if present and DefPars.is_default:
+    #             DefPars.check_completeness(Printer, _map.RefPars)
+    #     DefPars.finalize_map_pars(Printer)
 
     # --------
     # TO DO
@@ -151,7 +159,12 @@ def get_parameters(callcommand, Files, Printer):
     #       Check whether requested files exist, (are of correct format?), etc.
     # step 5 (step 4, but for maps)
 
-    RunPars = GM_PP.RunPars(Files, Printer, CmdPars, InPars, DefPars, RefPars)
+    RunPars = GM_PP.RunPars(
+        Files, Printer, CmdPars, InPars, DefPars, RefPars, True
+    )
+
+    for _map in mapdict.values():
+        _map.find_runpars(Files, Printer)
 
     GM_PT.devprint(def_parfile)
     GM_PT.devprint(RefPars)

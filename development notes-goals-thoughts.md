@@ -155,8 +155,6 @@ to do (not yet implemented)
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
 - (KvA) TO DO:
-  - When choosing filename to write to, what to do if filename already exists? Make this dependent on parameter?
-  - let RunPar deal with all other pars (both base, and maps)
   - After RunPar is complete, start test suite, capable of testing runpar, ready for testing all else, too.
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
@@ -178,6 +176,8 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) currently, cmd line parser assumes a variable has either 1 assigned choice, or a variable amount.
 - (KvA) currently, code to create a RawPars instance for command line input is one big function, not the prettiest - needs tidying up? - maybe other functs, too?
 - (KvA) Clearly state/explain somewhere what the syntax (/ rules) for command line parameters is.
+- (KvA) Added keyword parameter 'prevent_overwrite' (bool). It determines how to treat files that should be created. If the program has the instruction to create a new file, but the supplied fname already exists, what should happen? if this new keyword is set to false, the existing file will simply be overwritten. If it is set to True, the existing file will be renamed, so the supplied filename can be used for the new file. The new name for the file will be #oldname.num# - where num is the lowest integer number for which a file does not yet exist.
+- (KvA) Made it so that every map instance has its own CmdPars, InPars, DefPars, RefPars, RunPars. Each map shouldn't need any parameters but it's own, except for perhaps GEM-wide parameters. GEM itself shouldn't need any of the map parameters, so this all should work out.
 
 
 

@@ -55,7 +55,7 @@ class Map():
         If found, the resulting
         :class:`~GMAP.src.tools.ParameterParser.RefPars` object is stored as
         the `self.RefPars` attribute.
-        
+
         Parameters
         ----------
         Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
@@ -68,6 +68,57 @@ class Map():
             self.RefPars = GM_PP.RefPars(Printer, refparfilename)
         else:
             self.RefPars = None
+
+    def find_rawpars(self, Printer, CmdPars, InPars, DefPars):
+        # for each parameter source, extract all choices belonging to this
+        # map, and make a RawPars object with those choices. Make sure
+        # to empty the not_found array, so each source can be checked to make
+        # sure all parameters are understood.
+
+        # first, CmdPars
+        map_pars = self.extract_notfound(Printer, CmdPars)
+        self.CmdPars = GM_PP.RawPars.from_dict(
+            Printer, "Cmdline", map_pars, self.RefPars, False
+        )
+        for parname in map_pars.keys():
+            del CmdPars.not_found[self.name + "." + parname]
+
+        # InPars
+        map_pars = self.extract_notfound(Printer, InPars)
+        self.InPars = GM_PP.RawPars.from_dict(
+            Printer, InPars.fname, map_pars, self.RefPars, False
+        )
+        for parname in map_pars.keys():
+            del InPars.not_found[self.name + "." + parname]
+
+        # DefPars
+        map_pars = self.extract_notfound(Printer, DefPars)
+        self.DefPars = GM_PP.RawPars.from_dict(
+            Printer, DefPars.fname, map_pars, self.RefPars, True
+        )
+        for parname in map_pars.keys():
+            del DefPars.not_found[self.name + "." + parname]
+
+    def extract_notfound(self, Printer, RawParInst):
+        map_pars = {}
+        for parname, choice in RawParInst.not_found.items():
+            parnamelist = parname.split(".")
+            if len(parnamelist) != 2:
+                Printer.warning(
+                    "Names of map-specific parameters cannot contain a '.'.",
+                    True
+                )
+            if parnamelist[0] != self.name:
+                continue
+            map_pars[parnamelist[1]] = choice
+
+        return map_pars
+
+    def find_runpars(self, Files, Printer):
+        self.RunPars = GM_PP.RunPars(
+            Files, Printer, self.CmdPars, self.InPars, self.DefPars,
+            self.RefPars, False
+        )
 
 
 def scan_mapdirs(mapdirs):

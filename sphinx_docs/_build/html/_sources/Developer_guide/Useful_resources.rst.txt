@@ -12,12 +12,13 @@ Installation
 ------------
 Installing all programs to create the documentation might be confusing. Besides the installation instructions in this project's README.md, you might also want to check out the following resources:
 
-* `Installing sphinx <https://www.sphinx-doc.org/en/master/usage/installation.html>`_ from the Sphinx main documentation pages provides many different ways of installing sphinx besides pip install.
-* `Getting started <https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html>`_ from the numpydoc pages explains how to install it, and gives some possible flags to use in the sphinx conf.py.
-* `Napoleon <https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html>`_ is another tool that can be used for reading numpydoc-style docstrings, I haven't used it yet at the time of writing this.
-* The `sphinx autodoc tutorial for dummies <https://codeandchaos.wordpress.com/2012/07/30/sphinx-autodoc-tutorial-for-dummies/>`_ might be ancient and written for python 2.7, it still gives a good overview of the steps required. Many details, however, are not accurate anymore.
-* `Sphinx and numpydoc <https://codeandchaos.wordpress.com/2012/08/09/sphinx-and-numpydoc/>`_ is the followup to the autodoc tutorial for dummies. Same warnings apply!
+* `Installing sphinx <https://www.sphinx-doc.org/en/master/usage/installation.html>`__ from the Sphinx main documentation pages provides many different ways of installing sphinx besides pip install.
+* `Getting started <https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html>`__ from the numpydoc pages explains how to install it, and gives some possible flags to use in the sphinx conf.py.
+* `Napoleon <https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html>`__ is another tool that can be used for reading numpydoc-style docstrings, I haven't used it yet at the time of writing this.
+* The `sphinx autodoc tutorial for dummies <https://codeandchaos.wordpress.com/2012/07/30/sphinx-autodoc-tutorial-for-dummies/>`__ might be ancient and written for python 2.7, it still gives a good overview of the steps required. Many details, however, are not accurate anymore.
+* `Sphinx and numpydoc <https://codeandchaos.wordpress.com/2012/08/09/sphinx-and-numpydoc/>`__ is the followup to the autodoc tutorial for dummies. Same warnings apply!
 * On the `sphinx theme gallery page <https://sphinx-themes.org/>`__ you can find many more themes to render documentation in.
+* `Sphinx-design <https://sphinx-design.readthedocs.io/en/latest/get_started.html>`__ allows the use of more complex structures in the pages.
 
 
 Setting up
@@ -43,7 +44,8 @@ At some point the documentation itself has to be written. reST and numpydoc have
 * `This stackoverflow question <https://stackoverflow.com/questions/17189038/generating-an-external-link-in-sphinx>`__ has some useful answers on how to add website hyperlinks in your documentation pages. Or you just check out the source of this page for plenty of examples.
 * `This <https://sublime-and-sphinx-guide.readthedocs.io/en/latest/lists.html>`__ is a good explanation on how to use (un)ordered (nested) lists in the documentation pages.
 * and `this <https://lpn-doc-sphinx-primer.readthedocs.io/en/stable/concepts/heading.html>`__ is a good example on how to mark headers.
-
+* `The PyData Sphinx Theme <https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html>`__ page contains some cool inspiration for looks/layout/structure of webpage.
+* The current home page of the documentation contains a combination of `grids <https://sphinx-design.readthedocs.io/en/latest/grids.html>`__ and `cards <https://sphinx-design.readthedocs.io/en/latest/cards.html>`__ for a cleaner look.
 
 
 
