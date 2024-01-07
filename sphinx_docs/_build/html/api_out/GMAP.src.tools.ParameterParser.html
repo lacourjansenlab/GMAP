@@ -748,12 +748,13 @@ and handle errors.</p>
 <dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.verify_choice">
 <span class="sig-name descname"><span class="pre">verify_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RefPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.verify_choice" title="Link to this definition">#</a></dt>
 <dd><p>Check if the supplied choice is valid</p>
-<dl class="simple">
+<dl>
 <dt>Checks performed:</dt><dd><ul class="simple">
 <li><p>Are there exactly enough choices given?</p></li>
 <li><p>Can all choices be converted into the correct datatype?</p></li>
-<li><p>If there is a limited set of options to chose from - is the            provided choice allowed?</p></li>
+<li><p>If there is a limited set of options to chose from - is the</p></li>
 </ul>
+<p>provided choice allowed?</p>
 </dd>
 </dl>
 <dl class="field-list">
@@ -888,7 +889,7 @@ on the expected type of the items in the list.</p>
 <td><p>Initializes all attributes collecting parameter names</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars.add_reffile" title="GMAP.src.tools.ParameterParser.RefPars.add_reffile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_reffile</span></code></a>(Printer, fname, base_RefPars)</p></td>
-<td><p>When the default parameter file given by the user is of .ref format        instead of .txt, it ends up here. How are .ref files treated different?</p></td>
+<td><p>When the default parameter file given by the user is of .ref format instead of .txt, it ends up here. How are .ref files treated different?     - most importantly: format! A .ref file is formatted differently       from a .txt. - While a .txt only stores the choice for each parameter, the .ref       also stores the allowed options. This would allow users to impose       stricter limits. Is this actually useful???.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars.parse_key" title="GMAP.src.tools.ParameterParser.RefPars.parse_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_key</span></code></a>(string)</p></td>
 <td><p>Extracts parameter name, shorthand and type from key in file</p></td>
@@ -921,16 +922,17 @@ generated attributes, see <a class="reference internal" href="#GMAP.src.tools.Pa
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars.add_reffile">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_reffile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_RefPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars.add_reffile" title="Link to this definition">#</a></dt>
-<dd><dl class="simple">
-<dt>When the default parameter file given by the user is of .ref format        instead of .txt, it ends up here. How are .ref files treated different?</dt><dd><ul class="simple">
+<dd><p>When the default parameter file given by the user is of .ref format
+instead of .txt, it ends up here. How are .ref files treated different?</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>most importantly: format! A .ref file is formatted differently
 from a .txt.</p></li>
 <li><p>While a .txt only stores the choice for each parameter, the .ref
 also stores the allowed options. This would allow users to impose
 stricter limits. Is this actually useful???</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py method">

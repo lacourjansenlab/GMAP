@@ -5,6 +5,7 @@ from pathlib import Path
 import datetime
 
 import GMAP
+# from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class FileLocations:
@@ -55,7 +56,7 @@ class FileLocations:
 
         self.sourcedir_hc = self.script_dir / "sourcefiles"
         self.mapdir_hc = self.script_dir / "maps"
-        self.refparfilename_hc = "default_parameters.ref"
+        self.refparfilename_hc = "reference_parameters.ref"
 
     def set_exec_os(self, Printer):
         """Find and set the exec_os attribute.
@@ -103,7 +104,7 @@ def find_exec_os(Printer):
                 "Environment was determined to be windows, but it is neither a"
                 f" 32, nor 64 bit version. It appears to be {bits} bit. Please"
                 " contact the developers to solve this.",
-                True
+                "howtogethere", True
             )
     elif sys.platform == "darwin":
         exec_os = "MacOS"
@@ -113,14 +114,14 @@ def find_exec_os(Printer):
         Printer.warning(
             f"executing OS not recognised... sys.platform = {sys.platform}. "
             "Please contact the developers to solve this. ",
-            True
+            "howtogethere", True
         )
 
     return exec_os
 
 
 def get_file(
-    Files, dir_parname, file_parname, dir_hc, file_hc,
+    Files, dir_parname, file_parname, dir_hc, files_hc,
     cmd_pardict, pardicts=[], parfilelocs=[]
 ):
     """Determine the path to a file given all input sources
@@ -184,27 +185,37 @@ def get_file(
             dicts.append(_dict)
             flocs.append(floc.parent)
 
+    # dpr(dir_parname, file_parname)
+    # dpr([dict_.get(dir_parname, None) for dict_ in dicts])
+    # dpr([dict_.get(file_parname, None) for dict_ in dicts])
+    # dpr(flocs)
+
     for ix, (_dict, floc) in enumerate(zip(dicts, flocs)):
         if dir_parname in _dict:
             dirname = floc / _dict[dir_parname][0]
             for _dict in dicts[ix:]:
                 if file_parname in _dict:
-                    name = dirname / _dict[file_parname][0]
+                    filenames = _dict[file_parname]
                     break
             else:
-                name = dirname / file_hc
+                filenames = files_hc
             break
         elif file_parname in _dict:
-            name = floc / _dict[file_parname][0]
+            dirname = floc
+            filenames = _dict[file_parname]
             break
     else:
-        name = dir_hc / file_hc
+        dirname = dir_hc
+        filenames = files_hc
         file_is_hc = True
-    return name, file_is_hc
+
+    names = [dirname / name for name in filenames]
+
+    return names, file_is_hc
 
 
 def get_bare_file(
-    Files, file_parname, file_hc, cmd_pardict, pardicts=[], parfilelocs=[]
+    Files, file_parname, files_hc, cmd_pardict, pardicts=[], parfilelocs=[]
 ):
     """Determine the path to a file given all input sources
 
@@ -258,12 +269,12 @@ def get_bare_file(
 
     for _dict, floc in zip(dicts, flocs):
         if file_parname in _dict:
-            name = floc / _dict[file_parname][0]
+            names = [floc / name for name in _dict[file_parname]]
             break
     else:
-        name = file_hc
+        names = files_hc
 
-    return name
+    return names
 
 
 def get_def_parfile(
@@ -313,14 +324,14 @@ def get_def_parfile(
         cmd_pardict, [in_pardict], [in_parfile]
     )
 
-    file_found = try_file(name)
+    file_found = try_file(name[0])
 
     if not file_found:
         Printer.warning(
             f"\nThe requested default parameter file {name} could not be "
             "found, or is not a file. "
             "Please make sure you specified it correctly.\n",
-            True
+            "SU_FH_1", True
         )
 
     # We need a file to check if the default file is complete (AIM did this
@@ -335,7 +346,7 @@ def get_def_parfile(
                 "\nThe requested default parameter file requires the presence "
                 f"of the file {name}, but this file could not be found. "
                 "Please make sure you specified it correctly.\n",
-                True
+                "SU_FH_2", True
             )
 
     return file_found
@@ -361,6 +372,7 @@ def try_file(fname):
     fname : `pathlib.Path` or None
         The resolved path, or, if the input doesn't exist, None.
     """
+
     if fname.is_file():
         return fname.resolve()
     else:
@@ -392,5 +404,5 @@ def check_file_readability(Printer, fname):
         Printer.warning(
             f"\n The file {fname} is of the wrong type, please make sure "
             "it is a plain text file. ",
-            True
+            "SU_FH_3", True
         )

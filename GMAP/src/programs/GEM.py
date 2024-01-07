@@ -73,7 +73,7 @@ def get_parameters(callcommand, Files, Printer):
         def_parfile = GM_FH.get_def_parfile(Files, Printer, temp_cmd_pardict)
 
     # as get_def_parfile also checks for the presence of the hard-coded
-    # default parameter file (regardless of program flow), no need to do
+    # reference parameter file (regardless of program flow), no need to do
     # it again.
     # step 6 (find refparfile)
     ref_parfile = Files.sourcedir_hc / Files.refparfilename_hc

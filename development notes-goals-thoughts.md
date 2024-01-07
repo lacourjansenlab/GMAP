@@ -155,7 +155,10 @@ to do (not yet implemented)
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
 - (KvA) TO DO:
-  - After RunPar is complete, start test suite, capable of testing runpar, ready for testing all else, too.
+  - Make test for RunPar
+  - Make test for map-pars
+  - Make test for all different warnings GMAP can throw
+  - Think what further tests to add / increase test coverage (?)
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
@@ -163,7 +166,6 @@ If you need a place to quickly write something down, do it here! It can be tidie
   - Similarly, AIM had a setting for when/wheter to use dipole-dipole coupling for coupling between different kinds of oscillator... What to do?
 - (KvA) Refparfile currently doesn't indicate whether a parameter is optional, or MUST be given by the user. Or is the N/A choice sufficient?
 - (KvA) Chosen map structure forces coupling maps to be complex? At some point, discuss coupling maps more?
-- (KvA) Verbose??? logfiles??? for when finding/parsing files? Or use buffer + errorfile?
 - (KvA) the inpar and temp_cmd dictionaries have a list with choices as the value, even if only a single choice is expected. This is because at the time of creating these objects, we cannot yet know whether we expect a single, or multiple choices.
 - (KvA) I've added some shorthands for cmdlinepars:
   | parameter name in refparfile | full command line parameter name | shorthand command line parameter name |
@@ -178,6 +180,12 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) Clearly state/explain somewhere what the syntax (/ rules) for command line parameters is.
 - (KvA) Added keyword parameter 'prevent_overwrite' (bool). It determines how to treat files that should be created. If the program has the instruction to create a new file, but the supplied fname already exists, what should happen? if this new keyword is set to false, the existing file will simply be overwritten. If it is set to True, the existing file will be renamed, so the supplied filename can be used for the new file. The new name for the file will be #oldname.num# - where num is the lowest integer number for which a file does not yet exist.
 - (KvA) Made it so that every map instance has its own CmdPars, InPars, DefPars, RefPars, RunPars. Each map shouldn't need any parameters but it's own, except for perhaps GEM-wide parameters. GEM itself shouldn't need any of the map parameters, so this all should work out.
+- (KvA) In order to run the unittests, move in command prompt to the GMAP directory. In there, run ```pytest tests``` to run all tests. adding the flag ```-s``` allows (some?) python prints to pass through, the flag ```--cov=src``` gives the coverage of the current unit tests. In case of issues, ```--full-trace``` gives a lot more tracebacks and other information. Finally, to see what parts of the code are not covered by the tests, run ```pytest --cov-report term-missing --cov=src tests```. The Fanciest of all? ```pytest --cov-report term-missing:skip-covered --cov=src tests```.
+- (KvA) Gave every warning it's own error code. Currently, there are two uses in mind - Providing a way for the unittests to check whether the program was quit for the right reason, and providing a way for users to easily get more information on a specific issue in the manual - In the manual, they're easy to find, and references to other places in the manual can easily be added there. But maybe, more uses can be implemented in the future? for example, a way to skip/silence warnings of a specific error code?
+- (KvA) list-type parameters must always come with at least one choice (at least, when parsing from the command line). But maybe, that choice can just be '\\;'?
+- (KvA) RefPars is just a tool for reading parameter inputs, and creating the corresponding parameter datastructures. After they've been made, it's served its purpose, and is no longer needed. Any function after should only use defpars, not refpars.
+- (KvA) demo mode test and command line separation should not be part of get_parameters (Think of when the job 'setup' is implemented)
+- (KvA) currently, the type path_sep must lead to files, not directories... This is the reason map_directory is taken separately.
 
 
 

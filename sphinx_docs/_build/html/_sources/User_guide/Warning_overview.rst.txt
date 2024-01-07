@@ -1,0 +1,27 @@
+================
+Warning overview
+================
+
+Here you can find more information about the different warnings that can pop up.
+
+Codes starting with SU
+======================
+
+SU_FP
+-----
+
+SU_FP_1
+^^^^^^^
+The user attempted to supply their own reference parameter file. This behaviour is not yet supported. Instead, please use a default parameter file. Change the .ref extension to a .txt, and make sure the file structure matches the example in [ADD CROSSLINK!].
+
+SU_FP_2
+^^^^^^^
+The file structure for reference parameter files is different than that of default parameter files. Make sure the file structure matches the example in [ADD CROSSLINK!].
+
+SU_FP_3
+^^^^^^^
+The type of a parameter has been specified slightly wrong. The format is recognized, but the contents are probably misspelled. See the examples in [ADD CROSSLINK!].
+
+SU_FP_4
+^^^^^^^
+An unexpected error was encountered. See if the examples in [ADD CROSSLINK!] help fixing it, and please let us know what was wrong.

@@ -2,7 +2,7 @@
 # support files location
 
 source_directory(sd)[path_dir_sd]                 ../sourcefiles
-default_parameter_filename(dpf)[path_rel_sd_e]    [N/A]
+default_parameter_filename(dpf)[path_rel_sd]    [N/A]
 
 log_directory[path_dir_lg]                        [N/A]
 log_filename[path_rel_lg_c]                       log.log

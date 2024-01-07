@@ -1,6 +1,7 @@
 import sys
 import inspect
 import pathlib
+from traceback import TracebackException as TbEx
 
 
 class Printer:
@@ -76,9 +77,9 @@ class Printer:
             return
 
         if verbose_level <= self.verbose:
-            print(prettifier(toprint))
+            print(prettifier(str(toprint)))
         if verbose_level <= self.verbose_logfile:
-            print(prettifier(toprint), file=open(self.logfile, "a"))
+            print(prettifier(str(toprint)), file=open(self.logfile, "a"))
 
     def quit_early(self):
         """Called when the program is quitted early
@@ -98,8 +99,8 @@ class Printer:
 
         if self.program_state == "startup":
             self.verbose = 3
-            self.verbose_logfile = 3
-            self.program_state == "running"
+            self.verbose_logfile = 4
+            self.program_state = "running"
         with open(self.logfile, "w") as _:
             pass
 
@@ -107,7 +108,7 @@ class Printer:
             self.print(verbose_level, toprint)
         self.backlog = []
 
-    def warning(self, message, exitbool=False):
+    def warning(self, message, error_code, exitbool=False, exception=None):
         """Warning system. Prints the message, and allows to force-quit after.
 
         Parameters
@@ -116,8 +117,24 @@ class Printer:
             The warning/error message to print.
         exitbool : bool, default=False
             Whether the program should stop due to this error.
+        exception : BaseException, default=None
+            If the warning corresponds to a 'basic' python error,
+            that error can be caught and fed into this function.
         """
+
         self.print(0, message)
+
+        # print the traceback in exactly the same way as it would be
+        # thrown into the command line.
+        if exception:
+            traceprint = TbEx.from_exception(exception).format()
+            self.print(4, "\n" + "".join(traceprint))
+
+        self.print(
+            0,
+            "More information can be found in the documentation "
+            f"user pages using the following error code: {error_code}"
+        )
         if exitbool:
             if self.backlog:
                 self.print_backlog()

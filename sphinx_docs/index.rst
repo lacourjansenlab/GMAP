@@ -17,7 +17,9 @@ GMAP documentation
 
     .. grid-item-card::
         :margin: 0 3 0 0
-        
+        :link: User_guide/index
+        :link-type: doc
+
         **User Guide**
         ^^^^^^^^^^^^^^
         It would be really nice to have a clear user guide here!
@@ -56,6 +58,16 @@ GMAP documentation
         ^^^^^^^^^^^^^^^^^^^^^^
         A per-function level overview of the inner workings of GMAP.
 
+
+
+.. User guide
+.. ==========
+
+.. toctree::
+    :maxdepth: 4
+    :hidden:
+
+    User_guide/index
 
 
 .. Adding a new map

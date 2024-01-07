@@ -106,7 +106,7 @@ class Map():
             if len(parnamelist) != 2:
                 Printer.warning(
                     "Names of map-specific parameters cannot contain a '.'.",
-                    True
+                    "SU_MR_1", True
                 )
             if parnamelist[0] != self.name:
                 continue
