@@ -10,7 +10,7 @@ map_directory                   ../../../maps
 
 verbose                         3
 verbose_logfile                 1
-prevent_overwrite               True
+prevent_overwrite               False
 
 
 # test strings

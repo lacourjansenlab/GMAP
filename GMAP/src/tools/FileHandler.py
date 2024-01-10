@@ -215,7 +215,8 @@ def get_file(
 
 
 def get_bare_file(
-    Files, file_parname, files_hc, cmd_pardict, pardicts=[], parfilelocs=[]
+    Files, file_parname, files_hc, floc_hc, cmd_pardict, pardicts=[],
+    parfilelocs=[]
 ):
     """Determine the path to a file given all input sources
 
@@ -272,7 +273,7 @@ def get_bare_file(
             names = [floc / name for name in _dict[file_parname]]
             break
     else:
-        names = files_hc
+        names = [floc_hc / name for name in files_hc]
 
     return names
 
@@ -320,7 +321,7 @@ def get_def_parfile(
 
     name, file_is_hc = get_file(
         Files, "source_directory", "default_parameter_filename",
-        Files.sourcedir_hc, Files.refparfilename_hc,
+        Files.sourcedir_hc, [Files.refparfilename_hc],
         cmd_pardict, [in_pardict], [in_parfile]
     )
 

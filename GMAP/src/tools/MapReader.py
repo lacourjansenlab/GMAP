@@ -92,12 +92,15 @@ class Map():
             del InPars.not_found[self.name + "." + parname]
 
         # DefPars
-        map_pars = self.extract_notfound(Printer, DefPars)
-        self.DefPars = GM_PP.RawPars.from_dict(
-            Printer, DefPars.fname, map_pars, self.RefPars, True
-        )
-        for parname in map_pars.keys():
-            del DefPars.not_found[self.name + "." + parname]
+        if type(DefPars) is GM_PP.RawPars:
+            map_pars = self.extract_notfound(Printer, DefPars)
+            self.DefPars = GM_PP.RawPars.from_dict(
+                Printer, DefPars.fname, map_pars, self.RefPars, True
+            )
+            for parname in map_pars.keys():
+                del DefPars.not_found[self.name + "." + parname]
+        else:
+            self.DefPars = GM_PP.RawPars.create_empty()
 
     def extract_notfound(self, Printer, RawParInst):
         map_pars = {}
@@ -114,11 +117,14 @@ class Map():
 
         return map_pars
 
-    def find_runpars(self, Files, Printer):
-        self.RunPars = GM_PP.RunPars(
-            Files, Printer, self.CmdPars, self.InPars, self.DefPars,
-            self.RefPars, False
-        )
+    def find_runpars(self, Files, Printer, RunPars):
+        if self.RefPars:
+            self.RunPars = GM_PP.RunPars(
+                Files, Printer, self.CmdPars, self.InPars, self.DefPars,
+                self.RefPars, False, MainRunPars=RunPars
+            )
+        else:
+            self.RunPars = None
 
 
 def scan_mapdirs(mapdirs):

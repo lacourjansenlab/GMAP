@@ -98,8 +98,9 @@ class RefPars:
     """
 
     def __init__(self, Printer, fname):
-        self.fname = fname
+        self.fname = fname.resolve()
         self.add_groups()
+        self.nondefcount = 0
 
         self.parse_refparfile(Printer, self.parse_line_type_protected)
         self.parse_refparfile(Printer, self.parse_line_choice_protected)
@@ -317,7 +318,7 @@ class RefPars:
         # self.parse_line_choice(linelist)
         try:
             self.parse_line_choice(linelist)
-        except TypeError as ex:
+        except ValueError as ex:
             Printer.warning(
                 "Could not interpret the parameter choice on the following "
                 f"line:\n{line}"
@@ -326,16 +327,14 @@ class RefPars:
                 "\nQuitting!",
                 "SU_FP_5", True, exception=ex
             )
-
         except IndexError as ex:
             Printer.warning(
                 "Detected a wrong amount of choices for the parameter choice "
                 f"on the following line:\n{line}"
                 "\nWhile reading the following file as a reference file:\n"
-                f"{self.fname}\nQuitting!"
+                f"{self.fname}\nQuitting!",
                 "SU_FP_6", True, exception=ex
             )
-
         except Exception as ex:
             Printer.warning(
                 "Encountered an error while parsing the parameter choice on "
@@ -395,12 +394,12 @@ class RefPars:
         # bools need special care
         trueicators = ("true", "t")
         falseicators = ("false", "f")
-        if usetype == bool:
+        if usetype is bool:
             if any(
                 x.lower() not in trueicators and x.lower() not in falseicators
                 for x in options+choices
             ):
-                raise TypeError
+                raise ValueError
             options = [1 if x.lower() in trueicators else 0 for x in options]
             choices = [1 if x.lower() in trueicators else 0 for x in choices]
 
@@ -410,7 +409,7 @@ class RefPars:
         # if at least one pair of square brackets (selected items), that
         # indicates that there are only limited choices, instead of general
         if len(choices) != 0:
-            if parname not in self.maybe_list and len(choices) != 1:
+            if (parname not in self.maybe_list) and (len(choices) != 1):
                 raise IndexError
             else:
                 self.options[parname] = options
@@ -732,7 +731,7 @@ class RawPars:
                     curpar = curpar_list[0] + "." + curpar_tocheck
                 else:
                     curpar = curpar_tocheck
-            dpr(curpar_tocheck)
+            # dpr(curpar_tocheck)
 
             # Step 2: See if it actually exists
             found = instance.check_par_existence(
@@ -740,6 +739,7 @@ class RawPars:
             )[1]
 
             if not found:
+                dpr(curpar, curpar_tocheck, refpars_to_use.fname)
                 Printer.warning(warntext, "SU_WP_3", True)
 
             # Step 3: extract num of expected arguments, and also:
@@ -773,9 +773,12 @@ class RawPars:
                 # Here, we blindly assume that the user gave the correct
                 # amount of choices (bools don't require them). Whether they
                 # did will be verified at 'extract choices', a few lines down.
-                if not cmdargs[0].startswith("-"):
-                    choice = [cmdargs.pop(0)]
-                else:
+                try:
+                    if not cmdargs[0].startswith("-"):
+                        choice = [cmdargs.pop(0)]
+                    else:
+                        choice = []
+                except Exception:
                     choice = []
 
             pardict[curpar] = choice
@@ -841,11 +844,12 @@ class RawPars:
             #         if choice is None:
             #             continue
             #         self.choices[parname] = choice
-            choice, found = self.check_par_existence(
+            choice, found, parname = self.check_par_existence(
                 Printer, parname, parname, refpars, choice
             )
             if found:
-                continue
+                if choice is not None:
+                    self.choices[parname] = choice
 
             # anything that's left, is not part of base program
 
@@ -1030,7 +1034,7 @@ class RawPars:
             #         if choice is None:
             #             continue
             #         self.choices[parname] = choice
-            choice, found = self.check_par_existence(
+            choice, found, _ = self.check_par_existence(
                 Printer, parname, parnamelist[1], MapRefPars, choice
             )
 
@@ -1096,9 +1100,7 @@ class RawPars:
                     Printer, parname_refpars, choice, refpars
                 )
             if not do_verify or choice is None:
-                return None, found
-            else:
-                self.choices[parname_full] = choice
+                return None, found, parname_refpars
 
         elif parname_refpars in refpars.not_expected_in_deffile:
             found = True
@@ -1112,16 +1114,14 @@ class RawPars:
                     "SU_WP_13", True
                 )
             elif self.is_default:
-                return None, found
+                return None, found, parname_refpars
             else:
                 if do_verify:
                     choice = self.verify_choice(
                         Printer, parname_refpars, choice, refpars
                     )
                 if not do_verify or choice is None:
-                    return None, found
-                else:
-                    self.choices[parname_full] = choice
+                    return None, found, parname_refpars
 
         # nobool format?
         elif (
@@ -1137,12 +1137,12 @@ class RawPars:
                     for x in choice
                 ]
             # assumes extract_choices_map wont call check_par_existence
-            choice, found = self.check_par_existence(
+            choice, found, parname_refpars = self.check_par_existence(
                 Printer, parname_full[2:], parname_refpars[2:], refpars,
                 newchoice, do_verify
             )
 
-        return choice, found
+        return choice, found, parname_refpars
 
     def check_completeness(self, Printer, refpars):
         """Check if all required parameters are present
@@ -1189,7 +1189,8 @@ class RawPars:
         """
         if len(self.not_found.keys()) != 0:
             Printer.warning(
-                f"Unknown parameter {self.not_found.keys()[0]} found in the "
+                f"Unknown parameter {list(self.not_found.keys())[0]} found in "
+                "the "
                 f"file {self.fname}. "
                 "Please make sure you spelled it correctly.",
                 "SU_WP_15", True
@@ -1247,9 +1248,14 @@ class RunPars:
     """
 
     def __init__(
-        self, Files, Printer, CmdPars, InPars, DefPars, RefPars, is_main
+        self, Files, Printer, CmdPars, InPars, DefPars, RefPars, is_main,
+        MainRunPars=None
     ):
         self.is_main = is_main
+        if not is_main:
+            self.MainRunPars = MainRunPars
+        else:
+            self.MainRunPars = self
 
         # Extract all 'normal' parameters
         self.get_pars(Printer, CmdPars, InPars, DefPars, RefPars)
@@ -1354,26 +1360,29 @@ class RunPars:
             Files, Printer, CmdPars, InPars, DefPars, RefPars
         )
 
-        # deal with map_directory separately
-        file_hc = RefPars.choices["map_directory"]
-        names = GM_FH.get_bare_file(
-            Files, "map_directory", file_hc, CmdPars.choices,
-            [InPars.choices, DefPars.choices],
-            [InPars.fname, DefPars.fname]
-        )
-        names = [file.resolve() for file in names]
-        exists = [dir_.is_dir() for dir_ in names]
-        if False not in exists:
-            setattr(self, "map_directory", names)
-        else:
-            names = [str(file) for file in names]
-            Printer.warning(
-                f"\nThe directory {'.'.join(names)} was requested for the "
-                f"parameter map_directory, but could not be found, or is "
-                "not a directory. Please make sure you specified it "
-                "correctly.",
-                "SU_NP_3", True
+        if self.is_main:
+            # deal with map_directory separately
+            file_hc = RefPars.choices["map_directory"]
+            names = GM_FH.get_bare_file(
+                Files, "map_directory", file_hc, RefPars.fname.parent,
+                CmdPars.choices,
+                [InPars.choices, DefPars.choices],
+                [InPars.fname, DefPars.fname]
             )
+            names = [file.resolve() for file in names]
+            exists = [dir_.is_dir() for dir_ in names]
+            if False not in exists:
+                setattr(self, "map_directory", names)
+            else:
+                names = [str(file) for file in names]
+                Printer.warning(
+                    f"\nThe directory {', '.join(names)} was requested for "
+                    "the "
+                    f"parameter map_directory, but could not be found, or is "
+                    "not a directory. Please make sure you specified it "
+                    "correctly.",
+                    "SU_NP_3", True
+                )
 
         # deal with all other files
         for parname in RefPars.allfilepars:
@@ -1383,11 +1392,20 @@ class RunPars:
                 file_hc = RefPars.choices[parname]
             except Exception:
                 file_hc = None
-            names = GM_FH.get_bare_file(
-                Files, parname, file_hc, CmdPars.choices,
-                [InPars.choices, DefPars.choices],
-                [InPars.fname, DefPars.fname]
-            )
+            try:
+                names = GM_FH.get_bare_file(
+                    Files, parname, file_hc, RefPars.fname.parent,
+                    CmdPars.choices,
+                    [InPars.choices, DefPars.choices],
+                    [InPars.fname, DefPars.fname]
+                )
+            except Exception as ex:
+                Printer.warning(
+                    f"No choice for the parameter {parname} could be found. "
+                    "Please specify a choice on either the command line, or "
+                    "in the input file. ",
+                    "SU_NP_1", True, exception=ex
+                )
 
             if parname not in RefPars.filepars_create:
                 # if name doesnt exist, returns None
@@ -1395,16 +1413,33 @@ class RunPars:
                 file_found = (None not in files_found)
             else:
                 files_found = [name.resolve() for name in names]
+                file_found = files_found[0]
+                for file in files_found:
+                    par_dir = file.parent
+                    if not par_dir.is_dir():
+                        file_found = None
 
             if not file_found:
                 names = [str(file) for file in names]
-                Printer.warning(
-                    f"\nThe file(s) {', '.join(names)} was requested for the "
-                    "parameter "
-                    f"{parname}, but could not be found, or is not a "
-                    "file. Please make sure you specified it correctly.\n",
-                    "SU_NP_2", True
-                )
+                if self.is_main:
+                    Printer.warning(
+                        f"\nThe file(s) {', '.join(names)} was requested for "
+                        "the "
+                        f"parameter {parname}, "
+                        "but could not be found, or is not a "
+                        "file. Please make sure you specified it correctly.\n",
+                        "SU_NP_2", True
+                    )
+                else:
+                    Printer.warning(
+                        f"\nThe file(s) {', '.join(names)} was requested for "
+                        "the "
+                        f"parameter {parname}, for the map "
+                        f"{RefPars.fname.parent.name}, "
+                        "but could not be found, or is not a "
+                        "file. Please make sure you specified it correctly.\n",
+                        "SU_NP_2", True
+                    )
 
             if parname in RefPars.maybe_list:
                 setattr(self, parname, files_found)
@@ -1458,21 +1493,35 @@ class RunPars:
             except Exception:
                 dir_hc = Files.cwd
 
-            name = GM_FH.get_bare_file(
-                Files, dir_parname, [dir_hc], CmdPars.choices, dirlist,
-                fnamelist
+            dir_hc = GM_FH.get_bare_file(
+                Files, dir_parname, [dir_hc], RefPars.fname.parent,
+                CmdPars.choices, dirlist, fnamelist
             )
-            name = name[0]
+            name = dir_hc[0]
             if name.is_dir():
                 setattr(self, dir_parname, name.resolve())
             else:
-                Printer.warning(
-                    f"\nThe directory {name.resolve()} was requested for the "
-                    f"parameter {dir_parname}, but could not be found, or is "
-                    "not a directory. Please make sure you specified it "
-                    "correctly.",
-                    "SU_NP_3", True
-                )
+                if self.is_main:
+                    Printer.warning(
+                        f"\nThe directory {name.resolve()} was requested for "
+                        "the "
+                        f"parameter {dir_parname}, but could not be found, or "
+                        "is "
+                        "not a directory. Please make sure you specified it "
+                        "correctly.",
+                        "SU_NP_3", True
+                    )
+                else:
+                    Printer.warning(
+                        f"\nThe directory {name.resolve()} was requested for "
+                        "the "
+                        f"parameter {dir_parname}, for the map "
+                        f"{RefPars.fname.parent.name}, "
+                        "but could not be found, or is "
+                        "not a directory. Please make sure you specified it "
+                        "correctly.",
+                        "SU_NP_3", True
+                    )
 
             for file_parname in file_parnames:
                 if (
@@ -1482,10 +1531,16 @@ class RunPars:
                     setattr(self, file_parname, DefPars.fname)
                     continue  # This parameter has been dealt with separately
 
-                files_hc = RefPars.choices[file_parname]
+                try:
+                    files_hc = RefPars.choices[file_parname]
+                except Exception:
+                    files_hc = [Path(
+                        f"name_not_defined_{str(RefPars.nondefcount)}.txt"
+                    )]
+                    RefPars.nondefcount += 1
 
                 files_found = GM_FH.get_file(
-                    Files, dir_parname, file_parname, dir_hc, files_hc,
+                    Files, dir_parname, file_parname, dir_hc[0], files_hc,
                     CmdPars.choices, dirlist, fnamelist
                 )[0]
 
@@ -1500,6 +1555,7 @@ class RunPars:
                     # If a new file is made, we only have to see if the parent
                     # directory exists.
                     files_found = [file.resolve() for file in files_found]
+                    names = files_found
                     file_found = files_found[0]
                     for file in files_found:
                         par_dir = file.parent
@@ -1519,7 +1575,7 @@ class RunPars:
 
                 if (
                     file_parname in RefPars.filepars_create
-                    and self.prevent_overwrite
+                    and self.MainRunPars.prevent_overwrite
                     and file_found.is_file()
                 ):
                     # A new file should be made, but if a file of the same
@@ -1588,7 +1644,7 @@ def parse_commandline(
         The type of job the user requested.
     in_parfile : pathlib.Path
         The path to the input file given.
-    cmd_pars : list of str or None
+    cmd_pars : list of str
         The part of the command that should contain information on
         parameter choices - to be parsed later.
     """
@@ -1626,7 +1682,7 @@ def parse_commandline(
     if expect_parameters:
         cmd_pars = args_list
     else:
-        cmd_pars = None
+        cmd_pars = []
 
     return job, in_parfile, cmd_pars
 

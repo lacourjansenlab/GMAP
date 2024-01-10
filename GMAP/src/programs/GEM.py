@@ -32,18 +32,8 @@ import GMAP.src.tools.PrintTools as GM_PT
 from GMAP.src.tools.PrintTools import devprint as dpr
 
 
-def get_parameters(callcommand, Files, Printer):
+def get_parameters(Files, Printer, in_parfile, argslist):
     # very basic parsing of cmd
-
-    # step 1 (is GEM in demo mode?)
-    if callcommand[1] in ("demo"):
-        exp_inpfile = False
-    else:
-        exp_inpfile = True
-    # step 2 (very basic cmd line parse)
-    job, in_parfile, argslist = GM_PP.parse_commandline(
-        Files, Printer, callcommand, alljobs, "GMAP GEM", exp_inpfile, True
-    )
 
     # before we can parse the command line, or the input parameter file,
     # we have to know what parameter names to expect. However, to know
@@ -98,7 +88,7 @@ def get_parameters(callcommand, Files, Printer):
             f"The requested default parameter file {def_parfile} is of the "
             "wrong file format. "
             "Please refer to the manual to see what file types are supported.",
-            True
+            "SU_GEM_1", True
         )
 
     # step 9 (parse inparfile, not map part)
@@ -115,7 +105,8 @@ def get_parameters(callcommand, Files, Printer):
     mapdict = GM_MR.scan_mapdirs(mapdirs)
     for _map in mapdict.values():
         _map.find_refpars(Printer)
-        dpr(_map.RefPars.choices)
+        if _map.RefPars:
+            dpr(_map.RefPars.choices)
 
     # step 12 (finish parsing cmdline, inparfile, defparfile)
 
@@ -164,23 +155,25 @@ def get_parameters(callcommand, Files, Printer):
     )
 
     for _map in mapdict.values():
-        _map.find_runpars(Files, Printer)
+        _map.find_runpars(Files, Printer, RunPars)
 
-    GM_PT.devprint(def_parfile)
-    GM_PT.devprint(RefPars)
-    GM_PT.devprint(RefPars.fname)
-    GM_PT.devprint(RefPars.options)
-    GM_PT.devprint(RefPars.choices)
-    GM_PT.devprint(type(RefPars.fname))
-    GM_PT.devprint(DefPars.choices)
-    GM_PT.devprint(DefPars.not_found)
-    GM_PT.devprint(InPars.choices)
-    GM_PT.devprint(InPars.not_found)
-    GM_PT.devprint(RunPars)
+    return CmdPars, InPars, DefPars, RefPars, mapdict
 
 
 def GEM(callcommand, Files, Printer):
-    get_parameters(callcommand, Files, Printer)
+    # step 1 (is GEM in demo mode?)
+    if callcommand[1] in ("demo"):
+        exp_inpfile = False
+    else:
+        exp_inpfile = True
+    # step 2 (very basic cmd line parse)
+    job, in_parfile, argslist = GM_PP.parse_commandline(
+        Files, Printer, callcommand, alljobs, "GMAP GEM", exp_inpfile, True
+    )
+
+    CmdPars, InPars, DefPars, RefPars, mapdict = get_parameters(
+        Files, Printer, in_parfile, argslist
+    )
     GM_PT.devprint("entered main of GEM - yet to be constructed")
 
 

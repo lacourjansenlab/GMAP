@@ -163,6 +163,22 @@ SU_MR_1
 When supplying a parameter name for a map, it may at most contain one '.'.
 
 
+SU_GEM
+------
+
+SU_GEM_1
+^^^^^^^^
+The default parameter file supplied to gem is expected to be a .txt file. This error was triggered because the file has a different extension. .ref files are planned to be supported in the future (See SU_FP_1) [ADD CROSSLINK!]
+
+
+SU_GM
+-----
+
+SU_GM_1
+^^^^^^^
+When calling the program, 'GMAP' is followed by the program you'd like to use. Currently, AIM and GEM are available. The program couldn't recognize 'AIM' or 'GEM' from your command.
+
+
 Other codes
 ===========
 

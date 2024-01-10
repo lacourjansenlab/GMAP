@@ -1,3 +1,12 @@
+"""
+Tests all the functions/classes/methods in the file:
+src/tools/MathFunctions.py.
+
+Missing tests:
+    None?
+"""
+
+
 # own lib imports
 from GMAP.src.tools import MathFunctions as GM_MF
 

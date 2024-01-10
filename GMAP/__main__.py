@@ -11,11 +11,11 @@ def _report_unknown_choice(Printer):
     Printer.warning(
         "\nChoice of program wasn't recognized. Please type the following "
         "for more\ninformation on how to use this package:\n\nGMP\n\n",
-        True
+        "SU_GM_1", True
     )
 
 
-def main():
+def cmd_interface(callcommand):
     Files = GM_FH.FileLocations()
     Printer = GM_PT.Printer(Files)
     with open(Files.script_dir / "logo.txt") as lfile:
@@ -24,7 +24,7 @@ def main():
     Printer.print(1, logostr)
 
     allhelps = ["help", "h", "-h"]
-    callcommand = sys.argv
+
     if len(callcommand) == 1:
         callcommand.append(allhelps[0])
     if len(callcommand) == 2:
@@ -53,6 +53,11 @@ def main():
             # modch.main(callcommand[1:], FILES)
     else:
         _report_unknown_choice(Printer)
+
+
+def main():
+    callcommand = sys.argv
+    cmd_interface(callcommand)
 
 
 if __name__ == "__main__":

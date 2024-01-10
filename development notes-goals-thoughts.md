@@ -104,23 +104,23 @@ to do (not yet implemented)
 1. now, knowing all refparfiles, finish parsing defparfile (part of step 12)
 2. combine cmdline, inparfile, defparfile, refparfile choices into runpar
    1. Not just in order (fill in gaps with lower order) also take into account possible conflicts arising from this
-   2. check whether requested files exist, are of correct format, etc.
+   2. check whether requested files exist, are of correct format, etc. If a parameter is not defined in defpars, it will also not be present in refpars. If we're missing a directory, we'll use the cwd instead. If we're missing a filename, we'll use the stub-name 'name_not_defined_x', where x is a number starting at 0 and counting upwards for each missing parameter name.
 
-| cmd<br>dir | cmd<br>file | inp<br>dir | inp<br>file | def<br>dir | def<br>file | final file used               |
-|------------|-------------|------------|-------------|------------|-------------|-------------------------------|
-| Yes        | Yes         | Any        | Any         | Any        | Any         | cwd/cmd.dir/cmd.file          |
-| Yes        | No          | Any        | Yes         | Any        | Any         | cwd/cmd.dir/inpar.file        |
-| Yes        | No          | Any        | No          | Any        | Yes         | cwd/cmd.dir/defpar.file       |
-| Yes        | No          | Any        | No          | Any        | No          | cwd/cmd.dir/refpar.file       |
-| No         | Yes         | Any        | Any         | Any        | Any         | cwd/cmd.file                  |
-| No         | No          | Yes        | Yes         | Any        | Any         | inpar/inpar.dir/inpar.file    |
-| No         | No          | Yes        | No          | Any        | Yes         | inpar/inpar.dir/defpar.file   |
-| No         | No          | Yes        | No          | Any        | No          | inpar/inpar.dir/refpar.file   |
-| No         | No          | No         | Yes         | Any        | Any         | inpar/inpar.file              |
-| No         | No          | No         | No          | Yes        | Yes         | defpar/defpar.dir/defpar.file |
-| No         | No          | No         | No          | Yes        | No          | defpar/defpar.dir/refpar.file |
-| No         | No          | No         | No          | No         | Yes         | defpar/defpar.file            |
-| No         | No          | No         | No          | No         | No          | refpar/refpar.dir/refpar.file |
+| cmd<br>dir | cmd<br>file | inp<br>dir | inp<br>file | def<br>dir | def<br>file | final file used                      |
+|------------|-------------|------------|-------------|------------|-------------|--------------------------------------|
+| Yes        | Yes         | Any        | Any         | Any        | Any         | cwd/cmd.dir/cmd.file                 |
+| Yes        | No          | Any        | Yes         | Any        | Any         | cwd/cmd.dir/inpar.file               |
+| Yes        | No          | Any        | No          | Any        | Yes         | cwd/cmd.dir/defpar.file              |
+| Yes        | No          | Any        | No          | Any        | No          | cwd/cmd.dir/name_not_defined_x       |
+| No         | Yes         | Any        | Any         | Any        | Any         | cwd/cmd.file                         |
+| No         | No          | Yes        | Yes         | Any        | Any         | inpar/inpar.dir/inpar.file           |
+| No         | No          | Yes        | No          | Any        | Yes         | inpar/inpar.dir/defpar.file          |
+| No         | No          | Yes        | No          | Any        | No          | inpar/inpar.dir/name_not_defined_x   |
+| No         | No          | No         | Yes         | Any        | Any         | inpar/inpar.file                     |
+| No         | No          | No         | No          | Yes        | Yes         | defpar/defpar.dir/defpar.file        |
+| No         | No          | No         | No          | Yes        | No          | defpar/defpar.dir/name_not_defined_x |
+| No         | No          | No         | No          | No         | Yes         | defpar/defpar.file                   |
+| No         | No          | No         | No          | No         | No          | cwd/name_not_defined_x               |
 3. step 2, but for maps
 
 # To discuss
@@ -155,10 +155,10 @@ to do (not yet implemented)
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
 - (KvA) TO DO:
-  - Make test for RunPar
-  - Make test for map-pars
-  - Make test for all different warnings GMAP can throw
-  - Think what further tests to add / increase test coverage (?)
+  - Make test for GM_FH.get_def_parfile (covered by test_GEM, I believe, but still, unittests, so test it!)
+  - Make test for GM_FH errors SU_FH_1-3
+  - Make test for warning SU_GM_1
+  - check docstrings of testfiles for further todo on tests.
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
