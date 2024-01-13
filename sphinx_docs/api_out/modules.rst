@@ -1,5 +1,5 @@
-GMAP Code documentation
-=======================
+GMAP
+====
 
 .. toctree::
    :maxdepth: 4

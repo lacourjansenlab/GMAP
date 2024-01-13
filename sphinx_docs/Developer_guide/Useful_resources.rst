@@ -34,6 +34,7 @@ Writing documentation
 ---------------------
 At some point the documentation itself has to be written. reST and numpydoc have their own syntax, here are some pages to help with that.
 
+* `Cheat sheets <https://bashtage.github.io/sphinx-material/rst-cheatsheet/rst-cheatsheet.html>`__ are always the best!
 * `Directives <https://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html>`__ automatially create text with a special format. There are many available options - a good example is the 'see also' section that exists on most numpy pages. `Example <https://numpy.org/doc/stable/reference/generated/numpy.mean.html>`__
 * Numpydoc has written a cohesive `style guide <https://numpydoc.readthedocs.io/en/latest/format.html>`__ which explains how each section of a docstring should be used, but doesn't explain much on how to actually do many things.
 * In addition to the previous point, `sphinx <https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html>`__ has some very good examples of docstrings.

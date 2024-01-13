@@ -115,6 +115,10 @@ class Printer:
         ----------
         message : str
             The warning/error message to print.
+        error_code : str
+            The error code belonging to the warning that is raised - to be
+            reported to the user. See the
+            :ref:`warning overview<UserGuide_page_warning_overview>` page.
         exitbool : bool, default=False
             Whether the program should stop due to this error.
         exception : BaseException, default=None

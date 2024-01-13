@@ -103,59 +103,34 @@ def get_parameters(Files, Printer, in_parfile, argslist):
 
     # step 11 (for each map, parse parameters.ref, if present)
     mapdict = GM_MR.scan_mapdirs(mapdirs)
-    for _map in mapdict.values():
-        _map.find_refpars(Printer)
-        if _map.RefPars:
-            dpr(_map.RefPars.choices)
+    for map_ in mapdict.values():
+        map_.find_refpars(Printer)
+        if map_.RefPars:
+            dpr(map_.RefPars.choices)
 
     # step 12 (finish parsing cmdline, inparfile, defparfile)
 
     # cmdline
     CmdPars = GM_PP.RawPars.from_cmdline(
         Printer, argslist, RefPars,
-        {name: _map.RefPars for name, _map in mapdict.items()},
+        {name: map_.RefPars for name, map_ in mapdict.items()},
         False
     )
 
-    for _map in mapdict.values():
-        _map.find_rawpars(Printer, CmdPars, InPars, DefPars)
+    for map_ in mapdict.values():
+        map_.find_rawpars(Printer, CmdPars, InPars, DefPars)
 
     CmdPars.finalize_map_pars(Printer)
     InPars.finalize_map_pars(Printer)
     if def_parfile != ref_parfile:
         DefPars.finalize_map_pars(Printer)
 
-    # # inparfile
-    # if InPars:
-    #     for name, _map in mapdict.items():
-    #         InPars.extract_choices_map(Printer, name, _map.RefPars)
-    #     InPars.finalize_map_pars(Printer)
-
-    # # defparfile - _if_ it contains anything from a certain map, it must
-    # # contain all from that map
-    # if def_parfile != ref_parfile:
-    #     for name, _map in mapdict.items():
-    #        present = DefPars.extract_choices_map(Printer, name, _map.RefPars)
-    #         if present and DefPars.is_default:
-    #             DefPars.check_completeness(Printer, _map.RefPars)
-    #     DefPars.finalize_map_pars(Printer)
-
-    # --------
-    # TO DO
-    # --------
-
-    # step 4 (combine cmdline, inparfile, defparfile, base refparfile
-    #         into runpar)
-    #       take into account possible conflicts
-    #       Check whether requested files exist, (are of correct format?), etc.
-    # step 5 (step 4, but for maps)
-
     RunPars = GM_PP.RunPars(
         Files, Printer, CmdPars, InPars, DefPars, RefPars, True
     )
 
-    for _map in mapdict.values():
-        _map.find_runpars(Files, Printer, RunPars)
+    for map_ in mapdict.values():
+        map_.find_runpars(Files, Printer, RunPars)
 
     return CmdPars, InPars, DefPars, RefPars, mapdict
 

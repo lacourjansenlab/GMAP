@@ -139,6 +139,13 @@
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -243,6 +250,13 @@ document.write(`
   </p>
   <ul class="bd-navbar-elements navbar-nav">
     
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
@@ -511,7 +525,7 @@ Linux, or MacOS.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.get_bare_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">get_bare_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.get_bare_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">get_bare_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floc_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.get_bare_file" title="Link to this definition">#</a></dt>
 <dd><p>Determine the path to a file given all input sources</p>
 <p>There are 4 places that might store information regarding the file’s path,
 which should be considered in a set order.</p>
@@ -536,8 +550,10 @@ stored in another parameter.</p>
 </dd>
 <dt><strong>file_parname</strong><span class="classifier">str</span></dt><dd><p>The name of the parameter storing the path of the desired file.</p>
 </dd>
-<dt><strong>file_hc</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>In case the parameter in <cite>file_parname</cite> does not exist in any of the
+<dt><strong>file_hc</strong><span class="classifier">list of <cite>pathlib.Path</cite></span></dt><dd><p>In case the parameter in <cite>file_parname</cite> does not exist in any of the
 given inputs, use this one.</p>
+</dd>
+<dt><strong>floc_hc</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The base location from where the paths should be taken.</p>
 </dd>
 <dt><strong>cmd_pardict</strong><span class="classifier">dict</span></dt><dd><p>The dict storing all parameter choices from the command line.</p>
 </dd>
@@ -552,7 +568,7 @@ same order.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>name</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The path to the desired file</p>
+<dt><strong>names</strong><span class="classifier">list of <cite>pathlib.Path</cite></span></dt><dd><p>The path to the desired file</p>
 </dd>
 </dl>
 </dd>
@@ -568,11 +584,28 @@ the location of the default parameters file.</p>
 <p>If the user specified anything (either the sourcedir or the name of the
 default parameter file), the program checks that. If nothing is present
 there or if it isn’t a file, an error is raised, and the program quits.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Files</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.</p>
+</dd>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>cmd_pardict</strong><span class="classifier">dict</span></dt><dd><p>The dict storing the parameter choices from the command line.</p>
+</dd>
+<dt><strong>in_parfile</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The filename of the input parameter file.</p>
+</dd>
+<dt><strong>in_pardict</strong><span class="classifier">dict</span></dt><dd><p>The parameters supplied in the input parameter file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.get_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.get_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.get_file" title="Link to this definition">#</a></dt>
 <dd><p>Determine the path to a file given all input sources</p>
 <p>As there are 4 places that might store information regarding the file’s
 path, each of which can contain 2 bits of information, which don’t both
@@ -605,7 +638,7 @@ desired parameter path is assumed relative to.</p>
 <dt><strong>dir_hc</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>In case the parameter in <cite>dir_parname</cite> does not exist in any of the
 given inputs, use this one.</p>
 </dd>
-<dt><strong>file_hc</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>In case the parameter in <cite>file_parname</cite> does not exist in any of the
+<dt><strong>files_hc</strong><span class="classifier">list of <cite>pathlib.Path</cite></span></dt><dd><p>In case the parameter in <cite>file_parname</cite> does not exist in any of the
 given inputs, use this one.</p>
 </dd>
 <dt><strong>cmd_pardict</strong><span class="classifier">dict</span></dt><dd><p>The dict storing all parameter choices from the command line.</p>
@@ -621,7 +654,7 @@ same order.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><strong>name</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The path to the desired file.</p>
+<dt><strong>names</strong><span class="classifier">list of <cite>pathlib.Path</cite></span></dt><dd><p>The path to the desired file.</p>
 </dd>
 <dt><strong>file_is_hc</strong><span class="classifier">bool</span></dt><dd><p>Whether the dir_hc/file_hc fallback had to be used.</p>
 </dd>

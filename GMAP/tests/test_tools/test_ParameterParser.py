@@ -394,7 +394,7 @@ class TestRawPars:
         # Still missing DefPars.not_found
 
     def test_fromdict(self):
-        Files, Printer, RefPars = TestRawPars.setup_test_SU_WP_base()
+        _, Printer, RefPars = TestRawPars.setup_test_SU_WP_base()
 
         pardict = {
             "verbose": ["4"],
@@ -1216,8 +1216,8 @@ class TestMapPars:
             False
         )
 
-        for _map in mapdict.values():
-            _map.find_rawpars(Printer, CmdPars, InPars, DefPars)
+        for map_ in mapdict.values():
+            map_.find_rawpars(Printer, CmdPars, InPars, DefPars)
 
         CmdPars.finalize_map_pars(Printer)
         InPars.finalize_map_pars(Printer)
@@ -1258,8 +1258,8 @@ class TestMapPars:
             Files, Printer, CmdPars, InPars, DefPars, RefPars, True
         )
 
-        for _map in mapdict.values():
-            _map.find_runpars(Files, Printer, RunPars)
+        for map_ in mapdict.values():
+            map_.find_runpars(Files, Printer, RunPars)
 
         testmap1 = mapdict["testmap1"]
         testmap2 = mapdict["testmap2"]
@@ -1405,8 +1405,8 @@ class TestMapPars:
             False
         )
 
-        for _map in mapdict.values():
-            _map.find_rawpars(Printer, CmdPars, InPars, DefPars)
+        for map_ in mapdict.values():
+            map_.find_rawpars(Printer, CmdPars, InPars, DefPars)
 
         CmdPars.finalize_map_pars(Printer)
         InPars.finalize_map_pars(Printer)
@@ -1536,7 +1536,7 @@ def test_SU_PP_3(capsys):
         "GEM", "run", "-verbose", "3"
     ]
     with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        job, in_parfile, cmd_pars = GM_PP.parse_commandline(
+        _ = GM_PP.parse_commandline(
             Files, Printer, callcommand, alljobs, "GMAP",
             expect_inputfile=True, expect_parameters=True
         )

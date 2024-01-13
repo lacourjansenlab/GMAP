@@ -139,6 +139,13 @@
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -243,6 +250,13 @@ document.write(`
   </p>
   <ul class="bd-navbar-elements navbar-nav">
     
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
@@ -468,22 +482,25 @@ not-so-parsed choices.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices" title="GMAP.src.tools.ParameterParser.RawPars.extract_choices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_choices</span></code></a>(Printer, given_dict, refpars)</p></td>
 <td><p>Takes each parameter and their choice from the dict for parsing</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map" title="GMAP.src.tools.ParameterParser.RawPars.extract_choices_map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_choices_map</span></code></a>(Printer, mapname, MapRefPars)</p></td>
-<td><p>Parses each <cite>not_found</cite> item using a given map</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars" title="GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalize_map_pars</span></code></a>(Printer)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars" title="GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">finalize_map_pars</span></code></a>(Printer)</p></td>
 <td><p>Check whether <cite>not_found</cite> is empty</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.from_cmdline" title="GMAP.src.tools.ParameterParser.RawPars.from_cmdline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_cmdline</span></code></a>(Printer, cmdargs, refpars, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.from_cmdline" title="GMAP.src.tools.ParameterParser.RawPars.from_cmdline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_cmdline</span></code></a>(Printer, cmdargs, refpars, ...)</p></td>
 <td><p>Create an instance of this class for parameters in the command line</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.from_dict" title="GMAP.src.tools.ParameterParser.RawPars.from_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dict</span></code></a>(Printer, fname, given_dict, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.from_dict" title="GMAP.src.tools.ParameterParser.RawPars.from_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dict</span></code></a>(Printer, fname, given_dict, ...)</p></td>
 <td><p>Create an instance of this class for parameters stored in a dict.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.from_file" title="GMAP.src.tools.ParameterParser.RawPars.from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_file</span></code></a>(Printer, fname, refpars, is_default)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.from_file" title="GMAP.src.tools.ParameterParser.RawPars.from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_file</span></code></a>(Printer, fname, refpars, is_default)</p></td>
 <td><p>Create an instance of this class for parameters stored in a file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.verify_choice" title="GMAP.src.tools.ParameterParser.RawPars.verify_choice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify_choice</span></code></a>(Printer, parname, choice, RefPars)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.parse_cmd_choice" title="GMAP.src.tools.ParameterParser.RawPars.parse_cmd_choice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_cmd_choice</span></code></a>(Printer, cmdargs, curpar, ...)</p></td>
+<td><p>Extracts the choice from the command line</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.parse_cmd_parname" title="GMAP.src.tools.ParameterParser.RawPars.parse_cmd_parname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_cmd_parname</span></code></a>(Printer, curparraw, ...)</p></td>
+<td><p>Identifies a parameter name specified on the command line</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.verify_choice" title="GMAP.src.tools.ParameterParser.RawPars.verify_choice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">verify_choice</span></code></a>(Printer, parname, choice, RefPars)</p></td>
 <td><p>Check if the supplied choice is valid</p></td>
 </tr>
 </tbody>
@@ -514,7 +531,7 @@ and handle errors.</p>
 <dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.check_par_existence">
 <span class="sig-name descname"><span class="pre">check_par_existence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname_full</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname_refpars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">do_verify</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.check_par_existence" title="Link to this definition">#</a></dt>
 <dd><p>See if the given parameter exists within the supplied RefPars.</p>
-<p>After <a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices" title="GMAP.src.tools.ParameterParser.RawPars.extract_choices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">extract_choices()</span></code></a> or <a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map" title="GMAP.src.tools.ParameterParser.RawPars.extract_choices_map"><code class="xref py py-meth docutils literal notranslate"><span class="pre">extract_choices_map()</span></code></a> found a
+<p>After <a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices" title="GMAP.src.tools.ParameterParser.RawPars.extract_choices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">extract_choices()</span></code></a> found a
 parameter/choice pair that says it should be present in the supplied
 RefPars, it is given to this function to see whether it actually does.
 If so (and if requested), <a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.verify_choice" title="GMAP.src.tools.ParameterParser.RawPars.verify_choice"><code class="xref py py-meth docutils literal notranslate"><span class="pre">verify_choice()</span></code></a> is called to see if
@@ -544,6 +561,10 @@ otherwise as supplied</p>
 </dd>
 <dt><strong>found</strong><span class="classifier">bool</span></dt><dd><p>Whether the requested parameter was found to exist.</p>
 </dd>
+<dt><strong>parname_refpars</strong><span class="classifier">str</span></dt><dd><p>The name that we should look for in refpars. Most notably, if
+the supplied parameter was of nobool, the no is removed in this
+output.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -572,8 +593,8 @@ otherwise as supplied</p>
 <span class="sig-name descname"><span class="pre">extract_choices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">given_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices" title="Link to this definition">#</a></dt>
 <dd><p>Takes each parameter and their choice from the dict for parsing</p>
 <p>Each pair is forwarded to the correct location for further parsing.
-Does not deal in-depth with map-specific parameters.
-<a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map" title="GMAP.src.tools.ParameterParser.RawPars.extract_choices_map"><code class="xref py py-meth docutils literal notranslate"><span class="pre">extract_choices_map()</span></code></a> does.</p>
+Does not deal in-depth with map-specific parameters, unless the
+<a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a> instance is created specifically for that map.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -592,37 +613,14 @@ expected when there are 0 or 1 choices.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.extract_choices_map">
-<span class="sig-name descname"><span class="pre">extract_choices_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MapRefPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map" title="Link to this definition">#</a></dt>
-<dd><p>Parses each <cite>not_found</cite> item using a given map</p>
-<p><cite>Extract_choices</cite> will not have dealt succesfully with any map specific
-parameters that might have been there, but instead have added them to
-the <cite>not_found</cite> dictionary. Now (slightly further in initialization),
-we have the map parameters available, so this dictionary can be dealt
-with.
-This is done with a separate call to this function for every map that
-we want to check against.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
-and handle errors.</p>
-</dd>
-<dt><strong>mapname</strong><span class="classifier">str</span></dt><dd><p>The name of the map whose parameters will be checked against</p>
-</dd>
-<dt><strong>MapRefPars</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a></span></dt><dd><p>Contains all parameters available for this map</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars">
 <span class="sig-name descname"><span class="pre">finalize_map_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars" title="Link to this definition">#</a></dt>
 <dd><p>Check whether <cite>not_found</cite> is empty</p>
-<p>This method is called after <a class="reference internal" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map" title="GMAP.src.tools.ParameterParser.RawPars.extract_choices_map"><code class="xref py py-meth docutils literal notranslate"><span class="pre">extract_choices_map()</span></code></a> is run for
-every available map. Any parameters recognised there were removed from
+<p>This method is called after
+<a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map.find_rawpars" title="GMAP.src.tools.MapReader.Map.find_rawpars"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_rawpars()</span></code></a> is run for
+every available instance of
+<a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a>. Any parameters
+recognised there were removed from
 the <cite>not_found</cite> dictionary, so it should be empty, if all parameters
 were understood. Here we check if that is indeed the case.</p>
 <dl class="field-list">
@@ -745,6 +743,77 @@ and handle errors.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.parse_cmd_choice">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_cmd_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmdargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curpar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curpar_tocheck</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars_to_use</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.parse_cmd_choice" title="Link to this definition">#</a></dt>
+<dd><p>Extracts the choice from the command line</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>cmdargs</strong><span class="classifier">list of str</span></dt><dd><p>A slice from the list generated using sys.argv</p>
+</dd>
+<dt><strong>curpar</strong><span class="classifier">str</span></dt><dd><p>The full name of the parameter. Basically mapname.parname. If
+the parameter belongs to the main program, this is just parname.</p>
+</dd>
+<dt><strong>curpar_to_check</strong><span class="classifier">str</span></dt><dd><p>The name of the parameter, without the map prefix - as it should
+be looked up in the refpars object.</p>
+</dd>
+<dt><strong>refpars_to_use</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a></span></dt><dd><p>The RefPars object to which the recognized parameter belongs.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>choice</strong><span class="classifier">list of str</span></dt><dd><p>The choice that was submitted on the command line, parsed to the
+same format as the values in the dict from a parameter file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.parse_cmd_parname">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_cmd_parname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curparraw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refpars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maprefpars_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.parse_cmd_parname" title="Link to this definition">#</a></dt>
+<dd><p>Identifies a parameter name specified on the command line</p>
+<p>Removes hyphens, figures out whether the name is shorthand or not,
+whether it belongs to the base program, or one of the maps, and
+whether (in the case of bools) the parameter is inverted using the
+nobool format. If it is, this invertion is not cancelled, the ‘no’
+part is left in place.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>curparraw</strong><span class="classifier">str</span></dt><dd><p>The parameter name as specified on the command line</p>
+</dd>
+<dt><strong>refpars</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a></span></dt><dd><p>Contains all parameters that might be found in <cite>given_dict</cite>.</p>
+</dd>
+<dt><strong>maprefpars_dict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary containing the RefPars objects for all recognized
+maps. Keys are the map names, values are their RefPars object.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>curpar</strong><span class="classifier">str</span></dt><dd><p>The full name of the parameter. Basically mapname.parname. If
+the parameter belongs to the main program, this is just parname.</p>
+</dd>
+<dt><strong>curpar_to_check</strong><span class="classifier">str</span></dt><dd><p>The name of the parameter, without the map prefix - as it should
+be looked up in the refpars object.</p>
+</dd>
+<dt><strong>refpars_to_use</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a></span></dt><dd><p>The RefPars object to which the recognized parameter belongs.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RawPars.verify_choice">
 <span class="sig-name descname"><span class="pre">verify_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RefPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RawPars.verify_choice" title="Link to this definition">#</a></dt>
 <dd><p>Check if the supplied choice is valid</p>
@@ -829,6 +898,12 @@ and handle errors.</p>
 <dt class="field-odd">Attributes<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>fname</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The absolute path to the file that contains all desired parameters</p>
+</dd>
+<dt><strong>nondefcount</strong><span class="classifier">int</span></dt><dd><p>The amount of path-type parameters encountered that have no choice
+determined in the reference parameter file. Every time one is found,
+this number is used to generate a temporary filename so the run can
+continue. Then, the number is incremented by one to prevent duplicate
+file names.</p>
 </dd>
 <dt><strong>options</strong><span class="classifier">dict</span></dt><dd><p>Some parameters don’t allow free choice, but instead require you
 to pick from a certain list. <cite>options</cite> contains that list. Its
@@ -973,7 +1048,8 @@ explanation on datatypes.</p>
 <dd><p>Extract the choice for a parameter specified on the given line</p>
 <p>Analizes all information regarding the choice and options. Also
 converts any choice/option into the datatype recognized by
-<a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_type" title="GMAP.src.tools.ParameterParser.RefPars.parse_line_type"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_line_type()</span></code></a></p>
+<a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars.parse_line_type" title="GMAP.src.tools.ParameterParser.RefPars.parse_line_type"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_line_type()</span></code></a>. Stores found information in self.options
+and self.choices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -1073,7 +1149,7 @@ cleaning that line)</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RunPars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">RunPars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CmdPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">InPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DefPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RefPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_main</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RunPars" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">RunPars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CmdPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">InPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DefPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RefPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_main</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MainRunPars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RunPars" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stores the final choices used for the calculation</p>
 <p>Choices can be specified in multiple places. In the end, they have to be
@@ -1112,6 +1188,15 @@ from a separate default parameters file.</p>
 </dd>
 <dt><strong>RefPars</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a></span></dt><dd><p>Contains all available parameters from GMAP itself (not map-specific)</p>
 </dd>
+<dt><strong>is_main</strong><span class="classifier">bool</span></dt><dd><p>Whether this instance of RunPar belongs to the main program (and thus
+contains parameters about the runtime itself) - indicated by ‘True’,
+or if it belongs to an instance of
+<a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> - indicated by ‘False’.</p>
+</dd>
+<dt><strong>MainRunPars</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a> or None, default=None</span></dt><dd><p>The instance of RunPars that is the main (and thus contains the
+main parameters). If the main instance is still being created,
+None will be passed (or assumed) instead, and ‘self’ will be used.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -1124,6 +1209,21 @@ from a separate default parameters file.</p>
 </dd>
 </dl>
 </div>
+<dl class="field-list">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>is_main</strong><span class="classifier">bool</span></dt><dd><p>Whether this instance of RunPar belongs to the main program (and thus
+contains parameters about the runtime itself) - indicated by ‘True’,
+or if it belongs to an instance of
+<a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> - indicated by ‘False’.</p>
+</dd>
+<dt><strong>MainRunPars</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The instance of RunPars that is the main (and thus contains the
+main parameters). When assigning this attribute to the ‘main’ instance,
+‘self’ will be used.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
@@ -1452,7 +1552,7 @@ it is not required to have any.</p>
 </dd>
 <dt><strong>in_parfile</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The path to the input file given.</p>
 </dd>
-<dt><strong>cmd_pars</strong><span class="classifier">list of str or None</span></dt><dd><p>The part of the command that should contain information on
+<dt><strong>cmd_pars</strong><span class="classifier">list of str</span></dt><dd><p>The part of the command that should contain information on
 parameter choices - to be parsed later.</p>
 </dd>
 </dl>
@@ -1511,11 +1611,12 @@ parameter choices - to be parsed later.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.check_par_existence"><code class="docutils literal notranslate"><span class="pre">RawPars.check_par_existence()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.create_empty"><code class="docutils literal notranslate"><span class="pre">RawPars.create_empty()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices"><code class="docutils literal notranslate"><span class="pre">RawPars.extract_choices()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.extract_choices_map"><code class="docutils literal notranslate"><span class="pre">RawPars.extract_choices_map()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.finalize_map_pars"><code class="docutils literal notranslate"><span class="pre">RawPars.finalize_map_pars()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.from_cmdline"><code class="docutils literal notranslate"><span class="pre">RawPars.from_cmdline()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.from_dict"><code class="docutils literal notranslate"><span class="pre">RawPars.from_dict()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.from_file"><code class="docutils literal notranslate"><span class="pre">RawPars.from_file()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.parse_cmd_choice"><code class="docutils literal notranslate"><span class="pre">RawPars.parse_cmd_choice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.parse_cmd_parname"><code class="docutils literal notranslate"><span class="pre">RawPars.parse_cmd_parname()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RawPars.verify_choice"><code class="docutils literal notranslate"><span class="pre">RawPars.verify_choice()</span></code></a></li>
 </ul>
 </li>

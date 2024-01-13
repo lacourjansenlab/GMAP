@@ -1,3 +1,5 @@
+.. _UserGuide_page_warning_overview:
+
 ================
 Warning overview
 ================
@@ -20,23 +22,34 @@ The file structure for reference parameter files is different than that of defau
 
 SU_FP_3
 ^^^^^^^
-The type of a parameter in the reference parameter file has been specified slightly wrong. The format is recognized, but the contents are probably misspelled. See the examples in [ADD CROSSLINK!].
+The type of a parameter in the reference parameter file has been specified slightly wrong. The format is recognized, but the contents are probably misspelled. 
+If you are developing the file that triggered the error, :ref:`here <UserGuide_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.
 
 SU_FP_4
 ^^^^^^^
-An unexpected error was encountered while parsing the types of parameters in the reference parameter file. See if the examples in [ADD CROSSLINK!] help fixing it. It might be that there is a mistake in the (type or amount of) brackets used, whitespaces between the brackets, and many more.
+An unexpected error was encountered while parsing the types of parameters in the reference parameter file. It might be that there is a mistake in the (type or amount of) brackets used, whitespaces between the brackets, and many more.
+If you are developing the file that triggered the error, :ref:`here <UserGuide_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.
 
 SU_FP_5
 ^^^^^^^
-While parsing the choice of a parameter in the reference parameter file, there was a wrong type. Either the parameter has an unexpected python type, or a bool was specified with an choice of the wrong type (it couldn't be converted to a True or False). [ADD CROSSLINK!]
+While parsing the choice of a parameter in the reference parameter file, there was a wrong type. Either the parameter has an unexpected python type, or a bool was specified with an choice of the wrong type (it couldn't be converted to a True or False). 
+If you are developing the file that triggered the error, :ref:`here <UserGuide_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.
 
 SU_FP_6
 ^^^^^^^
-While parsing the choice of a parameter in the reference parameter file, an unexpected amount of choices was encountered. If the type of the parameter does not contain 'list\_', only one choice can be given. [ADD CROSSLINK!]
+While parsing the choice of a parameter in the reference parameter file, an unexpected amount of choices was encountered. If the type of the parameter does not contain 'list\_', only one choice can be given.
+If you are developing the file that triggered the error, :ref:`here <UserGuide_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.
 
 SU_FP_7
 ^^^^^^^
-While parsing the choice of a parameter in the reference parameter file, a different error occurred. See if the examples in [ADD CROSSLINK!] help fixing it.
+While parsing the choice of a parameter in the reference parameter file, a different error occurred.
+If you are developing the file that triggered the error, :ref:`here <UserGuide_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.
+
 
 
 SU_WP
@@ -44,63 +57,63 @@ SU_WP
 
 SU_WP_1
 ^^^^^^^
-This error is raised when the parameter choices on the command line couldn't be understood. Make sure that each parameter name is preceeded by '-' or, where applicable, '--'. [ADD CROSSLINK!]
+This error is raised when the parameter choices on the command line couldn't be understood. Make sure that each parameter name is preceeded by '-' or, where applicable, '--'. See :ref:`this page <UserGuide_page_specifying_parameters_commandline>` for more information on how to specify a parameter on the command line.
 
 SU_WP_2
 ^^^^^^^
-One of the parameters supplied on the command line contains a '.' indicating that this parameter is part of a map. The map name should be before the '.', while the parameter name should go directly after. The combination of map and parameter name was not recognized by the program. [ADD CROSSLINK!]
+One of the parameters supplied on the command line contains a '.' indicating that this parameter is part of a map. The map name should be before the '.', while the parameter name should go directly after. The combination of map and parameter name was not recognized by the program. See :ref:`this page <UserGuide_page_specifying_parameters_commandline>` for more information on how to specify a parameter on the command line, or consult the documentation of the map to see what parameters are allowed.
 
 SU_WP_3
 ^^^^^^^
-One of the parameters supplied on the command line was not recognized. [ADD CROSSLINK!]
+One of the parameters supplied on the command line was not recognized. See :ref:`this page <UserGuide_page_specifying_parameters_commandline>` for more information on how to specify a parameter on the command line, and see :ref:`this page <UserGuide_page_parameter_overview>` for what parameters are available.
 
 SU_WP_4
 ^^^^^^^
-The given parameter requires a choice to be provided, but this did not happen. [ADD CROSSLINK!]
+The given parameter requires a choice to be provided, but this did not happen. See :ref:`this page <UserGuide_page_parameter_overview>` for more information about this parameter, and :ref:`this page <UserGuide_page_specifying_parameters_commandline>` for more information on how to specify a parameter on the command line.
 
 SU_WP_5
 ^^^^^^^
-When specifying a choice for a parameter that can accept multiple choices, the last choice must always be appended by '\\;', without spaces between the last choice and the '\\;'. [ADD CROSSLINK!]
+When specifying a choice for a parameter that can accept multiple choices, the last choice must always be appended by '\\;', without spaces between the last choice and the '\\;'. See :ref:`this page <UserGuide_page_specifying_parameters_commandline>` for more information on how to specify a parameter on the command line.
 
 SU_WP_6
 ^^^^^^^
-One of the parameters supplied in a parameter file (either input or default, see error message) was not recognized. [ADD CROSSLINK!]
+One of the parameters supplied in a parameter file (either input or default, see error message) was not recognized. See :ref:`this page <UserGuide_page_parameter_overview>` for a list of all available parameters, and :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how to specify a parameter in a parameter file.
 
 SU_WP_7
 ^^^^^^^
-A default parameter file must contain a choice for every available parameter. [ADD CROSSLINK!]
+A default parameter file must contain a choice for every available parameter. See :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how parameter files work.
 
 SU_WP_8
 ^^^^^^^
-One of the parameters supplied in a parameter file (either input or default, see error message) did not have a choice specified. Each parameter (except bool-type) must come with a choice, so one should be given. If you do not want to make a choice, you can remove the line (if the file is not a default parameter file) [ADD CROSSLINK!]
+One of the parameters supplied in a parameter file (either input or default, see error message) did not have a choice specified. Each parameter must come with a choice, so one should be given. If you do not want to make a choice, you can remove the line (if the file is not a default parameter file). See :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how to specify a parameter in a parameter file.
 
 SU_WP_9
 ^^^^^^^
-One of the parameters supplied in a parameter file (either input or default, see error message) had too many choices specified. Only one was expected. [ADD CROSSLINK!]
+One of the parameters supplied in a parameter file (either input or default, see error message) had too many choices specified. Only one was expected. See :ref:`this page <UserGuide_page_parameter_overview>` for more information about this parameter, and :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how to specify a parameter in a parameter file.
 
 SU_WP_10
 ^^^^^^^^
-One of the parameters supplied in a parameter file (either input or default, see error message) expects a bool for a choice (either True or False), but something else was given. It was unclear which was meant. [ADD CROSSLINK!]
+One of the parameters supplied in a parameter file (either input or default, see error message) expects a bool for a choice (either True or False), but something else was given. It was unclear which was meant. See :ref:`this page <UserGuide_page_parameter_overview>` for more information about this parameter, and :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how to specify a parameter in a parameter file.
 
 SU_WP_11
 ^^^^^^^^
-One of the parameters supplied in a parameter file (either input or default, see error message) has a choice, but it is not allowed. See [ADD CROSSLINK!] for what choices are allowed.
+One of the parameters supplied in a parameter file (either input or default, see error message) has a choice, but it is not allowed. See :ref:`this page <UserGuide_page_parameter_overview>` for more information about this parameter including allowed choices, and :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how to specify a parameter in a parameter file.
 
 SU_WP_12
 ^^^^^^^^
-One of the parameters supplied in a parameter file (either input or default, see error message) could not be converted to the correct type. Most likely, a number was expected, but there were letters in there, or an integer (whole number) was expected, and the choice contains a decimal point. [ADD CROSSLINK!]
+One of the parameters supplied in a parameter file (either input or default, see error message) could not be converted to the correct type. Most likely, a number was expected, but there were letters in there, or an integer (whole number) was expected, and the choice contains a decimal point. See :ref:`this page <UserGuide_page_parameter_overview>` for more information about this parameter, and :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how to specify a parameter in a parameter file.
 
 SU_WP_13
 ^^^^^^^^
-Default parameter files must contain all parameters, but there is an exception. There is a subclass of parameters that are not allowed in the default parameter file, because it would simply not make sense. This parameter is one of them, and should be removed from the default parameter file. [ADD CROSSLINK!]
+Default parameter files must contain all parameters, but there is an exception. There is a subclass of parameters that are not allowed in the default parameter file, because it would simply not make sense. This parameter is one of them, and should be removed from the default parameter file. See :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how parameter files work.
 
 SU_WP_14
 ^^^^^^^^
-Default parameter files must contain all parameters, but this one is missing. Please add it. [ADD CROSSLINK!]
+Default parameter files must contain all parameters, but this one is missing. Please add it. See :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how parameter files work.
 
 SU_WP_15
 ^^^^^^^^
-One of the parameters supplied in a parameter file (either input or default, see error message) contained a '.' indicating that this parameter is part of a map. The map name should be before the '.', while the parameter name should go directly after. The combination of map and parameter name was not recognized by the program. [ADD CROSSLINK!]
+One of the parameters supplied in a parameter file (either input or default, see error message) contained a '.' indicating that this parameter is part of a map. The map name should be before the '.', while the parameter name should go directly after. The combination of map and parameter name was not recognized by the program. See :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how to specify a parameter on the command line, or consult the documentation of the map to see what parameters are allowed.
 
 
 SU_NP
@@ -112,11 +125,11 @@ The program needs a choice for the parameter, but none was found. Most likely, t
 
 SU_NP_2
 ^^^^^^^
-After interpreting the choices made on the command line, input-, default- and reference parameter files, the mentioned choice was decided on. However, the found filename does not exist. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. [ADD CROSSLINK!]
+After interpreting the choices made on the command line, input-, default- and reference parameter files, the mentioned choice was decided on. However, the found filename does not exist. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. :ref:`This page <UserGuide_page_parameter_overview>` has more information on how file locations should be given.
 
 SU_NP_3
 ^^^^^^^
-After interpreting the choices made on the command line, input-, default- and reference parameter files, the mentioned choice was decided on. However, the found directory name does not exist. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. [ADD CROSSLINK!]
+After interpreting the choices made on the command line, input-, default- and reference parameter files, the mentioned choice was decided on. However, the found directory name does not exist. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. :ref:`This page <UserGuide_page_parameter_overview>` has more information on how file locations should be given.
 
 
 SU_PP

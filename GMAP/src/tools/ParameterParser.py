@@ -3,6 +3,7 @@ from pathlib import Path
 
 import GMAP.src.tools.FileHandler as GM_FH
 from GMAP.src.tools.PrintTools import devprint as dpr
+dpr("", end="")  # to disable error of dpr unused
 
 
 class RefPars:
@@ -45,6 +46,12 @@ class RefPars:
     ----------
     fname : pathlib.Path
         The absolute path to the file that contains all desired parameters
+    nondefcount : int
+        The amount of path-type parameters encountered that have no choice
+        determined in the reference parameter file. Every time one is found,
+        this number is used to generate a temporary filename so the run can
+        continue. Then, the number is incremented by one to prevent duplicate
+        file names.
     options : dict
         Some parameters don't allow free choice, but instead require you
         to pick from a certain list. `options` contains that list. Its
@@ -315,7 +322,6 @@ class RefPars:
             usable for :meth:`parse_line_choice`.
         """
 
-        # self.parse_line_choice(linelist)
         try:
             self.parse_line_choice(linelist)
         except ValueError as ex:
@@ -350,7 +356,8 @@ class RefPars:
 
         Analizes all information regarding the choice and options. Also
         converts any choice/option into the datatype recognized by
-        :meth:`parse_line_type`
+        :meth:`parse_line_type`. Stores found information in self.options
+        and self.choices.
 
         Parameters
         ----------
@@ -358,17 +365,22 @@ class RefPars:
             The contents of a single line in the parameters.ref file, but
             processed and split into a usable format.
         """
+
+        # extract the parameter name we're looking at
         parname_raw = linelist[0]
         parchoice_raw = linelist[1:]
-
         parname = self.parse_key(parname_raw)[0]
 
+        # if this parameter shouldn't be defined in a default file, there
+        # will not be any useful information on this line.
         if parname in self.not_expected_in_deffile:
             return
 
         options = []
         choices = []
 
+        # extract all bits of information, and store them in options (always),
+        # and choices (if the option was surrounded by '[]').
         for bit_raw in parchoice_raw:
             if bit_raw[0] == "[" and bit_raw[-1] == "]":
                 bit = bit_raw[1:-1]
@@ -536,12 +548,13 @@ class RawPars:
         instance : :class:`RawPars`
             A newly generated instance.
         """
+
         instance = cls(None, False)
         instance.extract_choices(None, {}, {})
         return instance
 
     @classmethod
-    def from_dict(cls, Printer, fname, given_dict, refpars, is_default):
+    def from_dict(cls, Printer, fname, given_dict, RefPars, is_default):
         """Create an instance of this class for parameters stored in a dict.
 
         .. seealso ::
@@ -559,7 +572,7 @@ class RawPars:
             Contains parameter choices. Keys are the parameter names (str),
             values are lists containing all choices (str). Lists are still
             expected when there are 0 or 1 choices.
-        refpars : :class:`RefPars`
+        RefPars : :class:`RefPars`
             Contains all parameters that might be found in `given_dict`.
         is_default : bool
             Whether this is a default file (i.e. complete, see
@@ -577,13 +590,13 @@ class RawPars:
 
         instance = cls(fname, is_default)
 
-        instance.extract_choices(Printer, given_dict, refpars)
+        instance.extract_choices(Printer, given_dict, RefPars)
         if is_default:
-            instance.check_completeness(Printer, refpars)
+            instance.check_completeness(Printer, RefPars)
         return instance
 
     @classmethod
-    def from_file(cls, Printer, fname, refpars, is_default):
+    def from_file(cls, Printer, fname, RefPars, is_default):
         """Create an instance of this class for parameters stored in a file.
 
         First obtains a dict from the file, then uses :meth:`from_dict`
@@ -598,7 +611,7 @@ class RawPars:
             and handle errors.
         fname : pathlib.Path
             The name of the file from which to obtain the parameters
-        refpars : :class:`RefPars`
+        RefPars : :class:`RefPars`
             Contains all parameters that might be found in `given_dict`.
         is_default : bool
             Whether this is a default file (i.e. complete, see
@@ -614,13 +627,13 @@ class RawPars:
             given_dict = get_pardict(file)
 
         instance = cls.from_dict(
-            Printer, fname, given_dict, refpars, is_default
+            Printer, fname, given_dict, RefPars, is_default
         )
         return instance
 
     @classmethod
     def from_cmdline(
-        cls, Printer, cmdargs, refpars, maprefpars_dict, is_default
+        cls, Printer, cmdargs, RefPars, maprefpars_dict, is_default
     ):
         """Create an instance of this class for parameters in the command line
 
@@ -638,7 +651,7 @@ class RawPars:
             and handle errors.
         cmdargs : list of str
             A slice from the list generated using sys.argv
-        refpars : :class:`RefPars`
+        RefPars : :class:`RefPars`
             Contains all parameters that might be found in `given_dict`.
         maprefpars_dict : dict
             A dictionary containing the RefPars objects for all recognized
@@ -660,7 +673,7 @@ class RawPars:
         # - extract num of expected arguments
         # - extract actual arguments
 
-        instance = cls(Path("command line"), is_default)
+        temp_instance = cls(Path("command line"), is_default)
         pardict = {}
 
         while len(cmdargs) > 0:
@@ -674,131 +687,207 @@ class RawPars:
                     "SU_WP_1", True
                 )
             curparraw = cmdargs.pop(0)
-            curpar = curparraw.lstrip("-")
-            hyphno = len(curparraw) - len(curpar)
-            if hyphno == 1:
-                expect_shorthand = True
-            else:
-                expect_shorthand = False
-
-            warntext = (
-                f"The parameter {curpar} as specified on the command "
-                "line is not recognised. Please make sure you spelled "
-                "it correctly."
+            (
+                curpar, curpar_tocheck, refpars_to_use
+            ) = cls.parse_cmd_parname(
+                Printer, curparraw, RefPars, maprefpars_dict
             )
 
-            #   - maps (see what map this parameter belongs to)
-            if '.' in curpar:
-                curpar_list = curpar.split('.')
-                try:
-                    refpars_to_use = maprefpars_dict[curpar_list[0]]
-                    curpar_tocheck = curpar_list[1]
-                except KeyError as ex:
-                    Printer.warning(warntext, "SU_WP_2", True, exception=ex)
-
-            #   - base program - expect its from here.
-            else:
-                refpars_to_use = refpars
-                curpar_tocheck = curpar
-
-            #   - expand shorthands
-            if expect_shorthand:
-                found = False
-                try:
-                    curpar_tocheck = refpars_to_use.shorthands[curpar_tocheck]
-                    found = True
-                    ex = None
-                except Exception as excep:
-                    ex = excep
-
-                if not found and curpar_tocheck[:2].lower().startswith("no"):
-                    try:
-                        curpar_tocheck = "no" + refpars_to_use.shorthands[
-                            curpar_tocheck[2:]
-                        ]
-                        found = True
-                    except Exception:
-                        pass
-
-                if not found:
-                    if "." in curpar:
-                        warncode = "SU_WP_2"
-                    else:
-                        warncode = "SU_WP_3"
-                    Printer.warning(warntext, warncode, True, exception=ex)
-
-                if "." in curpar:
-                    curpar = curpar_list[0] + "." + curpar_tocheck
-                else:
-                    curpar = curpar_tocheck
-            # dpr(curpar_tocheck)
-
             # Step 2: See if it actually exists
-            found = instance.check_par_existence(
+            found = temp_instance.check_par_existence(
                 Printer, curpar, curpar_tocheck, refpars_to_use, None, False
             )[1]
-
             if not found:
-                dpr(curpar, curpar_tocheck, refpars_to_use.fname)
-                Printer.warning(warntext, "SU_WP_3", True)
+                Printer.warning(
+                    f"The parameter {curpar} as specified on the command "
+                    "line is not recognised. Please make sure you spelled "
+                    "it correctly.",
+                    "SU_WP_3", True
+                )
 
             # Step 3: extract num of expected arguments, and also:
             # Step 4: extract actual arguments
-            if curpar_tocheck in refpars_to_use.maybe_list:
-                # Lists MUST always come with at least one choice.
-                try:
-                    choice = [cmdargs.pop(0)]
-                except IndexError as ex:
-                    Printer.warning(
-                        f"The parameter {curpar} specified in the command "
-                        "line requires a choice to be given.",
-                        "SU_WP_4", True, exception=ex
-                    )
-
-                warntext = (
-                    f"The parameter {curpar} specified in the command line "
-                    "requires the last choice to be appended with '\\;'."
-                )
-                while not choice[-1].endswith("\\;"):
-                    try:
-                        choice.append(cmdargs.pop(0))
-                    except IndexError:
-                        Printer.warning(warntext, "SU_WP_5", True)
-
-                    if choice[-1].startswith("-"):
-                        Printer.warning(warntext, "SU_WP_5", True)
-                choice[-1] = choice[-1][:-2]
-
-            else:
-                # Here, we blindly assume that the user gave the correct
-                # amount of choices (bools don't require them). Whether they
-                # did will be verified at 'extract choices', a few lines down.
-                try:
-                    if not cmdargs[0].startswith("-"):
-                        choice = [cmdargs.pop(0)]
-                    else:
-                        choice = []
-                except Exception:
-                    choice = []
+            choice = cls.parse_cmd_choice(
+                Printer, cmdargs, curpar, curpar_tocheck, refpars_to_use
+            )
 
             pardict[curpar] = choice
 
-        instance.extract_choices(Printer, pardict, refpars)
-        if is_default:
-            instance.check_completeness(Printer, refpars)
-
-        # for name, maprefpar in maprefpars_dict.items():
-        #     instance.extract_choices_map(name, Printer, maprefpar)
-        # instance.finalize_map_pars(Printer)
+        instance = cls.from_dict(
+            Printer, Path("command line"), pardict, RefPars, is_default
+        )
 
         return instance
 
-    def extract_choices(self, Printer, given_dict, refpars):
+    @staticmethod
+    def parse_cmd_parname(Printer, curparraw, RefPars, maprefpars_dict):
+        """Identifies a parameter name specified on the command line
+
+        Removes hyphens, figures out whether the name is shorthand or not,
+        whether it belongs to the base program, or one of the maps, and
+        whether (in the case of bools) the parameter is inverted using the
+        nobool format. If it is, this invertion is not cancelled, the 'no'
+        part is left in place.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        curparraw : str
+            The parameter name as specified on the command line
+        RefPars : :class:`RefPars`
+            Contains all parameters that might be found in `given_dict`.
+        maprefpars_dict : dict
+            A dictionary containing the RefPars objects for all recognized
+            maps. Keys are the map names, values are their RefPars object.
+
+        Returns
+        -------
+        curpar : str
+            The full name of the parameter. Basically mapname.parname. If
+            the parameter belongs to the main program, this is just parname.
+        curpar_to_check : str
+            The name of the parameter, without the map prefix - as it should
+            be looked up in the refpars object.
+        RefParsToUse : :class:`RefPars`
+            The RefPars object to which the recognized parameter belongs.
+        """
+
+        curpar = curparraw.lstrip("-")
+        hyphno = len(curparraw) - len(curpar)
+        if hyphno == 1:
+            expect_shorthand = True
+        else:
+            expect_shorthand = False
+
+        warntext = (
+            f"The parameter {curpar} as specified on the command "
+            "line is not recognised. Please make sure you spelled "
+            "it correctly."
+        )
+
+        #   - maps (see what map this parameter belongs to)
+        if '.' in curpar:
+            curpar_list = curpar.split('.')
+            try:
+                RefParsToUse = maprefpars_dict[curpar_list[0]]
+                curpar_tocheck = curpar_list[1]
+            except KeyError as ex:
+                Printer.warning(warntext, "SU_WP_2", True, exception=ex)
+
+        #   - base program - expect its from here.
+        else:
+            RefParsToUse = RefPars
+            curpar_tocheck = curpar
+
+        #   - expand shorthands
+        if expect_shorthand:
+            found = False
+            try:
+                curpar_tocheck = RefParsToUse.shorthands[curpar_tocheck]
+                found = True
+                ex = None
+            except Exception as excep:
+                ex = excep
+
+            if not found and curpar_tocheck[:2].lower().startswith("no"):
+                try:
+                    curpar_tocheck = "no" + RefParsToUse.shorthands[
+                        curpar_tocheck[2:]
+                    ]
+                    found = True
+                except Exception:
+                    pass
+
+            if not found:
+                if "." in curpar:
+                    warncode = "SU_WP_2"
+                else:
+                    warncode = "SU_WP_3"
+                Printer.warning(warntext, warncode, True, exception=ex)
+
+            if "." in curpar:
+                curpar = curpar_list[0] + "." + curpar_tocheck
+            else:
+                curpar = curpar_tocheck
+
+        return curpar, curpar_tocheck, RefParsToUse
+
+    @staticmethod
+    def parse_cmd_choice(
+        Printer, cmdargs, curpar, curpar_tocheck, RefParsToUse
+    ):
+        """Extracts the choice from the command line
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        cmdargs : list of str
+            A slice from the list generated using sys.argv
+        curpar : str
+            The full name of the parameter. Basically mapname.parname. If
+            the parameter belongs to the main program, this is just parname.
+        curpar_to_check : str
+            The name of the parameter, without the map prefix - as it should
+            be looked up in the refpars object.
+        RefParsToUse : :class:`RefPars`
+            The RefPars object to which the recognized parameter belongs.
+
+        Returns
+        -------
+        choice : list of str
+            The choice that was submitted on the command line, parsed to the
+            same format as the values in the dict from a parameter file.
+        """
+
+        if curpar_tocheck in RefParsToUse.maybe_list:
+            # Lists MUST always come with at least one choice.
+            try:
+                choice = [cmdargs.pop(0)]
+            except IndexError as ex:
+                Printer.warning(
+                    f"The parameter {curpar} specified in the command "
+                    "line requires a choice to be given.",
+                    "SU_WP_4", True, exception=ex
+                )
+
+            warntext = (
+                f"The parameter {curpar} specified in the command line "
+                "requires the last choice to be appended with '\\;'."
+            )
+            while not choice[-1].endswith("\\;"):
+                try:
+                    choice.append(cmdargs.pop(0))
+                except IndexError:
+                    Printer.warning(warntext, "SU_WP_5", True)
+
+                if choice[-1].startswith("-"):
+                    Printer.warning(warntext, "SU_WP_5", True)
+            choice[-1] = choice[-1][:-2]
+
+        else:
+            # Here, we blindly assume that the user gave the correct
+            # amount of choices (bools don't require them). Whether they
+            # did will be verified at 'extract choices', a few lines down.
+            try:
+                if not cmdargs[0].startswith("-"):
+                    choice = [cmdargs.pop(0)]
+                else:
+                    choice = []
+            except Exception:
+                choice = []
+
+        return choice
+
+    def extract_choices(self, Printer, given_dict, RefPars):
         """Takes each parameter and their choice from the dict for parsing
 
         Each pair is forwarded to the correct location for further parsing.
-        Does not deal in-depth with map-specific parameters.
-        :meth:`extract_choices_map` does.
+        Does not deal in-depth with map-specific parameters, unless the
+        :class:`RawPars` instance is created specifically for that map.
 
         Parameters
         ----------
@@ -809,7 +898,7 @@ class RawPars:
             Contains parameter choices. Keys are the parameter names (str),
             values are lists containing all choices (str). Lists are still
             expected when there are 0 or 1 choices.
-        refpars : :class:`RefPars`
+        RefPars : :class:`RefPars`
             Contains all parameters that might be found in `given_dict`.
         """
 
@@ -818,34 +907,8 @@ class RawPars:
 
         # lets find out about each parameter!
         for parname, choice in given_dict.items():
-
-            # # if parameter is known
-            # if parname in refpars.choices:
-            #     choice = self.verify_choice(parname, choice, refpars)
-            #     if choice is None:
-            #         continue
-            #     self.choices[parname] = choice
-
-            # # if parameter is known, but shouldn't be in default parfiles
-            # elif parname in refpars.not_expected_in_deffile:
-            #     if self.is_default and len(choice) != 0:
-            #         GM_PT.warning(
-            #             f"A choice for the parameter {parname} is specified "
-            #             f"in the default parameter file {self.fname}. "
-            #             "However, default files cannot contain a choice for "
-            #           "this parameter. Please remove the parameter from the "
-            #             "file.",
-            #             True
-            #         )
-            #     elif self.is_default:
-            #         continue
-            #     else:
-            #         choice = self.verify_choice(parname, choice, refpars)
-            #         if choice is None:
-            #             continue
-            #         self.choices[parname] = choice
             choice, found, parname = self.check_par_existence(
-                Printer, parname, parname, refpars, choice
+                Printer, parname, parname, RefPars, choice
             )
             if found:
                 if choice is not None:
@@ -894,6 +957,7 @@ class RawPars:
             A homogenous list, containing the same information as supplied
             as the parameter `choice`, but converted to the correct datatype.
         """
+
         if len(choice) == 0:
             if self.is_default:
                 Printer.warning(
@@ -974,94 +1038,13 @@ class RawPars:
         else:
             return choice
 
-    def extract_choices_map(self, Printer, mapname, MapRefPars):
-        """Parses each `not_found` item using a given map
-
-        `Extract_choices` will not have dealt succesfully with any map specific
-        parameters that might have been there, but instead have added them to
-        the `not_found` dictionary. Now (slightly further in initialization),
-        we have the map parameters available, so this dictionary can be dealt
-        with.
-        This is done with a separate call to this function for every map that
-        we want to check against.
-
-        Parameters
-        ----------
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
-        mapname : str
-            The name of the map whose parameters will be checked against
-        MapRefPars : :class:`RefPars`
-            Contains all parameters available for this map
-
-        """
-
-        to_del = []
-        for parname, choice in self.not_found.items():
-            parnamelist = parname.split(".")
-            if len(parnamelist) != 2:
-                Printer.warning(
-                    "Names of map-specific parameters cannot contain a '.'.",
-                    "temp", True
-                )
-            if parnamelist[0] != mapname:
-                continue
-
-            # now, we know that this parameter (supposedly) belongs to this map
-            # if parnamelist[1] in maprefpars.choices:
-            #   choice = self.verify_choice(parnamelist[1], choice, maprefpars)
-            #     if choice is None:
-            #         continue
-            #     self.choices[parname] = choice
-
-            # elif parnamelist[1] in maprefpars.not_expected_in_deffile:
-            #     if self.is_default and len(choice) != 0:
-            #         GM_PT.warning(
-            #             f"A choice for the parameter {parname} is specified "
-            #             f"in the default parameter file {self.fname}. "
-            #             "However, default files cannot contain a choice for "
-            #           "this parameter. Please remove the parameter from the "
-            #             "file.",
-            #             True
-            #         )
-            #     elif self.is_default:
-            #         continue
-            #     else:
-            #         choice = self.verify_choice(
-            #             parnamelist[1], choice, maprefpars
-            #         )
-            #         if choice is None:
-            #             continue
-            #         self.choices[parname] = choice
-            choice, found, _ = self.check_par_existence(
-                Printer, parname, parnamelist[1], MapRefPars, choice
-            )
-
-            # parameter is not recognized
-            if not found:
-                Printer.warning(
-                    f"Unknown parameter {parname} found in the file "
-                    f"{self.fname}. "
-                    "Please make sure you spelled it correctly.",
-                    "temp", True
-                )
-
-            to_del.append(parname)
-
-        for parname in to_del:
-            del self.not_found[parname]
-
-        if to_del:
-            return True
-
     def check_par_existence(
-        self, Printer, parname_full, parname_refpars, refpars, choice,
+        self, Printer, parname_full, parname_refpars, RefPars, choice,
         do_verify=True
     ):
         """See if the given parameter exists within the supplied RefPars.
 
-        After :meth:`extract_choices` or :meth:`extract_choices_map` found a
+        After :meth:`extract_choices` found a
         parameter/choice pair that says it should be present in the supplied
         RefPars, it is given to this function to see whether it actually does.
         If so (and if requested), :meth:`verify_choice` is called to see if
@@ -1090,19 +1073,23 @@ class RawPars:
             otherwise as supplied
         found : bool
             Whether the requested parameter was found to exist.
+        parname_refpars : str
+            The name that we should look for in refpars. Most notably, if
+            the supplied parameter was of nobool, the no is removed in this
+            output.
         """
 
         found = False
-        if parname_refpars in refpars.choices:
+        if parname_refpars in RefPars.choices:
             found = True
             if do_verify:
                 choice = self.verify_choice(
-                    Printer, parname_refpars, choice, refpars
+                    Printer, parname_refpars, choice, RefPars
                 )
             if not do_verify or choice is None:
                 return None, found, parname_refpars
 
-        elif parname_refpars in refpars.not_expected_in_deffile:
+        elif parname_refpars in RefPars.not_expected_in_deffile:
             found = True
             if self.is_default and len(choice) != 0:
                 Printer.warning(
@@ -1118,7 +1105,7 @@ class RawPars:
             else:
                 if do_verify:
                     choice = self.verify_choice(
-                        Printer, parname_refpars, choice, refpars
+                        Printer, parname_refpars, choice, RefPars
                     )
                 if not do_verify or choice is None:
                     return None, found, parname_refpars
@@ -1126,7 +1113,7 @@ class RawPars:
         # nobool format?
         elif (
             parname_refpars[:2].lower() == "no"
-            and parname_refpars[2:] in refpars.boolpars
+            and parname_refpars[2:] in RefPars.boolpars
         ):
             if not choice:
                 newchoice = ["false"]
@@ -1136,15 +1123,14 @@ class RawPars:
                     "false" if x.lower() in trueicators else "true"
                     for x in choice
                 ]
-            # assumes extract_choices_map wont call check_par_existence
             choice, found, parname_refpars = self.check_par_existence(
-                Printer, parname_full[2:], parname_refpars[2:], refpars,
+                Printer, parname_full[2:], parname_refpars[2:], RefPars,
                 newchoice, do_verify
             )
 
         return choice, found, parname_refpars
 
-    def check_completeness(self, Printer, refpars):
+    def check_completeness(self, Printer, RefPars):
         """Check if all required parameters are present
 
         When the file is marked as being default, this method makes sure that
@@ -1163,7 +1149,7 @@ class RawPars:
             Contains all parameters that should be present here.
         """
 
-        for parname in refpars.choices.keys():
+        for parname in RefPars.choices.keys():
             if parname not in self.choices:
                 Printer.warning(
                     f"No entry found for the parameter {parname} in the "
@@ -1176,8 +1162,11 @@ class RawPars:
     def finalize_map_pars(self, Printer):
         """Check whether `not_found` is empty
 
-        This method is called after :meth:`extract_choices_map` is run for
-        every available map. Any parameters recognised there were removed from
+        This method is called after
+        :meth:`~GMAP.src.tools.MapReader.Map.find_rawpars` is run for
+        every available instance of
+        :class:`~GMAP.src.tools.MapReader.Map`. Any parameters
+        recognised there were removed from
         the `not_found` dictionary, so it should be empty, if all parameters
         were understood. Here we check if that is indeed the case.
 
@@ -1236,6 +1225,16 @@ class RunPars:
         from a separate default parameters file.
     RefPars : :class:`RefPars`
         Contains all available parameters from GMAP itself (not map-specific)
+    is_main : bool
+        Whether this instance of RunPar belongs to the main program (and thus
+        contains parameters about the runtime itself) - indicated by 'True',
+        or if it belongs to an instance of
+        :class:`~GMAP.src.tools.MapReader.Map` - indicated by 'False'.
+    MainRunPars : :class:`RunPars` or None, default=None
+        The instance of RunPars that is the main (and thus contains the
+        main parameters). If the main instance is still being created,
+        None will be passed (or assumed) instead, and 'self' will be used.
+
 
     See Also
     --------
@@ -1244,6 +1243,19 @@ class RunPars:
         about them
     RawPars
         The class containing parameter choices from other sources
+
+
+    Attributes
+    ----------
+    is_main : bool
+        Whether this instance of RunPar belongs to the main program (and thus
+        contains parameters about the runtime itself) - indicated by 'True',
+        or if it belongs to an instance of
+        :class:`~GMAP.src.tools.MapReader.Map` - indicated by 'False'.
+    MainRunPars : :class:`RunPars`
+        The instance of RunPars that is the main (and thus contains the
+        main parameters). When assigning this attribute to the 'main' instance,
+        'self' will be used.
 
     """
 
@@ -1795,7 +1807,7 @@ def find_par_in_cmd(Printer, argslist, flags, parname, is_list=False):
         return choice
 
 
-def find_mapdir(Files, Printer, argslist, in_pars, def_pars):
+def find_mapdir(Files, Printer, argslist, InPars, DefPars):
     """Extracts choice for the parameter map_directory from the command line.
 
     If the choice has been found, checks whether it exists. If it does not,
@@ -1811,12 +1823,11 @@ def find_mapdir(Files, Printer, argslist, in_pars, def_pars):
         and handle errors.
     argslist : list of str
         The part of the output of sys.argv that contains parameter choices.
-    in_pars : dict
-        All parameter choices given in the input parameter file. Keys are
-        parameter names, values are the choices.
-    def_pars : dict
-        All parameter choices given in the default parameter file. Keys are
-        parameter names, values are the choices.
+    InPars : :class:`RawPars`
+        Contains any parameter choices made in the input parameter file
+    DefPars : :class:`RawPars` or :class:`RefPars`
+        Contains all default parameter choices. Might be RefPars, might be
+        from a separate default parameters file.
 
     Returns
     -------
@@ -1833,22 +1844,22 @@ def find_mapdir(Files, Printer, argslist, in_pars, def_pars):
             Printer, Files.cwd, cmd_mapdir, "map_directory", "the command line"
         )
 
-    elif in_pars and "map_directory" in in_pars.choices:
+    elif InPars and "map_directory" in InPars.choices:
         mapdirs = directory_list_checker(
             Printer,
-            in_pars.fname.parent,
-            in_pars.choices["map_directory"],
+            InPars.fname.parent,
+            InPars.choices["map_directory"],
             "map_directory",
-            in_pars.fname
+            InPars.fname
         )
 
     else:
         mapdirs = directory_list_checker(
             Printer,
-            def_pars.fname.parent,
-            def_pars.choices["map_directory"],
+            DefPars.fname.parent,
+            DefPars.choices["map_directory"],
             "map_directory",
-            def_pars.fname
+            DefPars.fname
         )
 
     return mapdirs

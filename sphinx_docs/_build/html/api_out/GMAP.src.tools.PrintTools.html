@@ -139,6 +139,13 @@
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -243,6 +250,13 @@ document.write(`
   </p>
   <ul class="bd-navbar-elements navbar-nav">
     
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
@@ -442,7 +456,7 @@ the desired printing behaviour.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.set_state" title="GMAP.src.tools.PrintTools.Printer.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a>(new_state, verbose, verbose_logfile)</p></td>
 <td><p>Change the current state of Printer</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.warning" title="GMAP.src.tools.PrintTools.Printer.warning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></a>(message, error_code[, exitbool])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.warning" title="GMAP.src.tools.PrintTools.Printer.warning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></a>(message, error_code[, exitbool, ...])</p></td>
 <td><p>Warning system.</p></td>
 </tr>
 </tbody>
@@ -505,14 +519,21 @@ to re-chose those three values, allowing ‘importing’ them after
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.warning">
-<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exitbool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.warning" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exitbool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.warning" title="Link to this definition">#</a></dt>
 <dd><p>Warning system. Prints the message, and allows to force-quit after.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>message</strong><span class="classifier">str</span></dt><dd><p>The warning/error message to print.</p>
 </dd>
+<dt><strong>error_code</strong><span class="classifier">str</span></dt><dd><p>The error code belonging to the warning that is raised - to be
+reported to the user. See the
+<span class="xref std std-ref">warning overview</span> page.</p>
+</dd>
 <dt><strong>exitbool</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether the program should stop due to this error.</p>
+</dd>
+<dt><strong>exception</strong><span class="classifier">BaseException, default=None</span></dt><dd><p>If the warning corresponds to a ‘basic’ python error,
+that error can be caught and fed into this function.</p>
 </dd>
 </dl>
 </dd>

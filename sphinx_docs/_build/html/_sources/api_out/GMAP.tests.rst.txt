@@ -1,13 +1,13 @@
 GMAP.tests package
 ==================
 
-Submodules
-----------
+Subpackages
+-----------
 
 .. toctree::
    :maxdepth: 4
 
-   GMAP.tests.test_MathFunctions
+   GMAP.tests.test_tools
 
 Module contents
 ---------------

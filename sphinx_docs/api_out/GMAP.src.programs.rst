@@ -4,11 +4,21 @@ GMAP.src.programs package
 Submodules
 ----------
 
-.. toctree::
-   :maxdepth: 4
+GMAP.src.programs.AIM module
+----------------------------
 
-   GMAP.src.programs.AIM
-   GMAP.src.programs.GEM
+.. automodule:: GMAP.src.programs.AIM
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+GMAP.src.programs.GEM module
+----------------------------
+
+.. automodule:: GMAP.src.programs.GEM
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------

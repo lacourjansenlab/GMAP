@@ -43,6 +43,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'User_guide/Warning_overview';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to specify parameter choices" href="specifying_parameters.html" />
+    <link rel="prev" title="User guide" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -136,6 +138,13 @@
   </p>
   <ul class="bd-navbar-elements navbar-nav">
     
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
@@ -152,7 +161,7 @@
 
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../api_out/modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -222,7 +231,7 @@ document.write(`
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
       
-      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -241,6 +250,13 @@ document.write(`
   </p>
   <ul class="bd-navbar-elements navbar-nav">
     
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
@@ -257,7 +273,7 @@ document.write(`
 
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../api_out/modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -285,6 +301,20 @@ document.write(`
       </div>
     
   </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Warning overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specifying_parameters.html">How to specify parameter choices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameter_overview.html">parameter overview</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
@@ -318,6 +348,9 @@ document.write(`
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">User guide</a></li>
+    
     <li class="breadcrumb-item active" aria-current="page">Warning overview</li>
   </ul>
 </nav>
@@ -336,7 +369,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section id="warning-overview">
-<h1>Warning overview<a class="headerlink" href="#warning-overview" title="Link to this heading">#</a></h1>
+<span id="userguide-page-warning-overview"></span><h1>Warning overview<a class="headerlink" href="#warning-overview" title="Link to this heading">#</a></h1>
 <p>Here you can find more information about the different warnings that can pop up.</p>
 <section id="codes-starting-with-su">
 <h2>Codes starting with SU<a class="headerlink" href="#codes-starting-with-su" title="Link to this heading">#</a></h2>
@@ -352,13 +385,172 @@ document.write(`
 </section>
 <section id="su-fp-3">
 <h4>SU_FP_3<a class="headerlink" href="#su-fp-3" title="Link to this heading">#</a></h4>
-<p>The type of a parameter has been specified slightly wrong. The format is recognized, but the contents are probably misspelled. See the examples in [ADD CROSSLINK!].</p>
+<p>The type of a parameter in the reference parameter file has been specified slightly wrong. The format is recognized, but the contents are probably misspelled.
+If you are developing the file that triggered the error, <a class="reference internal" href="../Adding_a_new_map/File_structure/parameters.html#userguide-page-map-parameters-types"><span class="std std-ref">here</span></a> you can find more info on the different types, or look at the file ‘reference_parameters.ref’ that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.</p>
 </section>
 <section id="su-fp-4">
 <h4>SU_FP_4<a class="headerlink" href="#su-fp-4" title="Link to this heading">#</a></h4>
-<p>An unexpected error was encountered. See if the examples in [ADD CROSSLINK!] help fixing it, and please let us know what was wrong.</p>
+<p>An unexpected error was encountered while parsing the types of parameters in the reference parameter file. It might be that there is a mistake in the (type or amount of) brackets used, whitespaces between the brackets, and many more.
+If you are developing the file that triggered the error, <a class="reference internal" href="../Adding_a_new_map/File_structure/parameters.html#userguide-page-map-parameters-types"><span class="std std-ref">here</span></a> you can find more info on the different types, or look at the file ‘reference_parameters.ref’ that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.</p>
+</section>
+<section id="su-fp-5">
+<h4>SU_FP_5<a class="headerlink" href="#su-fp-5" title="Link to this heading">#</a></h4>
+<p>While parsing the choice of a parameter in the reference parameter file, there was a wrong type. Either the parameter has an unexpected python type, or a bool was specified with an choice of the wrong type (it couldn’t be converted to a True or False).
+If you are developing the file that triggered the error, <a class="reference internal" href="../Adding_a_new_map/File_structure/parameters.html#userguide-page-map-parameters-types"><span class="std std-ref">here</span></a> you can find more info on the different types, or look at the file ‘reference_parameters.ref’ that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.</p>
+</section>
+<section id="su-fp-6">
+<h4>SU_FP_6<a class="headerlink" href="#su-fp-6" title="Link to this heading">#</a></h4>
+<p>While parsing the choice of a parameter in the reference parameter file, an unexpected amount of choices was encountered. If the type of the parameter does not contain ‘list_’, only one choice can be given.
+If you are developing the file that triggered the error, <a class="reference internal" href="../Adding_a_new_map/File_structure/parameters.html#userguide-page-map-parameters-types"><span class="std std-ref">here</span></a> you can find more info on the different types, or look at the file ‘reference_parameters.ref’ that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.</p>
+</section>
+<section id="su-fp-7">
+<h4>SU_FP_7<a class="headerlink" href="#su-fp-7" title="Link to this heading">#</a></h4>
+<p>While parsing the choice of a parameter in the reference parameter file, a different error occurred.
+If you are developing the file that triggered the error, <a class="reference internal" href="../Adding_a_new_map/File_structure/parameters.html#userguide-page-map-parameters-types"><span class="std std-ref">here</span></a> you can find more info on the different types, or look at the file ‘reference_parameters.ref’ that lives in the sourcefiles directory for examples.
+If you have not touched the file that created this error, please get in touch with the person that created the file.</p>
 </section>
 </section>
+<section id="su-wp">
+<h3>SU_WP<a class="headerlink" href="#su-wp" title="Link to this heading">#</a></h3>
+<section id="su-wp-1">
+<h4>SU_WP_1<a class="headerlink" href="#su-wp-1" title="Link to this heading">#</a></h4>
+<p>This error is raised when the parameter choices on the command line couldn’t be understood. Make sure that each parameter name is preceeded by ‘-’ or, where applicable, ‘–’. See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-commandline"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter on the command line.</p>
+</section>
+<section id="su-wp-2">
+<h4>SU_WP_2<a class="headerlink" href="#su-wp-2" title="Link to this heading">#</a></h4>
+<p>One of the parameters supplied on the command line contains a ‘.’ indicating that this parameter is part of a map. The map name should be before the ‘.’, while the parameter name should go directly after. The combination of map and parameter name was not recognized by the program. See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-commandline"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter on the command line, or consult the documentation of the map to see what parameters are allowed.</p>
+</section>
+<section id="su-wp-3">
+<h4>SU_WP_3<a class="headerlink" href="#su-wp-3" title="Link to this heading">#</a></h4>
+<p>One of the parameters supplied on the command line was not recognized. See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-commandline"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter on the command line, and see <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">this page</span></a> for what parameters are available.</p>
+</section>
+<section id="su-wp-4">
+<h4>SU_WP_4<a class="headerlink" href="#su-wp-4" title="Link to this heading">#</a></h4>
+<p>The given parameter requires a choice to be provided, but this did not happen. See <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">this page</span></a> for more information about this parameter, and <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-commandline"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter on the command line.</p>
+</section>
+<section id="su-wp-5">
+<h4>SU_WP_5<a class="headerlink" href="#su-wp-5" title="Link to this heading">#</a></h4>
+<p>When specifying a choice for a parameter that can accept multiple choices, the last choice must always be appended by ‘\;’, without spaces between the last choice and the ‘\;’. See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-commandline"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter on the command line.</p>
+</section>
+<section id="su-wp-6">
+<h4>SU_WP_6<a class="headerlink" href="#su-wp-6" title="Link to this heading">#</a></h4>
+<p>One of the parameters supplied in a parameter file (either input or default, see error message) was not recognized. See <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">this page</span></a> for a list of all available parameters, and <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter in a parameter file.</p>
+</section>
+<section id="su-wp-7">
+<h4>SU_WP_7<a class="headerlink" href="#su-wp-7" title="Link to this heading">#</a></h4>
+<p>A default parameter file must contain a choice for every available parameter. See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how parameter files work.</p>
+</section>
+<section id="su-wp-8">
+<h4>SU_WP_8<a class="headerlink" href="#su-wp-8" title="Link to this heading">#</a></h4>
+<p>One of the parameters supplied in a parameter file (either input or default, see error message) did not have a choice specified. Each parameter must come with a choice, so one should be given. If you do not want to make a choice, you can remove the line (if the file is not a default parameter file). See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter in a parameter file.</p>
+</section>
+<section id="su-wp-9">
+<h4>SU_WP_9<a class="headerlink" href="#su-wp-9" title="Link to this heading">#</a></h4>
+<p>One of the parameters supplied in a parameter file (either input or default, see error message) had too many choices specified. Only one was expected. See <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">this page</span></a> for more information about this parameter, and <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter in a parameter file.</p>
+</section>
+<section id="su-wp-10">
+<h4>SU_WP_10<a class="headerlink" href="#su-wp-10" title="Link to this heading">#</a></h4>
+<p>One of the parameters supplied in a parameter file (either input or default, see error message) expects a bool for a choice (either True or False), but something else was given. It was unclear which was meant. See <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">this page</span></a> for more information about this parameter, and <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter in a parameter file.</p>
+</section>
+<section id="su-wp-11">
+<h4>SU_WP_11<a class="headerlink" href="#su-wp-11" title="Link to this heading">#</a></h4>
+<p>One of the parameters supplied in a parameter file (either input or default, see error message) has a choice, but it is not allowed. See <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">this page</span></a> for more information about this parameter including allowed choices, and <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter in a parameter file.</p>
+</section>
+<section id="su-wp-12">
+<h4>SU_WP_12<a class="headerlink" href="#su-wp-12" title="Link to this heading">#</a></h4>
+<p>One of the parameters supplied in a parameter file (either input or default, see error message) could not be converted to the correct type. Most likely, a number was expected, but there were letters in there, or an integer (whole number) was expected, and the choice contains a decimal point. See <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">this page</span></a> for more information about this parameter, and <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter in a parameter file.</p>
+</section>
+<section id="su-wp-13">
+<h4>SU_WP_13<a class="headerlink" href="#su-wp-13" title="Link to this heading">#</a></h4>
+<p>Default parameter files must contain all parameters, but there is an exception. There is a subclass of parameters that are not allowed in the default parameter file, because it would simply not make sense. This parameter is one of them, and should be removed from the default parameter file. See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how parameter files work.</p>
+</section>
+<section id="su-wp-14">
+<h4>SU_WP_14<a class="headerlink" href="#su-wp-14" title="Link to this heading">#</a></h4>
+<p>Default parameter files must contain all parameters, but this one is missing. Please add it. See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how parameter files work.</p>
+</section>
+<section id="su-wp-15">
+<h4>SU_WP_15<a class="headerlink" href="#su-wp-15" title="Link to this heading">#</a></h4>
+<p>One of the parameters supplied in a parameter file (either input or default, see error message) contained a ‘.’ indicating that this parameter is part of a map. The map name should be before the ‘.’, while the parameter name should go directly after. The combination of map and parameter name was not recognized by the program. See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter on the command line, or consult the documentation of the map to see what parameters are allowed.</p>
+</section>
+</section>
+<section id="su-np">
+<h3>SU_NP<a class="headerlink" href="#su-np" title="Link to this heading">#</a></h3>
+<section id="su-np-1">
+<h4>SU_NP_1<a class="headerlink" href="#su-np-1" title="Link to this heading">#</a></h4>
+<p>The program needs a choice for the parameter, but none was found. Most likely, this is a parameter that is not allowed to be specified in both the default and reference parameter files, and should therefore be specified in the input parameter file or on the command line. [ADD CROSSLINK!]</p>
+</section>
+<section id="su-np-2">
+<h4>SU_NP_2<a class="headerlink" href="#su-np-2" title="Link to this heading">#</a></h4>
+<p>After interpreting the choices made on the command line, input-, default- and reference parameter files, the mentioned choice was decided on. However, the found filename does not exist. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">This page</span></a> has more information on how file locations should be given.</p>
+</section>
+<section id="su-np-3">
+<h4>SU_NP_3<a class="headerlink" href="#su-np-3" title="Link to this heading">#</a></h4>
+<p>After interpreting the choices made on the command line, input-, default- and reference parameter files, the mentioned choice was decided on. However, the found directory name does not exist. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">This page</span></a> has more information on how file locations should be given.</p>
+</section>
+</section>
+<section id="su-pp">
+<h3>SU_PP<a class="headerlink" href="#su-pp" title="Link to this heading">#</a></h3>
+<section id="su-pp-1">
+<h4>SU_PP_1<a class="headerlink" href="#su-pp-1" title="Link to this heading">#</a></h4>
+<p>The specified choice of how the program should run was not recognized. Use the suggested line to see the options.</p>
+</section>
+<section id="su-pp-2">
+<h4>SU_PP_2<a class="headerlink" href="#su-pp-2" title="Link to this heading">#</a></h4>
+<p>The chosen way of running this program needs an input file. See [ADD CROSSLINK!] on how to correctly specify one.</p>
+</section>
+<section id="su-pp-3">
+<h4>SU_PP_3<a class="headerlink" href="#su-pp-3" title="Link to this heading">#</a></h4>
+<p>The chosen input parameter file on the command line was not found. Make sure you spelled it correctly. Also see [ADD CROSSLINK!]</p>
+</section>
+<section id="su-pp-4">
+<h4>SU_PP_4<a class="headerlink" href="#su-pp-4" title="Link to this heading">#</a></h4>
+<p>The command line contains the same parameter name more than once. Make sure to only give it once. If you use the shorthand, the full name is not needed. If there is a parameter that takes multiple choices, see [ADD CROSSLINK!] on how to supply those.</p>
+</section>
+</section>
+<section id="su-fh">
+<h3>SU_FH<a class="headerlink" href="#su-fh" title="Link to this heading">#</a></h3>
+<section id="su-fh-1">
+<h4>SU_FH_1<a class="headerlink" href="#su-fh-1" title="Link to this heading">#</a></h4>
+<p>The chosen default parameter file could not be found. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. [ADD CROSSLINK!]</p>
+</section>
+<section id="su-fh-2">
+<h4>SU_FH_2<a class="headerlink" href="#su-fh-2" title="Link to this heading">#</a></h4>
+<p>The program requires some reference as to what parameters are required. For some reason, this file went missing. See if this error persists with a fresh installation.</p>
+</section>
+<section id="su-fh-3">
+<h4>SU_FH_3<a class="headerlink" href="#su-fh-3" title="Link to this heading">#</a></h4>
+<p>Probably, the wrong file was supplied for this parameter. The program expects a plain text file, as can be made/edited using notepad, nano, vi, less, etc. [ADD CROSSLINK!]</p>
+</section>
+</section>
+<section id="su-mr">
+<h3>SU_MR<a class="headerlink" href="#su-mr" title="Link to this heading">#</a></h3>
+<section id="su-mr-1">
+<h4>SU_MR_1<a class="headerlink" href="#su-mr-1" title="Link to this heading">#</a></h4>
+<p>When supplying a parameter name for a map, it may at most contain one ‘.’.</p>
+</section>
+</section>
+<section id="su-gem">
+<h3>SU_GEM<a class="headerlink" href="#su-gem" title="Link to this heading">#</a></h3>
+<section id="su-gem-1">
+<h4>SU_GEM_1<a class="headerlink" href="#su-gem-1" title="Link to this heading">#</a></h4>
+<p>The default parameter file supplied to gem is expected to be a .txt file. This error was triggered because the file has a different extension. .ref files are planned to be supported in the future (See SU_FP_1) [ADD CROSSLINK!]</p>
+</section>
+</section>
+<section id="su-gm">
+<h3>SU_GM<a class="headerlink" href="#su-gm" title="Link to this heading">#</a></h3>
+<section id="su-gm-1">
+<h4>SU_GM_1<a class="headerlink" href="#su-gm-1" title="Link to this heading">#</a></h4>
+<p>When calling the program, ‘GMAP’ is followed by the program you’d like to use. Currently, AIM and GEM are available. The program couldn’t recognize ‘AIM’ or ‘GEM’ from your command.</p>
+</section>
+</section>
+</section>
+<section id="other-codes">
+<h2>Other codes<a class="headerlink" href="#other-codes" title="Link to this heading">#</a></h2>
+<p>As far as I know, there is no way to actually trigger this one. If you managed to do so, congratulations! Please let us know how you did so!</p>
 </section>
 </section>
 
@@ -372,6 +564,24 @@ document.write(`
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">User guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="specifying_parameters.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">How to specify parameter choices</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -394,10 +604,63 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-2">SU_FP_2</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-3">SU_FP_3</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-4">SU_FP_4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-5">SU_FP_5</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-6">SU_FP_6</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-7">SU_FP_7</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp">SU_WP</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-1">SU_WP_1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-2">SU_WP_2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-3">SU_WP_3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-4">SU_WP_4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-5">SU_WP_5</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-6">SU_WP_6</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-7">SU_WP_7</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-8">SU_WP_8</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-9">SU_WP_9</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-10">SU_WP_10</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-11">SU_WP_11</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-12">SU_WP_12</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-13">SU_WP_13</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-14">SU_WP_14</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-15">SU_WP_15</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np">SU_NP</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np-1">SU_NP_1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np-2">SU_NP_2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np-3">SU_NP_3</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-pp">SU_PP</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-pp-1">SU_PP_1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-pp-2">SU_PP_2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-pp-3">SU_PP_3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-pp-4">SU_PP_4</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fh">SU_FH</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fh-1">SU_FH_1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fh-2">SU_FH_2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fh-3">SU_FH_3</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-mr">SU_MR</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-mr-1">SU_MR_1</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-gem">SU_GEM</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-gem-1">SU_GEM_1</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-gm">SU_GM</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-gm-1">SU_GM_1</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-codes">Other codes</a></li>
 </ul>
   </nav></div>
 

@@ -1,6 +1,7 @@
 # Quick menu
 - [General rules for code](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-rules-for-code)
 - [General code-related remarks](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-code-related-remarks)
+- [Roadmap](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#roadmap)
 - [wishlist](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#wishlist)
 - [Package structure](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#package-structure)
 - [notes](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#notes)
@@ -25,6 +26,22 @@
 - Use pathlib! (not os)
 - Leave no map in core! This means also amideBB should be decoupled from code
 - After having had a look at argparse, I (KvA) will not use it for the cmdline. It doesn't quite give me what I'm looking for, and doesn't feel quite right.
+
+# Roadmap
+
+This is a rough overview of the different steps (in order) that are needed to get ```GEM run``` running.
+- Step 0: (Done!) Gmap interface, command prompt menu to navigate the different tools
+- Step 1: (Done!) Create test suite, documentation system
+- Step 2: (Done!) Parameter parsing
+- Step 3: Map parsing (maybe also already develop a map? - requires core algorithms?)
+- Step 4: System analysis (requires map parsing for group recognition)
+- Step 5: Core algorithms
+- Step 6: Map creation (or maybe already during parsing?)
+- Step 7: Performing per-frame calculation
+
+Other things for GMAP
+- Include AIM
+- Add GEM demo, GEM setup (just like installable AIM), maybe also a way to run GEM without calculating frames (to see if system is recognized, file sizes, etc)?
 
 # wishlist
 - Non-cubic PBCs
@@ -154,11 +171,11 @@ to do (not yet implemented)
 
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
-- (KvA) TO DO:
-  - Make test for GM_FH.get_def_parfile (covered by test_GEM, I believe, but still, unittests, so test it!)
-  - Make test for GM_FH errors SU_FH_1-3
-  - Make test for warning SU_GM_1
-  - check docstrings of testfiles for further todo on tests.
+
+- (KvA) In preparation for next CCC:
+  - Give a reason why GEM is needed.
+- (KvA) TODO before pull to main:
+  - Roadmap of what the next steps will be.
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
@@ -186,7 +203,14 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) RefPars is just a tool for reading parameter inputs, and creating the corresponding parameter datastructures. After they've been made, it's served its purpose, and is no longer needed. Any function after should only use defpars, not refpars.
 - (KvA) demo mode test and command line separation should not be part of get_parameters (Think of when the job 'setup' is implemented)
 - (KvA) currently, the type path_sep must lead to files, not directories... This is the reason map_directory is taken separately.
-
+- (KvA) Unittest todo:
+  - Make test for GM_FH.get_def_parfile (covered by test_GEM, I believe, but still, unittests, so test it!)
+  - Make test for GM_FH errors SU_FH_1-3
+  - Make test for warning SU_GM_1
+  - check docstrings of testfiles for further todo on tests.
+- (KvA) should the RunPars docstring contain (under attributes) all parameters as defined in the reference parameter file?
+- (KvA) GM_MR.scan_mapdirs() does not check whether a name occured twice. There is no need to disallow it (just yet?), but it would be nice to warn the user, and report the location that ís used.
+- (KvA) Should a check be added to confirm whether a parameter name from a reference parameter file can be used as a class attribute?
 
 
 ### ===============================

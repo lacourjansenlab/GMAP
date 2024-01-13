@@ -70,6 +70,29 @@ class Map():
             self.RefPars = None
 
     def find_rawpars(self, Printer, CmdPars, InPars, DefPars):
+        """Creates CmdPars, InPars and DefPars objects for this map instance.
+
+        Searches through the provided CmdPars, InPars and DefPars to see
+        whether there are any map-type parameters belonging to this map. If
+        so, they are taken from there, put in the map-specific instances for
+        CmdPars, InPars and DefPars, and then removed from the source (as the
+        source will be checked for emtiness at the end).
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        CmdPars : :class:`~GMAP.src.tools.ParameterParser.RawPars`
+            The object storing all parameters provided on the command line.
+        InPars : :class:`~GMAP.src.tools.ParameterParser.RawPars`
+            The object storing all parameters provided in the input parameter
+            file.
+        DefPars : :class:`~GMAP.src.tools.ParameterParser.RawPars`
+            The object storing all parameters provided in the default parameter
+            file. If no such file was provided, RefPars is used instead.
+        """
+
         # for each parameter source, extract all choices belonging to this
         # map, and make a RawPars object with those choices. Make sure
         # to empty the not_found array, so each source can be checked to make
@@ -103,6 +126,23 @@ class Map():
             self.DefPars = GM_PP.RawPars.create_empty()
 
     def extract_notfound(self, Printer, RawParInst):
+        """Find all parameters of this map in the given RawPars instance.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        RawParInst : :class:`~GMAP.src.tools.ParameterParser.RawPars`
+            The instance through which to look for parameters that belong
+            to this map.
+
+        Returns
+        -------
+        map_pars : dict
+            The 'slice' of the RawParInst.not_found dict that contains
+            parameters starting with 'self.name'.
+        """
         map_pars = {}
         for parname, choice in RawParInst.not_found.items():
             parnamelist = parname.split(".")
@@ -118,6 +158,26 @@ class Map():
         return map_pars
 
     def find_runpars(self, Files, Printer, RunPars):
+        """Create a RunPars instance for this map.
+
+        Just like the main code, a map has a RefPars, DefPars, Inpars and
+        CmdPars instance, that all need to be combined into a RunPars
+        instance to be used further in the code.
+
+        Parameters
+        ----------
+        Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+            Contains all currently known paths and other file-related
+            properties.
+            Has to be updated after RunPars is finalized.
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+            The 'main' RunPars instance containing all the basic run-defining
+            parameters.
+        """
+
         if self.RefPars:
             self.RunPars = GM_PP.RunPars(
                 Files, Printer, self.CmdPars, self.InPars, self.DefPars,
@@ -142,7 +202,6 @@ def scan_mapdirs(mapdirs):
     Returns
     -------
     all_maps : list of :class:`Map`
-
     """
 
     all_maps = {}

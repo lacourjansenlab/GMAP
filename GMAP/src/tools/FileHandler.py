@@ -155,7 +155,7 @@ def get_file(
     dir_hc : `pathlib.Path`
         In case the parameter in `dir_parname` does not exist in any of the
         given inputs, use this one.
-    file_hc : `pathlib.Path`
+    files_hc : list of `pathlib.Path`
         In case the parameter in `file_parname` does not exist in any of the
         given inputs, use this one.
     cmd_pardict : dict
@@ -170,7 +170,7 @@ def get_file(
 
     Returns
     -------
-    name : `pathlib.Path`
+    names : list of `pathlib.Path`
         The path to the desired file.
     file_is_hc : bool
         Whether the dir_hc/file_hc fallback had to be used.
@@ -180,29 +180,24 @@ def get_file(
     dicts = [cmd_pardict]
     flocs = [Files.cwd]
 
-    for _dict, floc in zip(pardicts, parfilelocs):
-        if _dict:
-            dicts.append(_dict)
+    for dict_, floc in zip(pardicts, parfilelocs):
+        if dict_:
+            dicts.append(dict_)
             flocs.append(floc.parent)
 
-    # dpr(dir_parname, file_parname)
-    # dpr([dict_.get(dir_parname, None) for dict_ in dicts])
-    # dpr([dict_.get(file_parname, None) for dict_ in dicts])
-    # dpr(flocs)
-
-    for ix, (_dict, floc) in enumerate(zip(dicts, flocs)):
-        if dir_parname in _dict:
-            dirname = floc / _dict[dir_parname][0]
-            for _dict in dicts[ix:]:
-                if file_parname in _dict:
-                    filenames = _dict[file_parname]
+    for ix, (dict_, floc) in enumerate(zip(dicts, flocs)):
+        if dir_parname in dict_:
+            dirname = floc / dict_[dir_parname][0]
+            for dict_ in dicts[ix:]:
+                if file_parname in dict_:
+                    filenames = dict_[file_parname]
                     break
             else:
                 filenames = files_hc
             break
-        elif file_parname in _dict:
+        elif file_parname in dict_:
             dirname = floc
-            filenames = _dict[file_parname]
+            filenames = dict_[file_parname]
             break
     else:
         dirname = dir_hc
@@ -241,9 +236,11 @@ def get_bare_file(
         Contains all currently known paths and other file-related properties.
     file_parname : str
         The name of the parameter storing the path of the desired file.
-    file_hc : `pathlib.Path`
+    file_hc : list of `pathlib.Path`
         In case the parameter in `file_parname` does not exist in any of the
         given inputs, use this one.
+    floc_hc : `pathlib.Path`
+        The base location from where the paths should be taken.
     cmd_pardict : dict
         The dict storing all parameter choices from the command line.
     pardicts : list of dicts, default=[]
@@ -256,21 +253,21 @@ def get_bare_file(
 
     Returns
     -------
-    name : `pathlib.Path`
+    names : list of `pathlib.Path`
         The path to the desired file
     """
 
     dicts = [cmd_pardict]
     flocs = [Files.cwd]
 
-    for _dict, floc in zip(pardicts, parfilelocs):
-        if _dict:
-            dicts.append(_dict)
+    for dict_, floc in zip(pardicts, parfilelocs):
+        if dict_:
+            dicts.append(dict_)
             flocs.append(floc.parent)
 
-    for _dict, floc in zip(dicts, flocs):
-        if file_parname in _dict:
-            names = [floc / name for name in _dict[file_parname]]
+    for dict_, floc in zip(dicts, flocs):
+        if file_parname in dict_:
+            names = [floc / name for name in dict_[file_parname]]
             break
     else:
         names = [floc_hc / name for name in files_hc]
@@ -289,35 +286,21 @@ def get_def_parfile(
     If the user specified anything (either the sourcedir or the name of the
     default parameter file), the program checks that. If nothing is present
     there or if it isn't a file, an error is raised, and the program quits.
+
+    Parameters
+    ----------
+    Files : :class:`FileLocations`
+        Contains all currently known paths and other file-related properties.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    cmd_pardict : dict
+        The dict storing the parameter choices from the command line.
+    in_parfile : `pathlib.Path`
+        The filename of the input parameter file.
+    in_pardict : dict
+        The parameters supplied in the input parameter file.
     """
-    # file_is_hc = False
-    # if "source_directory" in cmd_pardict:
-    #     dirname = Files.cwd / cmd_pardict["source_directory"][0]
-    #     if "default_parameter_filename" in cmd_pardict:
-    #         name = dirname / cmd_pardict["default_parameter_filename"][0]
-    #     elif "default_parameter_filename" in in_pardict:
-    #         name = dirname / in_pardict["default_parameter_filename"][0]
-    #     else:
-    #         name = dirname / Files.refparfilename_hc
-
-    # elif "default_parameter_filename" in cmd_pardict:
-    #     name = Files.cwd / cmd_pardict["default_parameter_filename"][0]
-
-    # # now, no info in the cmd line, only in files
-    # elif "source_directory" in in_pardict:
-    #     dirname = in_parfile.parent / in_pardict["source_directory"][0]
-    #     if "default_parameter_filename" in in_pardict:
-    #         name = dirname / in_pardict["default_parameter_filename"][0]
-    #     else:
-    #         name = dirname / Files.refparfilename_hc
-
-    # elif "default_parameter_filename" in in_pardict:
-    #     name = in_parfile / in_pardict["default_parameter_filename"][0]
-
-    # # now, no info in input file either - grab default from installation
-    # else:
-    #     name = Files.sourcedir_hc / Files.refparfilename_hc
-    #     file_is_hc = True
 
     name, file_is_hc = get_file(
         Files, "source_directory", "default_parameter_filename",
