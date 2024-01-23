@@ -16,7 +16,7 @@ For a good example, you can look at the file 'reference_parameters.ref' in the s
 File layout
 ===========
 
-As with all GMAP source files, any line where the first (non-whitespace) character is a hashtag (#) will be ignored.
+As with all GMAP source files, when a hashtag (#) is found, it and everything ater it on that line will be ignored. This allows for making notes and comments in the file.
 
 A reference parameter file consists of many lines, most of which are independent. A line has the following format:
 parameter_name(shorthand)[parameter_type] parameter_choice

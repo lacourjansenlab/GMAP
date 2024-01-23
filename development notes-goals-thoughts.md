@@ -34,10 +34,24 @@ This is a rough overview of the different steps (in order) that are needed to ge
 - Step 1: (Done!) Create test suite, documentation system
 - Step 2: (Done!) Parameter parsing
 - Step 3: Map parsing (maybe also already develop a map? - requires core algorithms?)
+  - ?? create file like reference parameters that specifies what things a map can contain?
+  - for each map, interpret the core.txt file. reject map if incomplete/wrong.
+  - for each map, see if there is a main.py file. If so, import and check for completeness.
+  - if incomplete, alias default functions for the missing ones.
+  - write those default functions in a separate file (sourcefiles?) - This file can function for these functions much like reference parameter files work for parameters.
+  - If the user requests the use of this map, throw error if map was loaded unsuccessfully.
 - Step 4: System analysis (requires map parsing for group recognition)
+  - Load in system (mda universe)
+  - extract 'basic' data (positions, masses, charges, etc)
+  - find requested oscgroup atoms
 - Step 5: Core algorithms
+  - A function to calculate just potentials (perhaps multiple depending on algorithm)
+  - A function to calculate potentials + fields (perhaps multiple depending on algorithm)
+  - A function to calculate potentials + fields + gradients (perhaps multiple depending on algorithm)
 - Step 6: Map creation (or maybe already during parsing?)
 - Step 7: Performing per-frame calculation
+- Step 8: Adding extra functionality
+  - Black-/whitelists - what kind of typing would they need? a new one?
 
 Other things for GMAP
 - Include AIM
@@ -45,7 +59,7 @@ Other things for GMAP
 
 # wishlist
 - Non-cubic PBCs
-- Create 'scan' functionality -> run all GEM/AIM preparations, but not the actual per-frame, just to see how the system is recognized. also, resnum info for black/whitelists
+- Create 'scan' functionality -> run all GEM/AIM preparations, but not the actual per-frame, just to see how the system is recognized. also, resnum info for black/whitelists (get an overview of which element in the hamiltonian corresponds to which residue number)
 - Parallelization? Not if we don't expect this to make a huge difference, instead, create an embarassingly parallel example.
 - Assign each (type/family of) error a code, so the user can silence (a specified amount of) them, similar to GROMACS' maxwarn parameter.
 - Print cmdline call to log file!
@@ -174,6 +188,8 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 - (KvA) In preparation for next CCC:
   - Give a reason why GEM is needed.
+  - Demo of AIM
+  - Overview of methods to calculate potential.
 - (KvA) TODO before pull to main:
   - Roadmap of what the next steps will be.
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)

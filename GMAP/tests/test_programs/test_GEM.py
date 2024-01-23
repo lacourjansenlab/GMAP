@@ -1,9 +1,14 @@
+
+# standard library imports
+from pathlib import Path
+
+# 3rd party imports
+import pytest
+
+# local imports
 from GMAP.src.programs import GEM as GM_GEM
 from GMAP.src.tools import FileHandler as GM_FH
 from GMAP.src.tools import PrintTools as GM_PT
-
-from pathlib import Path
-import pytest
 
 
 def test_get_parameters():

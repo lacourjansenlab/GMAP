@@ -1,6 +1,8 @@
-import sys
+
+# standard library imports
 import inspect
 import pathlib
+import sys
 from traceback import TracebackException as TbEx
 
 

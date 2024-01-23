@@ -25,6 +25,7 @@ For more information, check the manual on N/A.
 # standard lib imports
 import sys
 
+# local imports
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
@@ -33,6 +34,47 @@ from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 def get_parameters(Files, Printer, in_parfile, argslist):
+    """Collect all provided parameters, and store them.
+
+    Parameters are defined (along with default choices) in the reference
+    parameter file. Users can have a different set of defaults defined
+    in the default parameter file, and specific choices for this (set of)
+    runs in the input parameter file and the command line. This function
+    uses the functionality in src/tools/ParameterParser.py to collect
+    all choices, and construct a final set of choices from them. All
+    generated options are then returned.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+        Contains all currently known paths and other file-related properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    in_parfile : `pathlib.Path`
+        The path to the requested input parameter file.
+    argslist : list of str
+        The slice of sys.argv containing all parameter choices given on
+        the command line.
+
+    Returns
+    -------
+    CmdPars : :class:`RawPars`
+        Contains any parameter choices made on the command line
+    InPars : :class:`RawPars`
+        Contains any parameter choices made in the input parameter file
+    DefPars : :class:`RawPars` or :class:`RefPars`
+        Contains all default parameter choices. Might be RefPars, might be
+        from a separate default parameters file.
+    RefPars : :class:`RefPars`
+        Contains all available parameters from GMAP itself (not map-specific)
+    mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.Map` pairs
+        Stores all the :class:`~GMAP.src.tools.MapReader.Map` objects for
+        each map supplied. The keys are the Map.name attributes corresponding
+        to the maps stored as values.
+    """
+
     # very basic parsing of cmd
 
     # before we can parse the command line, or the input parameter file,
@@ -135,6 +177,8 @@ def get_parameters(Files, Printer, in_parfile, argslist):
     return CmdPars, InPars, DefPars, RefPars, mapdict
 
 
+# still a placeholder - this function still has to grow. Should in the
+# end manage the different run modes, and probably do nothing else?
 def GEM(callcommand, Files, Printer):
     # step 1 (is GEM in demo mode?)
     if callcommand[1] in ("demo"):
@@ -152,6 +196,7 @@ def GEM(callcommand, Files, Printer):
     GM_PT.devprint("entered main of GEM - yet to be constructed")
 
 
+# The jobs that GEM can currently execute.
 alljobs = [
     "demo",
     "run"
@@ -159,6 +204,13 @@ alljobs = [
 
 
 def main():
+    """Fakes behaviour as if called from __main__.
+
+    During normal operation (user types 'GMAP ...' in the command line),
+    this function should never be called. This function replicates the
+    'normal' behaviour so partial tests are possible.
+    """
+
     callcommand = sys.argv
     if len(callcommand) == 1:
         print(__doc__)

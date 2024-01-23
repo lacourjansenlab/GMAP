@@ -453,12 +453,58 @@ to deal with specific chromophores have to be included in the corresponding
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.get_parameters">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_parfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argslist</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.programs.GEM.get_parameters" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Collect all provided parameters, and store them.</p>
+<p>Parameters are defined (along with default choices) in the reference
+parameter file. Users can have a different set of defaults defined
+in the default parameter file, and specific choices for this (set of)
+runs in the input parameter file and the command line. This function
+uses the functionality in src/tools/ParameterParser.py to collect
+all choices, and construct a final set of choices from them. All
+generated options are then returned.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Files</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>in_parfile</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The path to the requested input parameter file.</p>
+</dd>
+<dt><strong>argslist</strong><span class="classifier">list of str</span></dt><dd><p>The slice of sys.argv containing all parameter choices given on
+the command line.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>CmdPars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></span></dt><dd><p>Contains any parameter choices made on the command line</p>
+</dd>
+<dt><strong>InPars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></span></dt><dd><p>Contains any parameter choices made in the input parameter file</p>
+</dd>
+<dt><strong>DefPars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></span></dt><dd><p>Contains all default parameter choices. Might be RefPars, might be
+from a separate default parameters file.</p>
+</dd>
+<dt><strong>RefPars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></span></dt><dd><p>Contains all available parameters from GMAP itself (not map-specific)</p>
+</dd>
+<dt><strong>mapdict</strong><span class="classifier">dict of str: <a class="reference internal" href="GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> pairs</span></dt><dd><p>Stores all the <a class="reference internal" href="GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> objects for
+each map supplied. The keys are the Map.name attributes corresponding
+to the maps stored as values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.main">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.programs.GEM.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Fakes behaviour as if called from __main__.</p>
+<p>During normal operation (user types ‘GMAP …’ in the command line),
+this function should never be called. This function replicates the
+‘normal’ behaviour so partial tests are possible.</p>
+</dd></dl>
 
 </section>
 <section id="module-GMAP.src.programs">

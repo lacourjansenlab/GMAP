@@ -6,13 +6,12 @@ Missing tests:
     None?
 """
 
-
-# own lib imports
-from GMAP.src.tools import MathFunctions as GM_MF
-
-# 3rd party lib imports
+# 3rd party imports
 import numpy as np
 import pytest
+
+# local imports
+from GMAP.src.tools import MathFunctions as GM_MF
 
 
 @pytest.mark.parametrize(("vector1", "vector2"), [

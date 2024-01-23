@@ -1,13 +1,14 @@
 # standard lib imports
 import sys
 
-# my lib imports
+# local imports
 import GMAP
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.PrintTools as GM_PT
 
 
 def _report_unknown_choice(Printer):
+    """Wrapper for warning call SU_GM_1."""
     Printer.warning(
         "\nChoice of program wasn't recognized. Please type the following "
         "for more\ninformation on how to use this package:\n\nGMP\n\n",
@@ -16,6 +17,19 @@ def _report_unknown_choice(Printer):
 
 
 def cmd_interface(callcommand):
+    """Directs the user to the correct program.
+
+    Interpret what program the user would like to use, and direct the
+    order to it. Or, when requested, print the help of GMAP or that of
+    the specific tool instead.
+
+    Parameters
+    ----------
+    callcommand : list of str
+        Basically, the return value of sys.argv. What the user has
+        actually requested from the program.
+    """
+
     Files = GM_FH.FileLocations()
     Printer = GM_PT.Printer(Files)
     with open(Files.script_dir / "logo.txt") as lfile:

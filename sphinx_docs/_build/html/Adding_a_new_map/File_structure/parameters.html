@@ -380,7 +380,7 @@ document.write(`
 <p>For a good example, you can look at the file ‘reference_parameters.ref’ in the sourcefiles directory. It contains all the parameters used by the program.</p>
 <section id="file-layout">
 <h2>File layout<a class="headerlink" href="#file-layout" title="Link to this heading">#</a></h2>
-<p>As with all GMAP source files, any line where the first (non-whitespace) character is a hashtag (#) will be ignored.</p>
+<p>As with all GMAP source files, when a hashtag (#) is found, it and everything ater it on that line will be ignored. This allows for making notes and comments in the file.</p>
 <p>A reference parameter file consists of many lines, most of which are independent. A line has the following format:
 parameter_name(shorthand)[parameter_type] parameter_choice
 In this format, notice how there is only one whitespace - in between the closing square bracket and the parameter choice. In between these two, there can be an arbitrary amount of whitespaces, but they cannot be anywhere else (except within parameter_choice, see below). Now, to explain each section:</p>

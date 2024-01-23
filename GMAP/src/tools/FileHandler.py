@@ -1,9 +1,11 @@
 
-import sys
+# standard library imports
 import ctypes as ct
-from pathlib import Path
 import datetime
+from pathlib import Path
+import sys
 
+# local imports
 import GMAP
 # from GMAP.src.tools.PrintTools import devprint as dpr
 

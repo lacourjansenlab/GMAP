@@ -6,17 +6,18 @@ Missing tests:
     SU_FP_7 (currently unknown how to access this)
 """
 
+# standard library imports
+from pathlib import Path
 
-# own lib imports
+# 3rd party imports
+import pytest
+
+# local imports
 from GMAP.src.programs.GEM import alljobs
 from GMAP.src.tools import FileHandler as GM_FH
 from GMAP.src.tools import MapReader as GM_MR
 from GMAP.src.tools import ParameterParser as GM_PP
 from GMAP.src.tools import PrintTools as GM_PT
-
-# 3rd party lib imports
-from pathlib import Path
-import pytest
 
 
 class TestRefPars:
@@ -617,8 +618,7 @@ class TestRunPars:
             "int_test_nodef": ["33"],
         }
 
-        curpath = Path("D:/github/GEMAIM-dev/GMAP/tests/test_tools")
-        curpath /= "test_ParameterParser.py"
+        curpath = Path(__file__).resolve()
 
         cmdline = [
             "--int_test_free", "42",
@@ -743,8 +743,7 @@ class TestRunPars:
                             cmdlines[-1].append(f"--{opt1}_{opt2}_file")
                             cmdlines[-1].append("fromcmd.txt")
 
-        curpath = Path("D:/github/GEMAIM-dev/GMAP/tests/test_tools")
-        curpath /= "test_ParameterParser.py"
+        curpath = Path(__file__).resolve()
         allInPars = [
             GM_PP.RawPars.from_dict(
                 Printer, curpath / "../testout/imaginary_inpfile", pardict,
@@ -948,8 +947,7 @@ class TestMapPars:
         }
         cmdline = []
 
-        curpath = Path("D:/github/GEMAIM-dev/GMAP/tests/test_tools")
-        curpath /= "test_ParameterParser.py"
+        curpath = Path(__file__).resolve()
 
         _, Printer, _, _, _, mapdict = TestMapPars.setup_maprefpars(
             pardict, cmdline)
@@ -1193,8 +1191,7 @@ class TestMapPars:
             "testmap2.float_test_free": ["88.8"]
         }
 
-        curpath = Path("D:/github/GEMAIM-dev/GMAP/tests/test_tools")
-        curpath /= "test_ParameterParser.py"
+        curpath = Path(__file__).resolve()
         InPars = GM_PP.RawPars.from_dict(
             Printer, curpath, pardict, RefPars, False
         )
@@ -1290,8 +1287,7 @@ class TestMapPars:
             "testmap2.float_test_free": ["88.8"]
         }
 
-        curpath = Path("D:/github/GEMAIM-dev/GMAP/tests/test_tools")
-        curpath /= "test_ParameterParser.py"
+        curpath = Path(__file__).resolve()
         InPars = GM_PP.RawPars.from_dict(
             Printer, curpath, pardict, RefPars, False
         )
@@ -1379,8 +1375,7 @@ class TestMapPars:
         )
         DefPars = RefPars
 
-        curpath = Path("D:/github/GEMAIM-dev/GMAP/tests/test_tools")
-        curpath /= "test_ParameterParser.py"
+        curpath = Path(__file__).resolve()
         InPars = GM_PP.RawPars.from_dict(
             Printer, curpath, pardict, RefPars, False
         )
@@ -1554,8 +1549,7 @@ def test_SU_PP_3(capsys):
     )
     DefPars = RefPars
 
-    curpath = Path("D:/github/GEMAIM-dev/GMAP/tests/test_tools")
-    curpath /= "test_ParameterParser.py"
+    curpath = Path(__file__).resolve()
     InPars = GM_PP.RawPars.from_dict(
         Printer, curpath, {}, RefPars, False
     )

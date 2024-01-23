@@ -310,6 +310,7 @@ document.write(`
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="Useful_resources.html">Useful resources</a></li>
 <li class="toctree-l1"><a class="reference internal" href="program_flow/index.html">Program flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Code_Style.html">Code Style</a></li>
 </ul>
 </div>
 </nav></div>
@@ -367,6 +368,10 @@ document.write(`
   <section id="developers-guide">
 <span id="devguide-page-home"></span><h1>Developers guide<a class="headerlink" href="#developers-guide" title="Link to this heading">#</a></h1>
 <p>These pages will contain information specifically for developers of the program.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Map != map()! Two main programs in the GMAP package (GEM and AIM) serve a specific purpose: converting an md trajectory into a Hamiltonian trajectory. In the spectroscopic community, this conversion is traditionally done using so-called maps. In this package, <a class="reference internal" href="../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> objects contain all information on such a spectroscopic map. Do not confuse these objects with python’s built-in map() function - it doesn’t occur yet in the program as of writing this text (january 2024), and is not expected to, either.</p>
+</div>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Useful_resources.html">Useful resources</a><ul>
@@ -379,6 +384,17 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="program_flow/index.html">Program flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Code_Style.html">Code Style</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Code_Style.html#general-tips-and-tricks">General tips and tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Style.html#remarks">Remarks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Style.html#general-rules">General rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Style.html#code-layout">Code layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Style.html#variable-names">Variable names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Style.html#imports">Imports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Style.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Code_Style.html#general-good-advice">General good advice</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>

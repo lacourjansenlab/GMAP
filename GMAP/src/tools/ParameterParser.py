@@ -1,6 +1,8 @@
 
+# standard library imports
 from pathlib import Path
 
+# local imports
 import GMAP.src.tools.FileHandler as GM_FH
 from GMAP.src.tools.PrintTools import devprint as dpr
 dpr("", end="")  # to disable error of dpr unused
@@ -199,7 +201,7 @@ class RefPars:
                         "The following problem occured when reading the "
                         f"reference parameter file {self.fname}"
                         "\n\nOne of the lines contains only one item, while "
-                        "pairs are expected. Quitting!",
+                        "key-value pairs are expected. Quitting!",
                         "SU_FP_2", True
                     )
 
@@ -687,9 +689,7 @@ class RawPars:
                     "SU_WP_1", True
                 )
             curparraw = cmdargs.pop(0)
-            (
-                curpar, curpar_tocheck, refpars_to_use
-            ) = cls.parse_cmd_parname(
+            curpar, curpar_tocheck, refpars_to_use = cls.parse_cmd_parname(
                 Printer, curparraw, RefPars, maprefpars_dict
             )
 
@@ -1700,7 +1700,7 @@ def parse_commandline(
 
 
 def find_defparfile_in_cmd(Printer, argslist):
-    """ Finds any parameters pertaining to default parfile in command line
+    """Finds any parameters pertaining to default parfile in command line
 
     Given an argslist (the part of sys.argv that should/could contain
     arguments), see if there is anything hinting at a default parameter
