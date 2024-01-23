@@ -1,6 +1,7 @@
 # Quick menu
 - [General rules for code](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-rules-for-code)
 - [General code-related remarks](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-code-related-remarks)
+- [Roadmap](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#roadmap)
 - [wishlist](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#wishlist)
 - [Package structure](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#package-structure)
 - [notes](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#notes)
@@ -26,9 +27,39 @@
 - Leave no map in core! This means also amideBB should be decoupled from code
 - After having had a look at argparse, I (KvA) will not use it for the cmdline. It doesn't quite give me what I'm looking for, and doesn't feel quite right.
 
+# Roadmap
+
+This is a rough overview of the different steps (in order) that are needed to get ```GEM run``` running.
+- Step 0: (Done!) Gmap interface, command prompt menu to navigate the different tools
+- Step 1: (Done!) Create test suite, documentation system
+- Step 2: (Done!) Parameter parsing
+- Step 3: Map parsing (maybe also already develop a map? - requires core algorithms?)
+  - ?? create file like reference parameters that specifies what things a map can contain?
+  - for each map, interpret the core.txt file. reject map if incomplete/wrong.
+  - for each map, see if there is a main.py file. If so, import and check for completeness.
+  - if incomplete, alias default functions for the missing ones.
+  - write those default functions in a separate file (sourcefiles?) - This file can function for these functions much like reference parameter files work for parameters.
+  - If the user requests the use of this map, throw error if map was loaded unsuccessfully.
+- Step 4: System analysis (requires map parsing for group recognition)
+  - Load in system (mda universe)
+  - extract 'basic' data (positions, masses, charges, etc)
+  - find requested oscgroup atoms
+- Step 5: Core algorithms
+  - A function to calculate just potentials (perhaps multiple depending on algorithm)
+  - A function to calculate potentials + fields (perhaps multiple depending on algorithm)
+  - A function to calculate potentials + fields + gradients (perhaps multiple depending on algorithm)
+- Step 6: Map creation (or maybe already during parsing?)
+- Step 7: Performing per-frame calculation
+- Step 8: Adding extra functionality
+  - Black-/whitelists - what kind of typing would they need? a new one?
+
+Other things for GMAP
+- Include AIM
+- Add GEM demo, GEM setup (just like installable AIM), maybe also a way to run GEM without calculating frames (to see if system is recognized, file sizes, etc)?
+
 # wishlist
 - Non-cubic PBCs
-- Create 'scan' functionality -> run all GEM/AIM preparations, but not the actual per-frame, just to see how the system is recognized. also, resnum info for black/whitelists
+- Create 'scan' functionality -> run all GEM/AIM preparations, but not the actual per-frame, just to see how the system is recognized. also, resnum info for black/whitelists (get an overview of which element in the hamiltonian corresponds to which residue number)
 - Parallelization? Not if we don't expect this to make a huge difference, instead, create an embarassingly parallel example.
 - Assign each (type/family of) error a code, so the user can silence (a specified amount of) them, similar to GROMACS' maxwarn parameter.
 - Print cmdline call to log file!
@@ -96,14 +127,32 @@ As of writing this, this is still a work-in-progress. A (rough) sketch. Will be 
 7. parse refparfile
 8. parse defparfile
 9. parse inparfile (at least, start it, we can only finish after having read the maps)
+10. find mapdir in cmdline > inparfile > defparfile > refparfile
+11. for each map, see if there is a parameters.ref. If so, parse it.
+12. now, knowing all refparfiles, finish parsing cmdline, inparfile
 
 to do (not yet implemented)
-1. find mapdir in cmdline > inparfile > defparfile > refparfile
-2. for each map, see if there is a parameters.ref. If so, parse it.
-3. now, knowing all refparfiles, finish parsing cmdline, inparfile, defparfile
-4. combine cmdline, inparfile, defparfile, refparfile (and maprefparfile) choices into runpar
+1. now, knowing all refparfiles, finish parsing defparfile (part of step 12)
+2. combine cmdline, inparfile, defparfile, refparfile choices into runpar
    1. Not just in order (fill in gaps with lower order) also take into account possible conflicts arising from this
-   2. check whether requested files exist, are of correct format, etc.
+   2. check whether requested files exist, are of correct format, etc. If a parameter is not defined in defpars, it will also not be present in refpars. If we're missing a directory, we'll use the cwd instead. If we're missing a filename, we'll use the stub-name 'name_not_defined_x', where x is a number starting at 0 and counting upwards for each missing parameter name.
+
+| cmd<br>dir | cmd<br>file | inp<br>dir | inp<br>file | def<br>dir | def<br>file | final file used                      |
+|------------|-------------|------------|-------------|------------|-------------|--------------------------------------|
+| Yes        | Yes         | Any        | Any         | Any        | Any         | cwd/cmd.dir/cmd.file                 |
+| Yes        | No          | Any        | Yes         | Any        | Any         | cwd/cmd.dir/inpar.file               |
+| Yes        | No          | Any        | No          | Any        | Yes         | cwd/cmd.dir/defpar.file              |
+| Yes        | No          | Any        | No          | Any        | No          | cwd/cmd.dir/name_not_defined_x       |
+| No         | Yes         | Any        | Any         | Any        | Any         | cwd/cmd.file                         |
+| No         | No          | Yes        | Yes         | Any        | Any         | inpar/inpar.dir/inpar.file           |
+| No         | No          | Yes        | No          | Any        | Yes         | inpar/inpar.dir/defpar.file          |
+| No         | No          | Yes        | No          | Any        | No          | inpar/inpar.dir/name_not_defined_x   |
+| No         | No          | No         | Yes         | Any        | Any         | inpar/inpar.file                     |
+| No         | No          | No         | No          | Yes        | Yes         | defpar/defpar.dir/defpar.file        |
+| No         | No          | No         | No          | Yes        | No          | defpar/defpar.dir/name_not_defined_x |
+| No         | No          | No         | No          | No         | Yes         | defpar/defpar.file                   |
+| No         | No          | No         | No          | No         | No          | cwd/name_not_defined_x               |
+3. step 2, but for maps
 
 # To discuss
 (discuss, then put in relevant section)
@@ -136,6 +185,13 @@ to do (not yet implemented)
 
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
+
+- (KvA) In preparation for next CCC:
+  - Give a reason why GEM is needed.
+  - Demo of AIM
+  - Overview of methods to calculate potential.
+- (KvA) TODO before pull to main:
+  - Roadmap of what the next steps will be.
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
@@ -143,7 +199,6 @@ If you need a place to quickly write something down, do it here! It can be tidie
   - Similarly, AIM had a setting for when/wheter to use dipole-dipole coupling for coupling between different kinds of oscillator... What to do?
 - (KvA) Refparfile currently doesn't indicate whether a parameter is optional, or MUST be given by the user. Or is the N/A choice sufficient?
 - (KvA) Chosen map structure forces coupling maps to be complex? At some point, discuss coupling maps more?
-- (KvA) Verbose??? logfiles??? for when finding/parsing files? Or use buffer + errorfile?
 - (KvA) the inpar and temp_cmd dictionaries have a list with choices as the value, even if only a single choice is expected. This is because at the time of creating these objects, we cannot yet know whether we expect a single, or multiple choices.
 - (KvA) I've added some shorthands for cmdlinepars:
   | parameter name in refparfile | full command line parameter name | shorthand command line parameter name |
@@ -156,6 +211,22 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) currently, cmd line parser assumes a variable has either 1 assigned choice, or a variable amount.
 - (KvA) currently, code to create a RawPars instance for command line input is one big function, not the prettiest - needs tidying up? - maybe other functs, too?
 - (KvA) Clearly state/explain somewhere what the syntax (/ rules) for command line parameters is.
+- (KvA) Added keyword parameter 'prevent_overwrite' (bool). It determines how to treat files that should be created. If the program has the instruction to create a new file, but the supplied fname already exists, what should happen? if this new keyword is set to false, the existing file will simply be overwritten. If it is set to True, the existing file will be renamed, so the supplied filename can be used for the new file. The new name for the file will be #oldname.num# - where num is the lowest integer number for which a file does not yet exist.
+- (KvA) Made it so that every map instance has its own CmdPars, InPars, DefPars, RefPars, RunPars. Each map shouldn't need any parameters but it's own, except for perhaps GEM-wide parameters. GEM itself shouldn't need any of the map parameters, so this all should work out.
+- (KvA) In order to run the unittests, move in command prompt to the GMAP directory. In there, run ```pytest tests``` to run all tests. adding the flag ```-s``` allows (some?) python prints to pass through, the flag ```--cov=src``` gives the coverage of the current unit tests. In case of issues, ```--full-trace``` gives a lot more tracebacks and other information. Finally, to see what parts of the code are not covered by the tests, run ```pytest --cov-report term-missing --cov=src tests```. The Fanciest of all? ```pytest --cov-report term-missing:skip-covered --cov=src tests```.
+- (KvA) Gave every warning it's own error code. Currently, there are two uses in mind - Providing a way for the unittests to check whether the program was quit for the right reason, and providing a way for users to easily get more information on a specific issue in the manual - In the manual, they're easy to find, and references to other places in the manual can easily be added there. But maybe, more uses can be implemented in the future? for example, a way to skip/silence warnings of a specific error code?
+- (KvA) list-type parameters must always come with at least one choice (at least, when parsing from the command line). But maybe, that choice can just be '\\;'?
+- (KvA) RefPars is just a tool for reading parameter inputs, and creating the corresponding parameter datastructures. After they've been made, it's served its purpose, and is no longer needed. Any function after should only use defpars, not refpars.
+- (KvA) demo mode test and command line separation should not be part of get_parameters (Think of when the job 'setup' is implemented)
+- (KvA) currently, the type path_sep must lead to files, not directories... This is the reason map_directory is taken separately.
+- (KvA) Unittest todo:
+  - Make test for GM_FH.get_def_parfile (covered by test_GEM, I believe, but still, unittests, so test it!)
+  - Make test for GM_FH errors SU_FH_1-3
+  - Make test for warning SU_GM_1
+  - check docstrings of testfiles for further todo on tests.
+- (KvA) should the RunPars docstring contain (under attributes) all parameters as defined in the reference parameter file?
+- (KvA) GM_MR.scan_mapdirs() does not check whether a name occured twice. There is no need to disallow it (just yet?), but it would be nice to warn the user, and report the location that ís used.
+- (KvA) Should a check be added to confirm whether a parameter name from a reference parameter file can be used as a class attribute?
 
 
 ### ===============================

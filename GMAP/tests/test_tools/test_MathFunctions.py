@@ -1,9 +1,17 @@
-# own lib imports
-from GMAP.src.tools import MathFunctions as GM_MF
+"""
+Tests all the functions/classes/methods in the file:
+src/tools/MathFunctions.py.
 
-# 3rd party lib imports
+Missing tests:
+    None?
+"""
+
+# 3rd party imports
 import numpy as np
 import pytest
+
+# local imports
+from GMAP.src.tools import MathFunctions as GM_MF
 
 
 @pytest.mark.parametrize(("vector1", "vector2"), [
@@ -21,6 +29,9 @@ def test_crossprod(vector1, vector2):
     assert np.all(
         GM_MF.crossprod(vector1, vector2) == np.cross(vector1, vector2)
     )
+    assert np.all(
+        GM_MF.crossprod.py_func(vector1, vector2) == np.cross(vector1, vector2)
+    )
 
 
 @pytest.mark.parametrize(("vector1", "vector2"), [
@@ -36,6 +47,9 @@ def test_dotprod(vector1, vector2):
     vector1 = np.array(vector1, dtype='float32')
     vector2 = np.array(vector2, dtype='float32')
     assert np.all(GM_MF.dotprod(vector1, vector2) == np.dot(vector1, vector2))
+    assert np.all(
+        GM_MF.dotprod.py_func(vector1, vector2) == np.dot(vector1, vector2)
+    )
 
 
 @pytest.mark.parametrize("vector", [
@@ -50,6 +64,7 @@ def test_vec3len(vector):
     """
     inpvec = np.array(vector)
     assert GM_MF.vec3_len(inpvec) == np.linalg.norm(inpvec)
+    assert GM_MF.vec3_len.py_func(inpvec) == np.linalg.norm(inpvec)
 
 
 @pytest.mark.parametrize(("vector1", "vector2"), [
@@ -69,6 +84,12 @@ def test_project(vector1, vector2):
     vector1 = np.array(vector1, dtype='float32')
     vector2 = np.array(vector2, dtype='float32')
     prj = GM_MF.project(vector1, vector2)
+    assert all((
+        abs(np.dot(vector1, prj)) <= 1e-5,
+        abs(np.dot(vector1, np.cross(vector2, prj))) <= 1e-5
+    ))
+
+    prj = GM_MF.project.py_func(vector1, vector2)
     assert all((
         abs(np.dot(vector1, prj)) <= 1e-5,
         abs(np.dot(vector1, np.cross(vector2, prj))) <= 1e-5

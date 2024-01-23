@@ -3,4 +3,7 @@ log_filename          log.log
 map_directory         GMAP/maps
 
 verbose 3
-testmap2.par1 4
+verbose_logfile 4
+prevent_overwrite False
+test_par group1
+test_par2 4.4

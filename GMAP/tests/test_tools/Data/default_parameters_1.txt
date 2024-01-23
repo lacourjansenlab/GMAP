@@ -1,0 +1,58 @@
+
+
+
+source_directory                ../../../sourcefiles
+
+log_directory
+log_filename                    log.log
+
+map_directory                   ../../../maps
+
+verbose                         3
+verbose_logfile                 1
+prevent_overwrite               False
+
+
+# test strings
+str_test_free                   freechoice
+str_test_choice                 not_this
+str_test_free_list              freechoice1 freechoice2
+str_test_choice_list            not_this
+str_test_choice_list2           dont_pick_this but_this
+
+# test bools
+bool_test1                      True
+bool_test2                      False
+bool_test3                      True
+
+# test ints
+int_test_free                   243
+int_test_choice                 65
+int_test_free_list              46 77
+int_test_choice_list            64
+int_test_choice_list2           12 85
+
+# test floats
+float_test_free                 6.2
+float_test_choice               83.7
+float_test_free_list            32 87
+float_test_choice_list          99.9
+float_test_choice_list2         44.5 33
+
+# test paths
+path_test_free                   ../test_MathFunctions.py
+path_test_free_new               tost_outfile.txt
+path_test_choice                 ../test_MathFunctions.py
+path_test_free_new_list          test_outfile_0_1.txt test_outfile_0_2.txt
+path_test_dir1                   ../../test_tools
+path_test_dir2                   ../testout
+path_test_rel11                  test_ParameterParser.py
+path_test_rel12_choice           test_MathFunctions.py
+path_test_rel21_new              tost_outfile_2_1.txt
+path_test_rel22_new_list         test_outfile_2_2_1.txt tost_outfile_2_2_2.txt
+path_test_rel23_new_choice       test_outfile_2_3_1.txt
+path_test_rel24_new_choice_list  test_outfile_2_4_1.txt test_outfile_2_4_4.txt
+
+
+
+

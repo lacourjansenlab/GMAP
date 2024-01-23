@@ -1,0 +1,25 @@
+
+
+
+source_directory(sd)[path_dir_sd]                 ../../../sourcefiles
+default_parameter_filename(dpf)[path_rel_sd]    [N/A]
+
+log_directory[path_dir_lg]                        [N/A]
+log_filename[path_rel_lg_c]                       log.log
+
+map_directory(md)[list_path_sep]               ../../../maps
+
+verbose[int]                                      0 1 [2] 3 4
+verbose_logfile[int]                              0 1 [2] 3 4
+prevent_overwrite[bool]                           False
+
+
+# testing array
+def_def_dir[path_dir_t1]     ../Data
+def_def_file[path_rel_t1_c]  fromref.txt
+nod_def_dir[path_dir_t2]     [N/A]
+nod_def_file[path_rel_t2_c]  fromref.txt
+def_nod_dir[path_dir_t3]     ../Data
+def_nod_file[path_rel_t3_c]  [N/A]
+nod_nod_dir[path_dir_t4]     [N/A]
+nod_nod_file[path_rel_t4_c]  [N/A]

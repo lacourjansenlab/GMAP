@@ -1,0 +1,20 @@
+
+
+
+source_directory                ../../../sourcefiles
+
+log_directory
+log_filename                    log.log
+
+map_directory                   ../../../maps
+
+verbose                         3
+verbose_logfile                 1
+prevent_overwrite               False
+
+
+# testing array
+def_def_dir     ../test_def
+def_def_file    fromdef.txt
+nod_def_file    fromdef.txt
+def_nod_dir     ../test_def
