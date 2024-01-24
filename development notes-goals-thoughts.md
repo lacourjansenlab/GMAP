@@ -94,12 +94,11 @@ As of writing this, this is still a work-in-progress. A (rough) sketch. Will be 
   - other data
     - bib reference(s)
     - more?
-  - [mandatory for complex maps] name of the 'main' python file, and name of the function giving the functdict.
   - [optional?] What coupling methods can(not) be applied (black/whitelists)
   - [optional?] Dipole to use for dipole-dipole interactions
   - [optional] delta-q to use for tresp/TCC coupling method
   - [optional?] what coupling method to apply to interactions between oscillators of this species (in case none is given in inpar file). None should also be an option.
-- Complex maps must have (are defined by having) a python script to be executed by GEM.
+- Complex maps must have (are defined by having) a python script named main.py to be executed by GEM.
   - The file must contain a function that returns a dict with all the functions GEM might want to look for. By having them returned as a dict, they could also live in a different .py file, made and used by the map (or a dependency)
   - The file can contain many functions (AIM inspired - calc_freq(), pre_calc(), post_frame(), more) that GMAP will look for. If they are not present, GMAP will use the 'default' (i.e. the one used for a 'simple' map)
   - The file can also alter any of the data specified in core.txt (for example, AIM's amide map can have, depending on choice (skinner, etc) different choices for rel_j, PEG_choice, constants, and references)
@@ -154,6 +153,35 @@ to do (not yet implemented)
 | No         | No          | No         | No          | No         | No          | cwd/name_not_defined_x               |
 3. step 2, but for maps
 
+
+# How to calculate potential (and other electrostatic properties)
+
+In principle, calculating the potential at a given point (here we'll call it the PoI) is incredibly simple. Sum up the potential felt from each point charge around. However, not all point charges are that close by. A very distant point charge has a very small influence, so it is probably not worth the computational effor to include it. How do we approximate the potential accurately using the smallest possible amount of charges? Different options include:
+
+- **atom-atom**. If a charge is closer to the PoI than the given limit, it's influence is included, otherwise, it is not. 
+  - *Advantage*: the found potential is relatively true to the actual potential at the POI
+  - *Disadvantage*: when taking the difference of two potentials, those potentials are influenced by a different group of charges, resulting in a VERY noisy spectrum. 
+  - *Disadvantage*: the total charge around does not have to be 0, or even an integer.
+  - *Disadvantage*: A pair of opposite charges can be split in half - creating the illusion of a much stronger potential.
+- **molecule-atom**. If a charge is closer to the centre of mass (CoM) of the residue of the PoI than the given limit, it's influence is included, otherwise, it is not.
+  - *Advantage*: all atoms in the molecule feel the same set of charges, so taking differences becomes more meaningful.
+  - *Disadvantage*: The total charge around does not have to be 0, or even an integer. 
+  - *Disadvantage*:, if the residue is very large, the PoI might be very far away from the CoM, leading to a less accurate potential, or requiring a larger radius within which to consider charges.
+  - *Disadvantage*: A pair of opposite charges can be split in half - creating the illusion of a much stronger potential.
+- **molecule-molecule** (also labeled perres). The influence of a charge on a PoI is only included if the CoM's of the residues each belongs to are within a certain limit. 
+  - *Advantage*: all atoms in the molecule feel the same set of charges, so taking differences becomes more meaningful.
+  - *Advantage*: the chance that the total charge is neutral is much larger, and otherwise, it must at least be an integer (with the 'off' charge probably being quite far away)
+  - *Disadvantage*: If either the residue of the PoI or any of the residues around is large, a charge could come very close to the PoI, but still not be counted. This can either lead to a (much) less accurate potential, or require a larger radius within which to consider charges.
+  - *Disadvantage*: A pair of opposite charges can be split in half - creating the illusion of a much stronger potential.
+- **soft cutoff**. Can be applied to each of the three methods. The most important reason for using this method is to deal with the general mentioned issue above - if two opposite charges are closeby to eachother, they could be 'split' in half, where one is close enough to be considered, and the other is not. The soft cutoff, as the name implies, is more gentle. Charges close enough are considered fully, but charges close to the cutoff are considered partly, with a formula (often linear) linking the distance and their 'weight'. The main disadvantage is that a larger radius is needed to accomodate the charges, and that applying the soft part is more computationally expensive (requiring more if-checks)
+- **neutralizing charges**. Can be applied to each of the three methods. Some magic to get neutral charge to influence the PoI. May or may not be applicable to electric fields (and gradients)? Should have the advantage of much less noise in the potential-distance graph.
+- **splitting residues**. If a residue is very large, split it in (neutral) parts. Only applicable for ma and mm methods.
+  - Advantage: removes the issue of possible ignoring closeby charges.
+  - Disadvantage: When splitting through the residue of the PoI, the disadvantage of different groups of charges influencing the PoI returns.
+  - maybe, split all but the residue of the PoI? Or, when splitting the residue of the PoI, don't split the PoIs contributing to a single frequency?
+
+
+
 # To discuss
 (discuss, then put in relevant section)
 
@@ -190,8 +218,10 @@ If you need a place to quickly write something down, do it here! It can be tidie
   - Give a reason why GEM is needed.
   - Demo of AIM
   - Overview of methods to calculate potential.
-- (KvA) TODO before pull to main:
-  - Roadmap of what the next steps will be.
+- (KvA) TODO:
+  - Theory page in documentation for explanation of hamiltonians etc.
+  - Links to relevant packages etc in explanation in main documentation page.
+  - More info on AIM - link papers that use custom groups? Thomas & Rike's SCN paper?
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
