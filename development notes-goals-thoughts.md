@@ -1,15 +1,15 @@
 # Quick menu
-- [General rules for code](/development%20notes-goals-thoughts.md#general-rules-for-code)
-- [General code-related remarks](/development%20notes-goals-thoughts.md#general-code-related-remarks)
-- [Roadmap](/development%20notes-goals-thoughts.md#roadmap)
-- [wishlist](/development%20notes-goals-thoughts.md#wishlist)
-- [Package structure](/development%20notes-goals-thoughts.md#package-structure)
-- [notes](/development%20notes-goals-thoughts.md#notes)
-- [structure/concepts of maps in/for GEM](/development%20notes-goals-thoughts.md#structureconcept-of-maps-infor-gem)
-- [How GEM looks for/through parameter files to obtain runpar](/development%20notes-goals-thoughts.md#how-gem-looks-forthrough-parameter-files-to-obtain-runpar)
-- [To discuss](/development%20notes-goals-thoughts.md#to-discuss)
-- [Dump section](/development%20notes-goals-thoughts.md#dump-section)
-- [Old notes/goals/thoughts/etc](/development%20notes-goals-thoughts.md#old-notesgoalsthoughtsetc)
+- [General rules for code](#general-rules-for-code)
+- [General code-related remarks](#general-code-related-remarks)
+- [Roadmap](#roadmap)
+- [wishlist](#wishlist)
+- [Package structure](#package-structure)
+- [notes](#notes)
+- [structure/concepts of maps in/for GEM](#structureconcept-of-maps-infor-gem)
+- [How GEM looks for/through parameter files to obtain runpar](#how-gem-looks-forthrough-parameter-files-to-obtain-runpar)
+- [To discuss](#to-discuss)
+- [Dump section](#dump-section)
+- [Old notes/goals/thoughts/etc](#old-notesgoalsthoughtsetc)
 
 
 
