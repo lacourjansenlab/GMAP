@@ -1,15 +1,15 @@
 # Quick menu
-- [General rules for code](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-rules-for-code)
-- [General code-related remarks](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-code-related-remarks)
-- [Roadmap](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#roadmap)
-- [wishlist](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#wishlist)
-- [Package structure](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#package-structure)
-- [notes](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#notes)
-- [structure/concepts of maps in/for GEM](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#structureconcept-of-maps-infor-gem)
-- [How GEM looks for/through parameter files to obtain runpar](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#how-gem-looks-forthrough-parameter-files-to-obtain-runpar)
-- [To discuss](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#to-discuss)
-- [Dump section](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#dump-section)
-- [Old notes/goals/thoughts/etc](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#old-notesgoalsthoughtsetc)
+- [General rules for code](/development%20notes-goals-thoughts.md#general-rules-for-code)
+- [General code-related remarks](/development%20notes-goals-thoughts.md#general-code-related-remarks)
+- [Roadmap](/development%20notes-goals-thoughts.md#roadmap)
+- [wishlist](/development%20notes-goals-thoughts.md#wishlist)
+- [Package structure](/development%20notes-goals-thoughts.md#package-structure)
+- [notes](/development%20notes-goals-thoughts.md#notes)
+- [structure/concepts of maps in/for GEM](/development%20notes-goals-thoughts.md#structureconcept-of-maps-infor-gem)
+- [How GEM looks for/through parameter files to obtain runpar](/development%20notes-goals-thoughts.md#how-gem-looks-forthrough-parameter-files-to-obtain-runpar)
+- [To discuss](/development%20notes-goals-thoughts.md#to-discuss)
+- [Dump section](/development%20notes-goals-thoughts.md#dump-section)
+- [Old notes/goals/thoughts/etc](/development%20notes-goals-thoughts.md#old-notesgoalsthoughtsetc)
 
 
 
