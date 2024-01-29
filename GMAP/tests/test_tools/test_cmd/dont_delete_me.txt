@@ -1,0 +1,3 @@
+If this file is not here, this directory will not be synced by git(hub desktop). This directory is required by some tests, so if the directory disappears, the tests will break.
+
+tldr: remove this file, tests will break.
