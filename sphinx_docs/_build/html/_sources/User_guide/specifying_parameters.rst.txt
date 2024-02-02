@@ -1,8 +1,8 @@
 .. _UserGuide_page_specifying_parameters:
 
-================================
+################################
 How to specify parameter choices
-================================
+################################
 
 Most runs by GMAP need some parameters to explain exactly what needs to be done. These need to be supplied to the program for it to function. This can be done three different ways - through the command line, using an input file, or in the default parameter file.
 
@@ -10,8 +10,10 @@ Here, the language used for specifying parameters is explained. If you want to s
 
 
 .. _UserGuide_page_specifying_parameters_commandline:
+
+********************
 In the commmand line
-====================
+********************
 
 When specifying parameters on the command line, whitespaces are used to separate both a parameter from its choices, the multiple different choices for a parameter, and between parameters. Therefore, the following rules are used to ensure proper identification:
 
@@ -28,8 +30,10 @@ When a parameter is allowed to take more than one choice, the last choice must b
 
 
 .. _UserGuide_page_specifying_parameters_file:
+
+**************************
 In an input parameter file
-==========================
+**************************
 
 In the input parameter file, each parameter is specified on a separate line. First comes the entire name (no shorthands), then one or more whitespaces, and then the choices. If there are multiple choices, they are again separated by whitespaces.
 
@@ -40,7 +44,8 @@ When a hashtag (#) is found, it and everything ater it on that line will be igno
 Please note that unlike the command line, parameter files don't allow the nobool format.
 
 
+***************************
 In a default parameter file
-===========================
+***************************
 
 The parameters in the default parameter file are written in the same way as in the input parameter file. The only difference is that the default parameter file must have all parameters. Parameters of maps don't have to be in it, but if any parameter of any map is in there, all parameters of that specific map must be in there.

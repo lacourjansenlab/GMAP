@@ -1,6 +1,6 @@
-==============
+##############
 File structure
-==============
+##############
 
 All maps are stored inside a map directory, that can be supplied to
 the program using the `map_directory` keyword. The keyword can be given
@@ -29,4 +29,5 @@ on each of the possible files can be found in the pages linked below.
 .. toctree::
 
     parameters
+    main_py
 

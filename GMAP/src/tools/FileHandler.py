@@ -365,7 +365,7 @@ def try_file(fname):
         return None
 
 
-def check_file_readability(Printer, fname):
+def check_file_readability(Printer, fname, doquit=True):
     """Checks if a given file can be read.
 
     If not, throws an error, and quits.
@@ -381,6 +381,11 @@ def check_file_readability(Printer, fname):
         and handle errors.
     fname : `pathlib.Path`
         The path to the file to check.
+
+    Returns
+    -------
+    _ : bool
+        Whether the file is readable.
     """
     try:
         with open(fname) as file:
@@ -390,5 +395,7 @@ def check_file_readability(Printer, fname):
         Printer.warning(
             f"\n The file {fname} is of the wrong type, please make sure "
             "it is a plain text file. ",
-            "SU_FH_3", True
+            "SU_FH_3", doquit
         )
+        return False
+    return True

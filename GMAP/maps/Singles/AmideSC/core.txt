@@ -9,9 +9,11 @@
 # before it is recognized. These must include at least all atoms required later,
 # but there can be more than that.
 
-functional_group        ASN    CG  OD1  CB  ND2  HD21  HD22
-functional_group        GLN    CD  OE1  CG  NE2  HE21  HE22
-# functional_group_file   relats.txt
+functional_group   [A,B] a(3,2) b c,d(2) [B,A] e d,a(3) b
+functional_group [a] x y(1) z(1) x y z
+functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+functional_group        [GLN]    CD  OE1  CG  NE2  HE21  HE22
+# functional_group_file   funcgroup.txt
 
 # --------------------------
 

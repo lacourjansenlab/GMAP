@@ -1,6 +1,6 @@
-==========
+##########
 User guide
-==========
+##########
 
 These pages will contain information specifically for developers of the program.
 

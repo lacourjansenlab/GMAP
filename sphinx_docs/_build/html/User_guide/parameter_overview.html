@@ -376,33 +376,38 @@ document.write(`
 <p>When multiple sources are used, the choices in the command line take precedence above the choices in the input file, which take precedence over those in the default parameter file.</p>
 <p>Please note that when paths are supplied, they should either be absolute, or specified relative to the source.</p>
 <p>Some parameters store paths that can be relative to a directory stored in a different parameter. Where this is the case, this is denoted. Please note that when a file path and a directory path are given, the file path is assumed relative to the directory path. If only the file path is given, it is assumed relative to the source. If only the directory is given, file paths from lower-precedence sources are assumed relative to it.</p>
+<section id="parameters-for-file-paths">
+<h2>parameters for file paths<a class="headerlink" href="#parameters-for-file-paths" title="Link to this heading">#</a></h2>
 <section id="source-directory">
-<h2>source_directory<a class="headerlink" href="#source-directory" title="Link to this heading">#</a></h2>
+<h3>source_directory<a class="headerlink" href="#source-directory" title="Link to this heading">#</a></h3>
 <p>(shorthand: -sd)</p>
 <p>The location of the sourcefiles directory. This directory stores all data required for the program to run. The parameter default_parameter_filename will be assumed relative to this directory when applicable.</p>
 </section>
 <section id="default-parameter-filename">
-<h2>default_parameter_filename<a class="headerlink" href="#default-parameter-filename" title="Link to this heading">#</a></h2>
+<h3>default_parameter_filename<a class="headerlink" href="#default-parameter-filename" title="Link to this heading">#</a></h3>
 <p>(shorthand: -dpf)</p>
 <p>The filename of the default parameter file. This parameter is not allowed to be present in the default parameter file. This file must contain all possible parameters (except those it cannot). It does not need to contain any parameters from maps, but if it contains any from any map, it must contain all of that specific map. The path stored here will be assumed to be relative to the directory given in the parameter source_directory when applicable.</p>
 </section>
 <section id="log-directory">
-<h2>log_directory<a class="headerlink" href="#log-directory" title="Link to this heading">#</a></h2>
+<h3>log_directory<a class="headerlink" href="#log-directory" title="Link to this heading">#</a></h3>
 <p>(no shorthand available)</p>
 <p>The location of the log directory. In this directory, all files relating to logging the program flow are located. The parameter log_filename will be assumed relative to this directory when applicable.</p>
 </section>
 <section id="log-filename">
-<h2>log_filename<a class="headerlink" href="#log-filename" title="Link to this heading">#</a></h2>
+<h3>log_filename<a class="headerlink" href="#log-filename" title="Link to this heading">#</a></h3>
 <p>(no shorthand available)</p>
 <p>The filename of the log file. This file contains the same, or similar information as the prints to the command line, depending on the choice for the parameters verbose and verbose_logfile. The path stored here will be assumed to be relative to the directory given in the parameter log_directory when applicable.</p>
 </section>
 <section id="map-directory">
-<h2>map_directory<a class="headerlink" href="#map-directory" title="Link to this heading">#</a></h2>
+<h3>map_directory<a class="headerlink" href="#map-directory" title="Link to this heading">#</a></h3>
 <p>(shorthand: -md)</p>
 <p>The location of the maps directory. Multiple directories are allowed to be given. Within a maps directory, the maps that can be used are stored. See <a class="reference internal" href="../Adding_a_new_map/index.html#userguide-page-adding-map"><span class="std std-ref">adding a new map</span></a> for more information on what maps are and how to make one.</p>
 </section>
+</section>
+<section id="parameters-for-how-to-write-files">
+<h2>parameters for how to write files<a class="headerlink" href="#parameters-for-how-to-write-files" title="Link to this heading">#</a></h2>
 <section id="verbose">
-<h2>verbose<a class="headerlink" href="#verbose" title="Link to this heading">#</a></h2>
+<h3>verbose<a class="headerlink" href="#verbose" title="Link to this heading">#</a></h3>
 <div class="line-block">
 <div class="line">(no shorthand available)</div>
 <div class="line">(options: 0, 1, 2, 3, 4)</div>
@@ -410,7 +415,7 @@ document.write(`
 <p>How verbose the prints to the command line should be. When 0 is chosen, nothing but errors will be reported.</p>
 </section>
 <section id="verbose-logfile">
-<h2>verbose_logfile<a class="headerlink" href="#verbose-logfile" title="Link to this heading">#</a></h2>
+<h3>verbose_logfile<a class="headerlink" href="#verbose-logfile" title="Link to this heading">#</a></h3>
 <div class="line-block">
 <div class="line">(no shorthand available)</div>
 <div class="line">(options: 0, 1, 2, 3, 4)</div>
@@ -418,12 +423,13 @@ document.write(`
 <p>How verbose the prints to the log file should be.</p>
 </section>
 <section id="prevent-overwrite">
-<h2>prevent_overwrite<a class="headerlink" href="#prevent-overwrite" title="Link to this heading">#</a></h2>
+<h3>prevent_overwrite<a class="headerlink" href="#prevent-overwrite" title="Link to this heading">#</a></h3>
 <div class="line-block">
 <div class="line">(no shorthand available)</div>
 <div class="line">(options: true, t, false, f)</div>
 </div>
 <p>Whether the files created by the program should or shouldn’t overwrite existing files. When set to True, the existing file will be renamed, and the requested name will be used for the new file. When set to False, the old file will be overwritten, and the data inside lost forever.</p>
+</section>
 </section>
 </section>
 
@@ -471,14 +477,20 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-directory">source_directory</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#default-parameter-filename">default_parameter_filename</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#log-directory">log_directory</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#log-filename">log_filename</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#map-directory">map_directory</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verbose">verbose</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#verbose-logfile">verbose_logfile</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prevent-overwrite">prevent_overwrite</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters-for-file-paths">parameters for file paths</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#source-directory">source_directory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#default-parameter-filename">default_parameter_filename</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-directory">log_directory</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-filename">log_filename</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#map-directory">map_directory</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters-for-how-to-write-files">parameters for how to write files</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verbose">verbose</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verbose-logfile">verbose_logfile</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prevent-overwrite">prevent_overwrite</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

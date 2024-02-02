@@ -936,7 +936,7 @@ class RawPars:
             - Are there exactly enough choices given?
             - Can all choices be converted into the correct datatype?
             - If there is a limited set of options to chose from - is the
-            provided choice allowed?
+              provided choice allowed?
 
         Parameters
         ----------

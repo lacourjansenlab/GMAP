@@ -549,9 +549,73 @@ If you have not touched the file that created this error, please get in touch wi
 </section>
 </section>
 </section>
+<section id="codes-starting-with-mi">
+<h2>Codes starting with MI<a class="headerlink" href="#codes-starting-with-mi" title="Link to this heading">#</a></h2>
+<section id="mi-mr">
+<h3>MI_MR<a class="headerlink" href="#mi-mr" title="Link to this heading">#</a></h3>
+<section id="mi-mr-1">
+<h4>MI_MR_1<a class="headerlink" href="#mi-mr-1" title="Link to this heading">#</a></h4>
+<p>For some reason, the main python file of the map could not be opened. This is an issue that most likely needs to be fixed by the developer of this file. If you set the verbose (or verbose logfile) level to 4, you can see the python traceback for more information.</p>
+</section>
+<section id="mi-mr-2">
+<h4>MI_MR_2<a class="headerlink" href="#mi-mr-2" title="Link to this heading">#</a></h4>
+<p>Could not find the core.txt file for the given map. A map is defined by its core, and cannot live without. This is an issue that most likely needs to be fixed by the developer of this map.</p>
+</section>
+<section id="mi-mr-3">
+<h4>MI_MR_3<a class="headerlink" href="#mi-mr-3" title="Link to this heading">#</a></h4>
+<p>The given parameter had no choice defined. Each parameter needs a choice for a map to make sense. This is an issue that most likely needs to be fixed by the developer of this map.</p>
+</section>
+<section id="mi-mr-4">
+<h4>MI_MR_4<a class="headerlink" href="#mi-mr-4" title="Link to this heading">#</a></h4>
+<p>The given parameter occurs on more than a single line in the file. However, it may only occur once. This is an issue that most likely needs to be fixed by the developer of this map.</p>
+</section>
+</section>
+<section id="mi-mc">
+<h3>MI_MC<a class="headerlink" href="#mi-mc" title="Link to this heading">#</a></h3>
+<section id="mi-mc-1">
+<h4>MI_MC_1<a class="headerlink" href="#mi-mc-1" title="Link to this heading">#</a></h4>
+<p>There are two ways of defining what the molecule a map operates on looks like. Either you specify each possible version of the molecule on a new line of core.txt using the parameter ‘functional group’, or, you choose to not define these in the core.txt file, but instead in a separate file (this might be preferred for maps operating on (very) large molecules). This file can be ‘linked’ by specifying its name using the parameter ‘functional_group_file’.</p>
+<p>The two methods are exclusive - all molecules must be in that single file, or all must be in the core.txt file. This warning was triggered because both systems were used simultaneously.</p>
+<p>This is an issue that most likely needs to be fixed by the developer of this map.</p>
+</section>
+<section id="mi-mc-2">
+<h4>MI_MC_2<a class="headerlink" href="#mi-mc-2" title="Link to this heading">#</a></h4>
+<p>There are two ways of defining what the molecule a map operates on looks like (see error SU_MC_1). This definition is essential: without, the map cannot function. Neither of the two methods was used/recognized in the file, resulting in a non-functional map. This is an issue that most likely needs to be fixed by the developer of this map.</p>
+</section>
+<section id="mi-mc-3">
+<h4>MI_MC_3<a class="headerlink" href="#mi-mc-3" title="Link to this heading">#</a></h4>
+<p>The map requires the given file to exist in order to recognize the molecule in the MD system. However, the file could not be found. Please make sure you copied the entire map-specific directory in your maps directory. If you did so, this is an issue that most likely needs to be fixed by the developer of this map.</p>
+</section>
+<section id="mi-mc-4">
+<h4>MI_MC_4<a class="headerlink" href="#mi-mc-4" title="Link to this heading">#</a></h4>
+<p>The map contains a definition of functional_group that couldn’t be interpreted. This could either be in the mentioned file itself, or the file linked in that file under the parameter functional_group_file. This is an issue that most likely needs to be fixed by the developer of this map.</p>
+<p>The error code given consists of three parts, separated by two dashes. The first part is the thing that went wrong (see overview below), the second and third indicate where this went wrong. The second number indicates which line (in the case of core.txt), or which newstruct (in the case of a provided file) triggered the error - 0 indicates the first, 1 indicates the second, etc. The 3rd number indicates the index of the atom that was last parsed successfully before the error triggered.</p>
+<dl>
+<dt>1</dt><dd><p>The marker for the next residue (square brackets) was found, but the last residue was not yet complete: either the name wasn’t registered, or there were no atoms associated with it.</p>
+</dd>
+<dt>2</dt><dd><p>The encountered term had either a ‘[’, or a ‘]’, but not both. Make sure that the residue name definition does not contain any spaces between these two brackets!</p>
+</dd>
+<dt>3</dt><dd><p>An atom was found to have a bond-marker (both ‘(’ and ‘)’ ). Within these parentheses, only integers (separated by a comma) are expected, but whatever was found inside could not be converted to an integer.</p>
+</dd>
+<dt>4</dt><dd><p>An atom was found to only have ‘(’ or ‘)’, but not both. Make sure that the atom + bond definition does not contain any spaces!</p>
+</dd>
+<dt>5</dt><dd><p>The end of the definition of this functional_group was found, but the last residue was not yet complete: either the name wasn’t registered, or there were no atoms associated with it.</p>
+</dd>
+<dt>6</dt><dd><div class="line-block">
+<div class="line">!!! careful! For this error, the 3rd number does not indicate the index of the last successful atom, but instead, the ‘label’ of the bond triggering the error !!!</div>
+<div class="line">When parsing the bonds defined within this structure (using parentheses), a certain bond identifier was found too often, or not often enough. Each identifier should occur exactly twice, a single atom may have multiple bond identifiers.</div>
+</div>
+</dd>
+</dl>
+</section>
+</section>
+</section>
 <section id="other-codes">
 <h2>Other codes<a class="headerlink" href="#other-codes" title="Link to this heading">#</a></h2>
+<section id="howtogethere">
+<h3>howtogethere<a class="headerlink" href="#howtogethere" title="Link to this heading">#</a></h3>
 <p>As far as I know, there is no way to actually trigger this one. If you managed to do so, congratulations! Please let us know how you did so!</p>
+</section>
 </section>
 </section>
 
@@ -661,7 +725,27 @@ If you have not touched the file that created this error, please get in touch wi
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-codes">Other codes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#codes-starting-with-mi">Codes starting with MI</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mr">MI_MR</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mr-1">MI_MR_1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mr-2">MI_MR_2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mr-3">MI_MR_3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mr-4">MI_MR_4</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mc">MI_MC</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mc-1">MI_MC_1</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mc-2">MI_MC_2</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mc-3">MI_MC_3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mc-4">MI_MC_4</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#other-codes">Other codes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#howtogethere">howtogethere</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

@@ -1,0 +1,6 @@
+
+functional_group [anyprot] N CA C(1) O [anyprot] N(1) H CA C
+
+used_atoms               2 3 1 4 5 6
+electrostatic_atoms      0 3
+electrostatic_choice     E

@@ -1,15 +1,17 @@
 # Quick menu
-- [General rules for code](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-rules-for-code)
-- [General code-related remarks](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#general-code-related-remarks)
-- [Roadmap](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#roadmap)
-- [wishlist](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#wishlist)
-- [Package structure](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#package-structure)
-- [notes](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#notes)
-- [structure/concepts of maps in/for GEM](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#structureconcept-of-maps-infor-gem)
-- [How GEM looks for/through parameter files to obtain runpar](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#how-gem-looks-forthrough-parameter-files-to-obtain-runpar)
-- [To discuss](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#to-discuss)
-- [Dump section](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#dump-section)
-- [Old notes/goals/thoughts/etc](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#old-notesgoalsthoughtsetc)
+- [General rules for code](#general-rules-for-code)
+- [General code-related remarks](#general-code-related-remarks)
+- [Roadmap](#roadmap)
+- [wishlist](#wishlist)
+- [Package structure](#package-structure)
+- [notes](#notes)
+- [structure/concepts of maps in/for GEM](#structureconcept-of-maps-infor-gem)
+- [How GEM looks for/through parameter files to obtain runpar](#how-gem-looks-forthrough-parameter-files-to-obtain-runpar)
+- [How to calculate potential (and other electrostatic properties)](#how-to-calculate-potential-and-other-electrostatic-properties)
+- [Rough program flow](#rough-program-flow-gem)
+- [To discuss](#to-discuss)
+- [Dump section](#dump-section)
+- [Old notes/goals/thoughts/etc](#old-notesgoalsthoughtsetc)
 
 
 
@@ -18,17 +20,20 @@
 - Make use of comments when function of code isn't easily discernable!
 - Its the modern era, we have storage space! Code does not need to be compactly written, legibility is the most important in this project
 - Don't worry about efficiency/speed of a function if it doesnt take more than 1% of total calculation time. This doesn't mean we should aim for blatantly needlessly expensive code.
-- Document the choices/assumptions/etc you make, so they can be put in a (dev)manual later. If it's too much to immediately write them down neatly, put them over [here](https://github.com/Kimvana/GEMAIM-dev/blob/main/development%20notes-goals-thoughts.md#dump-section)
+- Document the choices/assumptions/etc you make, so they can be put in a (dev)manual later. If it's too much to immediately write them down neatly, put them over [here](#dump-section)
 - Printing should *_always_* be done with a custom print command (except when defining these), not the python default print. if you want to temporarily print something during development, use ```GMAP.src.tools.PrintTools.devprint()``` instead. It behaves _EXACTLY_ like print does, but adds a linenumber and name of file/function to the print - this way, it is easy to find it back, and remove it.
 - When creating strings for printing, f-strings are the preferred method.
+
+[back to top](#quick-menu)
 
 # General code-related remarks
 - Use pathlib! (not os)
 - Leave no map in core! This means also amideBB should be decoupled from code
 - After having had a look at argparse, I (KvA) will not use it for the cmdline. It doesn't quite give me what I'm looking for, and doesn't feel quite right.
 
-# Roadmap
+[back to top](#quick-menu)
 
+# Roadmap
 This is a rough overview of the different steps (in order) that are needed to get ```GEM run``` running.
 - Step 0: (Done!) Gmap interface, command prompt menu to navigate the different tools
 - Step 1: (Done!) Create test suite, documentation system
@@ -55,7 +60,15 @@ This is a rough overview of the different steps (in order) that are needed to ge
 
 Other things for GMAP
 - Include AIM
-- Add GEM demo, GEM setup (just like installable AIM), maybe also a way to run GEM without calculating frames (to see if system is recognized, file sizes, etc)?
+- Add more functions for GEM, like
+- run (current WIP) - 'just' do the intended calculation
+  - demo - like run, but for a pre-generated file (and pre-generated settings)? So user can see how the program is supposed to run, and whether there are technical issues?
+  - setup - As GEM needs different files to run (most notably inside the maps directory and the sourcefiles directory) - copy these to a target location, so the user can make their own changes (just like the installable AIM)
+  - trial - same as run, but without the perframe loop. Or, alternatively (maybe setting?), a single frame. This way, the user can see how the system will be interpreted (and get a legend for the hamiltonian, the parameters.txt, etc), and possibly a calculation-time estimate, file size estimate, etc?
+  - maptest - a way for a map-developer to test whether their map is correct (the program can understand, no errors, etc) ?
+  - ?? Way to output any already calculated property.
+
+[back to top](#quick-menu)
 
 # wishlist
 - Non-cubic PBCs
@@ -65,14 +78,20 @@ Other things for GMAP
 - Print cmdline call to log file!
 - also output a 'legend' file. it would contain a description of every entry in the hamiltonian, so a user could retrace which is which.
 
+[back to top](#quick-menu)
+
 # Package structure
 - There will be one big package (currently named GMAP). The concept of this will equal that of GROMACS. It will contain different programs/tools (GEM, AIM, other relevant projects), just like GROMACS contains mdrun, trjconv, etc.
 - There will be a copy of the ['old' AIM](https://github.com/Kimvana/AIM/tree/Version-1.0-(main)) as a tool within the package. This will remain a copy, and will receive very few updates/changes to stay close to the original.
 - There will be a new program in the package (currently named GEM) that is very similar to AIM, but can _also_ deal with non-IR maps. It should still be capable of treating the systems AIM was made for.
 
+[back to top](#quick-menu)
+
 # notes
 - There should be no FILES.logdir_hc and FILES.outdir_hc
 - AIM had a 6-length array: C<sub>x</sub>, O<sub>x</sub>, Ca<sub>x</sub>, N<sub>x+1</sub>, H<sub>x+1</sub>, Ca<sub>x+1</sub>
+
+[back to top](#quick-menu)
 
 # structure/concept of maps in/for GEM
 As of writing this, this is still a work-in-progress. A (rough) sketch. Will be refined after further discussion and/or when the code develops.
@@ -104,6 +123,17 @@ As of writing this, this is still a work-in-progress. A (rough) sketch. Will be 
   - The file can also alter any of the data specified in core.txt (for example, AIM's amide map can have, depending on choice (skinner, etc) different choices for rel_j, PEG_choice, constants, and references)
   - The script should only alter data linked to the specific map (if desired), and treat all other data supplied to it as read-only.
 - Complex maps can have a default/reference parameter file named parameters.ref, in case the extra code requires it (for example, amides would need to know the choice of map - skinner etc). Also specifies expected type & allowed options & whether par must be specified.
+
+Data structures involved with maps (or just as a result of them):
+- AIMs OscAts. The big np array in which each row stores the indices of the atoms relevant for that group.
+  - old way - a rectangular array, all entries had to be filled. The size was known easily - 6 columns (hard coded), same amount of rows as groups detected.
+  - possible new way - larger rectangular array - as many columns as the largest group detected, same amount of rows as groups detected.
+    - advantage: true to the old way, one big np array is fast
+    - disadvantage: what to fill in for 'missing' / unneeded items
+    - disadvantage: size.
+  - possible new way - list of 1D np arrays.
+
+[back to top](#quick-menu)
 
 # How GEM looks for/through parameter files to obtain runpar.
 1. Check if GEM was called in demo-mode
@@ -153,6 +183,8 @@ to do (not yet implemented)
 | No         | No          | No         | No          | No         | No          | cwd/name_not_defined_x               |
 3. step 2, but for maps
 
+[back to top](#quick-menu)
+
 
 # How to calculate potential (and other electrostatic properties)
 
@@ -180,6 +212,90 @@ In principle, calculating the potential at a given point (here we'll call it the
   - Disadvantage: When splitting through the residue of the PoI, the disadvantage of different groups of charges influencing the PoI returns.
   - maybe, split all but the residue of the PoI? Or, when splitting the residue of the PoI, don't split the PoIs contributing to a single frequency?
 
+[back to top](#quick-menu)
+
+
+# Rough program flow (GEM)
+- See if GEM is in demo mode
+- Very basic cmdline parse (find definition of parameter file and arguments)
+- parse parameters:
+  - first cmdline argparse - find anything on srcdir/defpar
+  - inparfile to dict
+  - find which defpar to use
+  - find refparfile
+  - parse refparfile
+  - parse defparfile
+  - parse inparfile (not map part)
+  - find mapdir in cmdline > inparfile > defparfile
+  - for each map, parse parameters.ref
+  - parse cmdline
+  - for each map, make cmdpars, inpars, defpars
+  - check if all parameters from cmdpars, inpars, defpars have now been found
+  - make RunPars
+- for each map, make RunPars
+TO DO
+- read/interpret maps:
+  - (X) for each map, find (+check? complete?) main.py 
+  - (X) for each map, call func to change RunPars
+  - (X) for each map, parse core.txt
+  - (X) for each map, call func to change strs in core.txt
+  - for each map, interpret core.txt / make funcs
+  - ?? for each map, call ???
+- (X) find/open top/trj files
+- (X) run MDA.Universe
+- (X) check whether universe is right-angled, neutral
+- extract basic universe data:
+  - (X) atnums, atnames, resums, resnames, segids, and (VERY PROTECTED!) molnums
+  - The protected way of extracting molnums
+  - (X) positions, masses, charges, types (and from arr size, natoms), boxdims, halfbox
+  - (X) rebuild resnums to make them count from 0 (never resetting)
+  - AIMs residues - basically, look-up tables with 1 entry/whatev per residue
+    - lowest ix present
+    - highest ix present
+    - !!! AIM also does the main residue check here! extracts a list of all residue names that should be counted amongst the protein and influencers - also reports unknown resnames.
+  - ?? AIMs indices? Appears to only look for the protein part of the system?
+  - Find all molnums. If not stored in the system, extract them in another way. (how to deal with non-protein multiple-residue chains?)
+  - ?? AIM does this - fish out the maps that were actually requested by the user, ditch the rest.
+- initialize universe:
+  - identify the indices of all atoms involved in oscillators - basis of AIMs oscarr
+  - find resnums of protein, influencers, COMgroups
+  - create c-frienly objects if needed
+  - initialize arrays to use for calculating couplings
+  - run 'characterizer' - aids in sorting through atoms later
+  - find all local ixs for each oscillator
+- run the calculation:
+  - precalc:
+    - create some empty dicts
+    - build the couptype array
+    - call the pre-calc functions of maps
+    - alias mda.universe.trajectory
+    - compare runpar.endframe to mda nframes, correct endframe if needed to not exceed mda nframes.
+  - ```for frame in trj[startframe:]:```
+    - manage framenum (if not within range, skip iteration / break loop, prints, ETA calc, quit if too slow, etc)
+    - rebuild frame-specific data (positions, box, etc)
+    - recalculate COM (NSA?)
+    - initialize output structures (like hamiltonian)
+    - call the pre-frame functions of maps
+    - calculate the actual data for hamiltonian, dipoles, etc:
+      - calcdiag - for each oscillator:
+        - find ix that are in range
+        - calculate PEG
+        - calculate freq + rotation matrix
+        - add nnmap edit to freq
+        - if needed, adjust PEG
+        - calc dipole
+        - calc raman
+      - calccoupling:
+        - prepcoup - many couplings need some data that is oscillator-specific, not pair specific. That data is found in a per-oscillator fashion
+        - calccoup - for each pair, apply correct coupling method.
+      - findatpos - save position of an atom for each oscillator
+    - call the post-frame functions of maps
+    - write the calculated data
+- fincalc:
+  - print a report to the command line
+  - manage the profiler
+
+[back to top](#quick-menu)
 
 
 # To discuss
@@ -206,6 +322,8 @@ In principle, calculating the potential at a given point (here we'll call it the
 - How to check if defparfile is complete? if user specifies different one, use that file for the choises, but still use def_hc for completeness test?
 - find a way to automagically install/compile c library?
 
+[back to top](#quick-menu)
+
 
 ### ===============================
 # Dump section
@@ -213,15 +331,12 @@ In principle, calculating the potential at a given point (here we'll call it the
 
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
-
-- (KvA) In preparation for next CCC:
-  - Give a reason why GEM is needed.
-  - Demo of AIM
-  - Overview of methods to calculate potential.
 - (KvA) TODO:
+  - Add check that the bonds defining a funcgroup actually bond the multiple residues together (if there are multiple)
   - Theory page in documentation for explanation of hamiltonians etc.
   - Links to relevant packages etc in explanation in main documentation page.
   - More info on AIM - link papers that use custom groups? Thomas & Rike's SCN paper?
+  - Add the new parameters to the documentation page listing all parameters!
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
@@ -257,6 +372,13 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) should the RunPars docstring contain (under attributes) all parameters as defined in the reference parameter file?
 - (KvA) GM_MR.scan_mapdirs() does not check whether a name occured twice. There is no need to disallow it (just yet?), but it would be nice to warn the user, and report the location that ís used.
 - (KvA) Should a check be added to confirm whether a parameter name from a reference parameter file can be used as a class attribute?
+- (KvA) Can a single map give 2 different frequencies?
+- (KvA) Add option to only output hamiltonian diagonal
+- (KvA) Add option to output potentials (e.g. only potential caused by a-helix on atoms nearby)
+  - Or, more generally, option to output any property the program calculates? Maybe as a separate GEM functionality?
+- (KvA) If the top/trj files come from a type(DefPars) == RefPars, or from a RefPars itself, automatically enter demo mode?
+
+[back to top](#quick-menu)
 
 
 ### ===============================
@@ -335,3 +457,5 @@ Again, hoping to aid code development
 - Whats a good program/data structure? (for example, AIM's WS class is not ideal...)
 - How to go about test driven development? especially the complex/specific funtions?
 - Is it possible to type hint classes/kwargs properly in a way that suits the project? Or can/should we only type the basic ones?
+
+[back to top](#quick-menu)
