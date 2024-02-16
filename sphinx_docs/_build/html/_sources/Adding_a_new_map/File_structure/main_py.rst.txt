@@ -32,6 +32,8 @@ It is probable that the map wants to save information between functions, too, ju
   .. tip:: self.RunPars also has a reference to the main-program RunPars - it is stored as self.RunPars.MainRunPars.
 - self.code (type module) contains all functions defined in main.py. Any functions that the program needs, but are not specified in main.py are automatically filled in. Any object that the program does not require, but is still there, is also available.
 - self.rawcore (type dict of str-list pairs) contains the information from core.txt, before parsing. The function GM_adjust_map_core_raw can change this simple structure before it is being parsed into more complex structures and functions later.
+- self.Core (type :class:`~GMAP.src.tools.MapReader.Core`) contains the information from core.txt, after parsing.
+
 
 Files
 ======
@@ -82,7 +84,7 @@ Available attributes of Map
     * self.InPars
     * self.CmdPars
     * self.RunPars
-    * self.Code
+    * self.code
 
 Parameters
 ----------
@@ -132,8 +134,9 @@ Available attributes of Map
     * self.InPars
     * self.CmdPars
     * self.RunPars
-    * self.Code
+    * self.code
     * self.rawcore
+
 
 Parameters
 ----------
@@ -146,6 +149,69 @@ Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
+
+
+GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list)
+=================================================================
+
+Finalizes the list of oscillators.
+
+Is expected to return a list of oscillators - by default, it returns oscillator_list.
+
+The purpose of a map is to define how to calculate the properties for a certain kind of oscillator. The program will find instances of that oscillator in the MD system based on the choice for 'functional_group' in core.txt. After they've been found, they are passed to this function. The reason for this is twofold. Fistly, this allows the map to change this list if it were necessary (see example uses). Secondly, it allows the map to 'see' the oscillators for the first time, allowing it to identify the type of an oscillator, for example.
+
+
+Example uses
+------------
+
+A map needs to deal with two kinds of oscillator
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The AmideBB map is an example of this. When the second residue participating in the oscillator is the amino acid proline, some things need to be done differently. For example, the map parameters are different. In this function, the map can identify whether the presented oscillators are of the 'regular' type, or the 'pre-proline' type, and store this information accordingly.
+
+Please do note that when using different 'kinds' of oscillator, this method is not always the desired solution. In some cases, it might be better to split the functionalities into two separate maps (like has been done with AmideSC and AmideBB).
+
+A functional group is fully symmetrical
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The CystBridge map is an example of this. It is a map spanning two residues, but the two residues are functionally identical - the selection language does not allow to distinguish them. This means that every oscillator is found twice - once listing first A, then B, and once listing first B, then A. Here, A denotes the residue with the smallest atomic indices, B the one with the largest. This function can, in that case, be used to remove the BA instances, and only keep the AB ones.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.name
+    * self.type
+    * self.success
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+    Contains all currently known paths and other file-related properties.
+    Has to be updated after RunPars is finalized.
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+oscillator_list : list of :class:`~GMAP.src.tools.SystemReader.Oscillator`
+    The oscillators that were identified as a good match for this map.
+
+
 
 
 

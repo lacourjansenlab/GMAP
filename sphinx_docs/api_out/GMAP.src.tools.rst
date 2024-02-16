@@ -4,45 +4,16 @@ GMAP.src.tools package
 Submodules
 ----------
 
-GMAP.src.tools.FileHandler module
----------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: GMAP.src.tools.FileHandler
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-GMAP.src.tools.MapReader module
--------------------------------
-
-.. automodule:: GMAP.src.tools.MapReader
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-GMAP.src.tools.MathFunctions module
------------------------------------
-
-.. automodule:: GMAP.src.tools.MathFunctions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-GMAP.src.tools.ParameterParser module
--------------------------------------
-
-.. automodule:: GMAP.src.tools.ParameterParser
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-GMAP.src.tools.PrintTools module
---------------------------------
-
-.. automodule:: GMAP.src.tools.PrintTools
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   GMAP.src.tools.DefaultMapFunctions
+   GMAP.src.tools.FileHandler
+   GMAP.src.tools.MapReader
+   GMAP.src.tools.MathFunctions
+   GMAP.src.tools.ParameterParser
+   GMAP.src.tools.PrintTools
+   GMAP.src.tools.SystemReader
 
 Module contents
 ---------------

@@ -262,7 +262,77 @@ The error code given consists of three parts, separated by two dashes. The first
     | !!! careful! For this error, the 3rd number does not indicate the index of the last successful atom, but instead, the 'label' of the bond triggering the error !!!
     | When parsing the bonds defined within this structure (using parentheses), a certain bond identifier was found too often, or not often enough. Each identifier should occur exactly twice, a single atom may have multiple bond identifiers.
 
+MI_MC_5
+-------
+The map contains a definition of 'functional_group_bonds' that cannot be interpreted. Make sure it contains exactly two indices (each consisting of numbers only), separated by only a hyphen. Spaces should only be used to separate bonds from each other. The indices should count along the atoms defined in 'functional_group', starting from 0. Residue names do not count in this counting method.
 
+This is an issue that most likely needs to be fixed by the developer of this map.
+
+MI_MC_6
+-------
+The core.txt of every map can contain a variety of parameters, some of which are optional. Others are mandatory. The listed parameter is mandatory, but was missing. It must be added before the map can function. This is an issue that most likely needs to be fixed by the developer of this map.
+
+MI_MC_7
+-------
+This parameter must be specified using only numbers and spaces, but something else was used. This is an issue that most likely needs to be fixed by the developer of this map.
+
+MI_MC_8
+-------
+The size of the integers for this parameter cannot exceed the amount of atoms given for the other mentioned parameter. Please note that counting starts at 0. This is an issue that most likely needs to be fixed by the developer of this map.
+
+MI_MC_9
+-------
+The given parameter encodes a (position) vector, but its definition couldn't be interpreted. [Cite relevant manual page!!!]
+
+MI_MC_10
+--------
+If type is set to be 'linear', only one axis needs to be defined. Any of x, y and z can be used, depending on the map constants used. The other two will be taken perpendicular to eachother, and the one defined.
+If type is set to be 'standard', two of the three axes need to be defined. The first (any of x, y, and z) will take the direction as is, the second (any of the remainder of x, y and z) will have the component along the first removed. This means that for the second, only the perpendicular component will be used for the direction of the vector. The third is assumed by the program to be the cross product of the first vector with the second (first x second).
+
+
+MI_GEM
+======
+
+MI_GEM_1
+--------
+The user requested the use of a certain map, but the program cannot use/find it. Make sure there is a directory of the requested name in the directory named 'singles' inside your maps directory. If there is, check the earlier errors - there might have been issues loading it in.
+
+**********************
+Codes starting with MD
+**********************
+
+
+MD_SU
+=====
+
+MD_SU_1
+-------
+There was an issue with creating the universe from the supplied MD files (parameters 'topology_file' and 'trajectory_file').
+
+MD_SU_2
+-------
+The supplied MD files contain a universe that has a bounding box with non-90-degree angles. The current version does not support this.
+
+MD_SU_3
+-------
+The supplied MD files have a non-zero charge. The amount the charge is allowed to deviate is defined using the parameter neutral_charge_threshold. If the system has non-integer charge, the program will quit, if the charge is non-neutral, the program will throw a warning, but continue.
+
+MD_SU_4
+-------
+The atoms in the supplied MD system have an unexpected convention - their numbering didn't start at 0 and/or resets counting. Please get in touch with the developers of GMAP!
+
+MD_SU_5
+-------
+There is no bond information in the supplied MD system, but this information is required for the calculation to run. For the program to run, you should either use a different map, or provide a system with bond information. This can be done in two different ways:
+
+- Use :ref:`the parameter guess_bonds
+<UserGuide_page_parameter_overview>` in the input file or command line to have the program guess bonds in the MD system (no guarantee this accurately detects the bonds in your system).
+
+- Use a different format of topology file. `This website <https://userguide.mdanalysis.org/stable/formats/index.html>`__ has an extensive table of available formats for different MD software. Make sure you pick a format which lists 'bonds' in the column 'Attributes read'. Here an overview of options for a few common MD packages:
+  - Gromacs: .tpr
+  - Amber: top, prmtop or parm7
+  - Charmm: .psf
+  - NAMD: .psf
 
 
 ***********

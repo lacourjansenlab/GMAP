@@ -280,6 +280,15 @@ MI_MC_8
 -------
 The size of the integers for this parameter cannot exceed the amount of atoms given for the other mentioned parameter. Please note that counting starts at 0. This is an issue that most likely needs to be fixed by the developer of this map.
 
+MI_MC_9
+-------
+The given parameter encodes a (position) vector, but its definition couldn't be interpreted. [Cite relevant manual page!!!]
+
+MI_MC_10
+--------
+If type is set to be 'linear', only one axis needs to be defined. Any of x, y and z can be used, depending on the map constants used. The other two will be taken perpendicular to eachother, and the one defined.
+If type is set to be 'standard', two of the three axes need to be defined. The first (any of x, y, and z) will take the direction as is, the second (any of the remainder of x, y and z) will have the component along the first removed. This means that for the second, only the perpendicular component will be used for the direction of the vector. The third is assumed by the program to be the cross product of the first vector with the second (first x second).
+
 
 MI_GEM
 ======

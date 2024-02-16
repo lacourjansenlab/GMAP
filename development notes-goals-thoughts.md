@@ -250,14 +250,14 @@ TO DO
   - (X) positions, masses, charges, types (and from arr size, natoms), boxdims, halfbox
   - (X) rebuild resnums to make them count from 0 (never resetting)
   - AIMs residues - basically, look-up tables with 1 entry/whatev per residue
-    - lowest ix present
-    - highest ix present
-    - !!! AIM also does the main residue check here! extracts a list of all residue names that should be counted amongst the protein and influencers - also reports unknown resnames.
+    - (X) lowest ix present
+    - (X) highest ix present
+    - !!! AIM also does the main residue check here! extracts a list of all residue names that should be counted amongst the protein and influencers - also reports unknown resnames. - maybe, instead, have black/whitelists for what residues should(n't) be considered? 
   - ?? AIMs indices? Appears to only look for the protein part of the system?
   - Find all molnums. If not stored in the system, extract them in another way. (how to deal with non-protein multiple-residue chains?)
-  - ?? AIM does this - fish out the maps that were actually requested by the user, ditch the rest.
+  - (X) ?? AIM does this - fish out the maps that were actually requested by the user, ditch the rest.
 - initialize universe:
-  - identify the indices of all atoms involved in oscillators - basis of AIMs oscarr
+  - (X) identify the indices of all atoms involved in oscillators - basis of AIMs oscarr
   - find resnums of protein, influencers, COMgroups
   - create c-frienly objects if needed
   - initialize arrays to use for calculating couplings
@@ -332,11 +332,20 @@ TO DO
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
 - (KvA) TODO:
-  - Add check that the bonds defining a funcgroup actually bond the multiple residues together (if there are multiple)
+  - Report all residue names found, and which are(n't) taken as influencers
+  - replacement for AIM resnames file:
+    - in input file, influencers can be given through influencers_whitelist and influencers_blacklist. They take a list of strings, those strings are residue names.
+    - alternatively, the parameter influencers_file can be used. In it, groups of residue names can be defined, just as with AIM. Use set notation for this?
+    - (alternatively.... maybe...) allow for a file in sourcefiles that contain definitions to use in influencers_(white/black)list directly? or not?
+    - It is not needed to see if EVERY residue name is defined, as all are reported. Having all, it is the users responsibility that they check that list to see if it contains what they expect.
+  - Maybe extra functionality that gives an overview as to what the system looks like (residue and/or atom names)???
   - Theory page in documentation for explanation of hamiltonians etc.
   - Links to relevant packages etc in explanation in main documentation page.
   - More info on AIM - link papers that use custom groups? Thomas & Rike's SCN paper?
   - Add the new parameters to the documentation page listing all parameters!
+  - src/tools/SystemReader.System.abs_resnums() only uses changes in residue numbers. But software like charm (resetting resnum with new segment) can have a new residue without changing resnum (through having a 1-residue segment) - Fix it!
+  - Add the new functions (GM_get_dipole and GM_get_rotation_matrix) to adding_new_map part of documentation - in case users want to write their own special things there.
+  - Add list of function examples for maps to docpages (or just a tutorial on how to create a map?)
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
@@ -377,6 +386,7 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) Add option to output potentials (e.g. only potential caused by a-helix on atoms nearby)
   - Or, more generally, option to output any property the program calculates? Maybe as a separate GEM functionality?
 - (KvA) If the top/trj files come from a type(DefPars) == RefPars, or from a RefPars itself, automatically enter demo mode?
+- (KvA) I think there might be an issue with the residue number allocation - What if there's an MD package with repeating residue numbers, but segments of only 1 residue? then, the residue number would stay consistent, but it would in fact be a different residue :/ -- means that tools/SystemReader.system.abs_resnums needs an update.
 
 [back to top](#quick-menu)
 

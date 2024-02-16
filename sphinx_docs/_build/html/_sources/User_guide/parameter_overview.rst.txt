@@ -55,6 +55,20 @@ map_directory
 The location of the maps directory. Multiple directories are allowed to be given. Within a maps directory, the maps that can be used are stored. See :ref:`adding a new map<UserGuide_page_adding_map>` for more information on what maps are and how to make one.
 
 
+topology_file
+=============
+(shorthand: -top)
+
+The filename and location of the topology file to be used during the calculation. Allowed filetypes are the ones listed `here <https://userguide.mdanalysis.org/stable/formats/index.html>`__ that have a tick in the column labeled 'topology'.
+
+
+trajectory_file
+===============
+(shorthand: -trj)
+
+The filename and location of the trajectory file to be used during the calculation. Allowed filetypes are the ones listed `here <https://userguide.mdanalysis.org/stable/formats/index.html>`__ that have a tick in the column labeled 'coordinates'.
+
+
 *********************************
 parameters for how to write files
 *********************************
@@ -82,4 +96,29 @@ prevent_overwrite
 | (options: true, t, false, f)
 
 Whether the files created by the program should or shouldn't overwrite existing files. When set to True, the existing file will be renamed, and the requested name will be used for the new file. When set to False, the old file will be overwritten, and the data inside lost forever.
+
+
+**********************************************
+parameters for specifying calculation settings
+**********************************************
+
+maps_to_use
+===========
+(shorthand: -um)
+
+Which maps should be considered in the calculation. Or, in other words, which kinds of oscillators should be found, and calculated properties for. There are limited choices - namely, the names of the maps supplied through the parameter map_directory.
+
+
+neutral_charge_threshold
+========================
+(no shorthand available)
+
+How close to zero the total charge needs to be to be considered neutral. Essentially, all values between 0 - neutral_charge_threshold and 0 + neutral_charge_threshold will be considered 0.
+
+guess_bonds
+===========
+| (no shorthand available)
+| (options: true, t, false, f)
+
+Whether the program should guess bonds for the supplied universe. This should only be used if bond information if absolutely necessary, and there really is no topology file with bond information available. Bonds are guessed by `MDAnalysis<https://userguide.mdanalysis.org/stable/formats/guessing.html#types>`__.
 

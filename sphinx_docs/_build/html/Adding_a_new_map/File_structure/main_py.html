@@ -401,6 +401,7 @@ document.write(`
 </li>
 <li><p>self.code (type module) contains all functions defined in main.py. Any functions that the program needs, but are not specified in main.py are automatically filled in. Any object that the program does not require, but is still there, is also available.</p></li>
 <li><p>self.rawcore (type dict of str-list pairs) contains the information from core.txt, before parsing. The function GM_adjust_map_core_raw can change this simple structure before it is being parsed into more complex structures and functions later.</p></li>
+<li><p>self.Core (type <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Core" title="GMAP.src.tools.MapReader.Core"><code class="xref py py-class docutils literal notranslate"><span class="pre">Core</span></code></a>) contains the information from core.txt, after parsing.</p></li>
 </ul>
 </section>
 <section id="files">
@@ -448,7 +449,7 @@ document.write(`
 </ul>
 </td><td><ul class="simple">
 <li><p>self.RunPars</p></li>
-<li><p>self.Code</p></li>
+<li><p>self.code</p></li>
 </ul>
 </td></tr></table>
 </section>
@@ -498,7 +499,7 @@ about this map.</p>
 <li><p>self.RunPars</p></li>
 </ul>
 </td><td><ul class="simple">
-<li><p>self.Code</p></li>
+<li><p>self.code</p></li>
 <li><p>self.rawcore</p></li>
 </ul>
 </td></tr></table>
@@ -514,6 +515,66 @@ and handle errors.</p>
 </dd>
 <dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
 about this map.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-adjust-oscillators-files-printer-map-syst-oscillator-list">
+<h3>GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list)<a class="headerlink" href="#gm-adjust-oscillators-files-printer-map-syst-oscillator-list" title="Link to this heading">#</a></h3>
+<p>Finalizes the list of oscillators.</p>
+<p>Is expected to return a list of oscillators - by default, it returns oscillator_list.</p>
+<p>The purpose of a map is to define how to calculate the properties for a certain kind of oscillator. The program will find instances of that oscillator in the MD system based on the choice for ‘functional_group’ in core.txt. After they’ve been found, they are passed to this function. The reason for this is twofold. Fistly, this allows the map to change this list if it were necessary (see example uses). Secondly, it allows the map to ‘see’ the oscillators for the first time, allowing it to identify the type of an oscillator, for example.</p>
+<section id="id4">
+<h4>Example uses<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
+<section id="a-map-needs-to-deal-with-two-kinds-of-oscillator">
+<h5>A map needs to deal with two kinds of oscillator<a class="headerlink" href="#a-map-needs-to-deal-with-two-kinds-of-oscillator" title="Link to this heading">#</a></h5>
+<p>The AmideBB map is an example of this. When the second residue participating in the oscillator is the amino acid proline, some things need to be done differently. For example, the map parameters are different. In this function, the map can identify whether the presented oscillators are of the ‘regular’ type, or the ‘pre-proline’ type, and store this information accordingly.</p>
+<p>Please do note that when using different ‘kinds’ of oscillator, this method is not always the desired solution. In some cases, it might be better to split the functionalities into two separate maps (like has been done with AmideSC and AmideBB).</p>
+</section>
+<section id="a-functional-group-is-fully-symmetrical">
+<h5>A functional group is fully symmetrical<a class="headerlink" href="#a-functional-group-is-fully-symmetrical" title="Link to this heading">#</a></h5>
+<p>The CystBridge map is an example of this. It is a map spanning two residues, but the two residues are functionally identical - the selection language does not allow to distinguish them. This means that every oscillator is found twice - once listing first A, then B, and once listing first B, then A. Here, A denotes the residue with the smallest atomic indices, B the one with the largest. This function can, in that case, be used to remove the BA instances, and only keep the AB ones.</p>
+</section>
+</section>
+<section id="id5">
+<h4>Available attributes of Map<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id6">
+<h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<dl>
+<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+<dt>oscillator_list<span class="classifier">list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></span></dt><dd><p>The oscillators that were identified as a good match for this map.</p>
 </dd>
 </dl>
 </section>
@@ -589,6 +650,16 @@ about this map.</p>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Available attributes of Map</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Parameters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-adjust-oscillators-files-printer-map-syst-oscillator-list">GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#a-map-needs-to-deal-with-two-kinds-of-oscillator">A map needs to deal with two kinds of oscillator</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#a-functional-group-is-fully-symmetrical">A functional group is fully symmetrical</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Parameters</a></li>
 </ul>
 </li>
 </ul>

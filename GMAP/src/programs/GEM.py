@@ -27,6 +27,7 @@ import sys
 
 # local imports
 import GMAP.src.tools.FileHandler as GM_FH
+# import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
 import GMAP.src.tools.PrintTools as GM_PT
@@ -226,14 +227,33 @@ def GEM(callcommand, Files, Printer):
         if map_.name in RunPars.maps_to_use
     }
     RunPars.requested_mapdict = requested_mapdict
-    if any(map_.core.requires_bonds for map_ in requested_mapdict.values()):
+    if any(map_.Core.requires_bonds for map_ in requested_mapdict.values()):
         RunPars.detected_requires_bonds = True
     else:
         RunPars.detected_requires_bonds = False
 
     # next - MD system!
-    System = GM_SR.System(Printer, RunPars)
+    System = GM_SR.System(Files, Printer, RunPars)
     dpr(System.universe)
+
+    # dpr(System.positions[System.oscillators[0].used_atoms[0]])
+    # testvect = GM_MF.PBCvect(
+    #     System.positions[System.oscillators[0].used_atoms[0]],
+    #     System.boxvects, System.boxvects_inv
+    # )
+    # dpr(testvect, testvect.boxvects)
+    # dpr(testvect + 30)
+    # dpr(testvect * 3)
+    # dpr(testvect @ [[2, 0, 0], [0, 2, 0], [0, 0, 2]])
+    # oscvects = System.positions[System.oscillators[0].used_atoms]
+    # PBCoscvects = GM_MF.PBCvect(
+    #     oscvects, System.boxvects, System.boxvects_inv)
+    # dpr(oscvects)
+    # dpr(PBCoscvects)
+    # dpr(oscvects[1]-oscvects[0])
+    # dpr(PBCoscvects[1]-PBCoscvects[0])
+    # dpr(oscvects[1]**2)
+    # dpr(PBCoscvects[1]**2)
 
     GM_PT.devprint("entered main of GEM - yet to be constructed")
 

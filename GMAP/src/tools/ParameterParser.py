@@ -126,7 +126,7 @@ class RefPars:
               stricter limits. Is this actually useful???
         """
         Printer.warning(
-            "Not implemented yet!",
+            "\nNot implemented yet!",
             "SU_FP_1", True
         )
 
@@ -198,7 +198,7 @@ class RefPars:
                 linelist = line.split()
                 if len(linelist) == 1:
                     Printer.warning(
-                        "The following problem occured when reading the "
+                        "\nThe following problem occured when reading the "
                         f"reference parameter file {self.fname}"
                         "\n\nOne of the lines contains only one item, while "
                         "key-value pairs are expected. Quitting!",
@@ -230,7 +230,7 @@ class RefPars:
             self.parse_line_type(linelist)
         except (TypeError, KeyError) as ex:
             Printer.warning(
-                "Could not interpret the parameter name on the following "
+                "\nCould not interpret the parameter name on the following "
                 f"line:\n{line}"
                 "\nwhile reading the following file as reference "
                 f"file:\n{self.fname}"
@@ -239,7 +239,8 @@ class RefPars:
             )
         except Exception as ex:
             Printer.warning(
-                "Encountered an error while parsing the parameter name on the "
+                "\nEncountered an error while parsing the parameter name "
+                "on the "
                 f"following line:\n{line}"
                 "\nwhile reading the following file as reference "
                 f"file:\n{self.fname}"
@@ -328,7 +329,7 @@ class RefPars:
             self.parse_line_choice(linelist)
         except ValueError as ex:
             Printer.warning(
-                "Could not interpret the parameter choice on the following "
+                "\nCould not interpret the parameter choice on the following "
                 f"line:\n{line}"
                 "\nwhile reading the following file as reference "
                 f"file:\n{self.fname}"
@@ -337,7 +338,8 @@ class RefPars:
             )
         except IndexError as ex:
             Printer.warning(
-                "Detected a wrong amount of choices for the parameter choice "
+                "\nDetected a wrong amount of choices for the parameter "
+                "choice "
                 f"on the following line:\n{line}"
                 "\nWhile reading the following file as a reference file:\n"
                 f"{self.fname}\nQuitting!",
@@ -345,7 +347,7 @@ class RefPars:
             )
         except Exception as ex:
             Printer.warning(
-                "Encountered an error while parsing the parameter choice on "
+                "\nEncountered an error while parsing the parameter choice on "
                 f"the following line:\n{line}"
                 "\nwhile reading the following file as reference "
                 f"file:\n{self.fname}"
@@ -684,7 +686,7 @@ class RawPars:
             #   - hyphens
             if not cmdargs[0].startswith("-"):
                 Printer.warning(
-                    "The name of a parameter specified on the command line "
+                    "\nThe name of a parameter specified on the command line "
                     "should be preceeded with '-'.",
                     "SU_WP_1", True
                 )
@@ -699,7 +701,7 @@ class RawPars:
             )[1]
             if not found:
                 Printer.warning(
-                    f"The parameter {curpar} as specified on the command "
+                    f"\nThe parameter {curpar} as specified on the command "
                     "line is not recognised. Please make sure you spelled "
                     "it correctly.",
                     "SU_WP_3", True
@@ -762,7 +764,7 @@ class RawPars:
             expect_shorthand = False
 
         warntext = (
-            f"The parameter {curpar} as specified on the command "
+            f"\nThe parameter {curpar} as specified on the command "
             "line is not recognised. Please make sure you spelled "
             "it correctly."
         )
@@ -849,13 +851,13 @@ class RawPars:
                 choice = [cmdargs.pop(0)]
             except IndexError as ex:
                 Printer.warning(
-                    f"The parameter {curpar} specified in the command "
+                    f"\nThe parameter {curpar} specified in the command "
                     "line requires a choice to be given.",
                     "SU_WP_4", True, exception=ex
                 )
 
             warntext = (
-                f"The parameter {curpar} specified in the command line "
+                f"\nThe parameter {curpar} specified in the command line "
                 "requires the last choice to be appended with '\\;'."
             )
             while not choice[-1].endswith("\\;"):
@@ -923,7 +925,7 @@ class RawPars:
             # parameter should belong to core, but isn't recognized
             else:
                 Printer.warning(
-                    f"Unknown parameter {parname} found in the file "
+                    f"\nUnknown parameter {parname} found in the file "
                     f"{self.fname}. "
                     "Please make sure you spelled it correctly.",
                     "SU_WP_6", True
@@ -961,7 +963,7 @@ class RawPars:
         if len(choice) == 0:
             if self.is_default:
                 Printer.warning(
-                    f"No choice detected for the parameter {parname} "
+                    f"\nNo choice detected for the parameter {parname} "
                     f"specified in the file {self.fname}. "
                     "All parameters must be specified for the file to be "
                     "used.",
@@ -972,7 +974,7 @@ class RawPars:
                 choice.append("true")
             else:
                 Printer.warning(
-                    f"No choice detected for the parameter {parname} "
+                    f"\nNo choice detected for the parameter {parname} "
                     f"specified in the file {self.fname}. "
                     "Either remove the parameter line, or make a choice.",
                     "SU_WP_8", True
@@ -981,7 +983,7 @@ class RawPars:
         # if we expect a single choice, but multiple were given
         elif len(choice) > 1 and parname not in RefPars.maybe_list:
             Printer.warning(
-                f"Too many choices given for the parameter {parname} "
+                f"\nToo many choices given for the parameter {parname} "
                 f"specified in the file {self.fname}. "
                 "Please only specify one.",
                 "SU_WP_9", True
@@ -989,12 +991,13 @@ class RawPars:
 
         # now, correct amount of arguments.
         errortext1 = (
-            f"Invalid choice given for the parameter {parname} "
+            f"\nInvalid choice given for the parameter {parname} "
             f"specified in the file {self.fname}. "
             "Please refer to the manual for the allowed options."
         )
         errortext2 = (
-            f"Choice given for the parameter {parname} specified in the file "
+            f"\nChoice given for the parameter {parname} specified in "
+            "the file "
             f"{self.fname} is of the wrong type. "
             "Please refer to the manual for the expected type."
         )
@@ -1093,7 +1096,8 @@ class RawPars:
             found = True
             if self.is_default and len(choice) != 0:
                 Printer.warning(
-                    f"A choice for the parameter {parname_full} is specified "
+                    f"\nA choice for the parameter {parname_full} is "
+                    "specified "
                     f"in the default parameter file {self.fname}. "
                     "However, default files cannot contain a choice for "
                     "this parameter. Please remove the parameter from the "
@@ -1152,7 +1156,7 @@ class RawPars:
         for parname in RefPars.choices.keys():
             if parname not in self.choices:
                 Printer.warning(
-                    f"No entry found for the parameter {parname} in the "
+                    f"\nNo entry found for the parameter {parname} in the "
                     f"default parameter file {self.fname}. "
                     "All parameters must be specified for default files to "
                     "be used.",
@@ -1178,7 +1182,8 @@ class RawPars:
         """
         if len(self.not_found.keys()) != 0:
             Printer.warning(
-                f"Unknown parameter {list(self.not_found.keys())[0]} found in "
+                f"\nUnknown parameter {list(self.not_found.keys())[0]} "
+                "found in "
                 "the "
                 f"file {self.fname}. "
                 "Please make sure you spelled it correctly.",
@@ -1326,7 +1331,7 @@ class RunPars:
                     choice = source.choices[parname]
             if choice is None:
                 Printer.warning(
-                    f"No choice for the parameter {parname} could be found. "
+                    f"\nNo choice for the parameter {parname} could be found. "
                     "Please specify a choice on either the command line, or "
                     "in the input file. ",
                     "SU_NP_1", True
@@ -1413,7 +1418,7 @@ class RunPars:
                 )
             except Exception as ex:
                 Printer.warning(
-                    f"No choice for the parameter {parname} could be found. "
+                    f"\nNo choice for the parameter {parname} could be found. "
                     "Please specify a choice on either the command line, or "
                     "in the input file. ",
                     "SU_NP_1", True, exception=ex
@@ -1675,7 +1680,7 @@ def parse_commandline(
         # if we expect an input filename, but it isn't there, error!
         if len(callcommand) < 3:
             Printer.warning(
-                f"{job} requires an input file. Quitting!", "SU_PP_2", True
+                f"\n{job} requires an input file. Quitting!", "SU_PP_2", True
             )
 
         in_parfile = (Files.cwd / callcommand[2]).resolve()
@@ -1773,14 +1778,14 @@ def find_par_in_cmd(Printer, argslist, flags, parname, is_list=False):
 
         if totalcount > 1:
             Printer.warning(
-                "The program was called with more than one setting "
+                "\nThe program was called with more than one setting "
                 f"for {parname}. "
                 "Please make sure your command contains this parameter at "
                 "most once.",
                 "SU_PP_4", True
             )
 
-        warntext = f"{used_flag} requires a file name to be specified.",
+        warntext = f"\n{used_flag} requires a file name to be specified.",
         try:
             choice = [argslist[ix + 1]]
         except IndexError:
@@ -1791,7 +1796,7 @@ def find_par_in_cmd(Printer, argslist, flags, parname, is_list=False):
         if is_list:
             adder = 2
             warntext = (
-                f"{used_flag} requires the last choice to be appended with "
+                f"\n{used_flag} requires the last choice to be appended with "
                 "'\\;'."
             )
             while not choice[-1].endswith("\\;"):
@@ -1894,7 +1899,8 @@ def directory_list_checker(Printer, parent, direclist, parname, source):
         # not using fstrings here, as backslashes arent supported in
         # fstrings before python 3.12.
         Printer.warning(
-            f"The following choice(s) for {parname} found in {source} either "
+            f"\nThe following choice(s) for {parname} found in {source} "
+            "either "
             "do not exist, or are not directories:\n"
             + "\n".join(failed),
             "SU_PP_3", True

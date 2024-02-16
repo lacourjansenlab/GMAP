@@ -163,7 +163,7 @@ class Map():
             parnamelist = parname.split(".")
             if len(parnamelist) != 2:
                 Printer.warning(
-                    "Names of map-specific parameters cannot contain a '.'.",
+                    "\nNames of map-specific parameters cannot contain a '.'.",
                     "SU_MR_1", True
                 )
             if parnamelist[0] != self.name:
@@ -212,7 +212,8 @@ class Map():
         # defined later.
         self.complete_code((
             "adjust_RunPars",
-            "adjust_map_core_raw"
+            "adjust_map_core_raw",
+            "adjust_oscillators"
         ))
         self.code.GM_adjust_RunPars(Files, Printer, self)
 
@@ -227,9 +228,63 @@ class Map():
         self.Core = Core(Printer, self)
         if not self.Core.success:
             self.success = False
+            return
 
         # build remaining functions (i.e. do something with the contents
         # of core.txt)
+        functs_to_build = [
+            "get_dipole"
+        ]
+        kwargs_for_build = [{
+            "map_": self,
+            "Printer": Printer
+        }]
+
+        corefile = (self.directory / 'core.txt').resolve()
+
+        # If the code doesn't contain a function for getting the dipole, make
+        # sure the two necessary keywords are there.
+        if not hasattr(self.code, "GM_get_dipole"):
+            if not all(
+                keyword in self.rawcore for keyword in ("r_vec", "r_pos")
+            ):
+                Printer.warning(
+                    f"\nThe file {corefile} does not contain a definition of "
+                    "r_vec and/or r_pos. These two variables have to be "
+                    "present if the map's main.py file does not contain "
+                    "the function 'GM_get_dipole'.",
+                    "MI_MC_6"
+                )
+                self.success = False
+                return
+
+        # check for existence of xyz_uvec
+
+        # they're not expected if 'type' isn't expected, either (they go
+        # together)
+        # (type is set to None if not in file)
+        if self.Core.type:
+            msg = (
+                f"\nThe file {corefile} does not contain the right amount of "
+                "definitions for x_uvec, y_uvec, and z_uvec. Depending on "
+                "the choice for type, only one or two of these is allowed "
+                "to be specified."
+            )
+            nvars = sum([vec + "_uvec" in self.rawcore for vec in "xyz"])
+            if self.Core.type == 'standard' and nvars != 2:
+                Printer.warning(msg, "MI_MC_10")
+                self.success = False
+                return
+            elif self.Core.type == 'linear' and nvars != 1:
+                Printer.warning(msg, "MI_MC_10")
+                self.success = False
+                return
+            functs_to_build.append("get_rotation_matrix")
+            kwargs_for_build.append({"map_": self, "Printer": Printer})
+
+        self.complete_code(functs_to_build, kwargs_for_build)
+        dpr(self.code.GM_get_dipole)
+        # dpr(self.code.GM_get_dipole())
 
     def extract_code(self, Printer):
         """Imports the main.py file and returns its module instance.
@@ -261,7 +316,7 @@ class Map():
             spec.loader.exec_module(module)
         except Exception as ex:
             Printer.warning(
-                "A problem occured while reading in the code for the map "
+                "\nA problem occured while reading in the code for the map "
                 f"{self.name.resolve()}, defined at "
                 f"{str(self.directory.resolve())}. "
                 "Please consult the information of this map, or contact the "
@@ -270,7 +325,7 @@ class Map():
             )
         return module
 
-    def complete_code(self, funcnames):
+    def complete_code(self, funcnames, kwargslist=None):
         r"""Adds missing functions to the code of this map.
 
         A map can have many different funtions called by the program to
@@ -285,11 +340,15 @@ class Map():
             The functions that should be added in (without the GM\_
             suffix)
         """
-        for funcname in funcnames:
+
+        if not kwargslist:
+            kwargslist = [{}] * len(funcnames)
+
+        for funcname, kwargs in zip(funcnames, kwargslist):
             if not hasattr(self.code, "GM_" + funcname):
                 setattr(
                     self.code, "GM_" + funcname,
-                    getattr(GM_DMF, "get_" + funcname)()
+                    getattr(GM_DMF, "get_" + funcname)(**kwargs)
                 )
 
     def find_core(self, Printer):
@@ -422,7 +481,7 @@ class Map():
         choice = line[1:]
         if not choice:
             Printer.warning(
-                f"No choice detected for parameter {keyword} in the file "
+                f"\nNo choice detected for parameter {keyword} in the file "
                 f"{filepath}. This issue must be fixed before this map can "
                 "be used.",
                 "MI_MR_3", False
@@ -439,7 +498,8 @@ class Map():
             return file_contents
         else:
             Printer.warning(
-                f"The parameter {keyword} appeared more than once in the file "
+                f"\nThe parameter {keyword} appeared more than once in "
+                "the file "
                 f"{filepath}. It may only occur once. This issue must be "
                 "fixed before this map can be used.",
                 "MI_MR_4", False
@@ -512,6 +572,12 @@ class Core():
             self.electrostatic_choice = self.parse_estatic_choice(
                 Printer, rawcore, Map.directory
             )
+        else:
+            self.electrostatic_choice = None
+
+        self.type = self.parse_type(Printer, rawcore, Map.directory)
+        if not self.success:
+            return
 
     def parse_functional_group(self, Printer, rawcore, mapdir):
         """Parses the input for keywords functional_group(_file) in core.txt
@@ -544,7 +610,7 @@ class Core():
         # step 1: make sure the functional group is defined unambiguously.
         if funcgroup_par in rawcore and fgfile_par in rawcore:
             Printer.warning(
-                f"Found both the parameters '{funcgroup_par}' and "
+                f"\nFound both the parameters '{funcgroup_par}' and "
                 f"'{fgfile_par}' in the file {corefile}. Only one "
                 "of these two is allowed.",
                 "MI_MC_1"
@@ -554,7 +620,7 @@ class Core():
 
         if funcgroup_par not in rawcore and fgfile_par not in rawcore:
             Printer.warning(
-                f"Found neither the parameter '{funcgroup_par}' nor the "
+                f"\nFound neither the parameter '{funcgroup_par}' nor the "
                 f"parameter '{fgfile_par}' in the file {corefile}. However, "
                 "at least one of them is necessary for the map to function.",
                 "MI_MC_2"
@@ -568,7 +634,7 @@ class Core():
             fname = (mapdir / rawcore[fgfile_par]).resolve()
             if not fname.isfile():
                 Printer.warning(
-                    f"The file {corefile} wants to use the file {fname}"
+                    f"\nThe file {corefile} wants to use the file {fname}"
                     " to define the functional groups for that map. "
                     "However, this file does not exist.",
                     "MI_MC_3"
@@ -590,7 +656,7 @@ class Core():
             self.success = False
             errstring = "-".join([str(num) for num in error_code])
             Printer.warning(
-                f"The file {corefile} contains a definition of "
+                f"\nThe file {corefile} contains a definition of "
                 "functional_group that cannot be interpreted. A hint of what "
                 f"went wrong is this extra code: {errstring}. Please see the "
                 "manual for more information.",
@@ -611,6 +677,27 @@ class Core():
         if "requires_bonds" in rawcore:
             if rawcore["requires_bonds"][0].lower() in ("t", "true"):
                 self.requires_bonds = True
+            else:
+                self.requires_bonds = False
+        else:
+            self.requires_bonds = False
+
+        self.functional_group = [
+            Structure(struct, bonds) for struct, bonds in zip(
+                self.functional_group, self.bonds
+            )
+        ]
+
+        if any(not item.success for item in self.functional_group):
+            Printer.warning(
+                f"\nThe file {corefile} contains an invalid definition of "
+                "functional_group. At least one of the definitions consists "
+                "of multiple residues, but not all residues are bonded to "
+                "each other. Please make sure all residues are bonded!",
+                "MI_MC_9"
+            )
+            self.success = False
+            return
 
     @staticmethod
     def funcgroupfile_to_infile(fname):
@@ -805,7 +892,7 @@ class Core():
         for bond in bonds:
             if "-" not in bond:
                 Printer.warning(
-                    f"The file {corefile} contains a definition of "
+                    f"\nThe file {corefile} contains a definition of "
                     "functional_group_bonds that cannot be interpreted. "
                     "Please make sure that the bond is defined using a "
                     "hyphen.",
@@ -816,7 +903,7 @@ class Core():
             bond = bond.split("-")
             if len(bond) != 2:
                 Printer.warning(
-                    f"The file {corefile} contains a definition of "
+                    f"\nThe file {corefile} contains a definition of "
                     "functional_group_bonds that cannot be interpreted. "
                     "Please make sure that the bond consists of exactly "
                     "two atoms.",
@@ -829,7 +916,7 @@ class Core():
                 bond = [int(num) for num in bond]
             except Exception as ex:
                 Printer.warning(
-                    f"The file {corefile} contains a definition of "
+                    f"\nThe file {corefile} contains a definition of "
                     "functional_group_bonds that cannot be interpreted. "
                     "Please make sure that the definition contains only "
                     "integers and a single hyphen.",
@@ -864,7 +951,7 @@ class Core():
             for bond in bonds:
                 if any(ix >= number_atoms for ix in bond):
                     Printer.warning(
-                        f"The file {corefile} contains a definition of "
+                        f"\nThe file {corefile} contains a definition of "
                         "functional_group_bonds that cannot be interpreted. "
                         "Please make sure that the indices point to atoms "
                         "within functional_group.",
@@ -897,7 +984,7 @@ class Core():
         # see if it exists
         if "used_atoms" not in rawcore:
             Printer.warning(
-                "Could not find the parameter 'used_atoms' in the file "
+                "\nCould not find the parameter 'used_atoms' in the file "
                 f"{mapdir / 'core.txt'}. Without it, the map cannot "
                 "function. Please make sure it is present.",
                 "MI_MC_6"
@@ -910,7 +997,8 @@ class Core():
             used_atoms = [int(num) for num in rawcore["used_atoms"]]
         except Exception as ex:
             Printer.warning(
-                "Could not interpret the choice for the parameter 'used_atoms'"
+                "\nCould not interpret the choice for the parameter "
+                "'used_atoms'"
                 f" in the file {mapdir / 'core.txt'}. Please make sure the "
                 "choice consists of nothing but numbers separated by spaces.",
                 "MI_MC_7", exception=ex
@@ -918,14 +1006,13 @@ class Core():
             self.success = False
             return
 
-        # now, see if choice is valid
-        maxlen = min(
-            [sum(
-                [len(res[1]) for res in struct]
-            ) for struct in self.functional_group])
-        if any(ix >= maxlen for ix in used_atoms):
+        if any(
+            not all(ix in struct.indices for struct in self.functional_group)
+            for ix in used_atoms
+        ):
             Printer.warning(
-                "Could not interpret the choice for the parameter 'used_atoms'"
+                "\nCould not interpret the choice for the parameter "
+                "'used_atoms'"
                 f" in the file {mapdir / 'core.txt'}. Please make sure the "
                 "indices don't exceed the amount of atoms given for the "
                 "parameter functional_group.",
@@ -960,7 +1047,7 @@ class Core():
         # see if it exists
         if "electrostatic_atoms" not in rawcore:
             Printer.warning(
-                "Could not find the parameter 'electrostatic_atoms' in the "
+                "\nCould not find the parameter 'electrostatic_atoms' in the "
                 f"file {mapdir / 'core.txt'}. Without it, the map cannot "
                 "function. Please make sure it is present.",
                 "MI_MC_6"
@@ -974,21 +1061,25 @@ class Core():
                 int(num) for num in rawcore["electrostatic_atoms"]
             ]
         except Exception as ex:
-            Printer.warning(
-                "Could not interpret the choice for the parameter "
-                "'electrostatic_atoms'"
-                f" in the file {mapdir / 'core.txt'}. Please make sure the "
-                "choice consists of nothing but numbers separated by spaces.",
-                "MI_MC_7", exception=ex
-            )
-            self.success = False
-            return
+            if rawcore["electrostatic_atoms"][0].lower() == "none":
+                estatic_atoms = []
+            else:
+                Printer.warning(
+                    "\nCould not interpret the choice for the parameter "
+                    "'electrostatic_atoms'"
+                    f" in the file {mapdir / 'core.txt'}. Please make sure "
+                    "the choice consists of nothing but numbers separated by "
+                    "spaces.",
+                    "MI_MC_7", exception=ex
+                )
+                self.success = False
+                return
 
         # now, see if choice is valid
         maxlen = len(self.used_atoms)
         if any(ix >= maxlen for ix in estatic_atoms):
             Printer.warning(
-                "Could not interpret the choice for the parameter "
+                "\nCould not interpret the choice for the parameter "
                 "'electrostatic_atoms'"
                 f" in the file {mapdir / 'core.txt'}. Please make sure the "
                 "indices don't exceed the amount of atoms given for the "
@@ -1022,8 +1113,14 @@ class Core():
 
         # see if it exists
         if "electrostatic_choice" not in rawcore:
+            # if there are no atoms for which to calculate estatic properties,
+            # it is okay if this parameter is missing.
+            if not self.electrostatic_atoms:
+                return None
+
+            # If there are such atoms, this parameter is required.
             Printer.warning(
-                "Could not find the parameter 'electrostatic_choice' in the "
+                "\nCould not find the parameter 'electrostatic_choice' in the "
                 f"file {mapdir / 'core.txt'}. Without it, the map cannot "
                 "function. Please make sure it is present.",
                 "MI_MC_6"
@@ -1034,7 +1131,7 @@ class Core():
         choice = rawcore["electrostatic_choice"][0]
         if choice.upper() not in ("V", "E", "G"):
             Printer.warning(
-                "Could not interpret the choice for the parameter "
+                "\nCould not interpret the choice for the parameter "
                 "'electrostatic_choice'"
                 f" in the file {mapdir / 'core.txt'}. Please make sure the "
                 "choice is either 'V', 'E', or 'G'.",
@@ -1042,11 +1139,199 @@ class Core():
             )
             self.success = False
             return
-        return choice
+        return choice.upper()
+
+    def parse_type(self, Printer, rawcore, mapdir):
+        """Parse the choice for the parameter type
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        rawcore : dict of str - list of str pairs
+            The raw contents of the file core.txt
+        mapdir : pathlib.Path
+            The path to the directory in which the map is defined.
+
+        Returns
+        -------
+        choice : str
+            What the type of the oscillator is.
+        """
+
+        if "type" not in rawcore:
+            # type is only used for rotating VEG matrix (actualy, only
+            # the EG part of it)
+            if not self.electrostatic_atoms:
+                return None
+            if self.electrostatic_choice == "V":
+                return None
+
+            Printer.warning(
+                "\nCould not find the parameter 'type' in the "
+                f"file {mapdir / 'core.txt'}. Without it, the map cannot "
+                "function. Please make sure it is present.",
+                "MI_MC_6"
+            )
+            self.success = False
+            return
+
+        choice = rawcore["type"][0]
+        if choice.lower() not in ("standard", "linear"):
+            Printer.warning(
+                "\nCould not interpret the choice for the parameter "
+                "'type'"
+                f" in the file {mapdir / 'core.txt'}. Please make sure the "
+                "choice is either 'standard', or 'linear'.",
+                "MI_MC_8"
+            )
+            self.success = False
+            return
+        return choice.lower()
+
+
+class Structure():
+    """What an oscillator looks like
+
+    output formats:
+
+    - struct corresponds to a single line/newstruct
+      (depends of source) and is itself a list(1).
+
+        - Each item in list(1) corresponds to a single residue, and is
+        itself a list of 2 items. The first item contains the residue
+        name (is a list of str), the second item contains the atom
+        names. The second item is itself a list(2).
+        - Each item in list(2) corresponds to an atom and is itself a
+        list of str.
+
+    - bonds corresponds to a single line/newstruct
+      (depends of source) and is itself a list(1).
+
+        - Each item in list(1) corresponds to a bond and is a list of
+        two items. These are the indices of the two atoms that form
+        the bond.
+
+    Parameters
+    ----------
+    struct : list of list of list of list of str
+        Describes the names of all parts of this oscillator, see above
+        for further explanation of the format.
+    bonds : list of list of ints
+        Gives all pairs of atom indices that should be bound together.
+
+    Attributes
+    ----------
+    residues : list of :class:`~GMAP.src.tools.MapReader.Residue`
+        What atom/residue names go into each of the residues.
+    bonds : list of list of ints
+        What bonds make up the oscillator.
+    indices : dict of int: tuple of int pairs
+        The keys are the indices of atoms in the entire oscillator, the
+        values show where that atom is located. The first int in the
+        value is the index of the residue, the second int is the index
+        of the atom, within that residue.
+    indices_per_residue : dict of int: list of int pairs
+        The keys are the indices of the residue, the values are all
+        oscillator-indices of the atoms (like the keys in self.indices).
+    indices_inv : dict of typle of int: int pairs
+        Same as self.indices, but the keys and values have been
+        switched.
+    success : bool
+        Whether there were any problems encountered - a problem means
+        that the map the instance belongs to cannot be used.
+    """
+
+    def __init__(self, struct, bonds):
+        # dpr(struct)
+        self.residues = [Residue(res) for res in struct]
+        self.bonds = bonds
+
+        self.indices = {}
+        self.indices_per_residue = {}
+        ix = 0
+        for res_ix, residue in enumerate(self.residues):
+            local_ix = 0
+            self.indices_per_residue[res_ix] = []
+            for _ in residue.atoms:
+                self.indices[ix] = (res_ix, local_ix)
+                self.indices_per_residue[res_ix].append(ix)
+                local_ix += 1
+                ix += 1
+        self.indices_inv = {val: key for key, val in self.indices.items()}
+
+        if len(self.residues) > 1:
+            self.check_bonds()
+        else:
+            self.success = True
+
+    def __str__(self):
+        return f"{self.__class__.__name__}({str(self.residues)})"
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({repr(self.residues)})"
+
+    def check_bonds(self):
+        """Confirms whether supplied bonds link all residues
+
+        A multi-residue oscillator can only be properly defined and
+        found using the existing syntax if the parts within different
+        residues are bonded together. This function checks whether
+        the supplied bonds are enough to confirm that the different
+        residues actually lock together.
+        """
+
+        # It's already been checked/confirmed that all indices in bonds exist.
+        # now, see if the bonds couple the multiple residues.
+
+        resnums = [set([ix]) for ix in range(len(self.residues))]
+        # dpr(resnums)
+        for bond in self.bonds:
+            res1 = self.indices[bond[0]][0]
+            res2 = self.indices[bond[1]][0]
+            newset = resnums[res1] | resnums[res2]
+            resnums[res1] = newset
+            resnums[res2] = newset
+            # dpr(resnums)
+        # dpr(len(resnums), len(resnums[0]))
+        if len(resnums) != len(resnums[0]):
+            self.success = False
+        else:
+            self.success = True
+
+
+class Residue():
+    """What a single residue of a structure (template) looks like.
+
+    Parameters
+    ----------
+    residue : list of lists of str
+        The names of the residue and atoms making up this residue
+
+    Attributes
+    ----------
+    resnames : list of str
+        The different names this residue is allowed to have.
+    atoms : list of list of str
+        The different names each of the atoms in this residue is allowed
+        to have.
+    """
+
+    def __init__(self, residue):
+        self.resnames = residue[0]
+        self.atoms = residue[1]
+
+    def __str__(self):
+        return f"{self.__class__.__name__}({str([self.resnames, self.atoms])})"
+
+    def __repr__(self):
+        mylist = [self.resnames, self.atoms]
+        return f"{self.__class__.__name__}({repr(mylist)})"
 
 
 def scan_mapdirs(mapdirs):
-    """ gives a list of newly-generated Map objects
+    """Gives a list of newly-generated Map objects
 
     Given a list of paths (each representing a map directory), create a Map
     object for each map found, which will be filled later.

@@ -9,8 +9,6 @@
 # before it is recognized. These must include at least all atoms required later,
 # but there can be more than that.
 
-functional_group   [A,B] a(3,2) b c,d(2) [B,A] e d,a(3) b
-functional_group [a] x y(1) z(1) x y z
 functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
 functional_group        [GLN]    CD  OE1  CG  NE2  HE21  HE22
 # functional_group_file   funcgroup.txt
@@ -31,6 +29,7 @@ used_atoms    0 1 2 3 4 5   # all atoms are relevant, the order is already fine.
 # the atoms for which the electrostatic properties should be calculated.
 # The number represents the index at which that atom is present in the
 # used_atoms list.
+# if no estatic properties are needed, the choice 'None' should be given.
 
 electrostatic_atoms    0 3   # Skinner uses only the C and N atoms.
 
@@ -46,6 +45,7 @@ electrostatic_atoms    0 3   # Skinner uses only the C and N atoms.
 # choice here should be G, regardless of whether the potential or the field are
 # needed.
 
+# if 'None' as choice for estat ats, this parameter is not required.
 electrostatic_choice E   # V, E, or G
 
 # ------------------------
@@ -65,13 +65,22 @@ dipole_data_file        [N/A]   # There is no file - dipole (by default) does no
 # defined by subtracting the position of the zeroeth atom from that of the oneth.
 # the missing ones are found through geometry (cross product)
 
-x_uvec    1-0
+
+# if no estat ats, these may be missing.
+# if estat ats, but estat choice V, these may be missing.
+# if type is linear, only 1 vector is needed. otherwise, two.
+x_uvec    1-0  # this is comment
 y_uvec    3-0
 
 r_vec     1-0
+r_pos     0
 
 # ---------------------
 
+
+# current implementation only uses this for xyz vec, so:
+# if no estat ats, this parameter may be missing.
+# if estat ats, but estat choice V, this parameter may be missing.
 type   standard     # standard, linear
 
 

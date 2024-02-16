@@ -103,7 +103,8 @@ def find_exec_os(Printer):
             exec_os = "Win64bit"
         else:
             Printer.warning(
-                "Environment was determined to be windows, but it is neither a"
+                "\nEnvironment was determined to be windows, but it is "
+                "neither a"
                 f" 32, nor 64 bit version. It appears to be {bits} bit. Please"
                 " contact the developers to solve this.",
                 "howtogethere", True
@@ -114,7 +115,7 @@ def find_exec_os(Printer):
         exec_os = "Linux"
     else:
         Printer.warning(
-            f"executing OS not recognised... sys.platform = {sys.platform}. "
+            f"\nexecuting OS not recognised... sys.platform = {sys.platform}. "
             "Please contact the developers to solve this. ",
             "howtogethere", True
         )
