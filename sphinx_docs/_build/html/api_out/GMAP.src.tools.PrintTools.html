@@ -1,0 +1,715 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>GMAP.src.tools.PrintTools module &#8212; GMAP 0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script src="../_static/documentation_options.js?v=8dde47fa"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_out/GMAP.src.tools.PrintTools';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GMAP.tests package" href="GMAP.tests.html" />
+    <link rel="prev" title="GMAP.src.tools.ParameterParser module" href="GMAP.src.tools.ParameterParser.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">GMAP 0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
+                        Adding a new map
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Developer_guide/index.html">
+                        Developers guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        GMAP Code documentation
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
+                        Adding a new map
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Developer_guide/index.html">
+                        Developers guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        GMAP Code documentation
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="GMAP.html">GMAP package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="GMAP.src.html">GMAP.src package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.src.programs.html">GMAP.src.programs package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.programs.AIM.html">GMAP.src.programs.AIM module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.programs.GEM.html">GMAP.src.programs.GEM module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="GMAP.src.tools.html">GMAP.src.tools package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.FileHandler.html">GMAP.src.tools.FileHandler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MapReader.html">GMAP.src.tools.MapReader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html">GMAP.src.tools.MathFunctions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html">GMAP.src.tools.ParameterParser module</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">GMAP.src.tools.PrintTools module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="GMAP.tests.html">GMAP.tests package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="GMAP.tests.test_MathFunctions.html">GMAP.tests.test_MathFunctions module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP Code documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
+    
+    
+    <li class="breadcrumb-item"><a href="GMAP.src.tools.html" class="nav-link">GMAP.src.tools package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">GMAP.src.too...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="module-GMAP.src.tools.PrintTools">
+<span id="gmap-src-tools-printtools-module"></span><h1>GMAP.src.tools.PrintTools module<a class="headerlink" href="#module-GMAP.src.tools.PrintTools" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">Printer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages prints and logs during runtime.</p>
+<p>During runtime, the program can communicate many things, but the user
+might not be interested in all of them. That’s why verbose printing
+is desired. Besides that, having the prints saved in a log file is
+greatly desired, especially on clusters. This class allows many kinds
+of print functionality.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#GMAP.src.tools.PrintTools.devprint" title="GMAP.src.tools.PrintTools.devprint"><code class="xref py py-func docutils literal notranslate"><span class="pre">devprint()</span></code></a></dt><dd><p>Meant for printing during development.</p>
+</dd>
+</dl>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Files</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>logfile</strong><span class="classifier"><cite>pathlib.path</cite></span></dt><dd><p>The path to the logfile</p>
+</dd>
+<dt><strong>backlog</strong><span class="classifier">list</span></dt><dd><p>Initally, the user-specified log file path is not yet known. Until
+it is, all that should be printed is instead put into the backlog.
+In case the program quits before the log file is known, the backlog
+is printed to the crash file (and terminal).</p>
+</dd>
+<dt><strong>program_state</strong><span class="classifier">str</span></dt><dd><p>In what phase/mode the program currently exists. This state influences
+the desired printing behaviour.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">int</span></dt><dd><p>How verbose the prints to the command line should be.</p>
+</dd>
+<dt><strong>verbose_logfile</strong><span class="classifier">int</span></dt><dd><p>How verbose the prints to the log file should be.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.print" title="GMAP.src.tools.PrintTools.Printer.print"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print</span></code></a>(verbose_level, toprint)</p></td>
+<td><p>Called when something needs to be printed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.print_backlog" title="GMAP.src.tools.PrintTools.Printer.print_backlog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_backlog</span></code></a>()</p></td>
+<td><p>Prints the backlog so the program can stop.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.quit_early" title="GMAP.src.tools.PrintTools.Printer.quit_early"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quit_early</span></code></a>()</p></td>
+<td><p>Called when the program is quitted early</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.set_state" title="GMAP.src.tools.PrintTools.Printer.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a>(new_state, verbose, verbose_logfile)</p></td>
+<td><p>Change the current state of Printer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.warning" title="GMAP.src.tools.PrintTools.Printer.warning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></a>(message, error_code[, exitbool, ...])</p></td>
+<td><p>Warning system.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.print">
+<span class="sig-name descname"><span class="pre">print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose_level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toprint</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.print" title="Link to this definition">#</a></dt>
+<dd><p>Called when something needs to be printed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>verbose_level</strong><span class="classifier">int</span></dt><dd><p>The verbosity of the message to print. This will be compared with
+the requested verbose levels for printing - if <cite>verbose_level</cite> is
+smaller than or equal to the value set by the verbose parameters,
+the message will be printed/logged.</p>
+</dd>
+<dt><strong>toprint</strong><span class="classifier">str</span></dt><dd><p>The message to print</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.print_backlog">
+<span class="sig-name descname"><span class="pre">print_backlog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.print_backlog" title="Link to this definition">#</a></dt>
+<dd><p>Prints the backlog so the program can stop.</p>
+<p>When called in startup mode, verbose and verbose_log are set to 3,
+the crash logfile is used, and the entire backlog is worked through.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.quit_early">
+<span class="sig-name descname"><span class="pre">quit_early</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.quit_early" title="Link to this definition">#</a></dt>
+<dd><p>Called when the program is quitted early</p>
+<p>Prints the backlog if there is any.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_logfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_logfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.set_state" title="Link to this definition">#</a></dt>
+<dd><p>Change the current state of Printer</p>
+<p>Printer will always be initialized in startup mode, without a
+user-specified log file and verbose choices. This function allows
+to re-chose those three values, allowing ‘importing’ them after
+<a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a> finds them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>new_state</strong><span class="classifier">str</span></dt><dd><p>The new value for the attribute <cite>program_state</cite>.</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">int</span></dt><dd><p>The new value for the attribute <cite>verbose</cite></p>
+</dd>
+<dt><strong>verbose_logfile</strong><span class="classifier">int</span></dt><dd><p>The new value for the attribute <cite>verbose_logfile</cite></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.warning">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exitbool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.warning" title="Link to this definition">#</a></dt>
+<dd><p>Warning system. Prints the message, and allows to force-quit after.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>message</strong><span class="classifier">str</span></dt><dd><p>The warning/error message to print.</p>
+</dd>
+<dt><strong>error_code</strong><span class="classifier">str</span></dt><dd><p>The error code belonging to the warning that is raised - to be
+reported to the user. See the
+<span class="xref std std-ref">warning overview</span> page.</p>
+</dd>
+<dt><strong>exitbool</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether the program should stop due to this error.</p>
+</dd>
+<dt><strong>exception</strong><span class="classifier">BaseException, default=None</span></dt><dd><p>If the warning corresponds to a ‘basic’ python error,
+that error can be caught and fed into this function.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.devprint">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">devprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.devprint" title="Link to this definition">#</a></dt>
+<dd><p>python print for developers</p>
+<p>Developers should use this function to print instead of the python print
+function - it also prints where it was evoked, so any random prints can
+be easily retraced and removed after they’re no longer useful.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Calling this function goes <strong>exactly</strong> like the print from python</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>*args</strong><span class="classifier">tuple</span></dt><dd><p>All the things to print</p>
+</dd>
+<dt><strong>**kwargs</strong><span class="classifier">tuple</span></dt><dd><p>The keyword arguments to pass to python print.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.prettifier">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">prettifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deslen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">79</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.prettifier" title="Link to this definition">#</a></dt>
+<dd><p>Formats a given string to create soft-wrap-like behaviour.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>string</strong><span class="classifier">str</span></dt><dd><p>The string to format.</p>
+</dd>
+<dt><strong>deslen</strong><span class="classifier">int, default=79</span></dt><dd><p>The maximum amount of characters per line.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>new_string</strong><span class="classifier">str</span></dt><dd><p>The original input <cite>string</cite>, but with newline characters added where
+necessary.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="GMAP.src.tools.ParameterParser.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">GMAP.src.tools.ParameterParser module</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="GMAP.tests.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">GMAP.tests package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer"><code class="docutils literal notranslate"><span class="pre">Printer</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.print"><code class="docutils literal notranslate"><span class="pre">Printer.print()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.print_backlog"><code class="docutils literal notranslate"><span class="pre">Printer.print_backlog()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.quit_early"><code class="docutils literal notranslate"><span class="pre">Printer.quit_early()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.set_state"><code class="docutils literal notranslate"><span class="pre">Printer.set_state()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.warning"><code class="docutils literal notranslate"><span class="pre">Printer.warning()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.devprint"><code class="docutils literal notranslate"><span class="pre">devprint()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.prettifier"><code class="docutils literal notranslate"><span class="pre">prettifier()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/api_out/GMAP.src.tools.PrintTools.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, KE van Adrichem.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.14.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
