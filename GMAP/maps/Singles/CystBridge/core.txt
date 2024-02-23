@@ -1,6 +1,10 @@
 
 functional_group [CYS] N H CA C O CB SG(1) [CYS] N H CA C O CB SG(1)
 
+
+add_corefile       proteincore.txt
+
+
 #  CB SG CB SG
 used_atoms 5 6 12 13
 electrostatic_atoms 1 3

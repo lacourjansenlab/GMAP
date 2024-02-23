@@ -6,6 +6,9 @@ functional_group [anyprot] N CA C(1) O [anyprot] N(1) H CA C
 functional_group [anyprot] N CA C(1) O [PRO] N(1) CD CA C
 
 
+add_corefile       proteincore.txt
+
+
 #   C O CA N H CA
 used_atoms               2 3 1 4 5 6
 electrostatic_atoms      0 3

@@ -90,6 +90,12 @@ def GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list):
     return oscillator_list
 
 
+def placeholder_GM_get_rotation_matrix(
+    Files, Printer, Map, Syst, osc
+):
+    pass
+
+
 # returns the dipole position and vector for osc. To be used during a
 # frame - must be fast.
 # A map creator can write this function themselves, or let it be automatically
@@ -101,12 +107,6 @@ def placeholder_GM_get_dipole(Files, Printer, Map, Syst, osc):
     )
     r_pos = Syst.positions[osc.used_atoms[0]]
     return r_vec, r_pos
-
-
-def placeholder_GM_get_rotation_matrix(
-    Files, Printer, Map, Syst, osc
-):
-    pass
 
 
 # A function to adjust the final python objects built out of the

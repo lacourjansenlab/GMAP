@@ -49,11 +49,11 @@ def cmd_interface(callcommand):
 
     if choice.lower() in allhelps:
         if subch.lower() in allhelps:
-            Printer.print(GMAP.__doc__)
+            Printer.print(0, GMAP.__doc__)
             Printer.quit_early()
         elif subch in GMAP.alltools:
             modch = getattr(GMAP, subch)
-            Printer.print(modch.__doc__)
+            Printer.print(0, modch.__doc__)
             Printer.quit_early()
         else:
             _report_unknown_choice(Printer)
@@ -61,7 +61,7 @@ def cmd_interface(callcommand):
     elif choice in GMAP.alltools:
         modch = getattr(GMAP, choice)
         if subch.lower() in allhelps:
-            print(modch.__doc__)
+            Printer.print(0, modch.__doc__)
         else:
             getattr(modch, choice)(callcommand[1:], Files, Printer)
             # modch.main(callcommand[1:], FILES)

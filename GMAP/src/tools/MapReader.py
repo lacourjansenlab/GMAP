@@ -32,6 +32,8 @@ class Map():
     ----------
     directory : pathlib.Path
         The directory where the files defining this map can be found.
+    corepath : pathlib.Path
+        The path to the core.txt file within self.directory.
     name : str
         The name of this map. Often indicates the functional group
         modelled.
@@ -44,6 +46,33 @@ class Map():
         have to quit - if the map isn't used, we don't care. Later, when
         looking at the requested maps, if an unsuccessful map is
         requested, we can throw an error and quit!
+    avail_files : list of `pathlib.Path`
+        All files that are in the same map directory as this map. These
+        are the files available for appending using 'add_corefile'
+    type : str
+        The type of this map. Either 'Singles' or 'Doubles'
+    CmdPars : :class:`~GMAP.src.tools.ParameterParser.RawPars`
+        The object storing all parameters provided on the command line
+        that belong to this map.
+    InPars : :class:`~GMAP.src.tools.ParameterParser.RawPars`
+        The object storing all parameters provided in the input parameter
+        file that belong to this map.
+    DefPars : :class:`~GMAP.src.tools.ParameterParser.RawPars`
+        The object storing all parameters provided in the default parameter
+        file that belong to this map. If no such file was provided, an
+        empty instance is used instead.
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The RunPars instance containing all the basic run-defining
+        parameters that belong to this map.
+    code : module
+        The code that goes along with this map, if present. If not, an
+        empty module will be filled with default functions. If it is
+        present, any missing functions will be added from the default
+        functions.
+    rawcore : dict of str: list of str pairs
+        The contents of core.txt, after very simple parsing
+    Core : :class:`Core`
+        The contents of core.txt, fully parsed and ready to use.
 
     Notes
     -----
@@ -53,11 +82,12 @@ class Map():
 
     """
 
-    def __init__(self, mapdir):
+    def __init__(self, mapdir, avail_files):
         self.directory = mapdir
         self.name = mapdir.name
         self.type = mapdir.parent.name
         self.success = True
+        self.avail_files = avail_files
 
     def find_refpars(self, Printer):
         """Creates a RefPars object for the map-specific parameters
@@ -138,7 +168,7 @@ class Map():
             for parname in map_pars.keys():
                 del DefPars.not_found[self.name + "." + parname]
         else:
-            self.DefPars = GM_PP.RawPars.create_empty()
+            self.DefPars = GM_PP.RawPars.create_empty(Printer)
 
     def extract_notfound(self, Printer, RawParInst):
         """Find all parameters of this map in the given RawPars instance.
@@ -202,6 +232,32 @@ class Map():
             self.RunPars = None
 
     def initialize(self, Files, Printer):
+        """Initializes the map.
+
+        Initializing is a multi-step process:
+
+        - If there is a main.py file, read/extract it.
+        - If any of GM_adjust_[RunPars/map_core_raw/oscillators] are
+          missing, add the default for them.
+        - Run GM_adjust_RunPars
+        - Find the core.txt file, parse to rawcore. Supplement any
+          files, if requested.
+        - Run GM_adjust_map_core_raw
+        - Parse the final choice of rawcore to Core
+        - If not present in self.code, create functions for
+          GM_get_dipole and GM_get_rotation matrix based on core.
+
+        Parameters
+        ----------
+        Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+            Contains all currently known paths and other file-related
+            properties.
+            Has to be updated after RunPars is finalized.
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
+
         self.code = self.extract_code(Printer)
         if not self.code:
             self.code = GM_DMF.NewModule()
@@ -222,6 +278,27 @@ class Map():
         if not self.success:
             return
 
+        # add extra corefiles to the main core
+        all_to_add = [
+            file for files in self.rawcore.get("add_corefile", [])
+            for file in files]
+        for name in all_to_add:
+            # we only want the first occurence of this file
+            fpaths = [file for file in self.avail_files if file.name == name]
+            try:
+                self.rawcore = self.parse_core(
+                    Printer, fpaths[0], self.rawcore
+                )
+            except Exception as ex:
+                Printer.warning(
+                    f"The file {fpaths[0]} was requested to be added to the "
+                    f"file {self.corepath}. However, an issue occured, so it "
+                    "cannot be added.",
+                    "MI_MR_5", False, exception=ex
+                )
+                self.success = False
+                return
+
         # allow the contents of core.txt to be changed
         self.code.GM_adjust_map_core_raw(Files, Printer, self)
 
@@ -240,8 +317,6 @@ class Map():
             "Printer": Printer
         }]
 
-        corefile = (self.directory / 'core.txt').resolve()
-
         # If the code doesn't contain a function for getting the dipole, make
         # sure the two necessary keywords are there.
         if not hasattr(self.code, "GM_get_dipole"):
@@ -249,7 +324,8 @@ class Map():
                 keyword in self.rawcore for keyword in ("r_vec", "r_pos")
             ):
                 Printer.warning(
-                    f"\nThe file {corefile} does not contain a definition of "
+                    f"\nThe file {self.corepath} does not contain a "
+                    "definition of "
                     "r_vec and/or r_pos. These two variables have to be "
                     "present if the map's main.py file does not contain "
                     "the function 'GM_get_dipole'.",
@@ -265,7 +341,8 @@ class Map():
         # (type is set to None if not in file)
         if self.Core.type:
             msg = (
-                f"\nThe file {corefile} does not contain the right amount of "
+                f"\nThe file {self.corepath} does not contain the right "
+                "amount of "
                 "definitions for x_uvec, y_uvec, and z_uvec. Depending on "
                 "the choice for type, only one or two of these is allowed "
                 "to be specified."
@@ -375,7 +452,7 @@ class Map():
             The contents of the file, not yet analyzed for validity.
         """
 
-        filepath = self.directory / "core.txt"
+        filepath = (self.directory / "core.txt").resolve()
         if not filepath.is_file():
             Printer.warning(
                 f"\nCould not find the file {filepath}. This file is "
@@ -391,6 +468,8 @@ class Map():
             self.success = False
             return None
 
+        self.corepath = filepath
+
         core_contents = self.parse_core(Printer, filepath)
         if not core_contents:
             self.success = False
@@ -399,7 +478,7 @@ class Map():
         return core_contents
 
     @staticmethod
-    def parse_core(Printer, filepath):
+    def parse_core(Printer, filepath, file_contents=None):
         """Actually retrieves the information from core.txt.
 
         Parameters
@@ -416,7 +495,9 @@ class Map():
             The contents of the file, not yet analyzed for validity.
         """
 
-        file_contents = {}
+        if not file_contents:
+            file_contents = {}
+
         with open(filepath) as fhand:
             for line in fhand:
                 line = Map.cleanline(line)
@@ -479,6 +560,7 @@ class Map():
 
         keyword = line[0]
         choice = line[1:]
+
         if not choice:
             Printer.warning(
                 f"\nNo choice detected for parameter {keyword} in the file "
@@ -487,7 +569,7 @@ class Map():
                 "MI_MR_3", False
             )
             return None
-        if keyword == "functional_group":
+        if keyword in ("functional_group", "add_corefile", "influencer_group"):
             if keyword in file_contents:
                 file_contents[keyword].append(choice)
             else:
@@ -597,7 +679,7 @@ class Core():
         Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
             The object that allows to cleanly log and print during runtime,
             and handle errors.
-        rawcore : dict of str - list of str pairs
+        rawcore : dict of str: list of str pairs
             The raw contents of the file core.txt
         mapdir : pathlib.Path
             The path to the directory in which the map is defined.
@@ -1199,19 +1281,20 @@ class Structure():
     - struct corresponds to a single line/newstruct
       (depends of source) and is itself a list(1).
 
-        - Each item in list(1) corresponds to a single residue, and is
+      - Each item in list(1) corresponds to a single residue, and is
         itself a list of 2 items. The first item contains the residue
         name (is a list of str), the second item contains the atom
         names. The second item is itself a list(2).
-        - Each item in list(2) corresponds to an atom and is itself a
+      - Each item in list(2) corresponds to an atom and is itself a
         list of str.
 
     - bonds corresponds to a single line/newstruct
       (depends of source) and is itself a list(1).
 
-        - Each item in list(1) corresponds to a bond and is a list of
+      - Each item in list(1) corresponds to a bond and is a list of
         two items. These are the indices of the two atoms that form
         the bond.
+
 
     Parameters
     ----------
@@ -1352,13 +1435,24 @@ def scan_mapdirs(mapdirs):
         subdirs = [item for item in [*direc.iterdir()] if item.is_dir()]
         lookfor = ("Singles", "Pairs")
 
+        available_files = [
+            item for item in [*direc.iterdir()]
+            if item.is_file()
+            and GM_FH.check_file_readability(None, item)
+        ]
+
         for subdir in subdirs:
             if subdir.name in lookfor:
+                available_files_sub = [
+                    item for item in [*direc.iterdir()]
+                    if item.is_file()
+                    and GM_FH.check_file_readability(None, item)
+                ]
                 ssdirs = [
                     item for item in [*subdir.iterdir()] if item.is_dir()
                 ]
 
             for ssdir in ssdirs:
-                mapp = Map(ssdir)
+                mapp = Map(ssdir, available_files_sub + available_files)
                 all_maps[mapp.name] = mapp
     return all_maps

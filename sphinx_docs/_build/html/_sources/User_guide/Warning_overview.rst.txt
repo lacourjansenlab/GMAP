@@ -51,6 +51,10 @@ While parsing the choice of a parameter in the reference parameter file, a diffe
 If you are developing the file that triggered the error, :ref:`here <UserGuide_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
 If you have not touched the file that created this error, please get in touch with the person that created the file.
 
+SU_FP_8
+-------
+The reference parameter file was missing the parameters 'influencers_whitelist' and 'influencers_blacklist'. Make sure both are present.
+
 
 
 SU_WP
@@ -116,6 +120,9 @@ SU_WP_15
 --------
 One of the parameters supplied in a parameter file (either input or default, see error message) contained a '.' indicating that this parameter is part of a map. The map name should be before the '.', while the parameter name should go directly after. The combination of map and parameter name was not recognized by the program. See :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how to specify a parameter on the command line, or consult the documentation of the map to see what parameters are allowed.
 
+SU_WP_16
+--------
+For some groups of parameters, only one of the parameters can be used. Multiple parameters from such a group were used, make sure to only use one of those mentioned in the error message.
 
 SU_NP
 =====
@@ -131,6 +138,18 @@ After interpreting the choices made on the command line, input-, default- and re
 SU_NP_3
 -------
 After interpreting the choices made on the command line, input-, default- and reference parameter files, the mentioned choice was decided on. However, the found directory name does not exist. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. :ref:`This page <UserGuide_page_parameter_overview>` has more information on how file locations should be given.
+
+SU_NP_4
+-------
+Considering all parameter sources, it was found that the influencers should be defined by the given file. This file, however, contains (an) invalid character(s).
+
+SU_NP_5
+-------
+The given parameter file contains a mistake in how things are specified. See the returned python error for more information. To see the error, set either the parameter 'verbose', or the parameter 'verbose_logfile' to 4.
+
+SU_NP_6
+-------
+The given command for select_atoms triggered some error. See the returned python error for more information. To see the error, set either the parameter 'verbose', or the parameter 'verbose_logfile' to 4.
 
 
 SU_PP
@@ -216,6 +235,10 @@ The given parameter had no choice defined. Each parameter needs a choice for a m
 MI_MR_4
 -------
 The given parameter occurs on more than a single line in the file. However, it may only occur once. This is an issue that most likely needs to be fixed by the developer of this map.
+
+MI_MR_5
+-------
+An extra core file was requested to be appended to the given core file. However, some error occurred while trying to do this. This is an issue that most likely needs to be fixed by the developer of this map.
 
 
 MI_MC
@@ -325,10 +348,10 @@ MD_SU_5
 -------
 There is no bond information in the supplied MD system, but this information is required for the calculation to run. For the program to run, you should either use a different map, or provide a system with bond information. This can be done in two different ways:
 
-- Use :ref:`the parameter guess_bonds
-<UserGuide_page_parameter_overview>` in the input file or command line to have the program guess bonds in the MD system (no guarantee this accurately detects the bonds in your system).
+- Use :ref:`the parameter guess_bonds<UserGuide_page_parameter_overview>` in the input file or command line to have the program guess bonds in the MD system (no guarantee this accurately detects the bonds in your system).
 
 - Use a different format of topology file. `This website <https://userguide.mdanalysis.org/stable/formats/index.html>`__ has an extensive table of available formats for different MD software. Make sure you pick a format which lists 'bonds' in the column 'Attributes read'. Here an overview of options for a few common MD packages:
+
   - Gromacs: .tpr
   - Amber: top, prmtop or parm7
   - Charmm: .psf

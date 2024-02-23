@@ -414,6 +414,10 @@ If you have not touched the file that created this error, please get in touch wi
 If you are developing the file that triggered the error, <a class="reference internal" href="../Adding_a_new_map/File_structure/parameters.html#userguide-page-map-parameters-types"><span class="std std-ref">here</span></a> you can find more info on the different types, or look at the file ‘reference_parameters.ref’ that lives in the sourcefiles directory for examples.
 If you have not touched the file that created this error, please get in touch with the person that created the file.</p>
 </section>
+<section id="su-fp-8">
+<h4>SU_FP_8<a class="headerlink" href="#su-fp-8" title="Link to this heading">#</a></h4>
+<p>The reference parameter file was missing the parameters ‘influencers_whitelist’ and ‘influencers_blacklist’. Make sure both are present.</p>
+</section>
 </section>
 <section id="su-wp">
 <h3>SU_WP<a class="headerlink" href="#su-wp" title="Link to this heading">#</a></h3>
@@ -477,6 +481,10 @@ If you have not touched the file that created this error, please get in touch wi
 <h4>SU_WP_15<a class="headerlink" href="#su-wp-15" title="Link to this heading">#</a></h4>
 <p>One of the parameters supplied in a parameter file (either input or default, see error message) contained a ‘.’ indicating that this parameter is part of a map. The map name should be before the ‘.’, while the parameter name should go directly after. The combination of map and parameter name was not recognized by the program. See <a class="reference internal" href="specifying_parameters.html#userguide-page-specifying-parameters-file"><span class="std std-ref">this page</span></a> for more information on how to specify a parameter on the command line, or consult the documentation of the map to see what parameters are allowed.</p>
 </section>
+<section id="su-wp-16">
+<h4>SU_WP_16<a class="headerlink" href="#su-wp-16" title="Link to this heading">#</a></h4>
+<p>For some groups of parameters, only one of the parameters can be used. Multiple parameters from such a group were used, make sure to only use one of those mentioned in the error message.</p>
+</section>
 </section>
 <section id="su-np">
 <h3>SU_NP<a class="headerlink" href="#su-np" title="Link to this heading">#</a></h3>
@@ -491,6 +499,18 @@ If you have not touched the file that created this error, please get in touch wi
 <section id="su-np-3">
 <h4>SU_NP_3<a class="headerlink" href="#su-np-3" title="Link to this heading">#</a></h4>
 <p>After interpreting the choices made on the command line, input-, default- and reference parameter files, the mentioned choice was decided on. However, the found directory name does not exist. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">This page</span></a> has more information on how file locations should be given.</p>
+</section>
+<section id="su-np-4">
+<h4>SU_NP_4<a class="headerlink" href="#su-np-4" title="Link to this heading">#</a></h4>
+<p>Considering all parameter sources, it was found that the influencers should be defined by the given file. This file, however, contains (an) invalid character(s).</p>
+</section>
+<section id="su-np-5">
+<h4>SU_NP_5<a class="headerlink" href="#su-np-5" title="Link to this heading">#</a></h4>
+<p>The given parameter file contains a mistake in how things are specified. See the returned python error for more information. To see the error, set either the parameter ‘verbose’, or the parameter ‘verbose_logfile’ to 4.</p>
+</section>
+<section id="su-np-6">
+<h4>SU_NP_6<a class="headerlink" href="#su-np-6" title="Link to this heading">#</a></h4>
+<p>The given command for select_atoms triggered some error. See the returned python error for more information. To see the error, set either the parameter ‘verbose’, or the parameter ‘verbose_logfile’ to 4.</p>
 </section>
 </section>
 <section id="su-pp">
@@ -568,6 +588,10 @@ If you have not touched the file that created this error, please get in touch wi
 <section id="mi-mr-4">
 <h4>MI_MR_4<a class="headerlink" href="#mi-mr-4" title="Link to this heading">#</a></h4>
 <p>The given parameter occurs on more than a single line in the file. However, it may only occur once. This is an issue that most likely needs to be fixed by the developer of this map.</p>
+</section>
+<section id="mi-mr-5">
+<h4>MI_MR_5<a class="headerlink" href="#mi-mr-5" title="Link to this heading">#</a></h4>
+<p>An extra core file was requested to be appended to the given core file. However, some error occurred while trying to do this. This is an issue that most likely needs to be fixed by the developer of this map.</p>
 </section>
 </section>
 <section id="mi-mc">
@@ -667,15 +691,15 @@ If type is set to be ‘standard’, two of the three axes need to be defined. T
 <h4>MD_SU_5<a class="headerlink" href="#md-su-5" title="Link to this heading">#</a></h4>
 <p>There is no bond information in the supplied MD system, but this information is required for the calculation to run. For the program to run, you should either use a different map, or provide a system with bond information. This can be done in two different ways:</p>
 <ul class="simple">
-<li><p>Use :ref:<a href="#id1"><span class="problematic" id="id2">`</span></a>the parameter guess_bonds</p></li>
+<li><p>Use <a class="reference internal" href="parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">the parameter guess_bonds</span></a> in the input file or command line to have the program guess bonds in the MD system (no guarantee this accurately detects the bonds in your system).</p></li>
+<li><p>Use a different format of topology file. <a class="reference external" href="https://userguide.mdanalysis.org/stable/formats/index.html">This website</a> has an extensive table of available formats for different MD software. Make sure you pick a format which lists ‘bonds’ in the column ‘Attributes read’. Here an overview of options for a few common MD packages:</p>
+<ul>
+<li><p>Gromacs: .tpr</p></li>
+<li><p>Amber: top, prmtop or parm7</p></li>
+<li><p>Charmm: .psf</p></li>
+<li><p>NAMD: .psf</p></li>
 </ul>
-<p>&lt;UserGuide_page_parameter_overview&gt;` in the input file or command line to have the program guess bonds in the MD system (no guarantee this accurately detects the bonds in your system).</p>
-<ul class="simple">
-<li><p>Use a different format of topology file. <a class="reference external" href="https://userguide.mdanalysis.org/stable/formats/index.html">This website</a> has an extensive table of available formats for different MD software. Make sure you pick a format which lists ‘bonds’ in the column ‘Attributes read’. Here an overview of options for a few common MD packages:
-- Gromacs: .tpr
-- Amber: top, prmtop or parm7
-- Charmm: .psf
-- NAMD: .psf</p></li>
+</li>
 </ul>
 </section>
 </section>
@@ -742,6 +766,7 @@ If type is set to be ‘standard’, two of the three axes need to be defined. T
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-5">SU_FP_5</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-6">SU_FP_6</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-7">SU_FP_7</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-fp-8">SU_FP_8</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp">SU_WP</a><ul class="nav section-nav flex-column">
@@ -760,12 +785,16 @@ If type is set to be ‘standard’, two of the three axes need to be defined. T
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-13">SU_WP_13</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-14">SU_WP_14</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-15">SU_WP_15</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-wp-16">SU_WP_16</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np">SU_NP</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np-1">SU_NP_1</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np-2">SU_NP_2</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np-3">SU_NP_3</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np-4">SU_NP_4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np-5">SU_NP_5</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#su-np-6">SU_NP_6</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#su-pp">SU_PP</a><ul class="nav section-nav flex-column">
@@ -801,6 +830,7 @@ If type is set to be ‘standard’, two of the three axes need to be defined. T
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mr-2">MI_MR_2</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mr-3">MI_MR_3</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mr-4">MI_MR_4</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mr-5">MI_MR_5</a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mi-mc">MI_MC</a><ul class="nav section-nav flex-column">

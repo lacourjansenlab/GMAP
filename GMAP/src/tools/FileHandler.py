@@ -393,10 +393,11 @@ def check_file_readability(Printer, fname, doquit=True):
             for _ in file:
                 pass
     except UnicodeDecodeError:
-        Printer.warning(
-            f"\n The file {fname} is of the wrong type, please make sure "
-            "it is a plain text file. ",
-            "SU_FH_3", doquit
-        )
+        if Printer:
+            Printer.warning(
+                f"\n The file {fname} is of the wrong type, please make sure "
+                "it is a plain text file. ",
+                "SU_FH_3", doquit
+            )
         return False
     return True

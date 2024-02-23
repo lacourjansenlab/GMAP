@@ -5,6 +5,22 @@
 
 # -----------------------
 
+# Sometimes, you want multiple maps to have access to the same kind of
+# information, without having to specify it more than once. For example, what
+# defines a protein? which residues should make it up? You want all maps that
+# deal with proteins to work from the same master list, so you only have to
+# change that list, once. This allows multiple maps to share the same
+# information - the given file is treated as a corefile, and its contents are
+# 'appended' to this file. No relative paths, a file of this name must be
+# present, either in 'singles' (if the map itself is in 'singles'), or in the
+# map directory itself (former takes precedence)
+
+add_corefile       proteincore.txt
+
+
+
+# -----------------------
+
 # the functional group - how to recognize this group. All these must be present
 # before it is recognized. These must include at least all atoms required later,
 # but there can be more than that.

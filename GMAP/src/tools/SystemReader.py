@@ -6,6 +6,8 @@ import MDAnalysis as MDA
 import numpy as np
 
 # local imports
+import GMAP.src.tools.ParameterParser as GM_PP
+import GMAP.src.tools.PrintTools as GM_PT
 from GMAP.src.tools.PrintTools import devprint as dpr
 dpr("", end="")  # to disable error of dpr unused
 
@@ -76,6 +78,17 @@ class System:
         The angles between the three vectors defining the MD simulation
         box (its PBC). These are the last 3 entries returned by
         MDA.Universe.dimensions.
+    boxvects : `np.ndarray`
+        The vectors defining the MD box. boxvects.shape == (3, 3).
+        boxvects[i] returns one of the three vectors.
+        The result of MDA.lib.mdamath.triclinic_vectors(
+        self.universe.dimensions)
+    boxvects_inv : `np.ndarray`
+        The inverse of the rotation matrix self.boxvects.
+    safesphere : float
+        The radius of the sphere in which distances can be calculated
+        accurately. If the length of any vector exceeds this size, there
+        is a chance that vector is not actually the shortest available.
     residues : :class:`~GMAP.src.tools.SystemReader.Residues`
         This class contains information on a per-residue basis instead
         of a per-atom basis like this class does.
@@ -94,12 +107,16 @@ class System:
     oscillators : list of :class:`~GMAP.src.tools.SystemReader.Oscillator`
         All oscillators that were found in the MD system. These are the
         ones calculations will be performed on.
+    influencers_atix : list of int
+        The indices of all atoms that should be considered influencers.
     """
 
     def __init__(self, Files, Printer, RunPars):
         self.universe = gen_universe(Printer, RunPars)
         self.set_properties(Printer)
         self.basic_boxchecks(Printer, RunPars)
+
+        self.find_influencers(Printer, RunPars)
 
         self.find_oscillators(Files, Printer, RunPars)
 
@@ -185,7 +202,6 @@ class System:
             self.universe.dimensions
         )
         self.safesphere = 0.5 * self.boxvects.diagonal().min()
-        self.boxvects2 = self.boxvects.T @ self.boxvects
         self.boxvects_inv = np.linalg.inv(self.boxvects)
 
         # TO DO - analogue of AIMs ResidueFinder and IXFinder
@@ -240,6 +256,103 @@ class System:
                 writeresnum += 1
             self.resnums[atomnum] = writeresnum
             prevresnum = resnum
+
+    def find_influencers(self, Printer, RunPars):
+        """Find the indices of all atoms that are influencers
+
+        Influencers are the atoms whose charge should be considered
+        while calculating the VEG for a given point. This is a first
+        guess, things like local-ix, spheresize and the like are not
+        yet considered.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+            The 'main' RunPars instance containing all the basic run-defining
+            parameters.
+        """
+
+        groupdict = {}
+        groupdict["All"] = set(self.residues.resnames)
+        groupdict["None"] = set("")
+        for map_ in RunPars.requested_mapdict.values():
+            # Here, allow maps to add their own custom definitions!
+            all_map_influencers = map_.rawcore.get("influencer_group", [])
+            for map_inflgroup in all_map_influencers:
+                name = map_inflgroup[0]
+                group_def = " ".join(map_inflgroup[1:])
+                groupdict[name] = GM_PP.parse_influencerfile_line(
+                    Printer, group_def, groupdict, map_.corepath
+                )
+
+        for key, val in groupdict.items():
+            dpr(key, val)
+
+        Printer.print(1, f"\n{GM_PT.make_header('Influencers', '-')}\n\n")
+
+        if isinstance(RunPars.influencers, list):
+            choice = GM_PP.parse_influencer_par(" ".join(RunPars.influencers))
+            choice = GM_PP.parse_influencerfile_line(
+                Printer, choice, groupdict,
+                "parameter file "
+            )
+            self.influencers_atix = self.residues.manage_influencers(choice)
+            influencers_not_included = groupdict["All"] - choice
+            Printer.print(
+                1,
+                "Residue names included in influencers:\n"
+                + ", ".join(choice) +
+                "\n\nResidue names NOT included in influencers:\n"
+                + ", ".join(influencers_not_included)
+            )
+        elif isinstance(RunPars.influencers, str):
+            try:
+                atgroup = self.universe.select_atoms(RunPars.influencers)
+            except Exception as ex:
+                Printer.warning(
+                    "Some problem occured while selecting atoms for the "
+                    "influencers",
+                    "SU_NP_6", True, exception=ex
+                )
+            self.influencers_atix = atgroup.atoms.ix.tolist()
+        else:  # must be a separate file
+            choice = GM_PP.parse_influencerfile(Printer, RunPars.influencers)
+            if "choice" in choice:
+                choice = choice["choice"]
+            else:
+                Printer.warning(
+                    "When using a file to specify influencers, the final "
+                    "choice of influencers must be given using the group "
+                    "'choice'.",
+                    "SU_NP_5", True
+                )
+            self.influencers_atix = self.residues.manage_influencers(choice)
+            influencers_not_included = groupdict["All"] - choice
+            Printer.print(
+                1,
+                "Residue names included in influencers:\n"
+                + ", ".join(choice) +
+                "\n\nResidue names NOT included in influencers:\n"
+                + ", ".join(influencers_not_included)
+            )
+
+        # all kinds of influencer parameters
+        atixprint = GM_PT.intlist_to_rangelist(
+            self.influencers_atix, self.natoms
+        )
+        Printer.print(
+            3,
+            "Atoms included in influencers:\n"
+            + ", ".join(atixprint[0]) +
+            "\n\nAtoms NOT included in influencers:\n"
+            + ", ".join(atixprint[1])
+        )
+        self.influencers_atix = np.asarray(
+            self.influencers_atix, dtype=np.int32
+        )
 
     def find_oscillators(self, Files, Printer, RunPars):
         """Finds all the oscillators in the MD system
@@ -666,6 +779,10 @@ class Residues:
     resnames : list of str
         A list as long as there are residues in the MD system. For each
         residue, it stores its residue name.
+    influencer_names : set()
+        All residue names that are considered influencers this run.
+    influencer_ix : list of int
+        The indices of all residues that are influencers.
     """
 
     def __init__(self, syst):
@@ -713,6 +830,29 @@ class Residues:
         self.first_ix = np.array(self.first_ix)
         self.last_ix = np.array(self.last_ix)
 
+    def manage_influencers(self, influencerset):
+        """Return all atom indices with one of the given residue names
+
+        Parameters
+        ----------
+        influencerset : set
+            All residue names that should be considered.
+        """
+        self.influencer_names = influencerset
+
+        # resix
+        self.influencer_ix = [
+            resix for resix, resname in enumerate(self.resnames)
+            if resname in influencerset
+        ]
+
+        influencer_atix = []
+        for resix in self.influencer_ix:
+            influencer_atix.extend([*range(
+                self.first_ix[resix], self.last_ix[resix] + 1  # inclusive!
+            )])
+        return influencer_atix
+
 
 class Oscillator:
     """Stores all information on a single oscillator.
@@ -736,6 +876,9 @@ class Oscillator:
     electrostatic_atoms : list of int
         The system indices of all atoms that the map should calculate
         the electrostatic properties for.
+    positions_box : `np.ndarray`
+        The positions of all atoms given in used_atoms, in box
+        coordinates.
     """
 
     def __init__(self, atoms, map_):

@@ -147,6 +147,13 @@
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -254,6 +261,13 @@ document.write(`
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -478,12 +492,48 @@ document.write(`
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_get_dipole">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Default for obtaining the dipole</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The map instance which this function will belong to.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_get_dipole</strong><span class="classifier">function</span></dt><dd><p>The function that every oscillator will call to get its dipole</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_get_rotation_matrix">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_get_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_get_rotation_matrix" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Default for creating a rotation matrix</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The map instance which this function will belong to.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_get_rotation_matrix</strong><span class="classifier">function</span></dt><dd><p>The function that every oscillator will call to get its rotaion matrix</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.returns_last">

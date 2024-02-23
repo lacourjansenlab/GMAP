@@ -116,7 +116,7 @@ def get_parameters(Files, Printer, in_parfile, argslist):
     ref_parfile = Files.sourcedir_hc / Files.refparfilename_hc
     # step 7 (parse refparfile)
     GM_FH.check_file_readability(Printer, ref_parfile)  # check if file is UTF8
-    RefPars = GM_PP.RefPars(Printer, ref_parfile)
+    RefPars = GM_PP.RefPars(Printer, ref_parfile, True)
 
     # step 8 (parse defparfile)
     if def_parfile.suffix == ".txt":
@@ -254,6 +254,8 @@ def GEM(callcommand, Files, Printer):
     # dpr(PBCoscvects[1]-PBCoscvects[0])
     # dpr(oscvects[1]**2)
     # dpr(PBCoscvects[1]**2)
+
+    dpr(dir(System))
 
     GM_PT.devprint("entered main of GEM - yet to be constructed")
 

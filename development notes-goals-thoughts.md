@@ -249,16 +249,16 @@ TO DO
   - The protected way of extracting molnums
   - (X) positions, masses, charges, types (and from arr size, natoms), boxdims, halfbox
   - (X) rebuild resnums to make them count from 0 (never resetting)
-  - AIMs residues - basically, look-up tables with 1 entry/whatev per residue
+  - (X) AIMs residues - basically, look-up tables with 1 entry/whatev per residue
     - (X) lowest ix present
     - (X) highest ix present
-    - !!! AIM also does the main residue check here! extracts a list of all residue names that should be counted amongst the protein and influencers - also reports unknown resnames. - maybe, instead, have black/whitelists for what residues should(n't) be considered? 
+    - (X) !!! AIM also does the main residue check here! extracts a list of all residue names that should be counted amongst the protein and influencers - also reports unknown resnames. - maybe, instead, have black/whitelists for what residues should(n't) be considered? 
   - ?? AIMs indices? Appears to only look for the protein part of the system?
   - Find all molnums. If not stored in the system, extract them in another way. (how to deal with non-protein multiple-residue chains?)
   - (X) ?? AIM does this - fish out the maps that were actually requested by the user, ditch the rest.
 - initialize universe:
   - (X) identify the indices of all atoms involved in oscillators - basis of AIMs oscarr
-  - find resnums of protein, influencers, COMgroups
+  - find resnums of protein, (X) influencers, COMgroups
   - create c-frienly objects if needed
   - initialize arrays to use for calculating couplings
   - run 'characterizer' - aids in sorting through atoms later
@@ -332,19 +332,14 @@ TO DO
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
 - (KvA) TODO:
-  - Report all residue names found, and which are(n't) taken as influencers
-  - replacement for AIM resnames file:
-    - in input file, influencers can be given through influencers_whitelist and influencers_blacklist. They take a list of strings, those strings are residue names.
-    - alternatively, the parameter influencers_file can be used. In it, groups of residue names can be defined, just as with AIM. Use set notation for this?
-    - (alternatively.... maybe...) allow for a file in sourcefiles that contain definitions to use in influencers_(white/black)list directly? or not?
-    - It is not needed to see if EVERY residue name is defined, as all are reported. Having all, it is the users responsibility that they check that list to see if it contains what they expect.
+  - RefPars objects now have a third parameter upon initialization that indicates whether they are the main refpars. This is not yet properly implemented in tests!
+  - New parameters have been added - test_parameterparser will need an update!
+  - More polished prints and reporting to the user
   - Maybe extra functionality that gives an overview as to what the system looks like (residue and/or atom names)???
   - Theory page in documentation for explanation of hamiltonians etc.
   - Links to relevant packages etc in explanation in main documentation page.
   - More info on AIM - link papers that use custom groups? Thomas & Rike's SCN paper?
-  - Add the new parameters to the documentation page listing all parameters!
   - src/tools/SystemReader.System.abs_resnums() only uses changes in residue numbers. But software like charm (resetting resnum with new segment) can have a new residue without changing resnum (through having a 1-residue segment) - Fix it!
-  - Add the new functions (GM_get_dipole and GM_get_rotation_matrix) to adding_new_map part of documentation - in case users want to write their own special things there.
   - Add list of function examples for maps to docpages (or just a tutorial on how to create a map?)
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
@@ -364,7 +359,6 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) what if a parameter check fails? currently, all warnings have an exitbool=True, but is this always necessary/desired?
 - (KvA) currently, cmd line parser assumes a variable has either 1 assigned choice, or a variable amount.
 - (KvA) currently, code to create a RawPars instance for command line input is one big function, not the prettiest - needs tidying up? - maybe other functs, too?
-- (KvA) Clearly state/explain somewhere what the syntax (/ rules) for command line parameters is.
 - (KvA) Added keyword parameter 'prevent_overwrite' (bool). It determines how to treat files that should be created. If the program has the instruction to create a new file, but the supplied fname already exists, what should happen? if this new keyword is set to false, the existing file will simply be overwritten. If it is set to True, the existing file will be renamed, so the supplied filename can be used for the new file. The new name for the file will be #oldname.num# - where num is the lowest integer number for which a file does not yet exist.
 - (KvA) Made it so that every map instance has its own CmdPars, InPars, DefPars, RefPars, RunPars. Each map shouldn't need any parameters but it's own, except for perhaps GEM-wide parameters. GEM itself shouldn't need any of the map parameters, so this all should work out.
 - (KvA) In order to run the unittests, move in command prompt to the GMAP directory. In there, run ```pytest tests``` to run all tests. adding the flag ```-s``` allows (some?) python prints to pass through, the flag ```--cov=src``` gives the coverage of the current unit tests. In case of issues, ```--full-trace``` gives a lot more tracebacks and other information. Finally, to see what parts of the code are not covered by the tests, run ```pytest --cov-report term-missing --cov=src tests```. The Fanciest of all? ```pytest --cov-report term-missing:skip-covered --cov=src tests```.

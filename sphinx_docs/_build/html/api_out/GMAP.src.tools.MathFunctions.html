@@ -426,16 +426,36 @@ pointing from vect2 to vect1).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.PBC_triclinic">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">PBC_triclinic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxvects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxvects_inv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.PBC_triclinic" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.PBCvect">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">PBCvect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxvects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxvects_inv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.PBCvect" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NDArrayOperatorsMixin</span></code></p>
-<p>Behaves as np.ndarray, but will always lie -0.5 &lt; unit_coord(x) &lt; 0.5</p>
-<p>Can currently only deal with numpy ufuncs. A full list of which
-numpy functions are considered ufuncs can be found
-<a class="reference external" href="https://numpy.org/doc/stable/reference/ufuncs.html#available-ufuncs">here</a>.</p>
+<dd><p>Translates the vector to within the box centred around the origin</p>
+<p>If vect is a 2D array, the oneth dimension must be of the same size
+as the boxvects array.</p>
+<p>If boxvects is the identity matrix, each value in vect will be
+-0.5 &lt;= value &lt; 0.5.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>vect</strong><span class="classifier">np.ndarray</span></dt><dd><p>The vector that should be treated following the PBC. The method
+is tested for shapes (3,) and (M, 3), but it should work for
+the general case (N,) and (M, N), where N is the size of
+boxvects, and M is arbitrary.</p>
+</dd>
+<dt><strong>boxvects</strong><span class="classifier">np.ndarray</span></dt><dd><p>The vectors uniquely defining the box.
+Must be a square array. Size (3,3) has been tested, but in
+theory, any shape (N, N) should work.</p>
+</dd>
+<dt><strong>boxvects_inv</strong><span class="classifier">np.ndarray</span></dt><dd><p>The inverse matrix of boxvects.
+Must be a square array. Size (3,3) has been tested, but in
+theory, any shape (N, N) should work.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>new_vect</strong><span class="classifier">np.ndarray</span></dt><dd><p>The vector that has been corrected for PBC</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -582,7 +602,6 @@ correctness of the provided vectors. The method is njitted for added speed.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.PBC_diff_triclinic"><code class="docutils literal notranslate"><span class="pre">PBC_diff_triclinic()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.PBC_orthorhombic"><code class="docutils literal notranslate"><span class="pre">PBC_orthorhombic()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.PBC_triclinic"><code class="docutils literal notranslate"><span class="pre">PBC_triclinic()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.PBCvect"><code class="docutils literal notranslate"><span class="pre">PBCvect</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.crossprod"><code class="docutils literal notranslate"><span class="pre">crossprod()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.dotprod"><code class="docutils literal notranslate"><span class="pre">dotprod()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.project"><code class="docutils literal notranslate"><span class="pre">project()</span></code></a></li>

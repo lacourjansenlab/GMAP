@@ -26,10 +26,12 @@ GMAP documentation
     
     .. grid-item-card::
         :margin: 0 3 0 0
+        :link: Theory/index
+        :link-type: doc
 
-        **Scientific literature**
+        **Theory**
         ^^^^^^^^^^^^^^^^^^^^^^^^^
-        It would be really nice to have a concise overview of the relevant scientific literature here!
+        An overview of all the theory (and relevant publications) behind GMAP.
 
     .. grid-item-card::
         :margin: 0 3 0 0
@@ -38,7 +40,7 @@ GMAP documentation
 
         **Customizable maps**
         ^^^^^^^^^^^^^^^^^^^^^
-        Users can use community-created maps to include many different functional groups, models, and techniques
+        Users can use community-created maps to include many different functional groups, models, and techniques.
     
     .. grid-item-card::
         :margin: 0 3 0 0
@@ -47,7 +49,7 @@ GMAP documentation
 
         **Developers guide**
         ^^^^^^^^^^^^^^^^^^^^
-        Here, developers can find more in-depth information about the program
+        Here, developers can find more in-depth information about the program.
     
     .. grid-item-card::
         :margin: 0 3 0 0
@@ -66,6 +68,7 @@ GMAP documentation
     :hidden:
 
     User_guide/index
+    Theory/index
     Adding_a_new_map/index
     Developer_guide/index
     api_out/modules

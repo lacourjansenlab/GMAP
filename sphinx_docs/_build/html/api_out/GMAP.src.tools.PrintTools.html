@@ -573,6 +573,78 @@ be easily retraced and removed after they’re no longer useful.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.intlist_to_rangelist">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">intlist_to_rangelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intlist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_shadow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.intlist_to_rangelist" title="Link to this definition">#</a></dt>
+<dd><p>Takes a list of integers and packs it into ranges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>intlist</strong><span class="classifier">list of int</span></dt><dd><p>The list of integers to be packed.</p>
+</dd>
+<dt><strong>n_int</strong><span class="classifier">int</span></dt><dd><p>The amount of integers that can at most be there.</p>
+</dd>
+<dt><strong>make_shadow</strong><span class="classifier">bool, default=True</span></dt><dd><p>Whether the opposite should also be built - a list of all indices
+that weren’t in the intlist</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>result</strong><span class="classifier">list of str</span></dt><dd><p>All indices (grouped in ranges) that were in intlist.</p>
+</dd>
+<dt><strong>shadow</strong><span class="classifier">list of str or None</span></dt><dd><p>All indices (grouped in ranges) that weren’t in intlist.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Groups of 3 integers or larger will be grouped</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">intlist</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intlist</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intlist_to_rangelist</span><span class="p">(</span><span class="n">intlist</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">([&quot;0-4&quot;, &quot;6-9&quot;], [&quot;5&quot;])</span>
+</pre></div>
+</div>
+<p>Groups of 2 integers are left as is</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">intlist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intlist_to_rangelist</span><span class="p">(</span><span class="n">intlist</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="go">([&quot;0&quot;, &quot;1&quot;, &quot;5&quot;, &quot;8-10&quot;], [&quot;2-4&quot;, &quot;6&quot;, &quot;7&quot;])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.make_header">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">make_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_char</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">underline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.make_header" title="Link to this definition">#</a></dt>
+<dd><p>Returns a pretty header for distinguishing prints</p>
+<p>The header will be under and/or overlined with the character
+buffer_char. These lines will have the same length as the title,
+plus extra padding if requested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>title</strong><span class="classifier">str</span></dt><dd><p>The text that should be within the header.</p>
+</dd>
+<dt><strong>buffer_char</strong><span class="classifier">str</span></dt><dd><p>The character that should be used for the over/underline.</p>
+</dd>
+<dt><strong>overline, underline</strong><span class="classifier">bool, default=True</span></dt><dd><p>Whether there should be an over-, and/or underline.</p>
+</dd>
+<dt><strong>padding</strong><span class="classifier">int, default=0</span></dt><dd><p>How much extra space there should be. Over and underlines will
+get longer by twice this amount, the title itself gets this
+amount of whitespaces before and after the text.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>header</strong><span class="classifier">str</span></dt><dd><p>The header, ready for printing.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.prettifier">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">prettifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deslen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">79</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.prettifier" title="Link to this definition">#</a></dt>
 <dd><p>Formats a given string to create soft-wrap-like behaviour.</p>
@@ -593,6 +665,50 @@ necessary.</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.rangestrlist">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">rangestrlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.rangestrlist" title="Link to this definition">#</a></dt>
+<dd><p>Given a start and stop, return separate items or range. Inclusive.</p>
+<p>Meant as a helper function for :func”<cite>intlist_to_rangelist</cite>, not
+intended for separate use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>start</strong><span class="classifier">int</span></dt><dd><p>The first int to be included.</p>
+</dd>
+<dt><strong>stop</strong><span class="classifier">int</span></dt><dd><p>The last int to be included.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>out</strong><span class="classifier">list of str</span></dt><dd><p>The grouped ints.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Groups are shortened:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rangestrlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+<span class="go">[&quot;3-60&quot;]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rangestrlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">[&quot;3-5&quot;]</span>
+</pre></div>
+</div>
+<p>Pairs are left as-is</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rangestrlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">[&quot;3&quot;, &quot;4&quot;]</span>
+</pre></div>
+</div>
+<p>Single values are left alone</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rangestrlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">[&quot;3&quot;]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -650,7 +766,10 @@ necessary.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.devprint"><code class="docutils literal notranslate"><span class="pre">devprint()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.intlist_to_rangelist"><code class="docutils literal notranslate"><span class="pre">intlist_to_rangelist()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.make_header"><code class="docutils literal notranslate"><span class="pre">make_header()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.prettifier"><code class="docutils literal notranslate"><span class="pre">prettifier()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.rangestrlist"><code class="docutils literal notranslate"><span class="pre">rangestrlist()</span></code></a></li>
 </ul>
   </nav></div>
 

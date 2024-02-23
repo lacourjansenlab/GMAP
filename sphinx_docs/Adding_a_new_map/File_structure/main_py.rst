@@ -20,9 +20,11 @@ An instance of :class:`~GMAP.src.tools.MapReader.Map`. Stores all information of
 It is probable that the map wants to save information between functions, too, just like the main program. These data structures must be saved as an attribute to the instance of the class, as per good coding practices. This overview of attributes should help indicate what names are and aren't available.
 
 - self.directory (type pathlib.Path) is the path to the directory the map is saved in on the current machine.
+- self.corepath (type pathlib.Path) is the path to the core.txt file of the map.
 - self.name (type str) is the name of the map - i.e. the name of the directory in which all map files live.
 - self.type (type str) is the type of the map - either Singles or Pairs. Singles maps operate on a single oscillator (think of maps giving an oscillator frequency), Pairs maps operate on a pair of oscillators (think of maps giving a coupling value).
 - self.success (type bool) denotes whether the map has (until this point) been read successfully. An unsuccessful map will not trigger the program to quit, as long as the user does not want to use this map.
+- self.avail_files (type list of pathlib.Path) is a list of all files that are in the same map directory in this map (or in its parent directory). These are the files that can be used for appending using 'add_corefile' in the core file.
 - self.RefPars (type :class:`~GMAP.src.tools.ParameterParser.RefPars`) contains all information from the map-specific reference parameters file.
 - self.DefPars (type :class:`~GMAP.src.tools.ParameterParser.RawPars`) contains all choices for parameters for this map that were found in the default parameter file. Either all parameters are present, or none, depending on the default parameter file.
 - self.InPars (type :class:`~GMAP.src.tools.ParameterParser.RawPars`) contains all choices for parameters for this map that were found in the input parameter file. May be empty.
@@ -79,6 +81,7 @@ Available attributes of Map
     * self.name
     * self.type
     * self.success
+    * self.avail_files
     * self.RefPars
     * self.DefPars
     * self.InPars
@@ -126,9 +129,11 @@ Available attributes of Map
     :columns: 4
 
     * self.directory
+    * self.corepath
     * self.name
     * self.type
     * self.success
+    * self.avail_files
     * self.RefPars
     * self.DefPars
     * self.InPars
@@ -182,9 +187,11 @@ Available attributes of Map
     :columns: 4
 
     * self.directory
+    * self.corepath
     * self.name
     * self.type
     * self.success
+    * self.avail_files
     * self.RefPars
     * self.DefPars
     * self.InPars
@@ -212,6 +219,140 @@ oscillator_list : list of :class:`~GMAP.src.tools.SystemReader.Oscillator`
     The oscillators that were identified as a good match for this map.
 
 
+
+GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)
+=================================================================
+
+Returns the rotation matrix for the provided oscillator osc.
+
+A map usually requires the electrostatic properties to be given in a certain coordinate basis. Usually, this is not the global cartesian coordinates, but rather those rotated in a certain way. The rotation matrix defines the desired basis in global cartesian coordinates.
+
+.. important::
+    The electrostatic field/gradient should only be rotated, not sheared or scaled. Therefore, the provided rotation matrix should consist of three orthonormal vectors.
+
+If this function is not provided in the main.py file, the information stored in the parameters xyz_uvec in the core.txt file will be used instead to build a function with.
+
+.. tip::
+    In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found :ref:`in the theory section<Theory_page_PBC>`. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.
+
+
+Example uses
+------------
+
+The default method of providing the rotation matrix is not sufficient
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+    Contains all currently known paths and other file-related properties.
+    Has to be updated after RunPars is finalized.
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+    The oscillator for which the rotation matrix should be determined.
+
+
+Returns
+-------
+rotation_matrix : `np.ndarray`
+    The matrix that should be used to convert the electrostatic properties. rotation_matrix[0] should return a vector of length 3 defining what the box-x vector should look like, in cartesian coordinates. Same for [1] giving the y, and [2] giving the z. The three vectors are orthonormal.
+
+
+
+
+GM_get_dipole(Files, Printer, Map, Syst, osc)
+=================================================================
+
+Returns the dipole vector and its position in cartesian coordinates.
+
+.. tip::
+    In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found :ref:`in the theory section<Theory_page_PBC>`. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.
+
+
+Example uses
+------------
+
+The default method of providing the dipole vector is not sufficient
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+    Contains all currently known paths and other file-related properties.
+    Has to be updated after RunPars is finalized.
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+    The oscillator for which the rotation matrix should be determined.
+
+
+Returns
+-------
+r_vec : `np.ndarray`
+    The vector that represents the dipole of this oscillator.
+r_pos : `np.ndarray`
+    The position at which the dipole vector lies.
 
 
 

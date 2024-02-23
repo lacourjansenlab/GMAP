@@ -431,9 +431,37 @@ the local indices.</p>
 <dt><strong>electrostatic_atoms</strong><span class="classifier">list of int</span></dt><dd><p>The system indices of all atoms that the map should calculate
 the electrostatic properties for.</p>
 </dd>
+<dt><strong>positions_box</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The positions of all atoms given in used_atoms, in box
+coordinates.</p>
+</dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update" title="GMAP.src.tools.SystemReader.Oscillator.frame_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame_update</span></code></a>(Syst)</p></td>
+<td><p>Update the frame-specific attributes of the instance.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Oscillator.frame_update">
+<span class="sig-name descname"><span class="pre">frame_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Syst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update" title="Link to this definition">#</a></dt>
+<dd><p>Update the frame-specific attributes of the instance.</p>
+<p>When a new frame starts, the system positions array is updated,
+so the information in this class that depends on that must be
+updated, too.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Syst</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores all information on the MD system</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -462,6 +490,10 @@ residue, it stores the index of the last atom.</p>
 <dt><strong>resnames</strong><span class="classifier">list of str</span></dt><dd><p>A list as long as there are residues in the MD system. For each
 residue, it stores its residue name.</p>
 </dd>
+<dt><strong>influencer_names</strong><span class="classifier">set()</span></dt><dd><p>All residue names that are considered influencers this run.</p>
+</dd>
+<dt><strong>influencer_ix</strong><span class="classifier">list of int</span></dt><dd><p>The indices of all residues that are influencers.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -470,6 +502,9 @@ residue, it stores its residue name.</p>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.Residues.find_markers" title="GMAP.src.tools.SystemReader.Residues.find_markers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_markers</span></code></a>(syst)</p></td>
 <td><p>Make lookup tables (len=nres) for basic residue-based properties.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.Residues.manage_influencers" title="GMAP.src.tools.SystemReader.Residues.manage_influencers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">manage_influencers</span></code></a>(influencerset)</p></td>
+<td><p>Return all atom indices with one of the given residue names</p></td>
 </tr>
 </tbody>
 </table>
@@ -488,6 +523,20 @@ analysis of the MD system.</p>
 <dd class="field-odd"><dl>
 <dt><strong>syst</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>This object stores all important information about the MD
 system that will be analyzed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Residues.manage_influencers">
+<span class="sig-name descname"><span class="pre">manage_influencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">influencerset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Residues.manage_influencers" title="Link to this definition">#</a></dt>
+<dd><p>Return all atom indices with one of the given residue names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>influencerset</strong><span class="classifier">set</span></dt><dd><p>All residue names that should be considered.</p>
 </dd>
 </dl>
 </dd>
@@ -566,6 +615,17 @@ MDA.Universe.dimensions.</p>
 box (its PBC). These are the last 3 entries returned by
 MDA.Universe.dimensions.</p>
 </dd>
+<dt><strong>boxvects</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The vectors defining the MD box. boxvects.shape == (3, 3).
+boxvects[i] returns one of the three vectors.
+The result of MDA.lib.mdamath.triclinic_vectors(
+self.universe.dimensions)</p>
+</dd>
+<dt><strong>boxvects_inv</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The inverse of the rotation matrix self.boxvects.</p>
+</dd>
+<dt><strong>safesphere</strong><span class="classifier">float</span></dt><dd><p>The radius of the sphere in which distances can be calculated
+accurately. If the length of any vector exceeds this size, there
+is a chance that vector is not actually the shortest available.</p>
+</dd>
 <dt><strong>residues</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.SystemReader.Residues" title="GMAP.src.tools.SystemReader.Residues"><code class="xref py py-class docutils literal notranslate"><span class="pre">Residues</span></code></a></span></dt><dd><p>This class contains information on a per-residue basis instead
 of a per-atom basis like this class does.</p>
 </dd>
@@ -583,6 +643,8 @@ the parameter
 </dd>
 <dt><strong>oscillators</strong><span class="classifier">list of <a class="reference internal" href="#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>All oscillators that were found in the MD system. These are the
 ones calculations will be performed on.</p>
+</dd>
+<dt><strong>influencers_atix</strong><span class="classifier">list of int</span></dt><dd><p>The indices of all atoms that should be considered influencers.</p>
 </dd>
 </dl>
 </dd>
@@ -605,22 +667,25 @@ ones calculations will be performed on.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.extend_oscillator" title="GMAP.src.tools.SystemReader.System.extend_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend_oscillator</span></code></a>(found_local_ix, ...)</p></td>
 <td><p>Add all residues that are correctly bonded.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators" title="GMAP.src.tools.SystemReader.System.find_oscillators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators</span></code></a>(Files, Printer, RunPars)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_influencers" title="GMAP.src.tools.SystemReader.System.find_influencers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_influencers</span></code></a>(Printer, RunPars)</p></td>
+<td><p>Find the indices of all atoms that are influencers</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators" title="GMAP.src.tools.SystemReader.System.find_oscillators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators</span></code></a>(Files, Printer, RunPars)</p></td>
 <td><p>Finds all the oscillators in the MD system</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_atoms" title="GMAP.src.tools.SystemReader.System.find_oscillators_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_atoms</span></code></a>(resnum, residue_atoms)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_atoms" title="GMAP.src.tools.SystemReader.System.find_oscillators_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_atoms</span></code></a>(resnum, residue_atoms)</p></td>
 <td><p>See if the found residue indeed matches the desired template</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_perstruct" title="GMAP.src.tools.SystemReader.System.find_oscillators_perstruct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_perstruct</span></code></a>(struct, map_)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_perstruct" title="GMAP.src.tools.SystemReader.System.find_oscillators_perstruct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_perstruct</span></code></a>(struct, map_)</p></td>
 <td><p>Finds all oscillators matching the given structure.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_residue" title="GMAP.src.tools.SystemReader.System.find_oscillators_residue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_residue</span></code></a>(residue)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_residue" title="GMAP.src.tools.SystemReader.System.find_oscillators_residue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_residue</span></code></a>(residue)</p></td>
 <td><p>Finds all oscillators matching the given residue template.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.match_residues" title="GMAP.src.tools.SystemReader.System.match_residues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match_residues</span></code></a>(all_oscillators, struct)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.match_residues" title="GMAP.src.tools.SystemReader.System.match_residues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match_residues</span></code></a>(all_oscillators, struct)</p></td>
 <td><p>Finds the full oscillator from component residues</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.set_properties" title="GMAP.src.tools.SystemReader.System.set_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_properties</span></code></a>(Printer)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.set_properties" title="GMAP.src.tools.SystemReader.System.set_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_properties</span></code></a>(Printer)</p></td>
 <td><p>Sets the basic properties of the system.</p></td>
 </tr>
 </tbody>
@@ -736,6 +801,28 @@ the group.</p>
 Each list of int is a group that matches the current bond.
 It is made of the base_residue, with a new residue’s worth
 of atoms added on.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.find_influencers">
+<span class="sig-name descname"><span class="pre">find_influencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.find_influencers" title="Link to this definition">#</a></dt>
+<dd><p>Find the indices of all atoms that are influencers</p>
+<p>Influencers are the atoms whose charge should be considered
+while calculating the VEG for a given point. This is a first
+guess, things like local-ix, spheresize and the like are not
+yet considered.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
 </dd>
 </dl>
 </dd>
@@ -1011,9 +1098,13 @@ parameters.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator"><code class="docutils literal notranslate"><span class="pre">Oscillator</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator"><code class="docutils literal notranslate"><span class="pre">Oscillator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update"><code class="docutils literal notranslate"><span class="pre">Oscillator.frame_update()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Residues"><code class="docutils literal notranslate"><span class="pre">Residues</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Residues.find_markers"><code class="docutils literal notranslate"><span class="pre">Residues.find_markers()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Residues.manage_influencers"><code class="docutils literal notranslate"><span class="pre">Residues.manage_influencers()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System"><code class="docutils literal notranslate"><span class="pre">System</span></code></a><ul class="nav section-nav flex-column">
@@ -1022,6 +1113,7 @@ parameters.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.confirm_bond"><code class="docutils literal notranslate"><span class="pre">System.confirm_bond()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.confirm_internal_bond"><code class="docutils literal notranslate"><span class="pre">System.confirm_internal_bond()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.extend_oscillator"><code class="docutils literal notranslate"><span class="pre">System.extend_oscillator()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_influencers"><code class="docutils literal notranslate"><span class="pre">System.find_influencers()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators_atoms"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators_atoms()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators_perstruct"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators_perstruct()</span></code></a></li>

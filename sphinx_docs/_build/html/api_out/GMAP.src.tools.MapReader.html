@@ -147,6 +147,13 @@
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -254,6 +261,13 @@ document.write(`
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -682,7 +696,7 @@ possible name for that object.</p>
 <dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
 and handle errors.</p>
 </dd>
-<dt><strong>rawcore</strong><span class="classifier">dict of str - list of str pairs</span></dt><dd><p>The raw contents of the file core.txt</p>
+<dt><strong>rawcore</strong><span class="classifier">dict of str: list of str pairs</span></dt><dd><p>The raw contents of the file core.txt</p>
 </dd>
 <dt><strong>mapdir</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The path to the directory in which the map is defined.</p>
 </dd>
@@ -747,7 +761,7 @@ atoms in functional_group, starting counting at 0.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Map">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MapReader.</span></span><span class="sig-name descname"><span class="pre">Map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapdir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Map" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MapReader.</span></span><span class="sig-name descname"><span class="pre">Map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avail_files</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Map" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Contains all information regarding a single map.</p>
 <p>In this context, a map is as defined in the computational spectroscopy
@@ -777,6 +791,8 @@ contains the files for this specific map</p>
 <dd class="field-odd"><dl>
 <dt><strong>directory</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The directory where the files defining this map can be found.</p>
 </dd>
+<dt><strong>corepath</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The path to the core.txt file within self.directory.</p>
+</dd>
 <dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>The name of this map. Often indicates the functional group
 modelled.</p>
 </dd>
@@ -788,6 +804,33 @@ problem occurs, a warning is in order, but the program does not
 have to quit - if the map isn’t used, we don’t care. Later, when
 looking at the requested maps, if an unsuccessful map is
 requested, we can throw an error and quit!</p>
+</dd>
+<dt><strong>avail_files</strong><span class="classifier">list of <cite>pathlib.Path</cite></span></dt><dd><p>All files that are in the same map directory as this map. These
+are the files available for appending using ‘add_corefile’</p>
+</dd>
+<dt><strong>type</strong><span class="classifier">str</span></dt><dd><p>The type of this map. Either ‘Singles’ or ‘Doubles’</p>
+</dd>
+<dt><strong>CmdPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a></span></dt><dd><p>The object storing all parameters provided on the command line
+that belong to this map.</p>
+</dd>
+<dt><strong>InPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a></span></dt><dd><p>The object storing all parameters provided in the input parameter
+file that belong to this map.</p>
+</dd>
+<dt><strong>DefPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a></span></dt><dd><p>The object storing all parameters provided in the default parameter
+file that belong to this map. If no such file was provided, an
+empty instance is used instead.</p>
+</dd>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The RunPars instance containing all the basic run-defining
+parameters that belong to this map.</p>
+</dd>
+<dt><strong>code</strong><span class="classifier">module</span></dt><dd><p>The code that goes along with this map, if present. If not, an
+empty module will be filled with default functions. If it is
+present, any missing functions will be added from the default
+functions.</p>
+</dd>
+<dt><strong>rawcore</strong><span class="classifier">dict of str: list of str pairs</span></dt><dd><p>The contents of core.txt, after very simple parsing</p>
+</dd>
+<dt><strong>Core</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.MapReader.Core" title="GMAP.src.tools.MapReader.Core"><code class="xref py py-class docutils literal notranslate"><span class="pre">Core</span></code></a></span></dt><dd><p>The contents of core.txt, fully parsed and ready to use.</p>
 </dd>
 </dl>
 </dd>
@@ -819,18 +862,14 @@ requested, we can throw an error and quit!</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Map.find_runpars" title="GMAP.src.tools.MapReader.Map.find_runpars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_runpars</span></code></a>(Files, Printer, RunPars)</p></td>
 <td><p>Create a RunPars instance for this map.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Map.parse_core" title="GMAP.src.tools.MapReader.Map.parse_core"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_core</span></code></a>(Printer, filepath)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Map.initialize" title="GMAP.src.tools.MapReader.Map.initialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">initialize</span></code></a>(Files, Printer)</p></td>
+<td><p>Initializes the map.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Map.parse_core" title="GMAP.src.tools.MapReader.Map.parse_core"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_core</span></code></a>(Printer, filepath[, file_contents])</p></td>
 <td><p>Actually retrieves the information from core.txt.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Map.parse_core_line" title="GMAP.src.tools.MapReader.Map.parse_core_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_core_line</span></code></a>(Printer, line, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Map.parse_core_line" title="GMAP.src.tools.MapReader.Map.parse_core_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_core_line</span></code></a>(Printer, line, ...)</p></td>
 <td><p>Parses a single line from core.txt</p></td>
-</tr>
-</tbody>
-</table>
-<table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>initialize</strong></p></td>
-<td></td>
 </tr>
 </tbody>
 </table>
@@ -1030,11 +1069,38 @@ parameters.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Map.initialize">
 <span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Map.initialize" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the map.</p>
+<p>Initializing is a multi-step process:</p>
+<ul class="simple">
+<li><p>If there is a main.py file, read/extract it.</p></li>
+<li><p>If any of GM_adjust_[RunPars/map_core_raw/oscillators] are
+missing, add the default for them.</p></li>
+<li><p>Run GM_adjust_RunPars</p></li>
+<li><p>Find the core.txt file, parse to rawcore. Supplement any
+files, if requested.</p></li>
+<li><p>Run GM_adjust_map_core_raw</p></li>
+<li><p>Parse the final choice of rawcore to Core</p></li>
+<li><p>If not present in self.code, create functions for
+GM_get_dipole and GM_get_rotation matrix based on core.</p></li>
+</ul>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Files</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related
+properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Map.parse_core">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_core</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Map.parse_core" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_core</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_contents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Map.parse_core" title="Link to this definition">#</a></dt>
 <dd><p>Actually retrieves the information from core.txt.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1093,31 +1159,111 @@ each iteration.</p>
 <dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Residue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MapReader.</span></span><span class="sig-name descname"><span class="pre">Residue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">residue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Residue" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>What a single residue of a structure (template) looks like.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>residue</strong><span class="classifier">list of lists of str</span></dt><dd><p>The names of the residue and atoms making up this residue</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>resnames</strong><span class="classifier">list of str</span></dt><dd><p>The different names this residue is allowed to have.</p>
+</dd>
+<dt><strong>atoms</strong><span class="classifier">list of list of str</span></dt><dd><p>The different names each of the atoms in this residue is allowed
+to have.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Structure">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MapReader.</span></span><span class="sig-name descname"><span class="pre">Structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bonds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Structure" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>What an oscillator looks like</p>
+<p>output formats:</p>
+<ul class="simple">
+<li><p>struct corresponds to a single line/newstruct
+(depends of source) and is itself a list(1).</p>
+<ul>
+<li><p>Each item in list(1) corresponds to a single residue, and is
+itself a list of 2 items. The first item contains the residue
+name (is a list of str), the second item contains the atom
+names. The second item is itself a list(2).</p></li>
+<li><p>Each item in list(2) corresponds to an atom and is itself a
+list of str.</p></li>
+</ul>
+</li>
+<li><p>bonds corresponds to a single line/newstruct
+(depends of source) and is itself a list(1).</p>
+<ul>
+<li><p>Each item in list(1) corresponds to a bond and is a list of
+two items. These are the indices of the two atoms that form
+the bond.</p></li>
+</ul>
+</li>
+</ul>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>struct</strong><span class="classifier">list of list of list of list of str</span></dt><dd><p>Describes the names of all parts of this oscillator, see above
+for further explanation of the format.</p>
+</dd>
+<dt><strong>bonds</strong><span class="classifier">list of list of ints</span></dt><dd><p>Gives all pairs of atom indices that should be bound together.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>residues</strong><span class="classifier">list of <a class="reference internal" href="#GMAP.src.tools.MapReader.Residue" title="GMAP.src.tools.MapReader.Residue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Residue</span></code></a></span></dt><dd><p>What atom/residue names go into each of the residues.</p>
+</dd>
+<dt><strong>bonds</strong><span class="classifier">list of list of ints</span></dt><dd><p>What bonds make up the oscillator.</p>
+</dd>
+<dt><strong>indices</strong><span class="classifier">dict of int: tuple of int pairs</span></dt><dd><p>The keys are the indices of atoms in the entire oscillator, the
+values show where that atom is located. The first int in the
+value is the index of the residue, the second int is the index
+of the atom, within that residue.</p>
+</dd>
+<dt><strong>indices_per_residue</strong><span class="classifier">dict of int: list of int pairs</span></dt><dd><p>The keys are the indices of the residue, the values are all
+oscillator-indices of the atoms (like the keys in self.indices).</p>
+</dd>
+<dt><strong>indices_inv</strong><span class="classifier">dict of typle of int: int pairs</span></dt><dd><p>Same as self.indices, but the keys and values have been
+switched.</p>
+</dd>
+<dt><strong>success</strong><span class="classifier">bool</span></dt><dd><p>Whether there were any problems encountered - a problem means
+that the map the instance belongs to cannot be used.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
-<table class="table">
+<table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><strong>check_bonds</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Structure.check_bonds" title="GMAP.src.tools.MapReader.Structure.check_bonds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_bonds</span></code></a>()</p></td>
+<td><p>Confirms whether supplied bonds link all residues</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Structure.check_bonds">
 <span class="sig-name descname"><span class="pre">check_bonds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Structure.check_bonds" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Confirms whether supplied bonds link all residues</p>
+<p>A multi-residue oscillator can only be properly defined and
+found using the existing syntax if the parts within different
+residues are bonded together. This function checks whether
+the supplied bonds are enough to confirm that the different
+residues actually lock together.</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.MapReader.scan_mapdirs">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MapReader.</span></span><span class="sig-name descname"><span class="pre">scan_mapdirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapdirs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.scan_mapdirs" title="Link to this definition">#</a></dt>
-<dd><p>gives a list of newly-generated Map objects</p>
+<dd><p>Gives a list of newly-generated Map objects</p>
 <p>Given a list of paths (each representing a map directory), create a Map
 object for each map found, which will be filled later.</p>
 <dl class="field-list">

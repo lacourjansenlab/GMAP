@@ -448,6 +448,46 @@ document.write(`
 <p>(shorthand: -um)</p>
 <p>Which maps should be considered in the calculation. Or, in other words, which kinds of oscillators should be found, and calculated properties for. There are limited choices - namely, the names of the maps supplied through the parameter map_directory.</p>
 </section>
+<section id="influencers-whitelist">
+<h3>influencers_whitelist<a class="headerlink" href="#influencers-whitelist" title="Link to this heading">#</a></h3>
+<p>(no shorthand available)</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>only one of ‘influencers_whitelist’, ‘influencers_blacklist’, ‘influencers_file’ and ‘influencers_select_atoms’ may be present in a single parameter source. Between sources, multiple can occur: the command line can use ‘influencers_blacklist’, and the input parameter file can use ‘influencers_file’. The selection of the most ‘important’ source will be used, the rest is ignored. This means that the commandline ‘influencers_blacklist’ cannot use definitions in the ‘influencers_file’ given in the input parameter file.</p>
+</div>
+<p>Atoms belonging to a residue of (one of) the given name(s) will be taken into account when calculating electrostatics for the oscillators. For more information on how to specify influencers, see <a class="reference internal" href="influencer_specification.html#userguide-page-influencer-specification"><span class="std std-ref">Specifying influencers</span></a>.</p>
+</section>
+<section id="influencers-blacklist">
+<h3>influencers_blacklist<a class="headerlink" href="#influencers-blacklist" title="Link to this heading">#</a></h3>
+<p>(no shorthand available)</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>only one of ‘influencers_whitelist’, ‘influencers_blacklist’, ‘influencers_file’ and ‘influencers_select_atoms’ may be present in a single parameter source. Between sources, multiple can occur: the command line can use ‘influencers_blacklist’, and the input parameter file can use ‘influencers_file’. The selection of the most ‘important’ source will be used, the rest is ignored. This means that the commandline ‘influencers_blacklist’ cannot use definitions in the ‘influencers_file’ given in the input parameter file.</p>
+</div>
+<p>Atoms belonging to a residue of (one of) the given name(s) will <strong>not</strong> be taken into account when calculating electrostatics for the oscillators. For more information on how to specify influencers, see <a class="reference internal" href="influencer_specification.html#userguide-page-influencer-specification"><span class="std std-ref">Specifying influencers</span></a>.</p>
+</section>
+<section id="influencers-file">
+<h3>influencers_file<a class="headerlink" href="#influencers-file" title="Link to this heading">#</a></h3>
+<p>(no shorthand available)</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>only one of ‘influencers_whitelist’, ‘influencers_blacklist’, ‘influencers_file’ and ‘influencers_select_atoms’ may be present in a single parameter source. Between sources, multiple can occur: the command line can use ‘influencers_blacklist’, and the input parameter file can use ‘influencers_file’. The selection of the most ‘important’ source will be used, the rest is ignored. This means that the commandline ‘influencers_blacklist’ cannot use definitions in the ‘influencers_file’ given in the input parameter file.</p>
+</div>
+<p>Atoms belonging to a residue of (one of) the given name(s) on the line starting with ‘choice’ in this file will be taken into account when calculating electrostatics for the oscillators. For more information on how to specify influencers, see <a class="reference internal" href="influencer_specification.html#userguide-page-influencer-specification"><span class="std std-ref">Specifying influencers</span></a>. This file should be given relative to the place where the parameter is specified.</p>
+</section>
+<section id="influencers-select-atoms">
+<h3>influencers_select_atoms<a class="headerlink" href="#influencers-select-atoms" title="Link to this heading">#</a></h3>
+<p>(no shorthand available)</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>only one of ‘influencers_whitelist’, ‘influencers_blacklist’, ‘influencers_file’ and ‘influencers_select_atoms’ may be present in a single parameter source. Between sources, multiple can occur: the command line can use ‘influencers_blacklist’, and the input parameter file can use ‘influencers_file’. The selection of the most ‘important’ source will be used, the rest is ignored. This means that the commandline ‘influencers_blacklist’ cannot use definitions in the ‘influencers_file’ given in the input parameter file.</p>
+</div>
+<p>In case the influencers should be defined differently from the ‘default’ method of giving residue names, this parameter allows to use the atom selection syntax from MDAnalysis. The given choice for this parameter will be fed as a string to MDAnalysis.select_atoms(). Instructions for how to build this string can be found on <a href="#id1"><span class="problematic" id="id2">`MDAnalysis&lt;https://docs.mdanalysis.org/stable/documentation_pages/selections.html&gt;`__</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The used MDAnalysis functionality can make a noticable impact on calculation times, especially when using the program in parallel (multiple CPUs / cores / nodes). Most usecases should be fine, but if you notice a big difference for your calculations, please reach out to the developers of GMAP.</p>
+</div>
+</section>
 <section id="neutral-charge-threshold">
 <h3>neutral_charge_threshold<a class="headerlink" href="#neutral-charge-threshold" title="Link to this heading">#</a></h3>
 <p>(no shorthand available)</p>
@@ -459,7 +499,7 @@ document.write(`
 <div class="line">(no shorthand available)</div>
 <div class="line">(options: true, t, false, f)</div>
 </div>
-<p>Whether the program should guess bonds for the supplied universe. This should only be used if bond information if absolutely necessary, and there really is no topology file with bond information available. Bonds are guessed by <a href="#id1"><span class="problematic" id="id2">`MDAnalysis&lt;https://userguide.mdanalysis.org/stable/formats/guessing.html#types&gt;`__</span></a>.</p>
+<p>Whether the program should guess bonds for the supplied universe. This should only be used if bond information if absolutely necessary, and there really is no topology file with bond information available. Bonds are guessed by <a href="#id1"><span class="problematic" id="id3">`MDAnalysis&lt;https://userguide.mdanalysis.org/stable/formats/guessing.html#types&gt;`__</span></a>.</p>
 </section>
 </section>
 </section>
@@ -526,6 +566,10 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parameters-for-specifying-calculation-settings">parameters for specifying calculation settings</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maps-to-use">maps_to_use</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#influencers-whitelist">influencers_whitelist</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#influencers-blacklist">influencers_blacklist</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#influencers-file">influencers_file</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#influencers-select-atoms">influencers_select_atoms</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neutral-charge-threshold">neutral_charge_threshold</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#guess-bonds">guess_bonds</a></li>
 </ul>

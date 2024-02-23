@@ -106,13 +106,17 @@ class RefPars:
 
     """
 
-    def __init__(self, Printer, fname):
+    def __init__(self, Printer, fname, is_main=False):
         self.fname = fname.resolve()
         self.add_groups()
         self.nondefcount = 0
 
         self.parse_refparfile(Printer, self.parse_line_type_protected)
         self.parse_refparfile(Printer, self.parse_line_choice_protected)
+
+        # for fixing intertwined / more convoluted parameters (main file only)
+        if is_main:
+            self.resolve(Printer)
 
     @classmethod
     def add_reffile(cls, Printer, fname, base_RefPars):
@@ -435,6 +439,39 @@ class RefPars:
         else:
             self.choices[parname] = options
 
+    def resolve(self, Printer):
+        """Fixes intertwined/special parameters the standard parser can't fix
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
+
+        # influencers - we need some defaults, but they should not clash in any
+        # way.... in the default file, top one takes precedence.
+        for parameter in self.maybe_list:
+            if parameter in ("influencers_whitelist", "influencers_blacklist"):
+                break
+        else:
+            Printer.warning(
+                "Encountered an issue with the following reference parameter "
+                f"file: {self.fname}. The file should contain the parameters "
+                "'influencers_whitelist' and 'influencers_blacklist', but "
+                "contains neither.",
+                "SU_FP_8", True
+            )
+
+        self.maybe_list.append("influencers")
+        if parameter == "influencers_whitelist":
+            self.choices["influencers"] = self.choices[parameter]
+        elif parameter == "influencers_blacklist":
+            # invert the choice by subtracting the blacklist choice from all
+            self.choices["influencers"] = [":All", "-", "("] + self.choices[
+                parameter
+            ] + [")"]
+
     @staticmethod
     def parse_key(string):
         """Extracts parameter name, shorthand and type from key in file
@@ -536,12 +573,20 @@ class RawPars:
 
     """
 
-    def __init__(self, fname, is_default):
+    def __init__(self, Printer, fname, is_default, given_dict, RefPars):
         self.fname = fname
         self.is_default = is_default
 
+        self.extract_choices(Printer, given_dict, RefPars)
+        if is_default:
+            self.check_completeness(Printer, RefPars)
+
+        # if the class isn't empty
+        if given_dict:
+            self.resolve(Printer)
+
     @classmethod
-    def create_empty(cls):
+    def create_empty(cls, Printer):
         """Create an instance of this class without any data
 
         .. seealso ::
@@ -553,9 +598,7 @@ class RawPars:
             A newly generated instance.
         """
 
-        instance = cls(None, False)
-        instance.extract_choices(None, {}, {})
-        return instance
+        return cls(Printer, None, False, {}, {})
 
     @classmethod
     def from_dict(cls, Printer, fname, given_dict, RefPars, is_default):
@@ -589,15 +632,10 @@ class RawPars:
         """
 
         if len(given_dict) == 0:
-            instance = cls.create_empty()
+            instance = cls.create_empty(Printer)
             return instance
 
-        instance = cls(fname, is_default)
-
-        instance.extract_choices(Printer, given_dict, RefPars)
-        if is_default:
-            instance.check_completeness(Printer, RefPars)
-        return instance
+        return cls(Printer, fname, is_default, given_dict, RefPars)
 
     @classmethod
     def from_file(cls, Printer, fname, RefPars, is_default):
@@ -677,7 +715,7 @@ class RawPars:
         # - extract num of expected arguments
         # - extract actual arguments
 
-        temp_instance = cls(Path("command line"), is_default)
+        temp_instance = cls(Printer, Path("command line"), is_default, {}, {})
         pardict = {}
 
         while len(cmdargs) > 0:
@@ -1163,6 +1201,48 @@ class RawPars:
                     "SU_WP_14", True
                 )
 
+    def resolve(self, Printer):
+        """Fixes intertwined/special parameters the standard parser can't fix
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
+
+        # see how many influencer parameters are present - only one can be!
+        n_present = sum([parameter in (
+            "influencers_whitelist",
+            "influencers_blacklist",
+            "influencers_file",
+            "influencers_select_atoms"
+        ) for parameter in self.choices])
+
+        if n_present > 1:
+            Printer.warning(
+                "Encountered an issue with the following parameter source: "
+                f" {self.fname}. The source should contain only one of the "
+                "parameters 'influencers_whitelist', 'influencers_blacklist', "
+                "'influencers_file' and influencers_select_atoms, but "
+                "contains more than one.",
+                "SU_NP_16", True
+            )
+
+        if "influencers_whitelist" in self.choices:
+            self.choices["influencers"] = self.choices["influencers_whitelist"]
+        elif "influencers_blacklist" in self.choices:
+            # invert the choice by subtracting the blacklist choice from all
+            self.choices["influencers"] = [":All", "-", "("] + self.choices[
+                "influencers_blacklist"
+            ] + [")"]
+        elif "influencers_file" in self.choices:
+            self.choices["influencers"] = self.choices["influencers_file"]
+        elif "influencers_select_atoms" in self.choices:
+            self.choices["influencers"] = " ".join(
+                self.choices["influencers_select_atoms"]
+            )
+
     def finalize_map_pars(self, Printer):
         """Check whether `not_found` is empty
 
@@ -1261,6 +1341,10 @@ class RunPars:
         The instance of RunPars that is the main (and thus contains the
         main parameters). When assigning this attribute to the 'main' instance,
         'self' will be used.
+    detected_requires_bonds : bool
+        Whether (one of) the maps requested for use require(s) bonds
+    requested_mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.Map`
+        The maps that should be applied during the calculation.
 
     """
 
@@ -1323,6 +1407,9 @@ class RunPars:
             RefPars.intpars + RefPars.floatpars + RefPars.boolpars
             + RefPars.strpars
         )
+        if self.is_main:
+            allpars.append("influencers")
+
         sources = [CmdPars, InPars, DefPars, RefPars]
         for parname in allpars:
             choice = None
@@ -1403,7 +1490,7 @@ class RunPars:
 
         # deal with all other files
         for parname in RefPars.allfilepars:
-            if hasattr(self, parname):  # This filepar was ordered:
+            if hasattr(self, parname):  # This filepar was ordered (or mapdir)
                 continue
             try:
                 file_hc = RefPars.choices[parname]
@@ -1936,6 +2023,7 @@ def get_pardict(iterable):
         if len(line) == 0:
             continue
         linelist = [term.strip() for term in line.split()]
+        linelist = [term for term in linelist if term]
 
         outdict[linelist[0]] = linelist[1:]
     return outdict
@@ -1955,3 +2043,173 @@ def cleanline(line, escape_char="#"):
         The character that indicates that a comment started.
     """
     return line.split(escape_char)[0]
+
+
+def parse_influencerfile(Printer, fname, groupdict):
+    """Parses an entire influencer file. A collection of influencers.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    fname : pathlib.Path
+        The file that contains the line. Used for printing warnings.
+    groupdict : dict of str: set pairs
+        Previously defined groups
+
+    Returns
+    -------
+    groupdict : dict of str: set pairs
+        All currently known groups - both previously defined and newly
+        found in the supplied file.
+    """
+
+    with open(fname) as fhand:
+        for line in fhand:
+            line = cleanline(line).strip()
+            if not line:
+                continue
+
+            # reduce many spaces to a single one
+            line = [word for word in line.split() if word]
+            groupdict[line[0]] = parse_influencerfile_line(
+                Printer, " ".join(line[1:]), groupdict, fname
+            )
+    return groupdict
+
+
+def parse_influencerfile_line(Printer, line, groupdict, fname):
+    """Parse a single influencer definition.
+
+    Influencers are groups of residue names. A group can contain many,
+    a single, or no items. This function deals with the definition of
+    one of those groups. The resulting set is returned so it can be
+    used/assigned.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    line : str
+        The definition of the influencer group.
+    groupdict : dict of str: set pairs
+        Previously defined groups
+    fname : pathlib.Path
+        The file that contains the line. Used for printing warnings.
+
+    Returns
+    -------
+    newset : set
+        The set as was requested.
+    """
+
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    numbers = "1234567890"
+    namechars = letters + letters.upper() + numbers + "_"
+    specialchars = "-&|^()"
+    allowed_chars = " :" + namechars + specialchars
+
+    problem_chars = [char for char in line if char not in allowed_chars]
+
+    if problem_chars:
+        Printer.warning(
+            f"The influencers file {fname} contains one or more invalid "
+            "characters. Make sure the following characters are not present: "
+            f"{''.join(problem_chars)}.",
+            "SU_NP_4", True
+        )
+
+    # go through the line, character by character
+    final_choice = "def build_set(groupdict):\n"
+    final_choice += "    return "
+    is_name = False
+    fromdict = False
+    curname = ""
+
+    for char in line:
+        if char == ":":
+            fromdict = True
+        elif char in namechars:
+            is_name = True
+            curname += char
+        elif char in (specialchars + " "):
+            if is_name:
+                if fromdict:
+                    final_choice += "groupdict['" + curname + "']"
+                    fromdict = False
+                else:
+                    final_choice += "set(['" + curname + "'])"
+                curname = ""
+                is_name = False
+            final_choice += char
+    else:
+        if is_name:
+            if fromdict:
+                final_choice += "groupdict['" + curname + "']"
+                fromdict = False
+            else:
+                final_choice += "set(['" + curname + "'])"
+
+    dpr(final_choice)
+
+    try:
+        exec(final_choice)
+    except Exception as ex:
+        Printer.warning(
+            f"\nThe file {fname} has a problem with one of the definitions "
+            "of parameters. See the error for more information.",
+            "SU_NP_5", True, exception=ex
+        )
+        return None
+
+    # return GM_get_dipole
+    try:
+        newset = locals()["build_set"](groupdict)
+    except Exception as ex:
+        Printer.warning(
+            f"\nThe file {fname} has a problem with one of the definitions "
+            "of parameters. See the error for more information.",
+            "SU_NP_5", True, exception=ex
+        )
+
+    return newset
+
+
+def parse_influencer_par(string):
+    """Allows different selection language for influencers given as parameter.
+
+    Influencers can be given as a separate file, where, using the python
+    set syntax, all kinds of groups can be defined. However, when the
+    influencers are defined within the parameter file, this syntax is
+    less intuitive, because the selection for multiple maps, for
+    example, only has spaces separating the items.
+
+    If no set operators are used, but there are multiple items, assume
+    they should be 'added' together (union).
+
+    Parameters
+    ----------
+    string : str
+        The choice provided for the parameter
+
+    Returns
+    -------
+    string : str
+        The same choice as provided, but translated into set language.
+    """
+
+    specialchars = "-&|^()"
+
+    # there are spaces in between items, but there's not a single
+    # set-operator character to be found.
+    # In this case, assume that the user doesn't know/use set operators,
+    # and that all given objects should just be added together.
+    if (
+        not any(char in specialchars for char in string)
+        and any(char in " " for char in string)
+    ):
+        string = string.replace(" ", " | ")
+
+    return string

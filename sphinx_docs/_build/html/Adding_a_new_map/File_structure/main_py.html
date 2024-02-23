@@ -146,6 +146,13 @@
                     </li>
                 
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="../index.html">
                         Adding a new map
@@ -258,6 +265,13 @@ document.write(`
                     </li>
                 
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="../index.html">
                         Adding a new map
@@ -310,6 +324,7 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">File structure</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core.txt file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parameters.html">parameters.ref</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">main.py</a></li>
 </ul>
@@ -382,18 +397,20 @@ document.write(`
 <p>There are a few objects that occur quite often as an argument for these functions. Here is a quick overview of them:</p>
 <section id="map">
 <h3>Map<a class="headerlink" href="#map" title="Link to this heading">#</a></h3>
-<p>An instance of <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a>. Stores all information of this class. This is the most important object, as it stores everything related to this class. As functions of the map can change how the map is registered, this object will look different during the different functions. Here is an overview of all attributes the class can have, at each function it will be explained/highlighted what attributes are available at that point.</p>
+<p>An instance of <a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a>. Stores all information of this class. This is the most important object, as it stores everything related to this class. As functions of the map can change how the map is registered, this object will look different during the different functions. Here is an overview of all attributes the class can have, at each function it will be explained/highlighted what attributes are available at that point.</p>
 <p>It is probable that the map wants to save information between functions, too, just like the main program. These data structures must be saved as an attribute to the instance of the class, as per good coding practices. This overview of attributes should help indicate what names are and aren’t available.</p>
 <ul>
 <li><p>self.directory (type pathlib.Path) is the path to the directory the map is saved in on the current machine.</p></li>
+<li><p>self.corepath (type pathlib.Path) is the path to the core.txt file of the map.</p></li>
 <li><p>self.name (type str) is the name of the map - i.e. the name of the directory in which all map files live.</p></li>
 <li><p>self.type (type str) is the type of the map - either Singles or Pairs. Singles maps operate on a single oscillator (think of maps giving an oscillator frequency), Pairs maps operate on a pair of oscillators (think of maps giving a coupling value).</p></li>
 <li><p>self.success (type bool) denotes whether the map has (until this point) been read successfully. An unsuccessful map will not trigger the program to quit, as long as the user does not want to use this map.</p></li>
-<li><p>self.RefPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a>) contains all information from the map-specific reference parameters file.</p></li>
-<li><p>self.DefPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a>) contains all choices for parameters for this map that were found in the default parameter file. Either all parameters are present, or none, depending on the default parameter file.</p></li>
-<li><p>self.InPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a>) contains all choices for parameters for this map that were found in the input parameter file. May be empty.</p></li>
-<li><p>self.CmdPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a>) contains all choices for parameters for this map that were found on the command line. May be empty.</p></li>
-<li><p>self.RunPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a> or None) contains the combination of all parameter sources, where self.CmdPars &gt; self.InPars &gt; self.DefPars &gt; self.RefPars. If this behaviour is too naive, the contents can be changed with the function GM_adjust_RunPars listed below. This is where other functions should retrieve parameter choices from.</p>
+<li><p>self.avail_files (type list of pathlib.Path) is a list of all files that are in the same map directory in this map (or in its parent directory). These are the files that can be used for appending using ‘add_corefile’ in the core file.</p></li>
+<li><p>self.RefPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a>) contains all information from the map-specific reference parameters file.</p></li>
+<li><p>self.DefPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a>) contains all choices for parameters for this map that were found in the default parameter file. Either all parameters are present, or none, depending on the default parameter file.</p></li>
+<li><p>self.InPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a>) contains all choices for parameters for this map that were found in the input parameter file. May be empty.</p></li>
+<li><p>self.CmdPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a>) contains all choices for parameters for this map that were found on the command line. May be empty.</p></li>
+<li><p>self.RunPars (type <a class="reference internal" href="../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a> or None) contains the combination of all parameter sources, where self.CmdPars &gt; self.InPars &gt; self.DefPars &gt; self.RefPars. If this behaviour is too naive, the contents can be changed with the function GM_adjust_RunPars listed below. This is where other functions should retrieve parameter choices from.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>self.RunPars also has a reference to the main-program RunPars - it is stored as self.RunPars.MainRunPars.</p>
@@ -401,16 +418,16 @@ document.write(`
 </li>
 <li><p>self.code (type module) contains all functions defined in main.py. Any functions that the program needs, but are not specified in main.py are automatically filled in. Any object that the program does not require, but is still there, is also available.</p></li>
 <li><p>self.rawcore (type dict of str-list pairs) contains the information from core.txt, before parsing. The function GM_adjust_map_core_raw can change this simple structure before it is being parsed into more complex structures and functions later.</p></li>
-<li><p>self.Core (type <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Core" title="GMAP.src.tools.MapReader.Core"><code class="xref py py-class docutils literal notranslate"><span class="pre">Core</span></code></a>) contains the information from core.txt, after parsing.</p></li>
+<li><p>self.Core (type <a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Core" title="GMAP.src.tools.MapReader.Core"><code class="xref py py-class docutils literal notranslate"><span class="pre">Core</span></code></a>) contains the information from core.txt, after parsing.</p></li>
 </ul>
 </section>
 <section id="files">
 <h3>Files<a class="headerlink" href="#files" title="Link to this heading">#</a></h3>
-<p>An instance of <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a>. Stores filepaths and such.</p>
+<p>An instance of <a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a>. Stores filepaths and such.</p>
 </section>
 <section id="printer">
 <h3>Printer<a class="headerlink" href="#printer" title="Link to this heading">#</a></h3>
-<p>An instance of <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a>. Manages prints. If the function needs to throw an error or print something else, this is the class to use.</p>
+<p>An instance of <a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a>. Manages prints. If the function needs to throw an error or print something else, this is the class to use.</p>
 </section>
 </section>
 <section id="overview-of-all-functions">
@@ -440,10 +457,11 @@ document.write(`
 </ul>
 </td><td><ul class="simple">
 <li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
 <li><p>self.RefPars</p></li>
-<li><p>self.DefPars</p></li>
 </ul>
 </td><td><ul class="simple">
+<li><p>self.DefPars</p></li>
 <li><p>self.InPars</p></li>
 <li><p>self.CmdPars</p></li>
 </ul>
@@ -456,13 +474,13 @@ document.write(`
 <section id="parameters">
 <h4>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h4>
 <dl>
-<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
 Has to be updated after RunPars is finalized.</p>
 </dd>
-<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
 and handle errors.</p>
 </dd>
-<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
 about this map.</p>
 </dd>
 </dl>
@@ -485,20 +503,22 @@ about this map.</p>
 <h4>Available attributes of Map<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
 <table class="hlist"><tr><td><ul class="simple">
 <li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
 <li><p>self.name</p></li>
 <li><p>self.type</p></li>
 </ul>
 </td><td><ul class="simple">
 <li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
 <li><p>self.RefPars</p></li>
-<li><p>self.DefPars</p></li>
 </ul>
 </td><td><ul class="simple">
+<li><p>self.DefPars</p></li>
 <li><p>self.InPars</p></li>
 <li><p>self.CmdPars</p></li>
-<li><p>self.RunPars</p></li>
 </ul>
 </td><td><ul class="simple">
+<li><p>self.RunPars</p></li>
 <li><p>self.code</p></li>
 <li><p>self.rawcore</p></li>
 </ul>
@@ -507,13 +527,13 @@ about this map.</p>
 <section id="id3">
 <h4>Parameters<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <dl>
-<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
 Has to be updated after RunPars is finalized.</p>
 </dd>
-<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
 and handle errors.</p>
 </dd>
-<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
 about this map.</p>
 </dd>
 </dl>
@@ -540,11 +560,13 @@ about this map.</p>
 <h4>Available attributes of Map<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
 <table class="hlist"><tr><td><ul class="simple">
 <li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
 <li><p>self.name</p></li>
 <li><p>self.type</p></li>
 </ul>
 </td><td><ul class="simple">
 <li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
 <li><p>self.RefPars</p></li>
 <li><p>self.DefPars</p></li>
 </ul>
@@ -563,18 +585,158 @@ about this map.</p>
 <section id="id6">
 <h4>Parameters<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
 <dl>
-<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
 Has to be updated after RunPars is finalized.</p>
 </dd>
-<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
 and handle errors.</p>
 </dd>
-<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
 about this map.</p>
 </dd>
-<dt>Syst<span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
 </dd>
-<dt>oscillator_list<span class="classifier">list of <code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></span></dt><dd><p>The oscillators that were identified as a good match for this map.</p>
+<dt>oscillator_list<span class="classifier">list of <a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>The oscillators that were identified as a good match for this map.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-get-rotation-matrix-files-printer-map-syst-osc">
+<h3>GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-rotation-matrix-files-printer-map-syst-osc" title="Link to this heading">#</a></h3>
+<p>Returns the rotation matrix for the provided oscillator osc.</p>
+<p>A map usually requires the electrostatic properties to be given in a certain coordinate basis. Usually, this is not the global cartesian coordinates, but rather those rotated in a certain way. The rotation matrix defines the desired basis in global cartesian coordinates.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The electrostatic field/gradient should only be rotated, not sheared or scaled. Therefore, the provided rotation matrix should consist of three orthonormal vectors.</p>
+</div>
+<p>If this function is not provided in the main.py file, the information stored in the parameters xyz_uvec in the core.txt file will be used instead to build a function with.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found <a class="reference internal" href="../../Theory/PBC.html#theory-page-pbc"><span class="std std-ref">in the theory section</span></a>. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.</p>
+</div>
+<section id="id7">
+<h4>Example uses<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
+<section id="the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">
+<h5>The default method of providing the rotation matrix is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient" title="Link to this heading">#</a></h5>
+<p>Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.</p>
+</section>
+</section>
+<section id="id8">
+<h4>Available attributes of Map<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id9">
+<h4>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
+<dl>
+<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+<dt>osc<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>The oscillator for which the rotation matrix should be determined.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Link to this heading">#</a></h4>
+<dl>
+<dt>rotation_matrix<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The matrix that should be used to convert the electrostatic properties. rotation_matrix[0] should return a vector of length 3 defining what the box-x vector should look like, in cartesian coordinates. Same for [1] giving the y, and [2] giving the z. The three vectors are orthonormal.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-get-dipole-files-printer-map-syst-osc">
+<h3>GM_get_dipole(Files, Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-dipole-files-printer-map-syst-osc" title="Link to this heading">#</a></h3>
+<p>Returns the dipole vector and its position in cartesian coordinates.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found <a class="reference internal" href="../../Theory/PBC.html#theory-page-pbc"><span class="std std-ref">in the theory section</span></a>. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.</p>
+</div>
+<section id="id10">
+<h4>Example uses<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
+<section id="the-default-method-of-providing-the-dipole-vector-is-not-sufficient">
+<h5>The default method of providing the dipole vector is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient" title="Link to this heading">#</a></h5>
+<p>Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.</p>
+</section>
+</section>
+<section id="id11">
+<h4>Available attributes of Map<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id12">
+<h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
+<dl>
+<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+<dt>osc<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>The oscillator for which the rotation matrix should be determined.</p>
+</dd>
+</dl>
+</section>
+<section id="id13">
+<h4>Returns<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
+<dl>
+<dt>r_vec<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The vector that represents the dipole of this oscillator.</p>
+</dd>
+<dt>r_pos<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The position at which the dipole vector lies.</p>
 </dd>
 </dl>
 </section>
@@ -660,6 +822,26 @@ about this map.</p>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Available attributes of Map</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Parameters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-rotation-matrix-files-printer-map-syst-osc">GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">The default method of providing the rotation matrix is not sufficient</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#returns">Returns</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-dipole-files-printer-map-syst-osc">GM_get_dipole(Files, Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Returns</a></li>
 </ul>
 </li>
 </ul>

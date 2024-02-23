@@ -108,6 +108,44 @@ maps_to_use
 
 Which maps should be considered in the calculation. Or, in other words, which kinds of oscillators should be found, and calculated properties for. There are limited choices - namely, the names of the maps supplied through the parameter map_directory.
 
+influencers_whitelist
+=====================
+(no shorthand available)
+
+.. important::
+    only one of 'influencers_whitelist', 'influencers_blacklist', 'influencers_file' and 'influencers_select_atoms' may be present in a single parameter source. Between sources, multiple can occur: the command line can use 'influencers_blacklist', and the input parameter file can use 'influencers_file'. The selection of the most 'important' source will be used, the rest is ignored. This means that the commandline 'influencers_blacklist' cannot use definitions in the 'influencers_file' given in the input parameter file.
+
+Atoms belonging to a residue of (one of) the given name(s) will be taken into account when calculating electrostatics for the oscillators. For more information on how to specify influencers, see :ref:`Specifying influencers<UserGuide_page_influencer_specification>`.
+
+influencers_blacklist
+=====================
+(no shorthand available)
+
+.. important::
+    only one of 'influencers_whitelist', 'influencers_blacklist', 'influencers_file' and 'influencers_select_atoms' may be present in a single parameter source. Between sources, multiple can occur: the command line can use 'influencers_blacklist', and the input parameter file can use 'influencers_file'. The selection of the most 'important' source will be used, the rest is ignored. This means that the commandline 'influencers_blacklist' cannot use definitions in the 'influencers_file' given in the input parameter file.
+
+Atoms belonging to a residue of (one of) the given name(s) will **not** be taken into account when calculating electrostatics for the oscillators. For more information on how to specify influencers, see :ref:`Specifying influencers<UserGuide_page_influencer_specification>`.
+
+influencers_file
+================
+(no shorthand available)
+
+.. important::
+    only one of 'influencers_whitelist', 'influencers_blacklist', 'influencers_file' and 'influencers_select_atoms' may be present in a single parameter source. Between sources, multiple can occur: the command line can use 'influencers_blacklist', and the input parameter file can use 'influencers_file'. The selection of the most 'important' source will be used, the rest is ignored. This means that the commandline 'influencers_blacklist' cannot use definitions in the 'influencers_file' given in the input parameter file.
+
+Atoms belonging to a residue of (one of) the given name(s) on the line starting with 'choice' in this file will be taken into account when calculating electrostatics for the oscillators. For more information on how to specify influencers, see :ref:`Specifying influencers<UserGuide_page_influencer_specification>`. This file should be given relative to the place where the parameter is specified.
+
+influencers_select_atoms
+========================
+(no shorthand available)
+
+.. important::
+    only one of 'influencers_whitelist', 'influencers_blacklist', 'influencers_file' and 'influencers_select_atoms' may be present in a single parameter source. Between sources, multiple can occur: the command line can use 'influencers_blacklist', and the input parameter file can use 'influencers_file'. The selection of the most 'important' source will be used, the rest is ignored. This means that the commandline 'influencers_blacklist' cannot use definitions in the 'influencers_file' given in the input parameter file.
+
+In case the influencers should be defined differently from the 'default' method of giving residue names, this parameter allows to use the atom selection syntax from MDAnalysis. The given choice for this parameter will be fed as a string to MDAnalysis.select_atoms(). Instructions for how to build this string can be found on `MDAnalysis<https://docs.mdanalysis.org/stable/documentation_pages/selections.html>`__.
+
+.. note::
+    The used MDAnalysis functionality can make a noticable impact on calculation times, especially when using the program in parallel (multiple CPUs / cores / nodes). Most usecases should be fine, but if you notice a big difference for your calculations, please reach out to the developers of GMAP.
 
 neutral_charge_threshold
 ========================

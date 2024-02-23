@@ -12,6 +12,10 @@ log_filename[path_rel_lg_c]                       log.log
 
 map_directory(md)[list_path_sep]                  ../maps
 maps_to_use(um)[list_str]                         AmideSC
+influencers_whitelist[list_str]                   :All
+influencers_blacklist[list_str]                   :None
+influencers_file[path_sep]                        infl_file_base.txt
+influencers_select_atoms[list_str]                segid *
 
 verbose[int]                                      0 1 [2] 3 4
 verbose_logfile[int]                              0 1 [2] 3 4
