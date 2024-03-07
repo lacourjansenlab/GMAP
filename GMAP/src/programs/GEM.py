@@ -143,7 +143,7 @@ def get_parameters(Files, Printer, in_parfile, argslist):
         InPars = GM_PP.RawPars.from_dict(
             Printer, in_parfile, in_pardict, RefPars, False)
     else:
-        InPars = GM_PP.RawPars.create_empty()
+        InPars = GM_PP.RawPars.create_empty(Printer)
 
     # step 10 (find mapdir in cmdline > inparfile > defparfile)
     mapdirs = GM_PP.find_mapdir(Files, Printer, argslist, InPars, DefPars)
@@ -180,6 +180,33 @@ def get_parameters(Files, Printer, in_parfile, argslist):
         map_.find_runpars(Files, Printer, RunPars)
 
     return RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+
+
+# TO DO inside!
+def run(System):
+
+    # first, do precalc
+
+    # create empty structures, initialize whats needed
+    # call pre-calc funcs of maps
+    # compare runpar endframe to mda nframes - adjust endframe
+
+    trj = System.universe.trajectory
+    for frame in trj:  # add slice here to make it faster!
+        # manage frame number (if not in range, skip, prints, ETA, etc)
+        # rebuild the frame-specific data (positions, box, etc)
+        # (only if needed) recalc COM
+        # initialize output structures (like Ham)
+        # call pre-frame funcs of maps
+        # perform the actual calculations
+        # call post-frame functions of maps
+        # write calculated data to files
+        pass
+
+    # lastly, do postcalc:
+
+    # print all that the user does not yet know
+    # (profiler?)
 
 
 # still a placeholder - this function still has to grow. Should in the

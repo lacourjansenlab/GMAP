@@ -55,6 +55,9 @@ SU_FP_8
 -------
 The reference parameter file was missing the parameters 'influencers_whitelist' and 'influencers_blacklist'. Make sure both are present.
 
+SU_FP_9
+-------
+Due to definition conflicts, path-type parameters cannot take options in the reference file. If you want a user to pick between a number of files, give them names and use a string type parameter instead.
 
 
 SU_WP
@@ -239,6 +242,10 @@ The given parameter occurs on more than a single line in the file. However, it m
 MI_MR_5
 -------
 An extra core file was requested to be appended to the given core file. However, some error occurred while trying to do this. This is an issue that most likely needs to be fixed by the developer of this map.
+
+MI_MR_6
+-------
+An extra core file was requested to be appended to the given core file. However, no file of the requested name could be found. If the developer did not provide additional instructions on extra files to add, this is an issue that most likely needs to be fixed by the developer of this map.
 
 
 MI_MC

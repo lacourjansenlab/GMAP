@@ -35,6 +35,8 @@ class RefPars:
             and handle errors.
     fname : pathlib.Path
         The absolute path to the file that contains all desired parameters
+    is_main : bool, default=True
+        Whether this refpars object is the main one.
 
     See Also
     --------
@@ -106,13 +108,24 @@ class RefPars:
 
     """
 
-    def __init__(self, Printer, fname, is_main=False):
+    def __init__(self, Printer, fname, is_main=True):
+        self.is_main = is_main
         self.fname = fname.resolve()
         self.add_groups()
         self.nondefcount = 0
 
         self.parse_refparfile(Printer, self.parse_line_type_protected)
         self.parse_refparfile(Printer, self.parse_line_choice_protected)
+
+        # path-type parameters cannot also request a choice.
+        for parname in self.allfilepars:
+            if parname in self.options:
+                Printer.warning(
+                    "\nDue to path conflicts, reference files may not "
+                    "contain options for path-type parameters. "
+                    f"The affected file is {self.fname}",
+                    "SU_FP_9", True
+                )
 
         # for fixing intertwined / more convoluted parameters (main file only)
         if is_main:
@@ -715,7 +728,7 @@ class RawPars:
         # - extract num of expected arguments
         # - extract actual arguments
 
-        temp_instance = cls(Printer, Path("command line"), is_default, {}, {})
+        temp_instance = cls(Printer, Path("command line"), False, {}, {})
         pardict = {}
 
         while len(cmdargs) > 0:
@@ -962,6 +975,10 @@ class RawPars:
 
             # parameter should belong to core, but isn't recognized
             else:
+                if not RefPars.is_main:
+                    # if for a map, re-find map name!
+                    mapname = RefPars.fname.parent.name
+                    parname = mapname + "." + parname
                 Printer.warning(
                     f"\nUnknown parameter {parname} found in the file "
                     f"{self.fname}. "
@@ -998,10 +1015,14 @@ class RawPars:
             as the parameter `choice`, but converted to the correct datatype.
         """
 
+        if RefPars.is_main:
+            printname = parname
+        else:
+            printname = RefPars.fname.parent.name + "." + parname
         if len(choice) == 0:
             if self.is_default:
                 Printer.warning(
-                    f"\nNo choice detected for the parameter {parname} "
+                    f"\nNo choice detected for the parameter {printname} "
                     f"specified in the file {self.fname}. "
                     "All parameters must be specified for the file to be "
                     "used.",
@@ -1012,7 +1033,7 @@ class RawPars:
                 choice.append("true")
             else:
                 Printer.warning(
-                    f"\nNo choice detected for the parameter {parname} "
+                    f"\nNo choice detected for the parameter {printname} "
                     f"specified in the file {self.fname}. "
                     "Either remove the parameter line, or make a choice.",
                     "SU_WP_8", True
@@ -1021,7 +1042,7 @@ class RawPars:
         # if we expect a single choice, but multiple were given
         elif len(choice) > 1 and parname not in RefPars.maybe_list:
             Printer.warning(
-                f"\nToo many choices given for the parameter {parname} "
+                f"\nToo many choices given for the parameter {printname} "
                 f"specified in the file {self.fname}. "
                 "Please only specify one.",
                 "SU_WP_9", True
@@ -1029,12 +1050,12 @@ class RawPars:
 
         # now, correct amount of arguments.
         errortext1 = (
-            f"\nInvalid choice given for the parameter {parname} "
+            f"\nInvalid choice given for the parameter {printname} "
             f"specified in the file {self.fname}. "
             "Please refer to the manual for the allowed options."
         )
         errortext2 = (
-            f"\nChoice given for the parameter {parname} specified in "
+            f"\nChoice given for the parameter {printname} specified in "
             "the file "
             f"{self.fname} is of the wrong type. "
             "Please refer to the manual for the expected type."
@@ -1193,6 +1214,12 @@ class RawPars:
 
         for parname in RefPars.choices.keys():
             if parname not in self.choices:
+                if self.is_default and parname in ("influencers"):
+                    continue
+                if not RefPars.is_main:
+                    # if for a map, re-find map name!
+                    mapname = RefPars.fname.parent.name
+                    parname = mapname + "." + parname
                 Printer.warning(
                     f"\nNo entry found for the parameter {parname} in the "
                     f"default parameter file {self.fname}. "
@@ -1219,14 +1246,14 @@ class RawPars:
             "influencers_select_atoms"
         ) for parameter in self.choices])
 
-        if n_present > 1:
+        if n_present > 1 and not self.is_default:
             Printer.warning(
                 "Encountered an issue with the following parameter source: "
                 f" {self.fname}. The source should contain only one of the "
                 "parameters 'influencers_whitelist', 'influencers_blacklist', "
                 "'influencers_file' and influencers_select_atoms, but "
                 "contains more than one.",
-                "SU_NP_16", True
+                "SU_WP_16", True
             )
 
         if "influencers_whitelist" in self.choices:
@@ -2111,7 +2138,10 @@ def parse_influencerfile_line(Printer, line, groupdict, fname):
     specialchars = "-&|^()"
     allowed_chars = " :" + namechars + specialchars
 
+    dpr(line)
+    dpr(allowed_chars)
     problem_chars = [char for char in line if char not in allowed_chars]
+    dpr(problem_chars)
 
     if problem_chars:
         Printer.warning(
@@ -2162,7 +2192,6 @@ def parse_influencerfile_line(Printer, line, groupdict, fname):
             "of parameters. See the error for more information.",
             "SU_NP_5", True, exception=ex
         )
-        return None
 
     # return GM_get_dipole
     try:

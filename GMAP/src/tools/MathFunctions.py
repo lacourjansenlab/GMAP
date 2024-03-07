@@ -42,39 +42,39 @@ def PBC_triclinic(vect, boxvects, boxvects_inv):
     return (unit_vec - np.floor(unit_vec + 0.5)) @ boxvects
 
 
-# currently unused - missing docstring
-def PBC_diff_triclinic(vect1, vect2, boxvects, boxvects_inv):
-    diff = vect1 - vect2
-    unit_diff = diff @ boxvects_inv
-    unit_diff_fract = unit_diff - np.floor(unit_diff + 0.5)
-    # unit_diff_fract = unit_diff - np.floor(unit_diff)
-    # unit_diff_fract[unit_diff_fract >= 0.5] -= 1
-    shortdiff = unit_diff_fract @ boxvects
-    return shortdiff
+# # currently unused - missing docstring
+# def PBC_diff_triclinic(vect1, vect2, boxvects, boxvects_inv):
+#     diff = vect1 - vect2
+#     unit_diff = diff @ boxvects_inv
+#     unit_diff_fract = unit_diff - np.floor(unit_diff + 0.5)
+#     # unit_diff_fract = unit_diff - np.floor(unit_diff)
+#     # unit_diff_fract[unit_diff_fract >= 0.5] -= 1
+#     shortdiff = unit_diff_fract @ boxvects
+#     return shortdiff
 
 
-# currently unused - missing docstring
-@njit
-def PBC_diff_orthorhombic(vect1, vect2, halfbox, boxdims):
-    """
-    Calculates the distance vector between vect1 and vect2, taking into account
-    the periodic nature of the system. diff = vect1 - vect2 (diff = the vector
-    pointing from vect2 to vect1).
-    """
-    diff = vect1 - vect2
-    PBC_orthorhombic(diff, halfbox, boxdims)
-    return diff
+# # currently unused - missing docstring
+# @njit
+# def PBC_diff_orthorhombic(vect1, vect2, halfbox, boxdims):
+#     """
+#     Calculates the distance vector between vect1 and vect2, taking into
+#     account the periodic nature of the system. diff = vect1 - vect2
+#     (diff = the vector pointing from vect2 to vect1).
+#     """
+#     diff = vect1 - vect2
+#     PBC_orthorhombic(diff, halfbox, boxdims)
+#     return diff
 
 
-# from AIM, currently unused - missing docstring
-@njit
-def PBC_orthorhombic(vect, halfbox, boxdims):
-    for i in range(3):
-        if vect[i] > halfbox[i]:
-            vect[i] -= boxdims[i]
-        elif vect[i] < -halfbox[i]:
-            vect[i] += boxdims[i]
-    return vect
+# # from AIM, currently unused - missing docstring
+# @njit
+# def PBC_orthorhombic(vect, halfbox, boxdims):
+#     for i in range(3):
+#         if vect[i] > halfbox[i]:
+#             vect[i] -= boxdims[i]
+#         elif vect[i] < -halfbox[i]:
+#             vect[i] += boxdims[i]
+#     return vect
 
 
 @njit

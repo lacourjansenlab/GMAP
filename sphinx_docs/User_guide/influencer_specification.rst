@@ -38,6 +38,7 @@ The intersection only contains the items that are present in both:
 The difference contains all items of the first, that don't occur in the second:
 
 ``B = :x - :y``
+
 ``C = :y - :x``
 
 The symmetric difference contains all items that are present in either one, but not both:
@@ -53,35 +54,34 @@ The program has two groups hardcoded - :All contains all residue names found in 
 Specifying influencers using influencers_file
 *********************************************
 
-The influencers_file allows the user to define different groups. Consider the following example:
+The influencers_file allows the user to define different groups. Consider the following example::
 
+    Water             SOL | WAT
+    K                 K | K+
+    Na                NA | NA+ | Na+
+    Cl                CL | CL- | CLA
+    Ions              :K | :Na | :Cl
+    Solvent           :Water | :Ions
 
-``Water             SOL | WAT
-K                 K | K+
-Na                NA | NA+ | Na+
-Cl                CL | CL- | CLA
-Ions              :K | :Na | :Cl
-Solvent           :Water | :Ions``
+Here, a variety of different groups has been defined in a concise, structured way. However, it is not yet clear to the program what influencers the user wants. It is assumed that the user wants to use the selection saved as the group 'choice'. A simple change to the above fixes this::
 
-Here, a variety of different groups has been defined in a concise, structured way. However, it is not yet clear to the program what influencers the user wants. It is assumed that the user wants to use the selection saved as the group 'choice'. A simple change to the above fixes this:
+    Water             SOL | WAT
+    K                 K | K+
+    Na                NA | NA+ | Na+
+    Cl                CL | CL- | CLA
+    Ions              :K | :Na | :Cl
+    Solvent           :Water | :Ions
+    choice            :Solvent
 
-``Water             SOL | WAT
-K                 K | K+
-Na                NA | NA+ | Na+
-Cl                CL | CL- | CLA
-Ions              :K | :Na | :Cl
-Solvent           :Water | :Ions
-choice            :Solvent``
+Now, we've indicated that we only want to consider the influence of the solvent, and explained what the solvent actually is. If, however, we would like to blacklist the solvent, it would look like this::
 
-Now, we've indicated that we only want to consider the influence of the solvent, and explained what the solvent actually is. If, however, we would like to blacklist the solvent, it would look like this:
-
-``Water             SOL | WAT
-K                 K | K+
-Na                NA | NA+ | Na+
-Cl                CL | CL- | CLA
-Ions              :K | :Na | :Cl
-Solvent           :Water | :Ions
-choice            :All - :Solvent``
+    Water             SOL | WAT
+    K                 K | K+
+    Na                NA | NA+ | Na+
+    Cl                CL | CL- | CLA
+    Ions              :K | :Na | :Cl
+    Solvent           :Water | :Ions
+    choice            :All - :Solvent
 
 The group ':All' does not have to be defined, as it is already defined within the program itself. Mappings also have the option to create groups to aid with selections in systems they were specifically designed for. For example, the Amide maps are meant for use with proteins, so they contain the definitions for protein groups.
 
@@ -115,7 +115,7 @@ Please do note, however, that characters like ``|`` or ``^`` (can) have a specia
 More complex selections than residue names
 ******************************************
 
-In some cases, it might not be enough to 'just' define which types of residues should(n't) be considered. You might want to exclude some water molecules, but not others. For these cases, you can use the parameter ``influencers_select_atoms``. This parameter takes the given command, and uses it for MDAnalysis' ``select_atoms()`` function. This function should allow to make literally any selection under the sun. The full documentation of this function can be found `on the MDAnalysis documentation pages<https://docs.mdanalysis.org/stable/documentation_pages/selections.html>`__, but here are a few more simple examples to help you get started.
+In some cases, it might not be enough to 'just' define which types of residues should(n't) be considered. You might want to exclude some water molecules, but not others. For these cases, you can use the parameter ``influencers_select_atoms``. This parameter takes the given command, and uses it for MDAnalysis' ``select_atoms()`` function. This function should allow to make literally any selection under the sun. The full documentation of this function can be found `on the MDAnalysis documentation pages <https://docs.mdanalysis.org/stable/documentation_pages/selections.html>`__, but here are a few more simple examples to help you get started.
 
 
 Selecting specific residues
@@ -154,7 +154,7 @@ The above selects all atoms that are oxygen, but not those that are part of any 
 Similar to the example above, but now we select all atoms, except those that are part of residues named 'SOL', while also being oxygen. In other words, we blacklist only the oxygen atoms of the solvent.
 
 
-``influencers_select_atoms    protein and (name O or name C or name CA or name N or name H or name HA)
+``influencers_select_atoms    protein and (name O or name C or name CA or name N or name H or name HA)``
 
 This selects only the atoms that are part of the backbone of a protein (those are commonly named C, O, CA, HA, N and H). It doesn't select the terminal O and/or H atoms. For the full backbone, MDAnalysis has another special keyword - use 'backbone'. (MDAnalysis is designed with proteins in mind).
 

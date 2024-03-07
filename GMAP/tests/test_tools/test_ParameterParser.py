@@ -4,6 +4,9 @@ src/tools/ParameterParser.py.
 
 Missing tests:
     SU_FP_7 (currently unknown how to access this)
+    SU_FP_8
+    SU_WP_16
+    SU_NP_4-6
 """
 
 # standard library imports
@@ -26,7 +29,8 @@ class TestRefPars:
         Printer = GM_PT.Printer(Files)
         RefPars = GM_PP.RefPars(
             Printer, Path(
-                "tests/test_tools/Data/reference_parameters_1.ref")
+                "tests/test_tools/Data/reference_parameters_1.ref"),
+            True
         )
 
         assert RefPars.fname.name == "reference_parameters_1.ref"
@@ -46,33 +50,46 @@ class TestRefPars:
             "float_test_choice": [83.7, 66.6],
             "float_test_choice_list": [99.9, 71.5, 43.0, 88.4],
             "float_test_choice_list2": [44.5, 33.0, 12.8, 42.7],
-            "path_test_choice": [
-                Path("../test_ParameterParser.py"),
-                Path("../test_MathFunctions.py")
-            ],
-            "path_test_rel12_choice": [
-                Path("test_ParameterParser.py"),
-                Path("test_MathFunctions.py")
-            ],
-            "path_test_rel23_new_choice": [
-                Path("test_outfile_2_3_1.txt"),
-                Path("test_outfile_2_3_2.txt")
-            ],
-            "path_test_rel24_new_choice_list": [
-                Path("test_outfile_2_4_1.txt"),
-                Path("test_outfile_2_4_2.txt"),
-                Path("test_outfile_2_4_3.txt"),
-                Path("test_outfile_2_4_4.txt")
-            ]
-
+            # "path_test_choice": [
+            #     Path("../test_ParameterParser.py"),
+            #     Path("../test_MathFunctions.py")
+            # ],
+            # "path_test_rel12_choice": [
+            #     Path("test_ParameterParser.py"),
+            #     Path("test_MathFunctions.py")
+            # ],
+            # "path_test_rel23_new_choice": [
+            #     Path("test_outfile_2_3_1.txt"),
+            #     Path("test_outfile_2_3_2.txt")
+            # ],
+            # "path_test_rel24_new_choice_list": [
+            #     Path("test_outfile_2_4_1.txt"),
+            #     Path("test_outfile_2_4_2.txt"),
+            #     Path("test_outfile_2_4_3.txt"),
+            #     Path("test_outfile_2_4_4.txt")
+            # ]
         }
         assert RefPars.choices == {
+            "topology_file": [Path("../../../sourcefiles/pdb_1AKI.tpr")],
+            "trajectory_file": [Path(
+                "../../../sourcefiles/pdb_1AKI_50frame.xtc"
+            )],
             "source_directory": [Path("../../../sourcefiles")],
             "log_filename": [Path("log.log")],
             "map_directory": [Path("../../../maps")],
+            "maps_to_use": ["AmideSC"],
+            "influencers_whitelist": [":All"],
+            "influencers_blacklist": [":None"],
+            "influencers_file": [Path(
+                "../../../sourcefiles/infl_file_base.txt"
+            )],
+            "influencers_select_atoms": ["segid", "*"],
+            "influencers": [":All"],
             "verbose": [2],
             "verbose_logfile": [2],
             "prevent_overwrite": [False],
+            "neutral_charge_threshold": [0.0001],
+            "guess_bonds": [False],
             "str_test_free": ["freechoice"],
             "str_test_choice": ["pick_this"],
             "str_test_free_list": ["freechoice1", "freechoice2"],
@@ -93,27 +110,31 @@ class TestRefPars:
             "float_test_choice_list2": [33.0, 42.7],
             "path_test_free": [Path("../test_MathFunctions.py")],
             "path_test_free_new": [Path("test_outfile.txt")],
-            "path_test_choice": [Path("../test_ParameterParser.py")],
+            # "path_test_choice": [Path("../test_ParameterParser.py")],
             "path_test_free_new_list": [
                 Path("test_outfile_0_1.txt"), Path("test_outfile_0_2.txt")
             ],
             "path_test_dir1": [Path("../../test_tools")],
             "path_test_dir2": [Path("../Data")],
             "path_test_rel11": [Path("test_MathFunctions.py")],
-            "path_test_rel12_choice": [Path("test_ParameterParser.py")],
+            # "path_test_rel12_choice": [Path("test_ParameterParser.py")],
             "path_test_rel21_new": [Path("test_outfile_2_1.txt")],
             "path_test_rel22_new_list": [
                 Path("test_outfile_2_2_1.txt"), Path("test_outfile_2_2_2.txt")
             ],
-            "path_test_rel23_new_choice": [Path("test_outfile_2_3_2.txt")],
-            "path_test_rel24_new_choice_list": [
-                Path("test_outfile_2_4_3.txt"), Path("test_outfile_2_4_4.txt")
-            ]
+            # "path_test_rel23_new_choice": [Path("test_outfile_2_3_2.txt")],
+            # "path_test_rel24_new_choice_list": [
+            #     Path("test_outfile_2_4_3.txt"),
+            #     Path("test_outfile_2_4_4.txt")
+            # ]
         }
         assert RefPars.shorthands == {
+            "top": "topology_file",
+            "trj": "trajectory_file",
             "sd": "source_directory",
             "dpf": "default_parameter_filename",
             "md": "map_directory",
+            "um": "maps_to_use",
             "ts1": "str_test_free",
             "ts2": "str_test_choice",
             "ts3": "str_test_free_list",
@@ -135,23 +156,28 @@ class TestRefPars:
             "tf5": "float_test_choice_list2",
             "tp1": "path_test_free",
             "tp2": "path_test_free_new",
-            "tp3": "path_test_choice",
+            # "tp3": "path_test_choice",
             "tp4": "path_test_dir1",
             "tp5": "path_test_dir2",
             "tp6": "path_test_rel11",
-            "tp7": "path_test_rel12_choice",
+            # "tp7": "path_test_rel12_choice",
             "tp8": "path_test_rel21_new",
             "tp9": "path_test_rel22_new_list",
-            "tp10": "path_test_rel23_new_choice",
-            "tp11": "path_test_rel24_new_choice_list"
+            # "tp10": "path_test_rel23_new_choice",
+            # "tp11": "path_test_rel24_new_choice_list"
         }
         assert RefPars.organized_filepars == {
             "source_directory": ["default_parameter_filename"],
             "log_directory": ["log_filename"],
-            "path_test_dir1": ["path_test_rel11", "path_test_rel12_choice"],
+            # "path_test_dir1": ["path_test_rel11", "path_test_rel12_choice"],
+            "path_test_dir1": ["path_test_rel11"],
+            # "path_test_dir2": [
+            #     "path_test_rel21_new", "path_test_rel22_new_list",
+            #     "path_test_rel23_new_choice",
+            #     "path_test_rel24_new_choice_list"
+            # ]
             "path_test_dir2": [
-                "path_test_rel21_new", "path_test_rel22_new_list",
-                "path_test_rel23_new_choice", "path_test_rel24_new_choice_list"
+                "path_test_rel21_new", "path_test_rel22_new_list"
             ]
         }
         assert RefPars.organized_filepars_id == {
@@ -161,23 +187,26 @@ class TestRefPars:
             "t2": "path_test_dir2"
         }
         assert RefPars.allfilepars == [
+            "topology_file",
+            "trajectory_file",
             "source_directory",
             "default_parameter_filename",
             "log_directory",
             "log_filename",
             "map_directory",
+            "influencers_file",
             "path_test_free",
             "path_test_free_new",
-            "path_test_choice",
+            # "path_test_choice",
             "path_test_free_new_list",
             "path_test_dir1",
             "path_test_dir2",
             "path_test_rel11",
-            "path_test_rel12_choice",
+            # "path_test_rel12_choice",
             "path_test_rel21_new",
             "path_test_rel22_new_list",
-            "path_test_rel23_new_choice",
-            "path_test_rel24_new_choice_list",
+            # "path_test_rel23_new_choice",
+            # "path_test_rel24_new_choice_list",
             "path_test_nodef"
         ]
         assert RefPars.filepars_create == [
@@ -186,8 +215,8 @@ class TestRefPars:
             "path_test_free_new_list",
             "path_test_rel21_new",
             "path_test_rel22_new_list",
-            "path_test_rel23_new_choice",
-            "path_test_rel24_new_choice_list"
+            # "path_test_rel23_new_choice",
+            # "path_test_rel24_new_choice_list"
         ]
         assert RefPars.intpars == [
             "verbose",
@@ -200,6 +229,7 @@ class TestRefPars:
             "int_test_nodef"
         ]
         assert RefPars.floatpars == [
+            "neutral_charge_threshold",
             "float_test_free",
             "float_test_choice",
             "float_test_free_list",
@@ -208,11 +238,16 @@ class TestRefPars:
         ]
         assert RefPars.boolpars == [
             "prevent_overwrite",
+            "guess_bonds",
             "bool_test1",
             "bool_test2",
             "bool_test3"
         ]
         assert RefPars.strpars == [
+            "maps_to_use",
+            "influencers_whitelist",
+            "influencers_blacklist",
+            "influencers_select_atoms",
             "str_test_free",
             "str_test_choice",
             "str_test_free_list",
@@ -227,6 +262,10 @@ class TestRefPars:
         ]
         assert RefPars.maybe_list == [
             "map_directory",
+            "maps_to_use",
+            "influencers_whitelist",
+            "influencers_blacklist",
+            "influencers_select_atoms",
             "str_test_free_list",
             "str_test_choice_list",
             "str_test_choice_list2",
@@ -238,15 +277,29 @@ class TestRefPars:
             "float_test_choice_list2",
             "path_test_free_new_list",
             "path_test_rel22_new_list",
-            "path_test_rel24_new_choice_list"
+            # "path_test_rel24_new_choice_list"
+            "influencers",
         ]
+
+    def test_variations(self):
+        Files = GM_FH.FileLocations()
+        Printer = GM_PT.Printer(Files)
+        RefPars = GM_PP.RefPars(
+            Printer, Path(
+                "tests/test_tools/Data/reference_parameters_3.ref"),
+            True
+        )
+
+        assert RefPars.choices["influencers"] == [
+            ":All", "-", "(", ":None", ")"]
 
     def test_SU_FP_1(self, capsys):
         Files = GM_FH.FileLocations()
         Printer = GM_PT.Printer(Files)
         RefPars = GM_PP.RefPars(
             Printer, Path(
-                "tests/test_tools/Data/reference_parameters_1.ref")
+                "tests/test_tools/Data/reference_parameters_1.ref"),
+            True
         )
 
         with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
@@ -319,13 +372,29 @@ class TestRefPars:
             capsys
         )
 
+# unclear how to reach SU_FP_7
+
+    def test_SU_FP_8(self, capsys):
+        self.systest(
+            "tests/test_tools/Data/reference_parameters_SU_FP_8.ref",
+            "SU_FP_8",
+            capsys
+        )
+
+    def test_SU_FP_9(self, capsys):
+        self.systest(
+            "tests/test_tools/Data/reference_parameters_SU_FP_9.ref",
+            "SU_FP_9",
+            capsys, False
+        )
+
     @staticmethod
-    def systest(fname, errcode, capsys):
+    def systest(fname, errcode, capsys, is_main=True):
         Files = GM_FH.FileLocations()
         Printer = GM_PT.Printer(Files)
 
         with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            _ = GM_PP.RefPars(Printer, Path(fname))
+            _ = GM_PP.RefPars(Printer, Path(fname), is_main)
 
         assert pytest_wrapped_sysexit.type is SystemExit
         captured = capsys.readouterr()
@@ -338,23 +407,35 @@ class TestRawPars:
         Printer = GM_PT.Printer(Files)
         RefPars = GM_PP.RefPars(
             Printer, Path(
-                "tests/test_tools/Data/reference_parameters_1.ref")
+                "tests/test_tools/Data/reference_parameters_1.ref"),
+            True
         )
         DefPars = GM_PP.RawPars.from_file(
             Printer,
             Path("tests/test_tools/Data/default_parameters_1.txt"),
             RefPars, True
         )
+        sd = Path("../../../sourcefiles")
 
         assert DefPars.fname.name == "default_parameters_1.txt"
         assert DefPars.is_default is True
         assert DefPars.choices == {
-            "source_directory": [Path("../../../sourcefiles")],
+            "topology_file": [sd / "pdb_1AKI.tpr"],
+            "trajectory_file": [sd / "pdb_1AKI_50frame.xtc"],
+            "source_directory": [sd],
             "log_filename": [Path("log.log")],
             "map_directory": [Path("../../../maps")],
+            "maps_to_use": ["AmideSC"],
+            "influencers_whitelist": [":All"],
+            "influencers_blacklist": [":None"],
+            "influencers_file": [sd/"infl_file_base.txt"],
+            "influencers_select_atoms": ["segid", "*"],
+            "influencers": [":All"],
             "verbose": [3],
             "verbose_logfile": [1],
             "prevent_overwrite": [False],
+            "neutral_charge_threshold": [0.0001],
+            "guess_bonds": [False],
             "str_test_free": ["freechoice"],
             "str_test_choice": ["not_this"],
             "str_test_free_list": ["freechoice1", "freechoice2"],
@@ -375,22 +456,23 @@ class TestRawPars:
             "float_test_choice_list2": [44.5, 33.0],
             "path_test_free": [Path("../test_MathFunctions.py")],
             "path_test_free_new": [Path("tost_outfile.txt")],
-            "path_test_choice": [Path("../test_MathFunctions.py")],
+            # "path_test_choice": [Path("../test_MathFunctions.py")],
             "path_test_free_new_list": [
                 Path("test_outfile_0_1.txt"), Path("test_outfile_0_2.txt")
             ],
             "path_test_dir1": [Path("../../test_tools")],
-            "path_test_dir2": [Path("../testout")],
+            "path_test_dir2": [Path("../Data/testout")],
             "path_test_rel11": [Path("test_ParameterParser.py")],
-            "path_test_rel12_choice": [Path("test_MathFunctions.py")],
+            # "path_test_rel12_choice": [Path("test_MathFunctions.py")],
             "path_test_rel21_new": [Path("tost_outfile_2_1.txt")],
             "path_test_rel22_new_list": [
                 Path("test_outfile_2_2_1.txt"), Path("tost_outfile_2_2_2.txt")
             ],
-            "path_test_rel23_new_choice": [Path("test_outfile_2_3_1.txt")],
-            "path_test_rel24_new_choice_list": [
-                Path("test_outfile_2_4_1.txt"), Path("test_outfile_2_4_4.txt")
-            ]
+            # "path_test_rel23_new_choice": [Path("test_outfile_2_3_1.txt")],
+            # "path_test_rel24_new_choice_list": [
+            #     Path("test_outfile_2_4_1.txt"),
+            #     Path("test_outfile_2_4_4.txt")
+            # ]
         }
         # Still missing DefPars.not_found
 
@@ -452,6 +534,31 @@ class TestRawPars:
         }
         # Still missing InPars.not_found
         # Also, test map-shorthand
+
+    def test_variations(self):
+        def infltest(cmdline, inflchoice):
+            _, Printer, RefPars, _, _, maprefdict = self.setup_test_SU_WP_cmd(
+                cmdline)
+
+            CmdPars = GM_PP.RawPars.from_cmdline(
+                Printer, cmdline, RefPars, maprefdict, False
+            )
+            assert CmdPars.choices["influencers"] == inflchoice
+
+        infltest(
+            ["--influencers_blacklist", ":None\\;"],
+            [":All", "-", "(", ":None", ")"]
+        )
+
+        infltest(
+            ["--influencers_file", "sourcefiles/infl_file_base.txt"],
+            [Path("sourcefiles/infl_file_base.txt")]
+        )
+
+        infltest(
+            ["--influencers_select_atoms", "segid", "A\\;"],
+            "segid A"
+        )
 
     def test_SU_WP_1(self, capsys):
         cmdline = ["int_test_free", "42"]
@@ -555,16 +662,23 @@ class TestRawPars:
         captured = capsys.readouterr()
         assert captured.out.endswith("SU_WP_15\n")
 
+    def test_SU_WP_16(self, capsys):
+        pardict = {
+            "influencers_whitelist": [":All"],
+            "influencers_select_atoms": ["segid", "*"]
+        }
+        self.systest_pardict(pardict, "SU_WP_16", capsys, isdef=False)
+
     @staticmethod
     def setup_test_SU_WP_cmd(cmdline):
         Files, Printer, RefPars = TestRawPars.setup_test_SU_WP_base()
 
-        InPars = GM_PP.RawPars.create_empty()
+        InPars = GM_PP.RawPars.create_empty(Printer)
 
         mapdirs = GM_PP.find_mapdir(Files, Printer, cmdline, InPars, RefPars)
         mapdict = GM_MR.scan_mapdirs(mapdirs)
-        for _map in mapdict.values():
-            _map.find_refpars(Printer)
+        for map_ in mapdict.values():
+            map_.find_refpars(Printer)
 
         maprefdict = {name: _map.RefPars for name, _map in mapdict.items()}
 
@@ -576,7 +690,8 @@ class TestRawPars:
         Printer = GM_PT.Printer(Files)
         RefPars = GM_PP.RefPars(
             Printer, Path(
-                "tests/test_tools/Data/reference_parameters_1.ref")
+                "tests/test_tools/Data/reference_parameters_1.ref"),
+            True
         )
         return Files, Printer, RefPars
 
@@ -614,7 +729,7 @@ class TestRunPars:
             "verbose": ["4"],
             "nobool_test1": [],
             "int_test_free_list": ["88", "44"],
-            "path_test_dir2": ["testout2"],
+            "path_test_dir2": ["Data/testout2"],
             "int_test_nodef": ["33"],
         }
 
@@ -681,8 +796,8 @@ class TestRunPars:
             curpath / "../test_MathFunctions.py").resolve()
         assert RunPars.path_test_free_new == Path(
             curpath / "../Data/tost_outfile.txt").resolve()
-        assert RunPars.path_test_choice == Path(
-            curpath / "../test_Mathfunctions.py").resolve()
+        # assert RunPars.path_test_choice == Path(
+        #     curpath / "../test_Mathfunctions.py").resolve()
         assert RunPars.path_test_free_new_list == [
             Path(curpath / "../Data/test_outfile_0_1.txt").resolve(),
             Path(curpath / "../Data/test_outfile_0_2.txt").resolve()
@@ -690,23 +805,27 @@ class TestRunPars:
         assert RunPars.path_test_dir1 == Path(
             curpath / "..").resolve()
         assert RunPars.path_test_dir2 == Path(
-            curpath / "../testout2").resolve()
+            curpath / "../Data/testout2").resolve()
         assert RunPars.path_test_rel11 == Path(
             curpath / "../test_ParameterParser.py").resolve()
-        assert RunPars.path_test_rel12_choice == Path(
-            curpath / "../test_MathFunctions.py").resolve()
+        # assert RunPars.path_test_rel12_choice == Path(
+        #     curpath / "../test_MathFunctions.py").resolve()
         assert RunPars.path_test_rel21_new == Path(
-            curpath / "../testout2/tost_outfile_2_1.txt").resolve()
+            curpath / "../Data/testout2/tost_outfile_2_1.txt").resolve()
         assert RunPars.path_test_rel22_new_list == [
             Path(curpath / "../../../tast_outfile_2_2_4.txt").resolve(),
             Path(curpath / "../../../tast_outfile_2_2_0.txt").resolve()
         ]
-        assert RunPars.path_test_rel23_new_choice == Path(
-            curpath / "../testout2/test_outfile_2_3_1.txt").resolve()
-        assert RunPars.path_test_rel24_new_choice_list == [
-            Path(curpath / "../testout2/test_outfile_2_4_1.txt").resolve(),
-            Path(curpath / "../testout2/test_outfile_2_4_4.txt").resolve()
-        ]
+        # assert RunPars.path_test_rel23_new_choice == Path(
+        #     curpath / "../Data/testout2/test_outfile_2_3_1.txt").resolve()
+        # assert RunPars.path_test_rel24_new_choice_list == [
+        #     Path(
+        #         curpath / "../Data/testout2/test_outfile_2_4_1.txt"
+        #     ).resolve(),
+        #     Path(
+        #         curpath / "../Data/testout2/test_outfile_2_4_4.txt"
+        #     ).resolve()
+        # ]
 
     def test_filetree(self):
         # Assumes that RefPars and RawPars work correctly!!!
@@ -716,7 +835,8 @@ class TestRunPars:
         Printer = GM_PT.Printer(Files)
         RefPars = GM_PP.RefPars(
             Printer, Path(
-                "tests/test_tools/Data/reference_parameters_2.ref")
+                "tests/test_tools/Data/reference_parameters_2.ref"),
+            True
         )
         DefPars = GM_PP.RawPars.from_file(
             Printer,
@@ -736,7 +856,8 @@ class TestRunPars:
                             pardicts[-1][f"{opt1}_{opt2}_dir"] = [
                                 "../test_inp"]
                             cmdlines[-1].append(f"--{opt1}_{opt2}_dir")
-                            cmdlines[-1].append("tests/test_tools/test_cmd")
+                            cmdlines[-1].append(
+                                "tests/test_tools/Data/test_cmd")
                         if dofile:
                             pardicts[-1][f"{opt1}_{opt2}_file"] = [
                                 "frominp.txt"]
@@ -746,7 +867,8 @@ class TestRunPars:
         curpath = Path(__file__).resolve()
         allInPars = [
             GM_PP.RawPars.from_dict(
-                Printer, curpath / "../testout/imaginary_inpfile", pardict,
+                Printer,
+                curpath / "../Data/testout/imaginary_inpfile", pardict,
                 RefPars, False
             ) for pardict in pardicts
         ]
@@ -791,53 +913,67 @@ class TestRunPars:
         # both in cmdline, only dir in input
         # both in cmdline, both in input
         onlyfile = Path(curpath / "../../../fromcmd.txt").resolve()
-        both = Path(curpath / "../test_cmd/fromcmd.txt").resolve()
+        both = Path(curpath / "../Data/test_cmd/fromcmd.txt").resolve()
         expected_ddf = [
-            Path(curpath / "../test_def/fromdef.txt").resolve(),
-            Path(curpath / "../testout/frominp.txt").resolve(),
-            Path(curpath / "../test_inp/fromdef.txt").resolve(),
-            Path(curpath / "../test_inp/frominp.txt").resolve(),
+            Path(curpath / "../Data/test_def/fromdef.txt").resolve(),
+            Path(curpath / "../Data/testout/frominp.txt").resolve(),
+            Path(curpath / "../Data/test_inp/fromdef.txt").resolve(),
+            Path(curpath / "../Data/test_inp/frominp.txt").resolve(),
             onlyfile, onlyfile, onlyfile, onlyfile,
-            Path(curpath / "../test_cmd/fromdef.txt").resolve(),
-            Path(curpath / "../test_cmd/frominp.txt").resolve(),
-            Path(curpath / "../test_cmd/fromdef.txt").resolve(),
-            Path(curpath / "../test_cmd/frominp.txt").resolve(),
+            Path(curpath / "../Data/test_cmd/fromdef.txt").resolve(),
+            Path(curpath / "../Data/test_cmd/frominp.txt").resolve(),
+            Path(curpath / "../Data/test_cmd/fromdef.txt").resolve(),
+            Path(curpath / "../Data/test_cmd/frominp.txt").resolve(),
             both, both, both, both
         ]
         expected_ndf = [
             Path(curpath / "../Data/fromdef.txt").resolve(),
-            Path(curpath / "../testout/frominp.txt").resolve(),
-            Path(curpath / "../test_inp/fromdef.txt").resolve(),
-            Path(curpath / "../test_inp/frominp.txt").resolve(),
+            Path(curpath / "../Data/testout/frominp.txt").resolve(),
+            Path(curpath / "../Data/test_inp/fromdef.txt").resolve(),
+            Path(curpath / "../Data/test_inp/frominp.txt").resolve(),
             onlyfile, onlyfile, onlyfile, onlyfile,
-            Path(curpath / "../test_cmd/fromdef.txt").resolve(),
-            Path(curpath / "../test_cmd/frominp.txt").resolve(),
-            Path(curpath / "../test_cmd/fromdef.txt").resolve(),
-            Path(curpath / "../test_cmd/frominp.txt").resolve(),
+            Path(curpath / "../Data/test_cmd/fromdef.txt").resolve(),
+            Path(curpath / "../Data/test_cmd/frominp.txt").resolve(),
+            Path(curpath / "../Data/test_cmd/fromdef.txt").resolve(),
+            Path(curpath / "../Data/test_cmd/frominp.txt").resolve(),
             both, both, both, both
         ]
         expected_dnf = [
-            Path(curpath / "../test_def/name_not_defined_0.txt").resolve(),
-            Path(curpath / "../testout/frominp.txt").resolve(),
-            Path(curpath / "../test_inp/name_not_defined_4.txt").resolve(),
-            Path(curpath / "../test_inp/frominp.txt").resolve(),
+            Path(
+                curpath / "../Data/test_def/name_not_defined_0.txt"
+            ).resolve(),
+            Path(curpath / "../Data/testout/frominp.txt").resolve(),
+            Path(
+                curpath / "../Data/test_inp/name_not_defined_4.txt"
+            ).resolve(),
+            Path(curpath / "../Data/test_inp/frominp.txt").resolve(),
             onlyfile, onlyfile, onlyfile, onlyfile,
-            Path(curpath / "../test_cmd/name_not_defined_16.txt").resolve(),
-            Path(curpath / "../test_cmd/frominp.txt").resolve(),
-            Path(curpath / "../test_cmd/name_not_defined_20.txt").resolve(),
-            Path(curpath / "../test_cmd/frominp.txt").resolve(),
+            Path(
+                curpath / "../Data/test_cmd/name_not_defined_16.txt"
+            ).resolve(),
+            Path(curpath / "../Data/test_cmd/frominp.txt").resolve(),
+            Path(
+                curpath / "../Data/test_cmd/name_not_defined_20.txt"
+            ).resolve(),
+            Path(curpath / "../Data/test_cmd/frominp.txt").resolve(),
             both, both, both, both
         ]
         expected_nnf = [
             Path(curpath / "../../../name_not_defined_1.txt").resolve(),
-            Path(curpath / "../testout/frominp.txt").resolve(),
-            Path(curpath / "../test_inp/name_not_defined_5.txt").resolve(),
-            Path(curpath / "../test_inp/frominp.txt").resolve(),
+            Path(curpath / "../Data/testout/frominp.txt").resolve(),
+            Path(
+                curpath / "../Data/test_inp/name_not_defined_5.txt"
+            ).resolve(),
+            Path(curpath / "../Data/test_inp/frominp.txt").resolve(),
             onlyfile, onlyfile, onlyfile, onlyfile,
-            Path(curpath / "../test_cmd/name_not_defined_17.txt").resolve(),
-            Path(curpath / "../test_cmd/frominp.txt").resolve(),
-            Path(curpath / "../test_cmd/name_not_defined_21.txt").resolve(),
-            Path(curpath / "../test_cmd/frominp.txt").resolve(),
+            Path(
+                curpath / "../Data/test_cmd/name_not_defined_17.txt"
+            ).resolve(),
+            Path(curpath / "../Data/test_cmd/frominp.txt").resolve(),
+            Path(
+                curpath / "../Data/test_cmd/name_not_defined_21.txt"
+            ).resolve(),
+            Path(curpath / "../Data/test_cmd/frominp.txt").resolve(),
             both, both, both, both
         ]
 
@@ -890,6 +1026,11 @@ class TestRunPars:
         ]
         self.systest_runpars(cmdline, "SU_NP_3", capsys)
 
+        # cmdline = [
+        #     "--map_directory", "doesntexist\\;"
+        # ]
+        # self.systest_runpars(cmdline, "SU_NP_3", capsys)
+
     @staticmethod
     def setup_for_runpars(pardict, inparspath, cmdline):
         # setup - Create all necessary objects.
@@ -897,7 +1038,8 @@ class TestRunPars:
         Printer = GM_PT.Printer(Files)
         RefPars = GM_PP.RefPars(
             Printer, Path(
-                "tests/test_tools/Data/reference_parameters_1.ref")
+                "tests/test_tools/Data/reference_parameters_1.ref"),
+            True
         )
         DefPars = GM_PP.RawPars.from_file(
             Printer,
@@ -974,24 +1116,24 @@ class TestMapPars:
                 "float_test_choice": [83.7, 66.6],
                 "float_test_choice_list": [99.9, 71.5, 43.0, 88.4],
                 "float_test_choice_list2": [44.5, 33.0, 12.8, 42.7],
-                "path_test_choice": [
-                    Path("../../../../test_ParameterParser.py"),
-                    Path("../../../../test_MathFunctions.py")
-                ],
-                "path_test_rel12_choice": [
-                    Path("test_ParameterParser.py"),
-                    Path("test_MathFunctions.py")
-                ],
-                "path_test_rel23_new_choice": [
-                    Path("test_outfile_2_3_1.txt"),
-                    Path("test_outfile_2_3_2.txt")
-                ],
-                "path_test_rel24_new_choice_list": [
-                    Path("test_outfile_2_4_1.txt"),
-                    Path("test_outfile_2_4_2.txt"),
-                    Path("test_outfile_2_4_3.txt"),
-                    Path("test_outfile_2_4_4.txt")
-                ]
+                # "path_test_choice": [
+                #     Path("../../../../test_ParameterParser.py"),
+                #     Path("../../../../test_MathFunctions.py")
+                # ],
+                # "path_test_rel12_choice": [
+                #     Path("test_ParameterParser.py"),
+                #     Path("test_MathFunctions.py")
+                # ],
+                # "path_test_rel23_new_choice": [
+                #     Path("test_outfile_2_3_1.txt"),
+                #     Path("test_outfile_2_3_2.txt")
+                # ],
+                # "path_test_rel24_new_choice_list": [
+                #     Path("test_outfile_2_4_1.txt"),
+                #     Path("test_outfile_2_4_2.txt"),
+                #     Path("test_outfile_2_4_3.txt"),
+                #     Path("test_outfile_2_4_4.txt")
+                # ]
 
             }
             assert map_.RefPars.choices == {
@@ -1015,25 +1157,26 @@ class TestMapPars:
                 "float_test_choice_list2": [33.0, 42.7],
                 "path_test_free": [Path("../../../../test_MathFunctions.py")],
                 "path_test_free_new": [Path("test_outfile.txt")],
-                "path_test_choice": [
-                    Path("../../../../test_ParameterParser.py")],
+                # "path_test_choice": [
+                #     Path("../../../../test_ParameterParser.py")],
                 "path_test_free_new_list": [
                     Path("test_outfile_0_1.txt"), Path("test_outfile_0_2.txt")
                 ],
                 "path_test_dir1": [Path("../../../../../test_tools")],
                 "path_test_dir2": [Path("../../../../Data")],
                 "path_test_rel11": [Path("test_MathFunctions.py")],
-                "path_test_rel12_choice": [Path("test_ParameterParser.py")],
+                # "path_test_rel12_choice": [Path("test_ParameterParser.py")],
                 "path_test_rel21_new": [Path("test_outfile_2_1.txt")],
                 "path_test_rel22_new_list": [
                     Path("test_outfile_2_2_1.txt"),
                     Path("test_outfile_2_2_2.txt")
                 ],
-                "path_test_rel23_new_choice": [Path("test_outfile_2_3_2.txt")],
-                "path_test_rel24_new_choice_list": [
-                    Path("test_outfile_2_4_3.txt"),
-                    Path("test_outfile_2_4_4.txt")
-                ]
+                # "path_test_rel23_new_choice": [
+                #     Path("test_outfile_2_3_2.txt")],
+                # "path_test_rel24_new_choice_list": [
+                #     Path("test_outfile_2_4_3.txt"),
+                #     Path("test_outfile_2_4_4.txt")
+                # ]
             }
             assert map_.RefPars.shorthands == {
                 "ts1": "str_test_free",
@@ -1056,23 +1199,25 @@ class TestMapPars:
                 "tf5": "float_test_choice_list2",
                 "tp1": "path_test_free",
                 "tp2": "path_test_free_new",
-                "tp3": "path_test_choice",
+                # "tp3": "path_test_choice",
                 "tp4": "path_test_dir1",
                 "tp5": "path_test_dir2",
                 "tp6": "path_test_rel11",
-                "tp7": "path_test_rel12_choice",
+                # "tp7": "path_test_rel12_choice",
                 "tp8": "path_test_rel21_new",
                 "tp9": "path_test_rel22_new_list",
-                "tp10": "path_test_rel23_new_choice",
-                "tp11": "path_test_rel24_new_choice_list"
+                # "tp10": "path_test_rel23_new_choice",
+                # "tp11": "path_test_rel24_new_choice_list"
             }
             assert map_.RefPars.organized_filepars == {
                 "path_test_dir1": [
-                    "path_test_rel11", "path_test_rel12_choice"],
+                    "path_test_rel11",
+                    # "path_test_rel12_choice"
+                ],
                 "path_test_dir2": [
                     "path_test_rel21_new", "path_test_rel22_new_list",
-                    "path_test_rel23_new_choice",
-                    "path_test_rel24_new_choice_list"
+                    # "path_test_rel23_new_choice",
+                    # "path_test_rel24_new_choice_list"
                 ]
             }
             assert map_.RefPars.organized_filepars_id == {
@@ -1082,24 +1227,24 @@ class TestMapPars:
             assert map_.RefPars.allfilepars == [
                 "path_test_free",
                 "path_test_free_new",
-                "path_test_choice",
+                # "path_test_choice",
                 "path_test_free_new_list",
                 "path_test_dir1",
                 "path_test_dir2",
                 "path_test_rel11",
-                "path_test_rel12_choice",
+                # "path_test_rel12_choice",
                 "path_test_rel21_new",
                 "path_test_rel22_new_list",
-                "path_test_rel23_new_choice",
-                "path_test_rel24_new_choice_list"
+                # "path_test_rel23_new_choice",
+                # "path_test_rel24_new_choice_list"
             ]
             assert map_.RefPars.filepars_create == [
                 "path_test_free_new",
                 "path_test_free_new_list",
                 "path_test_rel21_new",
                 "path_test_rel22_new_list",
-                "path_test_rel23_new_choice",
-                "path_test_rel24_new_choice_list"
+                # "path_test_rel23_new_choice",
+                # "path_test_rel24_new_choice_list"
             ]
             assert map_.RefPars.intpars == [
                 "int_test_free",
@@ -1140,7 +1285,7 @@ class TestMapPars:
                 "float_test_choice_list2",
                 "path_test_free_new_list",
                 "path_test_rel22_new_list",
-                "path_test_rel24_new_choice_list"
+                # "path_test_rel24_new_choice_list"
             ]
 
     def test_maprawpars(self):
@@ -1172,29 +1317,11 @@ class TestMapPars:
             "bool_test1": [False], "bool_test2": [False]}
 
     def test_maprawpars2(self):
-        # setup - Create all necessary objects.
-        Files = GM_FH.FileLocations()
-        Printer = GM_PT.Printer(Files)
-        RefPars = GM_PP.RefPars(
-            Printer, Path(
-                "tests/test_tools/Data/reference_parameters_2.ref")
-        )
-        DefPars = GM_PP.RawPars.from_file(
-            Printer,
-            Path("tests/test_tools/Data/default_parameters_2_formap.txt"),
-            RefPars, True
-        )
-
         pardict = {
             "map_directory": ["Data/test_mapdir"],
             "testmap1.int_test_free": ["42"],
             "testmap2.float_test_free": ["88.8"]
         }
-
-        curpath = Path(__file__).resolve()
-        InPars = GM_PP.RawPars.from_dict(
-            Printer, curpath, pardict, RefPars, False
-        )
 
         cmdline = [
             "-testmap1.ti2", "65",
@@ -1202,24 +1329,9 @@ class TestMapPars:
             "-testmap2.notb2"
         ]
 
-        mapdirs = GM_PP.find_mapdir(Files, Printer, cmdline, InPars, DefPars)
-        mapdict = GM_MR.scan_mapdirs(mapdirs)
-        for map_ in mapdict.values():
-            map_.find_refpars(Printer)
-
-        CmdPars = GM_PP.RawPars.from_cmdline(
-            Printer, cmdline, RefPars,
-            {name: _map.RefPars for name, _map in mapdict.items()},
-            False
-        )
-
-        for map_ in mapdict.values():
-            map_.find_rawpars(Printer, CmdPars, InPars, DefPars)
-
-        CmdPars.finalize_map_pars(Printer)
-        InPars.finalize_map_pars(Printer)
-        if DefPars.fname != RefPars.fname:
-            DefPars.finalize_map_pars(Printer)
+        _, _, _, _, InPars, CmdPars, mapdict = self.setup_maprawpars(
+            pardict, cmdline, Path(
+                "tests/test_tools/Data/default_parameters_2_formap.txt"))
 
         assert CmdPars.not_found == {}
         assert InPars.not_found == {}
@@ -1232,6 +1344,58 @@ class TestMapPars:
         assert testmap2.InPars.choices == {"float_test_free": [88.8]}
         assert testmap2.CmdPars.choices == {
             "bool_test1": [False], "bool_test2": [False]}
+
+    def test_SU_WP_6(self, capsys):
+        pardict = {"map_directory": ["Data/test_mapdir"]}
+        cmdline = []
+        deffilepath = Path(
+            "tests/test_tools/Data/default_parameters_2_formap_SU_WP_6.txt"
+        )
+        (
+            Files, Printer, RefPars, DefPars, InPars, mapdict
+        ) = TestMapPars.setup_maprefpars(pardict, cmdline, deffilepath)
+
+        for map_ in mapdict.values():
+            map_.find_refpars(Printer)
+
+        CmdPars = GM_PP.RawPars.from_cmdline(
+            Printer, cmdline, RefPars,
+            {name: map_.RefPars for name, map_ in mapdict.items()},
+            False
+        )
+
+        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+            for map_ in mapdict.values():
+                map_.find_rawpars(Printer, CmdPars, InPars, DefPars)
+        assert pytest_wrapped_sysexit.type is SystemExit
+        captured = capsys.readouterr()
+        assert captured.out.endswith("SU_WP_6\n")
+
+    def test_SU_WP_14(self, capsys):
+        pardict = {"map_directory": ["Data/test_mapdir"]}
+        cmdline = []
+        deffilepath = Path(
+            "tests/test_tools/Data/default_parameters_2_formap_SU_WP_14.txt"
+        )
+        (
+            Files, Printer, RefPars, DefPars, InPars, mapdict
+        ) = TestMapPars.setup_maprefpars(pardict, cmdline, deffilepath)
+
+        for map_ in mapdict.values():
+            map_.find_refpars(Printer)
+
+        CmdPars = GM_PP.RawPars.from_cmdline(
+            Printer, cmdline, RefPars,
+            {name: map_.RefPars for name, map_ in mapdict.items()},
+            False
+        )
+
+        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+            for map_ in mapdict.values():
+                map_.find_rawpars(Printer, CmdPars, InPars, DefPars)
+        assert pytest_wrapped_sysexit.type is SystemExit
+        captured = capsys.readouterr()
+        assert captured.out.endswith("SU_WP_14\n")
 
     def test_maprunpars(self):
         pardict = {
@@ -1271,13 +1435,53 @@ class TestMapPars:
         assert testmap2.RunPars.bool_test1 is False
         assert testmap2.RunPars.bool_test2 is False
 
+    def test_maprunpars2(self):
+        pardict = {
+            "map_directory": ["Data/test_mapdir"],
+            "testmap1.int_test_free": ["42"],
+            "testmap2.float_test_free": ["88.8"]
+        }
+
+        cmdline = [
+            "-testmap1.ti2", "65",
+            "--testmap2.nobool_test1",
+            "-testmap2.notb2"
+        ]
+
+        (
+            Files, Printer, RefPars, DefPars, InPars, CmdPars, mapdict
+        ) = self.setup_maprawpars(
+            pardict, cmdline, Path(
+                "tests/test_tools/Data/default_parameters_2_formap.txt"))
+
+        RunPars = GM_PP.RunPars(
+            Files, Printer, CmdPars, InPars, DefPars, RefPars, True
+        )
+
+        for map_ in mapdict.values():
+            map_.find_runpars(Files, Printer, RunPars)
+
+        testmap1 = mapdict["testmap1"]
+        testmap2 = mapdict["testmap2"]
+
+        assert testmap1.RunPars.is_main is False
+        assert testmap2.RunPars.is_main is False
+
+        assert testmap1.RunPars.int_test_free == 42
+        assert testmap1.RunPars.int_test_choice == 65
+
+        assert testmap2.RunPars.float_test_free == 88.8
+        assert testmap2.RunPars.bool_test1 is False
+        assert testmap2.RunPars.bool_test2 is False
+
     def test_SU_MR_1(self, capsys):
         # setup - Create all necessary objects.
         Files = GM_FH.FileLocations()
         Printer = GM_PT.Printer(Files)
         RefPars = GM_PP.RefPars(
             Printer, Path(
-                "tests/test_tools/Data/reference_parameters_2.ref")
+                "tests/test_tools/Data/reference_parameters_2.ref"),
+            True
         )
         DefPars = RefPars
 
@@ -1311,8 +1515,8 @@ class TestMapPars:
         CmdPars.not_found["testmap1.booltest.1"] = ["True"]
 
         with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            for _map in mapdict.values():
-                _map.find_rawpars(Printer, CmdPars, InPars, DefPars)
+            for map_ in mapdict.values():
+                map_.find_rawpars(Printer, CmdPars, InPars, DefPars)
 
         assert pytest_wrapped_sysexit.type is SystemExit
         captured = capsys.readouterr()
@@ -1335,8 +1539,8 @@ class TestMapPars:
         )
 
         with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            for _map in mapdict.values():
-                _map.find_runpars(Files, Printer, RunPars)
+            for map_ in mapdict.values():
+                map_.find_runpars(Files, Printer, RunPars)
         assert pytest_wrapped_sysexit.type is SystemExit
         captured = capsys.readouterr()
         assert captured.out.endswith("SU_NP_2\n")
@@ -1358,22 +1562,32 @@ class TestMapPars:
         )
 
         with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            for _map in mapdict.values():
-                _map.find_runpars(Files, Printer, RunPars)
+            for map_ in mapdict.values():
+                map_.find_runpars(Files, Printer, RunPars)
         assert pytest_wrapped_sysexit.type is SystemExit
         captured = capsys.readouterr()
         assert captured.out.endswith("SU_NP_3\n")
 
     @staticmethod
-    def setup_maprefpars(pardict, cmdline):
+    def setup_maprefpars(pardict, cmdline, defparfilename=None):
         # setup - Create all necessary objects.
         Files = GM_FH.FileLocations()
         Printer = GM_PT.Printer(Files)
+        # RefPars = GM_PP.RefPars(
+        #     Printer, Path(
+        #         "tests/test_tools/Data/reference_parameters_2.ref"),
+        #     True
+        # )
         RefPars = GM_PP.RefPars(
             Printer, Path(
-                "tests/test_tools/Data/reference_parameters_2.ref")
+                "sourcefiles/reference_parameters.ref"
+            ), True
         )
-        DefPars = RefPars
+        if defparfilename:
+            DefPars = GM_PP.RawPars.from_file(
+                Printer, defparfilename, RefPars, True)
+        else:
+            DefPars = RefPars
 
         curpath = Path(__file__).resolve()
         InPars = GM_PP.RawPars.from_dict(
@@ -1386,17 +1600,17 @@ class TestMapPars:
         return Files, Printer, RefPars, DefPars, InPars, mapdict
 
     @staticmethod
-    def setup_maprawpars(pardict, cmdline):
+    def setup_maprawpars(pardict, cmdline, defparfilename=None):
         (
             Files, Printer, RefPars, DefPars, InPars, mapdict
-        ) = TestMapPars.setup_maprefpars(pardict, cmdline)
+        ) = TestMapPars.setup_maprefpars(pardict, cmdline, defparfilename)
 
         for map_ in mapdict.values():
             map_.find_refpars(Printer)
 
         CmdPars = GM_PP.RawPars.from_cmdline(
             Printer, cmdline, RefPars,
-            {name: _map.RefPars for name, _map in mapdict.items()},
+            {name: map_.RefPars for name, map_ in mapdict.items()},
             False
         )
 
@@ -1477,6 +1691,45 @@ def test_find_defparfile():
     }
 
 
+def test_parse_influencerfile():
+    Files = GM_FH.FileLocations()
+    Printer = GM_PT.Printer(Files)
+
+    file = Path("sourcefiles/infl_file_base.txt")
+    groupdict = {
+        "All": set("ABC")
+    }
+    groupdict = GM_PP.parse_influencerfile(Printer, file, groupdict)
+
+    assert groupdict == {
+        "All": set("ABC"),
+        "choice": set("ABC")
+    }
+
+    otherfile = Path("tests/test_tools/Data/infl_file.txt")
+    groupdict = {
+        "All": set("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    }
+    groupdict = GM_PP.parse_influencerfile(Printer, otherfile, groupdict)
+
+    assert groupdict == {
+        "All": set("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+        "vowels": set("AEIOU"),
+        "consonants": set("BCDFGHJKLMNPQRSTVWXYZ"),
+        "straight_only": set("AEFHIKLMNTVWXYZ"),
+        "curved_only": set("CJOQSU"),
+        "curvestr": set("BDGPR"),
+        "straight_only_vowels": set("AEI"),
+        "curved_or_vowel": set("ACEIJQS"),
+        "choice": set("ACEIJKQS")
+    }
+
+
+def test_parse_influencer_par():
+    assert GM_PP.parse_influencer_par("A B C") == "A | B | C"
+    assert GM_PP.parse_influencer_par("A & B C") == "A & B C"
+
+
 def test_SU_PP_1(capsys):
     Files = GM_FH.FileLocations()
     Printer = GM_PT.Printer(Files)
@@ -1545,7 +1798,8 @@ def test_SU_PP_3(capsys):
     Printer = GM_PT.Printer(Files)
     RefPars = GM_PP.RefPars(
         Printer, Path(
-            "tests/test_tools/Data/reference_parameters_2.ref")
+            "tests/test_tools/Data/reference_parameters_2.ref"),
+        True
     )
     DefPars = RefPars
 
@@ -1628,3 +1882,43 @@ def test_SU_WP_5(capsys):
     assert pytest_wrapped_sysexit.type is SystemExit
     captured = capsys.readouterr()
     assert captured.out.endswith("SU_WP_5\n")
+
+
+def test_SU_NP_4(capsys):
+    Files = GM_FH.FileLocations()
+    Printer = GM_PT.Printer(Files)
+
+    file = Path("tests/test_tools/Data/infl_file_SU_NP_4.txt")
+    groupdict = {
+        "All": set("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    }
+    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        groupdict = GM_PP.parse_influencerfile(Printer, file, groupdict)
+    assert pytest_wrapped_sysexit.type is SystemExit
+    captured = capsys.readouterr()
+    assert captured.out.endswith("SU_NP_4\n")
+
+
+def test_SU_NP_5(capsys):
+    Files = GM_FH.FileLocations()
+    Printer = GM_PT.Printer(Files)
+
+    file = Path("tests/test_tools/Data/infl_file_SU_NP_5_1.txt")
+    groupdict = {
+        "All": set("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    }
+    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        groupdict = GM_PP.parse_influencerfile(Printer, file, groupdict)
+    assert pytest_wrapped_sysexit.type is SystemExit
+    captured = capsys.readouterr()
+    assert captured.out.endswith("SU_NP_5\n")
+
+    file = Path("tests/test_tools/Data/infl_file_SU_NP_5_2.txt")
+    groupdict = {
+        "All": set("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    }
+    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        groupdict = GM_PP.parse_influencerfile(Printer, file, groupdict)
+    assert pytest_wrapped_sysexit.type is SystemExit
+    captured = capsys.readouterr()
+    assert captured.out.endswith("SU_NP_5\n")

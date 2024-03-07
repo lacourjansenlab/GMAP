@@ -147,6 +147,13 @@
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -254,6 +261,13 @@ document.write(`
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -880,7 +894,7 @@ as the parameter <cite>choice</cite>, but converted to the correct datatype.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RefPars">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">RefPars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_main</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">RefPars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_main</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RefPars" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Deals with reference parameters</p>
 <p>To allow for easier use of the program, users are not required to specify
@@ -906,6 +920,8 @@ an explanation of the expected format.</p>
 and handle errors.</p>
 </dd>
 <dt><strong>fname</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The absolute path to the file that contains all desired parameters</p>
+</dd>
+<dt><strong>is_main</strong><span class="classifier">bool, default=True</span></dt><dd><p>Whether this refpars object is the main one.</p>
 </dd>
 </dl>
 </dd>

@@ -44,6 +44,8 @@
     <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Theory" href="../Theory/index.html" />
+    <link rel="prev" title="parameter overview" href="parameter_overview.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -137,9 +139,16 @@
   </p>
   <ul class="bd-navbar-elements navbar-nav">
     
-                    <li class="nav-item">
+                    <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -230,7 +239,7 @@ document.write(`
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
       
-      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -249,9 +258,16 @@ document.write(`
   </p>
   <ul class="bd-navbar-elements navbar-nav">
     
-                    <li class="nav-item">
+                    <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -301,6 +317,21 @@ document.write(`
     
   </div>
   
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Warning_overview.html">Warning overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="specifying_parameters.html">How to specify parameter choices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parameter_overview.html">parameter overview</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Specifying influencers</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
@@ -333,6 +364,9 @@ document.write(`
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">User guide</a></li>
+    
     <li class="breadcrumb-item active" aria-current="page">Specifying...</li>
   </ul>
 </nav>
@@ -368,8 +402,8 @@ document.write(`
 <p>The intersection only contains the items that are present in both:</p>
 <p><code class="docutils literal notranslate"><span class="pre">D</span> <span class="pre">=</span> <span class="pre">:x</span> <span class="pre">&amp;</span> <span class="pre">:y</span></code></p>
 <p>The difference contains all items of the first, that don’t occur in the second:</p>
-<p><code class="docutils literal notranslate"><span class="pre">B</span> <span class="pre">=</span> <span class="pre">:x</span> <span class="pre">-</span> <span class="pre">:y</span></code>
-<code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">=</span> <span class="pre">:y</span> <span class="pre">-</span> <span class="pre">:x</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">B</span> <span class="pre">=</span> <span class="pre">:x</span> <span class="pre">-</span> <span class="pre">:y</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">=</span> <span class="pre">:y</span> <span class="pre">-</span> <span class="pre">:x</span></code></p>
 <p>The symmetric difference contains all items that are present in either one, but not both:</p>
 <p><code class="docutils literal notranslate"><span class="pre">B</span> <span class="pre">|</span> <span class="pre">C</span> <span class="pre">=</span> <span class="pre">:x</span> <span class="pre">^</span> <span class="pre">:y</span></code></p>
 <p>The program has two groups hardcoded - :All contains all residue names found in the MD simulation, :None contains nothing. This allows selecting ‘unknown’ groups:</p>
@@ -378,28 +412,34 @@ document.write(`
 <section id="specifying-influencers-using-influencers-file">
 <h2>Specifying influencers using influencers_file<a class="headerlink" href="#specifying-influencers-using-influencers-file" title="Link to this heading">#</a></h2>
 <p>The influencers_file allows the user to define different groups. Consider the following example:</p>
-<p><code class="docutils literal notranslate"><span class="pre">Water</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">SOL</span> <span class="pre">|</span> <span class="pre">WAT</span>
-<span class="pre">K</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">K</span> <span class="pre">|</span> <span class="pre">K+</span>
-<span class="pre">Na</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">NA</span> <span class="pre">|</span> <span class="pre">NA+</span> <span class="pre">|</span> <span class="pre">Na+</span>
-<span class="pre">Cl</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">CL</span> <span class="pre">|</span> <span class="pre">CL-</span> <span class="pre">|</span> <span class="pre">CLA</span>
-<span class="pre">Ions</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">:K</span> <span class="pre">|</span> <span class="pre">:Na</span> <span class="pre">|</span> <span class="pre">:Cl</span>
-<span class="pre">Solvent</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">:Water</span> <span class="pre">|</span> <span class="pre">:Ions</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Water</span>             <span class="n">SOL</span> <span class="o">|</span> <span class="n">WAT</span>
+<span class="n">K</span>                 <span class="n">K</span> <span class="o">|</span> <span class="n">K</span><span class="o">+</span>
+<span class="n">Na</span>                <span class="n">NA</span> <span class="o">|</span> <span class="n">NA</span><span class="o">+</span> <span class="o">|</span> <span class="n">Na</span><span class="o">+</span>
+<span class="n">Cl</span>                <span class="n">CL</span> <span class="o">|</span> <span class="n">CL</span><span class="o">-</span> <span class="o">|</span> <span class="n">CLA</span>
+<span class="n">Ions</span>              <span class="p">:</span><span class="n">K</span> <span class="o">|</span> <span class="p">:</span><span class="n">Na</span> <span class="o">|</span> <span class="p">:</span><span class="n">Cl</span>
+<span class="n">Solvent</span>           <span class="p">:</span><span class="n">Water</span> <span class="o">|</span> <span class="p">:</span><span class="n">Ions</span>
+</pre></div>
+</div>
 <p>Here, a variety of different groups has been defined in a concise, structured way. However, it is not yet clear to the program what influencers the user wants. It is assumed that the user wants to use the selection saved as the group ‘choice’. A simple change to the above fixes this:</p>
-<p><code class="docutils literal notranslate"><span class="pre">Water</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">SOL</span> <span class="pre">|</span> <span class="pre">WAT</span>
-<span class="pre">K</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">K</span> <span class="pre">|</span> <span class="pre">K+</span>
-<span class="pre">Na</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">NA</span> <span class="pre">|</span> <span class="pre">NA+</span> <span class="pre">|</span> <span class="pre">Na+</span>
-<span class="pre">Cl</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">CL</span> <span class="pre">|</span> <span class="pre">CL-</span> <span class="pre">|</span> <span class="pre">CLA</span>
-<span class="pre">Ions</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">:K</span> <span class="pre">|</span> <span class="pre">:Na</span> <span class="pre">|</span> <span class="pre">:Cl</span>
-<span class="pre">Solvent</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">:Water</span> <span class="pre">|</span> <span class="pre">:Ions</span>
-<span class="pre">choice</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">:Solvent</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Water</span>             <span class="n">SOL</span> <span class="o">|</span> <span class="n">WAT</span>
+<span class="n">K</span>                 <span class="n">K</span> <span class="o">|</span> <span class="n">K</span><span class="o">+</span>
+<span class="n">Na</span>                <span class="n">NA</span> <span class="o">|</span> <span class="n">NA</span><span class="o">+</span> <span class="o">|</span> <span class="n">Na</span><span class="o">+</span>
+<span class="n">Cl</span>                <span class="n">CL</span> <span class="o">|</span> <span class="n">CL</span><span class="o">-</span> <span class="o">|</span> <span class="n">CLA</span>
+<span class="n">Ions</span>              <span class="p">:</span><span class="n">K</span> <span class="o">|</span> <span class="p">:</span><span class="n">Na</span> <span class="o">|</span> <span class="p">:</span><span class="n">Cl</span>
+<span class="n">Solvent</span>           <span class="p">:</span><span class="n">Water</span> <span class="o">|</span> <span class="p">:</span><span class="n">Ions</span>
+<span class="n">choice</span>            <span class="p">:</span><span class="n">Solvent</span>
+</pre></div>
+</div>
 <p>Now, we’ve indicated that we only want to consider the influence of the solvent, and explained what the solvent actually is. If, however, we would like to blacklist the solvent, it would look like this:</p>
-<p><code class="docutils literal notranslate"><span class="pre">Water</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">SOL</span> <span class="pre">|</span> <span class="pre">WAT</span>
-<span class="pre">K</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">K</span> <span class="pre">|</span> <span class="pre">K+</span>
-<span class="pre">Na</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">NA</span> <span class="pre">|</span> <span class="pre">NA+</span> <span class="pre">|</span> <span class="pre">Na+</span>
-<span class="pre">Cl</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">CL</span> <span class="pre">|</span> <span class="pre">CL-</span> <span class="pre">|</span> <span class="pre">CLA</span>
-<span class="pre">Ions</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">:K</span> <span class="pre">|</span> <span class="pre">:Na</span> <span class="pre">|</span> <span class="pre">:Cl</span>
-<span class="pre">Solvent</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">:Water</span> <span class="pre">|</span> <span class="pre">:Ions</span>
-<span class="pre">choice</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">:All</span> <span class="pre">-</span> <span class="pre">:Solvent</span></code></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Water</span>             <span class="n">SOL</span> <span class="o">|</span> <span class="n">WAT</span>
+<span class="n">K</span>                 <span class="n">K</span> <span class="o">|</span> <span class="n">K</span><span class="o">+</span>
+<span class="n">Na</span>                <span class="n">NA</span> <span class="o">|</span> <span class="n">NA</span><span class="o">+</span> <span class="o">|</span> <span class="n">Na</span><span class="o">+</span>
+<span class="n">Cl</span>                <span class="n">CL</span> <span class="o">|</span> <span class="n">CL</span><span class="o">-</span> <span class="o">|</span> <span class="n">CLA</span>
+<span class="n">Ions</span>              <span class="p">:</span><span class="n">K</span> <span class="o">|</span> <span class="p">:</span><span class="n">Na</span> <span class="o">|</span> <span class="p">:</span><span class="n">Cl</span>
+<span class="n">Solvent</span>           <span class="p">:</span><span class="n">Water</span> <span class="o">|</span> <span class="p">:</span><span class="n">Ions</span>
+<span class="n">choice</span>            <span class="p">:</span><span class="n">All</span> <span class="o">-</span> <span class="p">:</span><span class="n">Solvent</span>
+</pre></div>
+</div>
 <p>The group ‘:All’ does not have to be defined, as it is already defined within the program itself. Mappings also have the option to create groups to aid with selections in systems they were specifically designed for. For example, the Amide maps are meant for use with proteins, so they contain the definitions for protein groups.</p>
 <div class="admonition danger">
 <p class="admonition-title">Danger</p>
@@ -420,7 +460,7 @@ document.write(`
 </section>
 <section id="more-complex-selections-than-residue-names">
 <h2>More complex selections than residue names<a class="headerlink" href="#more-complex-selections-than-residue-names" title="Link to this heading">#</a></h2>
-<p>In some cases, it might not be enough to ‘just’ define which types of residues should(n’t) be considered. You might want to exclude some water molecules, but not others. For these cases, you can use the parameter <code class="docutils literal notranslate"><span class="pre">influencers_select_atoms</span></code>. This parameter takes the given command, and uses it for MDAnalysis’ <code class="docutils literal notranslate"><span class="pre">select_atoms()</span></code> function. This function should allow to make literally any selection under the sun. The full documentation of this function can be found <a href="#id3"><span class="problematic" id="id4">`on the MDAnalysis documentation pages&lt;https://docs.mdanalysis.org/stable/documentation_pages/selections.html&gt;`__</span></a>, but here are a few more simple examples to help you get started.</p>
+<p>In some cases, it might not be enough to ‘just’ define which types of residues should(n’t) be considered. You might want to exclude some water molecules, but not others. For these cases, you can use the parameter <code class="docutils literal notranslate"><span class="pre">influencers_select_atoms</span></code>. This parameter takes the given command, and uses it for MDAnalysis’ <code class="docutils literal notranslate"><span class="pre">select_atoms()</span></code> function. This function should allow to make literally any selection under the sun. The full documentation of this function can be found <a class="reference external" href="https://docs.mdanalysis.org/stable/documentation_pages/selections.html">on the MDAnalysis documentation pages</a>, but here are a few more simple examples to help you get started.</p>
 <section id="selecting-specific-residues">
 <h3>Selecting specific residues<a class="headerlink" href="#selecting-specific-residues" title="Link to this heading">#</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">influencers_select_atoms</span>&#160;&#160; <span class="pre">resnum</span> <span class="pre">4-6</span> <span class="pre">or</span> <span class="pre">resnum</span> <span class="pre">10</span></code></p>
@@ -440,7 +480,7 @@ document.write(`
 <p>The above selects all atoms that are oxygen, but not those that are part of any residue named ‘SOL’. As ‘SOL’ is a common name to use for solvent water, this selects all the oxygen atoms except those that are part of the solvent.</p>
 <p><code class="docutils literal notranslate"><span class="pre">influencers_select_atoms</span>&#160;&#160;&#160; <span class="pre">not</span> <span class="pre">(resname</span> <span class="pre">SOL</span> <span class="pre">and</span> <span class="pre">element</span> <span class="pre">O)</span></code></p>
 <p>Similar to the example above, but now we select all atoms, except those that are part of residues named ‘SOL’, while also being oxygen. In other words, we blacklist only the oxygen atoms of the solvent.</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a>influencers_select_atoms    protein and (name O or name C or name CA or name N or name H or name HA)</p>
+<p><code class="docutils literal notranslate"><span class="pre">influencers_select_atoms</span>&#160;&#160;&#160; <span class="pre">protein</span> <span class="pre">and</span> <span class="pre">(name</span> <span class="pre">O</span> <span class="pre">or</span> <span class="pre">name</span> <span class="pre">C</span> <span class="pre">or</span> <span class="pre">name</span> <span class="pre">CA</span> <span class="pre">or</span> <span class="pre">name</span> <span class="pre">N</span> <span class="pre">or</span> <span class="pre">name</span> <span class="pre">H</span> <span class="pre">or</span> <span class="pre">name</span> <span class="pre">HA)</span></code></p>
 <p>This selects only the atoms that are part of the backbone of a protein (those are commonly named C, O, CA, HA, N and H). It doesn’t select the terminal O and/or H atoms. For the full backbone, MDAnalysis has another special keyword - use ‘backbone’. (MDAnalysis is designed with proteins in mind).</p>
 <p><code class="docutils literal notranslate"><span class="pre">influencers_select_atoms</span>&#160;&#160;&#160; <span class="pre">(resname</span> <span class="pre">ASN</span> <span class="pre">or</span> <span class="pre">resname</span> <span class="pre">GLN)</span> <span class="pre">and</span> <span class="pre">not</span> <span class="pre">resnum</span> <span class="pre">10</span></code></p>
 <p>This selects all atoms that belong to a residue of the name ASN or GLN, except those that also happen to have the residue number 10. This means the 10th residue in the MD system, not necessarily the 10th residue of the name ASN or GLN.</p>
@@ -458,6 +498,24 @@ document.write(`
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="parameter_overview.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">parameter overview</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../Theory/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Theory</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               

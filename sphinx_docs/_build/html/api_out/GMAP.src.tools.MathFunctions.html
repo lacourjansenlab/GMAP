@@ -147,6 +147,13 @@
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -254,6 +261,13 @@ document.write(`
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -405,24 +419,6 @@ document.write(`
                   
   <section id="module-GMAP.src.tools.MathFunctions">
 <span id="gmap-src-tools-mathfunctions-module"></span><h1>GMAP.src.tools.MathFunctions module<a class="headerlink" href="#module-GMAP.src.tools.MathFunctions" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.PBC_diff_orthorhombic">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">PBC_diff_orthorhombic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vect2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halfbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxdims</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.PBC_diff_orthorhombic" title="Link to this definition">#</a></dt>
-<dd><p>Calculates the distance vector between vect1 and vect2, taking into account
-the periodic nature of the system. diff = vect1 - vect2 (diff = the vector
-pointing from vect2 to vect1).</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.PBC_diff_triclinic">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">PBC_diff_triclinic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vect2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxvects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxvects_inv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.PBC_diff_triclinic" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.PBC_orthorhombic">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">PBC_orthorhombic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halfbox</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxdims</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.PBC_orthorhombic" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.MathFunctions.PBC_triclinic">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MathFunctions.</span></span><span class="sig-name descname"><span class="pre">PBC_triclinic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxvects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxvects_inv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MathFunctions.PBC_triclinic" title="Link to this definition">#</a></dt>
@@ -598,9 +594,6 @@ correctness of the provided vectors. The method is njitted for added speed.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.PBC_diff_orthorhombic"><code class="docutils literal notranslate"><span class="pre">PBC_diff_orthorhombic()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.PBC_diff_triclinic"><code class="docutils literal notranslate"><span class="pre">PBC_diff_triclinic()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.PBC_orthorhombic"><code class="docutils literal notranslate"><span class="pre">PBC_orthorhombic()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.PBC_triclinic"><code class="docutils literal notranslate"><span class="pre">PBC_triclinic()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.crossprod"><code class="docutils literal notranslate"><span class="pre">crossprod()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MathFunctions.dotprod"><code class="docutils literal notranslate"><span class="pre">dotprod()</span></code></a></li>

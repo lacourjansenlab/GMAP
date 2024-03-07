@@ -55,6 +55,9 @@ SU_FP_8
 -------
 The reference parameter file was missing the parameters 'influencers_whitelist' and 'influencers_blacklist'. Make sure both are present.
 
+SU_FP_9
+-------
+Due to definition conflicts, path-type parameters cannot take options in the reference file. If you want a user to pick between a number of files, give them names and use a string type parameter instead.
 
 
 SU_WP

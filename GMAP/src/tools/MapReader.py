@@ -110,7 +110,7 @@ class Map():
 
         refparfilename = self.directory / "parameters.ref"
         if refparfilename.is_file():
-            self.RefPars = GM_PP.RefPars(Printer, refparfilename)
+            self.RefPars = GM_PP.RefPars(Printer, refparfilename, False)
         else:
             self.RefPars = None
 
@@ -279,25 +279,9 @@ class Map():
             return
 
         # add extra corefiles to the main core
-        all_to_add = [
-            file for files in self.rawcore.get("add_corefile", [])
-            for file in files]
-        for name in all_to_add:
-            # we only want the first occurence of this file
-            fpaths = [file for file in self.avail_files if file.name == name]
-            try:
-                self.rawcore = self.parse_core(
-                    Printer, fpaths[0], self.rawcore
-                )
-            except Exception as ex:
-                Printer.warning(
-                    f"The file {fpaths[0]} was requested to be added to the "
-                    f"file {self.corepath}. However, an issue occured, so it "
-                    "cannot be added.",
-                    "MI_MR_5", False, exception=ex
-                )
-                self.success = False
-                return
+        self.append_core(Printer)
+        if not self.success:
+            return
 
         # allow the contents of core.txt to be changed
         self.code.GM_adjust_map_core_raw(Files, Printer, self)
@@ -306,6 +290,150 @@ class Map():
         if not self.Core.success:
             self.success = False
             return
+
+        # adding GM_get_dipole and GM_get_rotation_matrix to self.code.
+        self.code_add_builds(Printer)
+        if not self.success:
+            return
+
+        dpr(self.code.GM_get_dipole)
+        # dpr(self.code.GM_get_dipole())
+
+    def append_core(self, Printer):
+        """Interprets the choice in core.txt for add_corefile.
+
+        Appends the contents of the requested file(s). If added files
+        rely on files themselves, those dependencies are also added.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
+
+        all_to_add = [
+            file for files in self.rawcore.get("add_corefile", [])
+            for file in files
+        ]
+        self.rawcore["add_corefile"] = []
+        # as long as things should be added - this allows imports to rely
+        # on imports themselves.
+        while all_to_add:
+            for name in all_to_add:
+                # we only want the first occurence of this file
+                fpaths = [
+                    file for file in self.avail_files if file.name == name
+                ]
+
+                try:
+                    self.rawcore = self.parse_core(
+                        Printer, fpaths[0], self.rawcore
+                    )
+                    if not self.rawcore:
+                        self.success = False
+                        return
+                except IndexError as ex:
+                    Printer.warning(
+                        f"\nA file of the name {name} was requested to be "
+                        "added "
+                        f"to the file {self.corepath}. However, no file of "
+                        "that name could be found",
+                        "MI_MR_6", False, exception=ex
+                    )
+                except Exception as ex:
+                    Printer.warning(
+                        f"\nThe file {fpaths[0]} was requested to be added to "
+                        f"the file {self.corepath}. However, an issue "
+                        "occured, so it cannot be added.",
+                        "MI_MR_5", False, exception=ex
+                    )
+                    self.success = False
+                    return
+            all_to_add = all_to_add = [
+                file for files in self.rawcore.get("add_corefile", [])
+                for file in files
+            ]
+            self.rawcore["add_corefile"] = []
+
+    def extract_code(self, Printer):
+        """Imports the main.py file and returns its module instance.
+
+        Taking ``import numpy as np`` as example, ``np`` is the module
+        instance.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+
+        Returns
+        -------
+        module : module
+            The contents of the file as a module.
+        """
+        modpath = self.directory / "main.py"
+        if not modpath.is_file():
+            return None
+
+        modname = self.name + "_code"
+
+        try:
+            spec = importlib.util.spec_from_file_location(modname, modpath)
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[modname] = module
+            spec.loader.exec_module(module)
+        except Exception as ex:
+            Printer.warning(
+                "\nA problem occured while reading in the code for the map "
+                f"{self.name}, defined at "
+                f"{str(self.directory.resolve())}. "
+                "Please consult the information of this map, or contact the "
+                "developer of this map.",
+                "MI_MR_1", False, ex
+            )
+        return module
+
+    def complete_code(self, funcnames, kwargslist=None):
+        r"""Adds missing functions to the code of this map.
+
+        A map can have many different funtions called by the program to
+        allow for fully custom behaviour. To make it easier to call them
+        later, any that do not exist yet, will have a default function
+        added in. For some, that may be a useless shell (just pass),
+        for others, there will be an actual default calculation.
+
+        Parameters
+        ----------
+        funcnames : tuple of str
+            The functions that should be added in (without the GM\_
+            suffix)
+        """
+
+        if not kwargslist:
+            kwargslist = [{}] * len(funcnames)
+
+        for funcname, kwargs in zip(funcnames, kwargslist):
+            if not hasattr(self.code, "GM_" + funcname):
+                setattr(
+                    self.code, "GM_" + funcname,
+                    getattr(GM_DMF, "get_" + funcname)(**kwargs)
+                )
+
+    def code_add_builds(self, Printer):
+        """Add functions that depend on lines in core.txt.
+
+        These functions require that core.txt is checked for certain
+        keywords. If they are not present, self.success is set to false,
+        and this function is left prematurely.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
 
         # build remaining functions (i.e. do something with the contents
         # of core.txt)
@@ -360,73 +488,6 @@ class Map():
             kwargs_for_build.append({"map_": self, "Printer": Printer})
 
         self.complete_code(functs_to_build, kwargs_for_build)
-        dpr(self.code.GM_get_dipole)
-        # dpr(self.code.GM_get_dipole())
-
-    def extract_code(self, Printer):
-        """Imports the main.py file and returns its module instance.
-
-        Taking ``import numpy as np`` as example, ``np`` is the module
-        instance.
-
-        Parameters
-        ----------
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
-
-        Returns
-        -------
-        module : module
-            The contents of the file as a module.
-        """
-        modpath = self.directory / "main.py"
-        if not modpath.is_file():
-            return None
-
-        modname = self.name + "_code"
-
-        try:
-            spec = importlib.util.spec_from_file_location(modname, modpath)
-            module = importlib.util.module_from_spec(spec)
-            sys.modules[modname] = module
-            spec.loader.exec_module(module)
-        except Exception as ex:
-            Printer.warning(
-                "\nA problem occured while reading in the code for the map "
-                f"{self.name.resolve()}, defined at "
-                f"{str(self.directory.resolve())}. "
-                "Please consult the information of this map, or contact the "
-                "developer of this map.",
-                "MI_MR_1", False, ex
-            )
-        return module
-
-    def complete_code(self, funcnames, kwargslist=None):
-        r"""Adds missing functions to the code of this map.
-
-        A map can have many different funtions called by the program to
-        allow for fully custom behaviour. To make it easier to call them
-        later, any that do not exist yet, will have a default function
-        added in. For some, that may be a useless shell (just pass),
-        for others, there will be an actual default calculation.
-
-        Parameters
-        ----------
-        funcnames : tuple of str
-            The functions that should be added in (without the GM\_
-            suffix)
-        """
-
-        if not kwargslist:
-            kwargslist = [{}] * len(funcnames)
-
-        for funcname, kwargs in zip(funcnames, kwargslist):
-            if not hasattr(self.code, "GM_" + funcname):
-                setattr(
-                    self.code, "GM_" + funcname,
-                    getattr(GM_DMF, "get_" + funcname)(**kwargs)
-                )
 
     def find_core(self, Printer):
         """Sees if the map core exists, and extracts all its information.
@@ -1444,12 +1505,13 @@ def scan_mapdirs(mapdirs):
         for subdir in subdirs:
             if subdir.name in lookfor:
                 available_files_sub = [
-                    item for item in [*direc.iterdir()]
+                    item for item in [*subdir.iterdir()]
                     if item.is_file()
                     and GM_FH.check_file_readability(None, item)
                 ]
                 ssdirs = [
-                    item for item in [*subdir.iterdir()] if item.is_dir()
+                    item.resolve() for item in [*subdir.iterdir()]
+                    if item.is_dir()
                 ]
 
             for ssdir in ssdirs:

@@ -371,6 +371,10 @@ If you need a place to quickly write something down, do it here! It can be tidie
   - Make test for GM_FH.get_def_parfile (covered by test_GEM, I believe, but still, unittests, so test it!)
   - Make test for GM_FH errors SU_FH_1-3
   - Make test for warning SU_GM_1
+  - Make test for warnings MI_MR_1-5
+  - Make test for warnings MI_MC_10
+  - Make test for warnings MI_GEM_1
+  - Make test for warnings MD_SU_5
   - check docstrings of testfiles for further todo on tests.
 - (KvA) should the RunPars docstring contain (under attributes) all parameters as defined in the reference parameter file?
 - (KvA) GM_MR.scan_mapdirs() does not check whether a name occured twice. There is no need to disallow it (just yet?), but it would be nice to warn the user, and report the location that ís used.

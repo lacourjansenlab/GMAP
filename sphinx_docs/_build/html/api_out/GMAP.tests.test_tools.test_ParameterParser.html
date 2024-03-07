@@ -146,6 +146,13 @@
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -253,6 +260,13 @@ document.write(`
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -407,7 +421,10 @@ document.write(`
 <p>Tests all the functions/classes/methods in the file:
 src/tools/ParameterParser.py.</p>
 <dl class="simple">
-<dt>Missing tests:</dt><dd><p>SU_FP_7 (currently unknown how to access this)</p>
+<dt>Missing tests:</dt><dd><p>SU_FP_7 (currently unknown how to access this)
+SU_FP_8
+SU_WP_16
+SU_NP_4-6</p>
 </dd>
 </dl>
 <dl class="py class">
@@ -432,6 +449,12 @@ src/tools/ParameterParser.py.</p>
 <tr class="row-odd"><td><p><strong>test_SU_NP_3</strong></p></td>
 <td></td>
 </tr>
+<tr class="row-even"><td><p><strong>test_SU_WP_14</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>test_SU_WP_6</strong></p></td>
+<td></td>
+</tr>
 <tr class="row-even"><td><p><strong>test_maprawpars</strong></p></td>
 <td></td>
 </tr>
@@ -444,16 +467,19 @@ src/tools/ParameterParser.py.</p>
 <tr class="row-odd"><td><p><strong>test_maprunpars</strong></p></td>
 <td></td>
 </tr>
+<tr class="row-even"><td><p><strong>test_maprunpars2</strong></p></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestMapPars.setup_maprawpars">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setup_maprawpars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmdline</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.setup_maprawpars" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setup_maprawpars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmdline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defparfilename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.setup_maprawpars" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestMapPars.setup_maprefpars">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setup_maprefpars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmdline</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.setup_maprefpars" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setup_maprefpars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmdline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defparfilename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.setup_maprefpars" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -469,6 +495,16 @@ src/tools/ParameterParser.py.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_NP_3">
 <span class="sig-name descname"><span class="pre">test_SU_NP_3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_NP_3" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_WP_14">
+<span class="sig-name descname"><span class="pre">test_SU_WP_14</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_WP_14" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_WP_6">
+<span class="sig-name descname"><span class="pre">test_SU_WP_6</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_WP_6" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -489,6 +525,11 @@ src/tools/ParameterParser.py.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_maprunpars">
 <span class="sig-name descname"><span class="pre">test_maprunpars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_maprunpars" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_maprunpars2">
+<span class="sig-name descname"><span class="pre">test_maprunpars2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_maprunpars2" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -533,37 +574,43 @@ src/tools/ParameterParser.py.</p>
 <tr class="row-odd"><td><p><strong>test_SU_WP_15</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p><strong>test_SU_WP_2</strong></p></td>
+<tr class="row-even"><td><p><strong>test_SU_WP_16</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p><strong>test_SU_WP_3</strong></p></td>
+<tr class="row-odd"><td><p><strong>test_SU_WP_2</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p><strong>test_SU_WP_4</strong></p></td>
+<tr class="row-even"><td><p><strong>test_SU_WP_3</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p><strong>test_SU_WP_5</strong></p></td>
+<tr class="row-odd"><td><p><strong>test_SU_WP_4</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p><strong>test_SU_WP_6</strong></p></td>
+<tr class="row-even"><td><p><strong>test_SU_WP_5</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p><strong>test_SU_WP_7</strong></p></td>
+<tr class="row-odd"><td><p><strong>test_SU_WP_6</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p><strong>test_SU_WP_8</strong></p></td>
+<tr class="row-even"><td><p><strong>test_SU_WP_7</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p><strong>test_SU_WP_9</strong></p></td>
+<tr class="row-odd"><td><p><strong>test_SU_WP_8</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p><strong>test_fromcmd</strong></p></td>
+<tr class="row-even"><td><p><strong>test_SU_WP_9</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><p><strong>test_fromdict</strong></p></td>
+<tr class="row-odd"><td><p><strong>test_fromcmd</strong></p></td>
 <td></td>
 </tr>
-<tr class="row-even"><td><p><strong>test_fromfile</strong></p></td>
+<tr class="row-even"><td><p><strong>test_fromdict</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>test_fromfile</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>test_variations</strong></p></td>
 <td></td>
 </tr>
 </tbody>
@@ -624,6 +671,11 @@ src/tools/ParameterParser.py.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_16">
+<span class="sig-name descname"><span class="pre">test_SU_WP_16</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_16" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_2">
 <span class="sig-name descname"><span class="pre">test_SU_WP_2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_2" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
@@ -678,6 +730,11 @@ src/tools/ParameterParser.py.</p>
 <span class="sig-name descname"><span class="pre">test_fromfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_fromfile" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_variations">
+<span class="sig-name descname"><span class="pre">test_variations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_variations" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -708,14 +765,23 @@ src/tools/ParameterParser.py.</p>
 <tr class="row-odd"><td><p><strong>test_SU_FP_6</strong></p></td>
 <td></td>
 </tr>
+<tr class="row-even"><td><p><strong>test_SU_FP_8</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>test_SU_FP_9</strong></p></td>
+<td></td>
+</tr>
 <tr class="row-even"><td><p><strong>test_correctness</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>test_variations</strong></p></td>
 <td></td>
 </tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestRefPars.systest">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">systest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.systest" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">systest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_main</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.systest" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -749,8 +815,23 @@ src/tools/ParameterParser.py.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_SU_FP_8">
+<span class="sig-name descname"><span class="pre">test_SU_FP_8</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_SU_FP_8" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_SU_FP_9">
+<span class="sig-name descname"><span class="pre">test_SU_FP_9</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_SU_FP_9" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_correctness">
 <span class="sig-name descname"><span class="pre">test_correctness</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_correctness" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_variations">
+<span class="sig-name descname"><span class="pre">test_variations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_variations" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -862,6 +943,11 @@ src/tools/ParameterParser.py.</p>
 <span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_ParameterParser.</span></span><span class="sig-name descname"><span class="pre">test_parse_commandline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.test_parse_commandline" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.tests.test_tools.test_ParameterParser.test_parse_influencerfile">
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_ParameterParser.</span></span><span class="sig-name descname"><span class="pre">test_parse_influencerfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.tests.test_tools.test_ParameterParser.test_parse_influencerfile" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -905,10 +991,13 @@ src/tools/ParameterParser.py.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_MR_1"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_SU_MR_1()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_NP_2"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_SU_NP_2()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_NP_3"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_SU_NP_3()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_WP_14"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_SU_WP_14()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_SU_WP_6"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_SU_WP_6()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_maprawpars"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_maprawpars()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_maprawpars2"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_maprawpars2()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_maprefpars"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_maprefpars()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_maprunpars"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_maprunpars()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestMapPars.test_maprunpars2"><code class="docutils literal notranslate"><span class="pre">TestMapPars.test_maprunpars2()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars"><code class="docutils literal notranslate"><span class="pre">TestRawPars</span></code></a><ul class="nav section-nav flex-column">
@@ -923,6 +1012,7 @@ src/tools/ParameterParser.py.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_13"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_SU_WP_13()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_14"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_SU_WP_14()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_15"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_SU_WP_15()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_16"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_SU_WP_16()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_2"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_SU_WP_2()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_3"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_SU_WP_3()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_SU_WP_4"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_SU_WP_4()</span></code></a></li>
@@ -934,6 +1024,7 @@ src/tools/ParameterParser.py.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_fromcmd"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_fromcmd()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_fromdict"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_fromdict()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_fromfile"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_fromfile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRawPars.test_variations"><code class="docutils literal notranslate"><span class="pre">TestRawPars.test_variations()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars"><code class="docutils literal notranslate"><span class="pre">TestRefPars</span></code></a><ul class="nav section-nav flex-column">
@@ -944,7 +1035,10 @@ src/tools/ParameterParser.py.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_SU_FP_4"><code class="docutils literal notranslate"><span class="pre">TestRefPars.test_SU_FP_4()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_SU_FP_5"><code class="docutils literal notranslate"><span class="pre">TestRefPars.test_SU_FP_5()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_SU_FP_6"><code class="docutils literal notranslate"><span class="pre">TestRefPars.test_SU_FP_6()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_SU_FP_8"><code class="docutils literal notranslate"><span class="pre">TestRefPars.test_SU_FP_8()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_SU_FP_9"><code class="docutils literal notranslate"><span class="pre">TestRefPars.test_SU_FP_9()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_correctness"><code class="docutils literal notranslate"><span class="pre">TestRefPars.test_correctness()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRefPars.test_variations"><code class="docutils literal notranslate"><span class="pre">TestRefPars.test_variations()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.TestRunPars"><code class="docutils literal notranslate"><span class="pre">TestRunPars</span></code></a><ul class="nav section-nav flex-column">
@@ -965,6 +1059,7 @@ src/tools/ParameterParser.py.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.test_SU_WP_5"><code class="docutils literal notranslate"><span class="pre">test_SU_WP_5()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.test_find_defparfile"><code class="docutils literal notranslate"><span class="pre">test_find_defparfile()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.test_parse_commandline"><code class="docutils literal notranslate"><span class="pre">test_parse_commandline()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.tests.test_tools.test_ParameterParser.test_parse_influencerfile"><code class="docutils literal notranslate"><span class="pre">test_parse_influencerfile()</span></code></a></li>
 </ul>
   </nav></div>
 
