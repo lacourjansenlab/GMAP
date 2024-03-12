@@ -4,21 +4,11 @@ GMAP.tests.test\_tools package
 Submodules
 ----------
 
-GMAP.tests.test\_tools.test\_MathFunctions module
--------------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: GMAP.tests.test_tools.test_MathFunctions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-GMAP.tests.test\_tools.test\_ParameterParser module
----------------------------------------------------
-
-.. automodule:: GMAP.tests.test_tools.test_ParameterParser
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   GMAP.tests.test_tools.test_MathFunctions
+   GMAP.tests.test_tools.test_ParameterParser
 
 Module contents
 ---------------

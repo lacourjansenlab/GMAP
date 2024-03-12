@@ -31,6 +31,7 @@ sys.path.append(str(Path(__file__).parent.parent.resolve()))
 # html_theme = 'classic'
 html_theme = 'pydata_sphinx_theme'
 html_static_path = ['_static']
+html_favicon = "Figures/temp_logo.ico"
 
 # -- Other options -----------------------------------------------------------
 numpydoc_class_members_toctree = False

@@ -41,6 +41,7 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'User_guide/index';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Warning overview" href="Warning_overview.html" />
@@ -141,6 +142,13 @@
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="#">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -258,6 +266,13 @@ document.write(`
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -311,6 +326,7 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="Warning_overview.html">Warning overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="specifying_parameters.html">How to specify parameter choices</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameter_overview.html">parameter overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="influencer_specification.html">Specifying influencers</a></li>
 </ul>
 </div>
 </nav></div>
@@ -367,11 +383,13 @@ document.write(`
                   
   <section id="user-guide">
 <h1>User guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
-<p>These pages will contain information specifically for developers of the program.</p>
+<p>These pages will contain information relevant for common use of the program.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Warning_overview.html">Warning overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Warning_overview.html#codes-starting-with-su">Codes starting with SU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Warning_overview.html#codes-starting-with-mi">Codes starting with MI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Warning_overview.html#codes-starting-with-md">Codes starting with MD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Warning_overview.html#other-codes">Other codes</a></li>
 </ul>
 </li>
@@ -382,14 +400,17 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="parameter_overview.html">parameter overview</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#source-directory">source_directory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#default-parameter-filename">default_parameter_filename</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#log-directory">log_directory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#log-filename">log_filename</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#map-directory">map_directory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#verbose">verbose</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#verbose-logfile">verbose_logfile</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#prevent-overwrite">prevent_overwrite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#parameters-for-file-paths">parameters for file paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#parameters-for-how-to-write-files">parameters for how to write files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parameter_overview.html#parameters-for-specifying-calculation-settings">parameters for specifying calculation settings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="influencer_specification.html">Specifying influencers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="influencer_specification.html#set-operators">Set operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="influencer_specification.html#specifying-influencers-using-influencers-file">Specifying influencers using influencers_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="influencer_specification.html#specifying-influencers-in-a-parameter-file">Specifying influencers in a parameter file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="influencer_specification.html#specifying-influencers-on-the-command-line">Specifying influencers on the command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="influencer_specification.html#more-complex-selections-than-residue-names">More complex selections than residue names</a></li>
 </ul>
 </li>
 </ul>

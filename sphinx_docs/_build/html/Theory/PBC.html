@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>GMAP.tests.test_MathFunctions module &#8212; GMAP 0 documentation</title>
+    <title>Periodic boundary conditions (PBC) &#8212; GMAP 0 documentation</title>
   
   
   
@@ -40,10 +40,12 @@
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'api_out/GMAP.tests.test_MathFunctions';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Theory/PBC';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="GMAP.tests package" href="GMAP.tests.html" />
+    <link rel="next" title="Adding a new map" href="../Adding_a_new_map/index.html" />
+    <link rel="prev" title="Theory" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -144,6 +146,13 @@
                     </li>
                 
 
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
@@ -158,9 +167,9 @@
                     </li>
                 
 
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api_out/modules.html">
+                        GMAP
                       </a>
                     </li>
                 
@@ -256,6 +265,13 @@ document.write(`
                     </li>
                 
 
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
@@ -270,9 +286,9 @@ document.write(`
                     </li>
                 
 
-                    <li class="nav-item current active">
-                      <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api_out/modules.html">
+                        GMAP
                       </a>
                     </li>
                 
@@ -307,29 +323,7 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="GMAP.html">GMAP package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="GMAP.src.html">GMAP.src package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.src.programs.html">GMAP.src.programs package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="GMAP.src.programs.AIM.html">GMAP.src.programs.AIM module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="GMAP.src.programs.GEM.html">GMAP.src.programs.GEM module</a></li>
-</ul>
-</li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.src.tools.html">GMAP.src.tools package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.FileHandler.html">GMAP.src.tools.FileHandler module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MapReader.html">GMAP.src.tools.MapReader module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html">GMAP.src.tools.MathFunctions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html">GMAP.src.tools.ParameterParser module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.PrintTools.html">GMAP.src.tools.PrintTools module</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="GMAP.tests.html">GMAP.tests package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">GMAP.tests.test_MathFunctions module</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Periodic boundary conditions (PBC)</a></li>
 </ul>
 </div>
 </nav></div>
@@ -359,8 +353,6 @@ document.write(`
 
 
 
-
-
 <nav aria-label="Breadcrumb">
   <ul class="bd-breadcrumbs">
     
@@ -370,15 +362,9 @@ document.write(`
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP Code documentation</a></li>
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Theory</a></li>
     
-    
-    <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
-    
-    
-    <li class="breadcrumb-item"><a href="GMAP.tests.html" class="nav-link">GMAP.tests package</a></li>
-    
-    <li class="breadcrumb-item active" aria-current="page">GMAP.tests.t...</li>
+    <li class="breadcrumb-item active" aria-current="page">Periodic...</li>
   </ul>
 </nav>
 </div>
@@ -395,8 +381,49 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="gmap-tests-test-mathfunctions-module">
-<h1>GMAP.tests.test_MathFunctions module<a class="headerlink" href="#gmap-tests-test-mathfunctions-module" title="Link to this heading">#</a></h1>
+  <section id="periodic-boundary-conditions-pbc">
+<span id="theory-page-pbc"></span><h1>Periodic boundary conditions (PBC)<a class="headerlink" href="#periodic-boundary-conditions-pbc" title="Link to this heading">#</a></h1>
+<p>When performing an MD simulation, it is not possible to model infinitely many atoms. Yet, to properly model the forces acting on an atom, it is not an option to just have your cloud of atoms stop. This problem is solved by assuming that the box in which all atoms live, is repeated infinitely, much like grid paper.</p>
+<p>In practice, this means that 2-dimensional analogue of an MD system is actually pacman: when you leave the pacman field on the right side, you’ll enter it again on the left. Same with the top and bottom. In an MD system, if an atom crosses one of the sides of the box, it will be moved to the other side. A single atom can be considered to have infinite images, one in every ‘copy’ of the box. MD software considers all infinite copies by using the particle mesh ewald (PME) approximation.</p>
+<p>While GMAP does not have to do the same extensive calculations as MD software, it is subject to the consequences of these PBC. When calculating anything geometrical, the program must ask itself - am I using the correct image of this particle? If, for example, you want the distance between two atoms, you must make sure that you take the two closest images of those atoms. The simulation box is large enough, that the closest and second closest are so different in distance, that the latter does already not make sense.</p>
+<p>The influence of the PBC is noticable in a few parts of the code, and not all parts deal with it in the same way. The rest of this page is an overview of which parts of the code have to deal with the PBC, and how they do it.</p>
+<section id="calculating-vectors-for-oscillators">
+<h2>Calculating vectors for oscillators<a class="headerlink" href="#calculating-vectors-for-oscillators" title="Link to this heading">#</a></h2>
+<p>The properties calculated for a single oscillator should not change if the entire box is rotated. Therefore, maps usually rotate the cartesian coordinates to a localized coordinate system, where the axes are defined by the shape of the molecule. This allows a map to let a property of an oscillator depend on the electrostatic properties in a given direction. For example, the frequency of absorbed light is dependent on the strength of the electric field along a certain atomic bond.</p>
+<p>To allow this, <a class="reference internal" href="../Adding_a_new_map/File_structure/core.html#map-defining-xyz-uvec"><span class="std std-ref">a map specifies its local coordinates</span></a> in terms of atom positions. It can, for example, say something like “my local x axis should point in the same direction as this oxygen atom is located compared to this carbon atom”. This could be expressed by saying the x vector is defined by subtracting the position of the carbon atom from that of the oxygen atom.</p>
+<p>It is this kind of maths with positions that leads to trouble with PBC. Just subtracting atom positions (or adding them, or dividing them by a scalar) can lead to the wrong results. That is why these operations are not performed in cartesian coordinates, but rather in box coordinates. Box coordinates are basically the transformation performed using the vectors defining the bounding box. Any MD package will make clear what kind of box you are using. Any box can be defined using three vectors. The first vector is commonly used for the shortest side of the box, and will point along the x axis. The second vector is the middle side of the box, living in the xy plane, and the third is the longest side of the box, living in xyz space.</p>
+<p>Then we can expres an atom’s position in terms of these vectors - for example, 0.5*x + 0.2*y + 0.6*z. Here, note that, if an atom lied inside of the box initially, all three coefficients should be positive, and between 0 and 1. Or, for a slightly different convention, between -0.5 and 0.5.</p>
+<p>The neat thing is that if we add, subtract, average, or anything like that within these box coordinates, we will always end up in a valid position. It might not be the image that lies within the central box, but we will always find an image. Then, we only need to remove the integer part (and keep the decimal), to find the image that lies within the box. Finally, this central image can be converted back in cartesian coordinates for further use.</p>
+<p>To explain the above in (pseudo) python code:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">an idea as to how to calculate the average position of the atoms 1 and 0 of any given oscillator.</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">MDAnalysis</span> <span class="k">as</span> <span class="nn">MDA</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">universe</span> <span class="o">=</span> <span class="n">MDA</span><span class="o">.</span><span class="n">Universe</span><span class="p">()</span>
+
+<span class="n">box_vectors</span> <span class="o">=</span> <span class="n">MDA</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">mdamath</span><span class="o">.</span><span class="n">triclinic_vectors</span><span class="p">(</span>
+    <span class="n">universe</span><span class="o">.</span><span class="n">dimensions</span>
+<span class="p">)</span>
+<span class="n">box_vectors_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">box_vectors</span><span class="p">)</span>
+
+<span class="c1"># MDA returns numpy arrays</span>
+<span class="n">local_positions_cart</span> <span class="o">=</span> <span class="n">universe</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">oscillator</span><span class="o">.</span><span class="n">used_atoms</span><span class="p">]</span>
+
+<span class="c1"># @ is shorthand for matrix multiplication</span>
+<span class="n">local_positions_box</span> <span class="o">=</span> <span class="n">local_positions_cart</span> <span class="o">@</span> <span class="n">box_vectors_inv</span>
+
+<span class="c1"># keep the decimal part only</span>
+<span class="n">local_positions_box</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">local_positions_box</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">avg_pos</span> <span class="o">=</span> <span class="p">(</span><span class="n">local_positions_box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">local_positions_box</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">avg_pos</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">avg_pos</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># keep the decimal part only</span>
+
+<span class="n">avg_pos_cartesian</span> <span class="o">=</span> <span class="n">avg_pos</span> <span class="o">@</span> <span class="n">box_vectors</span>
+</pre></div>
+</div>
+</div>
+</section>
 </section>
 
 
@@ -410,13 +437,22 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="GMAP.tests.html"
+       href="index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">GMAP.tests package</p>
+        <p class="prev-next-title">Theory</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="../Adding_a_new_map/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Adding a new map</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -429,8 +465,19 @@ document.write(`
 
   <div class="sidebar-secondary-item">
 
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-vectors-for-oscillators">Calculating vectors for oscillators</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
   <div class="tocsection sourcelink">
-    <a href="../_sources/api_out/GMAP.tests.test_MathFunctions.rst.txt">
+    <a href="../_sources/Theory/PBC.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

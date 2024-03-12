@@ -41,9 +41,10 @@
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Adding_a_new_map/File_structure/index';</script>
+    <link rel="icon" href="../../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="parameters.ref" href="parameters.html" />
+    <link rel="next" title="Core.txt file" href="core.html" />
     <link rel="prev" title="Adding a new map" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -141,6 +142,13 @@
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -257,6 +265,13 @@ document.write(`
                     </li>
                 
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="../index.html">
                         Adding a new map
@@ -309,7 +324,9 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">File structure</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core.txt file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parameters.html">parameters.ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main_py.html">main.py</a></li>
 </ul>
 </li>
 </ul>
@@ -388,13 +405,97 @@ with pairs of groups. They will, for example, encode a way to calculate the
 coupling between two groups (each of which is defined in ‘Singles’).</p>
 <p>A map can take many different shapes. Both scientifically/physically speaking,
 but also in regards to its digital structure in the program. Only one central
-file is mandatory, a few other given files are optional, and from the optional
-.py file, a completely free collection of files can be accessed. Information
+file is mandatory (the core file), a few other given files are optional, and from the optional .py file, a completely free collection of files can be accessed. Information
 on each of the possible files can be found in the pages linked below.</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Core.txt file</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="core.html#functional-group">functional_group</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#step-1-an-oscillator-on-a-single-residue">Step 1 - An oscillator on a single residue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#step-2-an-oscillator-on-multiple-residues">Step 2 - An oscillator on multiple residues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#step-3-multiple-choices-of-names">Step 3 - multiple choices of names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#step-4-multiple-atoms-with-the-same-name">Step 4 - multiple atoms with the same name</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#bonus-counting-atoms">Bonus - counting atoms</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#functional-group-file">functional_group_file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#functional-group-bonds">functional_group_bonds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#used-atoms">used_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#electrostatic-atoms">electrostatic_atoms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#electrostatic-choice">electrostatic_choice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#type-and-xyz-uvec">type and xyz_uvec</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#type">type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#xyz-uvec">xyz_uvec</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#r-pos-and-r-vec">r_pos and r_vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#influencer-group">influencer_group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#add-corefile">add_corefile</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html">parameters.ref</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="parameters.html#file-layout">File layout</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="main_py.html">main.py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="main_py.html#basic-structure">Basic structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#map">Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#files">Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#printer">Printer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="main_py.html#overview-of-all-functions">Overview of all functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-adjust-runpars-files-printer-map">GM_adjust_RunPars(Files, Printer, Map)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#example-uses">Example uses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#interlinked-parameters">interlinked parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#dependent-parameters">dependent parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#available-attributes-of-map">Available attributes of Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#parameters">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-adjust-map-core-raw-files-printer-map">GM_adjust_map_core_raw(Files, Printer, Map)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id1">Example uses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#dependency-on-map-parameters">Dependency on map parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id2">Available attributes of Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id3">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-adjust-oscillators-files-printer-map-syst-oscillator-list">GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id4">Example uses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#a-map-needs-to-deal-with-two-kinds-of-oscillator">A map needs to deal with two kinds of oscillator</a></li>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#a-functional-group-is-fully-symmetrical">A functional group is fully symmetrical</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id5">Available attributes of Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id6">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-get-rotation-matrix-files-printer-map-syst-osc">GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id7">Example uses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">The default method of providing the rotation matrix is not sufficient</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id8">Available attributes of Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id9">Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#returns">Returns</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-get-dipole-files-printer-map-syst-osc">GM_get_dipole(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id10">Example uses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id11">Available attributes of Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id12">Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id13">Returns</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -421,11 +522,11 @@ on each of the possible files can be found in the pages linked below.</p>
       </div>
     </a>
     <a class="right-next"
-       href="parameters.html"
+       href="core.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">parameters.ref</p>
+        <p class="prev-next-title">Core.txt file</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

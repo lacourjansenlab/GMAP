@@ -1,0 +1,13 @@
+Water             SOL | TIP3 | WAT
+K                 K | K+
+Na                NA | NA+ | Na+
+Cl                CL | CL- | CLA
+
+Ions          :K | :Na | :Cl
+Solvent       :Water | :Ions
+
+Lipid             DMPC | POP
+
+Protein_ext       LYSH HSD HIE
+
+choice   :Solvent

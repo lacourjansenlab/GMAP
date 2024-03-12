@@ -1,7 +1,7 @@
-GMAP.tests.test\_MathFunctions module
+GMAP.src.tools.ParameterParser module
 =====================================
 
-.. automodule:: GMAP.tests.test_MathFunctions
+.. automodule:: GMAP.src.tools.ParameterParser
    :members:
    :undoc-members:
    :show-inheritance:

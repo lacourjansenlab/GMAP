@@ -1,0 +1,1196 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>GMAP.src.tools.SystemReader module &#8212; GMAP 0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script src="../_static/documentation_options.js?v=8dde47fa"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_out/GMAP.src.tools.SystemReader';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GMAP.tests package" href="GMAP.tests.html" />
+    <link rel="prev" title="GMAP.src.tools.PrintTools module" href="GMAP.src.tools.PrintTools.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">GMAP 0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
+                        Adding a new map
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Developer_guide/index.html">
+                        Developers guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        GMAP
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary" tabindex="0">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item">
+<nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
+                        Adding a new map
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Developer_guide/index.html">
+                        Developers guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="modules.html">
+                        GMAP
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="GMAP.html">GMAP package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="GMAP.src.html">GMAP.src package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.src.programs.html">GMAP.src.programs package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.programs.AIM.html">GMAP.src.programs.AIM module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.programs.GEM.html">GMAP.src.programs.GEM module</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="GMAP.src.tools.html">GMAP.src.tools package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.DefaultMapFunctions.html">GMAP.src.tools.DefaultMapFunctions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.FileHandler.html">GMAP.src.tools.FileHandler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MapReader.html">GMAP.src.tools.MapReader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html">GMAP.src.tools.MathFunctions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html">GMAP.src.tools.ParameterParser module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.PrintTools.html">GMAP.src.tools.PrintTools module</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">GMAP.src.tools.SystemReader module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="GMAP.tests.html">GMAP.tests package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.tests.test_tools.html">GMAP.tests.test_tools package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_MathFunctions.html">GMAP.tests.test_tools.test_MathFunctions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_ParameterParser.html">GMAP.tests.test_tools.test_ParameterParser module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+
+<nav aria-label="Breadcrumb">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP</a></li>
+    
+    
+    <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
+    
+    
+    <li class="breadcrumb-item"><a href="GMAP.src.tools.html" class="nav-link">GMAP.src.tools package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">GMAP.src.too...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="module-GMAP.src.tools.SystemReader">
+<span id="gmap-src-tools-systemreader-module"></span><h1>GMAP.src.tools.SystemReader module<a class="headerlink" href="#module-GMAP.src.tools.SystemReader" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Oscillator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.SystemReader.</span></span><span class="sig-name descname"><span class="pre">Oscillator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Oscillator" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores all information on a single oscillator.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>atoms</strong><span class="classifier">list of int</span></dt><dd><p>The indices of the atoms that make up this oscillator. All atoms
+specified in functional_group are in here.</p>
+</dd>
+<dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The map that this oscillator belongs to.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>Map</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The map that this oscillator belongs to.</p>
+</dd>
+<dt><strong>used_atoms</strong><span class="classifier">list of int</span></dt><dd><p>Using Map.used_atoms - contains the system indices of the atoms
+the map actually requires. Note that Map.used_atoms contains
+the local indices.</p>
+</dd>
+<dt><strong>electrostatic_atoms</strong><span class="classifier">list of int</span></dt><dd><p>The system indices of all atoms that the map should calculate
+the electrostatic properties for.</p>
+</dd>
+<dt><strong>positions_box</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The positions of all atoms given in used_atoms, in box
+coordinates.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update" title="GMAP.src.tools.SystemReader.Oscillator.frame_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame_update</span></code></a>(Syst)</p></td>
+<td><p>Update the frame-specific attributes of the instance.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Oscillator.frame_update">
+<span class="sig-name descname"><span class="pre">frame_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Syst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update" title="Link to this definition">#</a></dt>
+<dd><p>Update the frame-specific attributes of the instance.</p>
+<p>When a new frame starts, the system positions array is updated,
+so the information in this class that depends on that must be
+updated, too.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Syst</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores all information on the MD system</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Residues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.SystemReader.</span></span><span class="sig-name descname"><span class="pre">Residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">syst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Residues" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Creates and stores information on the system on a per-residue basis</p>
+<p>The System class has a lot of information on a per-atom basis, this
+class has it on a per residue.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>syst</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The class containing all the information on the system of the
+MD trajectory.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>first_ix</strong><span class="classifier">list of int</span></dt><dd><p>A list as long as there are residues in the MD system. For each
+residue, it stores the index of the first atom.</p>
+</dd>
+<dt><strong>last_ix</strong><span class="classifier">list of int</span></dt><dd><p>A list as long as there are residues in the MD system. For each
+residue, it stores the index of the last atom.</p>
+</dd>
+<dt><strong>resnames</strong><span class="classifier">list of str</span></dt><dd><p>A list as long as there are residues in the MD system. For each
+residue, it stores its residue name.</p>
+</dd>
+<dt><strong>influencer_names</strong><span class="classifier">set()</span></dt><dd><p>All residue names that are considered influencers this run.</p>
+</dd>
+<dt><strong>influencer_ix</strong><span class="classifier">list of int</span></dt><dd><p>The indices of all residues that are influencers.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.Residues.find_markers" title="GMAP.src.tools.SystemReader.Residues.find_markers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_markers</span></code></a>(syst)</p></td>
+<td><p>Make lookup tables (len=nres) for basic residue-based properties.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.Residues.manage_influencers" title="GMAP.src.tools.SystemReader.Residues.manage_influencers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">manage_influencers</span></code></a>(influencerset)</p></td>
+<td><p>Return all atom indices with one of the given residue names</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Residues.find_markers">
+<span class="sig-name descname"><span class="pre">find_markers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">syst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Residues.find_markers" title="Link to this definition">#</a></dt>
+<dd><p>Make lookup tables (len=nres) for basic residue-based properties.</p>
+<p>1D arrays are built with a length equal to the amount of
+residues in the system. For each residue, we save the index
+(atnum) of the first and last atom it consists of, as well as
+its name.
+Knowing where a residue starts/ends is very useful for further
+analysis of the MD system.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>syst</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>This object stores all important information about the MD
+system that will be analyzed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Residues.manage_influencers">
+<span class="sig-name descname"><span class="pre">manage_influencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">influencerset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Residues.manage_influencers" title="Link to this definition">#</a></dt>
+<dd><p>Return all atom indices with one of the given residue names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>influencerset</strong><span class="classifier">set</span></dt><dd><p>All residue names that should be considered.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.SystemReader.</span></span><span class="sig-name descname"><span class="pre">System</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores all information on the MD system and objects therein</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Files</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related
+properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>universe</strong><span class="classifier"><cite>MDAnalysis.Universe</cite></span></dt><dd><p>The universe that is analyzed this run.</p>
+</dd>
+<dt><strong>atnums</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the atom indices.
+First atom is numbered 0, every next index is 1 larger than the
+previous one. Counting never resets.</p>
+</dd>
+<dt><strong>atnames</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the name of each atom.</p>
+</dd>
+<dt><strong>resnums</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the number of the
+residue each atom belongs to. First residue is numbered 0, each
+subsequent residue gets an index 1 larger than the previous one.
+Counting never resets.</p>
+</dd>
+<dt><strong>resnames</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the name of the residue
+each atom belongs to.</p>
+</dd>
+<dt><strong>positions</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 2D array of shape [self.natoms, 3] storing the position of
+each atom in the MD system.</p>
+</dd>
+<dt><strong>masses</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the mass of each atom.</p>
+</dd>
+<dt><strong>charges</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the charge of each
+atom. This is the charge as used by the MD system, not as a
+certain map might need it.</p>
+</dd>
+<dt><strong>types</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the type of each atom.
+A type is often dependent on the forcefield used - each element
+can have multiple types associated with it. In the MD
+calculation, each type has certain force field parameters
+associated with it.</p>
+</dd>
+<dt><strong>segids</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the name of the segment
+each atom belongs to.</p>
+</dd>
+<dt><strong>natoms</strong><span class="classifier"><cite>np.int32</cite></span></dt><dd><p>The amount of atoms found in the MD trajectory.</p>
+</dd>
+<dt><strong>nres</strong><span class="classifier"><cite>np.int32</cite></span></dt><dd><p>The amount of residues found in the MD trajectory.</p>
+</dd>
+<dt><strong>boxdims</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The length of the 3 vectors defining the MD simulation box
+(its PBC). These are the first 3 entries returned by
+MDA.Universe.dimensions.</p>
+</dd>
+<dt><strong>halfbox</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>Same as boxdims, but each value is divided by 2.</p>
+</dd>
+<dt><strong>angles</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The angles between the three vectors defining the MD simulation
+box (its PBC). These are the last 3 entries returned by
+MDA.Universe.dimensions.</p>
+</dd>
+<dt><strong>boxvects</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The vectors defining the MD box. boxvects.shape == (3, 3).
+boxvects[i] returns one of the three vectors.
+The result of MDA.lib.mdamath.triclinic_vectors(
+self.universe.dimensions)</p>
+</dd>
+<dt><strong>boxvects_inv</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The inverse of the rotation matrix self.boxvects.</p>
+</dd>
+<dt><strong>safesphere</strong><span class="classifier">float</span></dt><dd><p>The radius of the sphere in which distances can be calculated
+accurately. If the length of any vector exceeds this size, there
+is a chance that vector is not actually the shortest available.</p>
+</dd>
+<dt><strong>residues</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.SystemReader.Residues" title="GMAP.src.tools.SystemReader.Residues"><code class="xref py py-class docutils literal notranslate"><span class="pre">Residues</span></code></a></span></dt><dd><p>This class contains information on a per-residue basis instead
+of a per-atom basis like this class does.</p>
+</dd>
+<dt><strong>molnums</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the number of the
+molecule each atom belongs to. First molecule is numbered 0,
+each subsequent molecule gets an index 1 larger than the
+previous one. Counting never resets.</p>
+</dd>
+<dt><strong>rightangled</strong><span class="classifier">bool</span></dt><dd><p>Whether self.angles only contains 90 degree angles.</p>
+</dd>
+<dt><strong>neutral</strong><span class="classifier">bool</span></dt><dd><p>Whether the total charge of the MD system (the sum of
+self.charges) equals 0. The precision used can be changed using
+the parameter
+<a class="reference internal" href="../User_guide/parameter_overview.html#userguide-page-parameter-overview"><span class="std std-ref">neutral_charge_threshold</span></a>.</p>
+</dd>
+<dt><strong>oscillators</strong><span class="classifier">list of <a class="reference internal" href="#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>All oscillators that were found in the MD system. These are the
+ones calculations will be performed on.</p>
+</dd>
+<dt><strong>influencers_atix</strong><span class="classifier">list of int</span></dt><dd><p>The indices of all atoms that should be considered influencers.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.abs_resnums" title="GMAP.src.tools.SystemReader.System.abs_resnums"><code class="xref py py-obj docutils literal notranslate"><span class="pre">abs_resnums</span></code></a>(Printer)</p></td>
+<td><p>Renumbers residue numbers so they start at 0, and never reset</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.basic_boxchecks" title="GMAP.src.tools.SystemReader.System.basic_boxchecks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">basic_boxchecks</span></code></a>(Printer, RunPars)</p></td>
+<td><p>Performs the first basic analyses on the provided universe.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.confirm_bond" title="GMAP.src.tools.SystemReader.System.confirm_bond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confirm_bond</span></code></a>(ix1, ix2)</p></td>
+<td><p>Check whether the given atoms are bonded</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.confirm_internal_bond" title="GMAP.src.tools.SystemReader.System.confirm_internal_bond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confirm_internal_bond</span></code></a>(oscillator, bond)</p></td>
+<td><p>Check whether the given bond exists in the given oscillator</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.extend_oscillator" title="GMAP.src.tools.SystemReader.System.extend_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend_oscillator</span></code></a>(found_local_ix, ...)</p></td>
+<td><p>Add all residues that are correctly bonded.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_influencers" title="GMAP.src.tools.SystemReader.System.find_influencers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_influencers</span></code></a>(Printer, RunPars)</p></td>
+<td><p>Find the indices of all atoms that are influencers</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators" title="GMAP.src.tools.SystemReader.System.find_oscillators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators</span></code></a>(Files, Printer, RunPars)</p></td>
+<td><p>Finds all the oscillators in the MD system</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_atoms" title="GMAP.src.tools.SystemReader.System.find_oscillators_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_atoms</span></code></a>(resnum, residue_atoms)</p></td>
+<td><p>See if the found residue indeed matches the desired template</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_perstruct" title="GMAP.src.tools.SystemReader.System.find_oscillators_perstruct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_perstruct</span></code></a>(struct, map_)</p></td>
+<td><p>Finds all oscillators matching the given structure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_residue" title="GMAP.src.tools.SystemReader.System.find_oscillators_residue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_residue</span></code></a>(residue)</p></td>
+<td><p>Finds all oscillators matching the given residue template.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.match_residues" title="GMAP.src.tools.SystemReader.System.match_residues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match_residues</span></code></a>(all_oscillators, struct)</p></td>
+<td><p>Finds the full oscillator from component residues</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.set_properties" title="GMAP.src.tools.SystemReader.System.set_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_properties</span></code></a>(Printer)</p></td>
+<td><p>Sets the basic properties of the system.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.abs_resnums">
+<span class="sig-name descname"><span class="pre">abs_resnums</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.abs_resnums" title="Link to this definition">#</a></dt>
+<dd><p>Renumbers residue numbers so they start at 0, and never reset</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.basic_boxchecks">
+<span class="sig-name descname"><span class="pre">basic_boxchecks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.basic_boxchecks" title="Link to this definition">#</a></dt>
+<dd><p>Performs the first basic analyses on the provided universe.</p>
+<p>Doesn’t return anything - if anything is amiss, it will just
+throw a fatal error.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.confirm_bond">
+<span class="sig-name descname"><span class="pre">confirm_bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ix1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.confirm_bond" title="Link to this definition">#</a></dt>
+<dd><p>Check whether the given atoms are bonded</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ix1, ix2</strong><span class="classifier">int</span></dt><dd><p>The system-indices of the two atoms to check</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>is_bond</strong><span class="classifier">bool</span></dt><dd><p>Whether the two atoms are bonded</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.confirm_internal_bond">
+<span class="sig-name descname"><span class="pre">confirm_internal_bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.confirm_internal_bond" title="Link to this definition">#</a></dt>
+<dd><p>Check whether the given bond exists in the given oscillator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>oscillator</strong><span class="classifier">list of int</span></dt><dd><p>The system-indices of the atoms that make up the oscillator.</p>
+</dd>
+<dt><strong>bond</strong><span class="classifier">tup of int</span></dt><dd><p>The oscillator-indices of the two atoms that should make up
+the bond.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>is_bond</strong><span class="classifier">bool</span></dt><dd><p>Whether the requested bond exists in the given group</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.extend_oscillator">
+<span class="sig-name descname"><span class="pre">extend_oscillator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">found_local_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_local_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_residue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_oscillators</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.extend_oscillator" title="Link to this definition">#</a></dt>
+<dd><p>Add all residues that are correctly bonded.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>found_local_ix</strong><span class="classifier">int</span></dt><dd><p>The local index of the atom in the bond that we already
+have.</p>
+</dd>
+<dt><strong>new_local_ix</strong><span class="classifier">int</span></dt><dd><p>The local index of the atom in the bond that we are still
+missing.</p>
+</dd>
+<dt><strong>base_residue</strong><span class="classifier">list of int</span></dt><dd><p>The system indices of the group we’re trying to extend</p>
+</dd>
+<dt><strong>struct</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Structure" title="GMAP.src.tools.MapReader.Structure"><code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></a></span></dt><dd><p>What the oscillator we’re looking for looks like.</p>
+</dd>
+<dt><strong>all_oscillators</strong><span class="classifier">list of list of list of int</span></dt><dd><p>Contains all groups of atoms that are a match for each of
+the residues in the oscillator.
+A list(1) with an item for each of the residues. Each of
+those items is a list(2), containing all groups that are a
+candidate for this residue. Each group in list(2) is itself
+a list of the (system-) indices of the atoms that make up
+the group.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>outlist</strong><span class="classifier">list of list of int</span></dt><dd><p>All new groups that follow out of base_residue.
+Each list of int is a group that matches the current bond.
+It is made of the base_residue, with a new residue’s worth
+of atoms added on.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.find_influencers">
+<span class="sig-name descname"><span class="pre">find_influencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.find_influencers" title="Link to this definition">#</a></dt>
+<dd><p>Find the indices of all atoms that are influencers</p>
+<p>Influencers are the atoms whose charge should be considered
+while calculating the VEG for a given point. This is a first
+guess, things like local-ix, spheresize and the like are not
+yet considered.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.find_oscillators">
+<span class="sig-name descname"><span class="pre">find_oscillators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.find_oscillators" title="Link to this definition">#</a></dt>
+<dd><p>Finds all the oscillators in the MD system</p>
+<p>Before an oscillator is considered ‘found’, it has to match the
+following criteria:</p>
+<p>Firstly, an oscillator must have matching residue and atom names
+with the definition in the map.</p>
+<p>Secondly, an oscillator must have all the bonds specified by the
+map.</p>
+<p>Lastly, an oscillator must pass the final check by the map
+itself.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Files</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related
+properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.find_oscillators_atoms">
+<span class="sig-name descname"><span class="pre">find_oscillators_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resnum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">residue_atoms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.find_oscillators_atoms" title="Link to this definition">#</a></dt>
+<dd><p>See if the found residue indeed matches the desired template</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>resnum</strong><span class="classifier">int</span></dt><dd><p>The number of the MD residue to compare to the template</p>
+</dd>
+<dt><strong>residue_atoms: list of list of str</strong></dt><dd><p>The template for the residue - for each relevant position,
+a list of allowed atom names.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>atoms_ix</strong><span class="classifier">None or list of int</span></dt><dd><p>The MD atom indices (atnums) of the residue that match the
+template. If this residue is not a match, None is returned
+instead.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.find_oscillators_perstruct">
+<span class="sig-name descname"><span class="pre">find_oscillators_perstruct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.find_oscillators_perstruct" title="Link to this definition">#</a></dt>
+<dd><p>Finds all oscillators matching the given structure.</p>
+<p>Considers residue and atoms names, as well as bonds defined in
+the map.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>struct</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Structure" title="GMAP.src.tools.MapReader.Structure"><code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></a></span></dt><dd><p>The structure template that will be matched.</p>
+</dd>
+<dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The map instance the structure belongs to.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>all_oscillators</strong><span class="classifier">list of             <a class="reference internal" href="#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>All oscillators that were found matching the given structure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.find_oscillators_residue">
+<span class="sig-name descname"><span class="pre">find_oscillators_residue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">residue</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.find_oscillators_residue" title="Link to this definition">#</a></dt>
+<dd><p>Finds all oscillators matching the given residue template.</p>
+<p>Only considers residue and atoms names.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>residue</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Residue" title="GMAP.src.tools.MapReader.Residue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Residue</span></code></a></span></dt><dd><p>The desired residue template for which the MD system will be
+searched.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.match_residues">
+<span class="sig-name descname"><span class="pre">match_residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_oscillators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.match_residues" title="Link to this definition">#</a></dt>
+<dd><p>Finds the full oscillator from component residues</p>
+<p>Some oscillators live fully inside a single residue, but others
+don’t. If they dont, the atoms of multiple residues have to
+match, and those residues must be correctly bonded. This method
+enforces that second part. It receives all groups of atoms that
+conform to the per-residue selection (exactly like
+single-residue oscillators), and sees which are bonded
+correctly.</p>
+<p>As an example, imagine an oscillator spanning 3 residues, that
+occurs 10 times in the system. Most likely, there will be 10
+candidates that look like the first residue of the oscillator,
+10 that look like the second, and 10 that look like the third.
+This function then checks which of the matches for the first
+residue is bonded to which of the matches for the second, and to
+those of the third.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>all_oscillators</strong><span class="classifier">list of list of list of int</span></dt><dd><p>Contains all groups of atoms that are a match for each of
+the residues in the oscillator.
+A list(1) with an item for each of the residues. Each of
+those items is a list(2), containing all groups that are a
+candidate for this residue. Each group in list(2) is itself
+a list of the (system-) indices of the atoms that make up
+the group.</p>
+</dd>
+<dt><strong>struct</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Structure" title="GMAP.src.tools.MapReader.Structure"><code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></a></span></dt><dd><p>What the oscillator we’re looking for looks like.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>oscillators_to_do</strong><span class="classifier">list of list of int</span></dt><dd><p>All groups of atoms that match the template structure. Each
+group of atoms is a list of system-indices of the atoms it
+contains.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.set_properties">
+<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.set_properties" title="Link to this definition">#</a></dt>
+<dd><p>Sets the basic properties of the system.</p>
+<p>Extracts them from self.universe.atoms, and saves them in self.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.check_box_charge">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.SystemReader.</span></span><span class="sig-name descname"><span class="pre">check_box_charge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.check_box_charge" title="Link to this definition">#</a></dt>
+<dd><p>Checks whether the supplied universe has neutral charge.</p>
+<p>If the box has a non-integer charge, the program throws an error
+and quits.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+<dt><strong>charges</strong><span class="classifier">np.ndarray</span></dt><dd><p>The charges of all atoms in the system. Array is 1-dimensional,
+with a length equal to the amount of atoms in the MD simulation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>is_neutral</strong><span class="classifier">bool</span></dt><dd><p>True if the box charge is (within threshold) neutral
+False if the box charge is (within threshold) integer, but not
+neutral.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.check_box_rightangled">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.SystemReader.</span></span><span class="sig-name descname"><span class="pre">check_box_rightangled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.check_box_rightangled" title="Link to this definition">#</a></dt>
+<dd><p>Checks whether the supplied universe has only right angles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>universe</strong><span class="classifier">MDAnalysis.Universe</span></dt><dd><p>The universe that will be analyzed this run</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>rightangled</strong><span class="classifier">bool</span></dt><dd><p>Whether this universe has right angles only.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.gen_universe">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.SystemReader.</span></span><span class="sig-name descname"><span class="pre">gen_universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.gen_universe" title="Link to this definition">#</a></dt>
+<dd><p>Calls MDAanalysis.Universe on the supplied files and catches errors.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>universe</strong><span class="classifier"><cite>MDAnalysis.Universe</cite></span></dt><dd><p>The universe that will be analyzed this run</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="GMAP.src.tools.PrintTools.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">GMAP.src.tools.PrintTools module</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="GMAP.tests.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">GMAP.tests package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator"><code class="docutils literal notranslate"><span class="pre">Oscillator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update"><code class="docutils literal notranslate"><span class="pre">Oscillator.frame_update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Residues"><code class="docutils literal notranslate"><span class="pre">Residues</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Residues.find_markers"><code class="docutils literal notranslate"><span class="pre">Residues.find_markers()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Residues.manage_influencers"><code class="docutils literal notranslate"><span class="pre">Residues.manage_influencers()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System"><code class="docutils literal notranslate"><span class="pre">System</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.abs_resnums"><code class="docutils literal notranslate"><span class="pre">System.abs_resnums()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.basic_boxchecks"><code class="docutils literal notranslate"><span class="pre">System.basic_boxchecks()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.confirm_bond"><code class="docutils literal notranslate"><span class="pre">System.confirm_bond()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.confirm_internal_bond"><code class="docutils literal notranslate"><span class="pre">System.confirm_internal_bond()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.extend_oscillator"><code class="docutils literal notranslate"><span class="pre">System.extend_oscillator()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_influencers"><code class="docutils literal notranslate"><span class="pre">System.find_influencers()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators_atoms"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators_atoms()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators_perstruct"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators_perstruct()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators_residue"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators_residue()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.match_residues"><code class="docutils literal notranslate"><span class="pre">System.match_residues()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.set_properties"><code class="docutils literal notranslate"><span class="pre">System.set_properties()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.check_box_charge"><code class="docutils literal notranslate"><span class="pre">check_box_charge()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.check_box_rightangled"><code class="docutils literal notranslate"><span class="pre">check_box_rightangled()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.gen_universe"><code class="docutils literal notranslate"><span class="pre">gen_universe()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/api_out/GMAP.src.tools.SystemReader.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2023, KE van Adrichem.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.14.4.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,9 +1,20 @@
+topology_file                GMAP/sourcefiles/pdb_1AKI.tpr
+trajectory_file              GMAP/sourcefiles/pdb_1AKI_50frame.xtc
+
 source_directory      GMAP/sourcefiles
 log_filename          log.log
 map_directory         GMAP/maps
+maps_to_use                     AmideSC
+influencers_whitelist           :All
+influencers_blacklist           :None
+influencers_file                GMAP/sourcefiles/infl_file_base.txt
+influencers_select_atoms        segid *
+
 
 verbose 3
 verbose_logfile 4
 prevent_overwrite False
-test_par group1
-test_par2 4.4
+
+neutral_charge_threshold                   0.0001
+guess_bonds                                False
+
