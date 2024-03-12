@@ -49,7 +49,7 @@ def cmd_interface(callcommand):
 
     if choice.lower() in allhelps:
         if subch.lower() in allhelps:
-            Printer.print(GMAP.__doc__)
+            Printer.print(1, GMAP.__doc__)
             Printer.quit_early()
         elif subch in GMAP.alltools:
             modch = getattr(GMAP, subch)

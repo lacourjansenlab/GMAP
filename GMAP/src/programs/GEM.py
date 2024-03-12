@@ -193,6 +193,7 @@ def GEM(callcommand, Files, Printer):
     CmdPars, InPars, DefPars, RefPars, mapdict = get_parameters(
         Files, Printer, in_parfile, argslist
     )
+
     GM_PT.devprint("entered main of GEM - yet to be constructed")
 
 
