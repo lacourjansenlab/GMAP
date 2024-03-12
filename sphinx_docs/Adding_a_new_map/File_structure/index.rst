@@ -1,6 +1,6 @@
-==============
+##############
 File structure
-==============
+##############
 
 All maps are stored inside a map directory, that can be supplied to
 the program using the `map_directory` keyword. The keyword can be given
@@ -22,11 +22,12 @@ coupling between two groups (each of which is defined in 'Singles').
 
 A map can take many different shapes. Both scientifically/physically speaking,
 but also in regards to its digital structure in the program. Only one central
-file is mandatory, a few other given files are optional, and from the optional
-.py file, a completely free collection of files can be accessed. Information
+file is mandatory (the core file), a few other given files are optional, and from the optional .py file, a completely free collection of files can be accessed. Information
 on each of the possible files can be found in the pages linked below.
 
 .. toctree::
 
+    core
     parameters
+    main_py
 

@@ -1,8 +1,8 @@
 .. _UserGuide_page_map_parameters:
 
-==============
+##############
 parameters.ref
-==============
+##############
 
 This is an optional file containing all keyword parameters the map needs. The file must be of the name 'parameters.ref' for it to be recognized.
 
@@ -13,8 +13,9 @@ In the program, the contents of this file are stored in the map-specific instanc
 For a good example, you can look at the file 'reference_parameters.ref' in the sourcefiles directory. It contains all the parameters used by the program.
 
 
+***********
 File layout
-===========
+***********
 
 As with all GMAP source files, when a hashtag (#) is found, it and everything ater it on that line will be ignored. This allows for making notes and comments in the file.
 
@@ -29,6 +30,7 @@ Notice that the shorthand does not influence the map name itself. This means tha
 The shorthand is fully optional. If you don't want to specify one, leave it out, and don't add the parentheses. 
 
 .. _UserGuide_page_map_parameters_types:
+
 parameter_type denotes what the python datatype of the parameter choice should be. Currently, the options are 'path' (for pathlib.Path type - file names), 'str' (for strings), 'bool' (for booleans), 'int' (for integers), and 'float'.
 If a parameter should be allowed (but still not required) to take more than one argument, the type should be prepended with 'list\_'. So, if the desired type is multiple strings, the type should be 'list_str'.
 In the case of 'path' parameter types, something must be appended, too. There are three options: 'path_sep' is for when a path exists on its own, 'path_dir' is for a directory name - 'path_rel' is for files that are expected in a directory stored in a 'path_dir' parameter. To denote which 'path_rel's belong to which 'path_dir', an extra suffix is used. The suffix can be chosen freely, but must be unique within the parameter file. So, for example, all parameters of the type 'path_rel_1' are expected relative to the location stored in the parameter of type 'path_dir_1' (of this type, there should be only one), while all parameters of type 'path_dir_ts' are expected relative to the location stored in the parameter of type 'path_dir_ts'.

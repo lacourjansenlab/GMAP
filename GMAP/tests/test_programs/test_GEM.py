@@ -18,7 +18,9 @@ def test_get_parameters():
     in_parfile = Path("../test_inpar.txt").resolve()
     argslist = []
 
-    CmdPars, InPars, DefPars, RefPars, mapdict = GM_GEM.get_parameters(
+    (
+        RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+    ) = GM_GEM.get_parameters(
         Files, Printer, in_parfile, argslist
     )
 
@@ -26,10 +28,12 @@ def test_get_parameters():
     # has already been tested separately.
     assert InPars.fname.name == "test_inpar.txt"
     assert DefPars == RefPars
-    assert len(mapdict) == 3
+    assert len(mapdict) == 6
     assert CmdPars.choices == {}
 
-    CmdPars, InPars, DefPars, RefPars, mapdict = GM_GEM.get_parameters(
+    (
+        RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+    ) = GM_GEM.get_parameters(
         Files, Printer, None, argslist
     )
 
@@ -37,7 +41,9 @@ def test_get_parameters():
 
     argslist = ["-dpf", "../test_defpar.txt"]
 
-    CmdPars, InPars, DefPars, RefPars, mapdict = GM_GEM.get_parameters(
+    (
+        RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+    ) = GM_GEM.get_parameters(
         Files, Printer, in_parfile, argslist
     )
 

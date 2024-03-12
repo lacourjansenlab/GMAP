@@ -41,10 +41,11 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_out/GMAP.src.tools.FileHandler';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="GMAP.src.tools.MapReader module" href="GMAP.src.tools.MapReader.html" />
-    <link rel="prev" title="GMAP.src.tools package" href="GMAP.src.tools.html" />
+    <link rel="prev" title="GMAP.src.tools.DefaultMapFunctions module" href="GMAP.src.tools.DefaultMapFunctions.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -146,6 +147,13 @@
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -161,7 +169,7 @@
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -258,6 +266,13 @@ document.write(`
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -273,7 +288,7 @@ document.write(`
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -316,17 +331,23 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="GMAP.src.tools.html">GMAP.src.tools package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.DefaultMapFunctions.html">GMAP.src.tools.DefaultMapFunctions module</a></li>
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">GMAP.src.tools.FileHandler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MapReader.html">GMAP.src.tools.MapReader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html">GMAP.src.tools.MathFunctions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html">GMAP.src.tools.ParameterParser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.PrintTools.html">GMAP.src.tools.PrintTools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.SystemReader.html">GMAP.src.tools.SystemReader module</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="GMAP.tests.html">GMAP.tests package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="GMAP.tests.test_MathFunctions.html">GMAP.tests.test_MathFunctions module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.tests.test_tools.html">GMAP.tests.test_tools package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_MathFunctions.html">GMAP.tests.test_tools.test_MathFunctions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_ParameterParser.html">GMAP.tests.test_tools.test_ParameterParser module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -371,7 +392,7 @@ document.write(`
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP Code documentation</a></li>
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP</a></li>
     
     
     <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
@@ -478,7 +499,7 @@ and handle errors.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.check_file_readability">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">check_file_readability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.check_file_readability" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">check_file_readability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doquit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.check_file_readability" title="Link to this definition">#</a></dt>
 <dd><p>Checks if a given file can be read.</p>
 <p>If not, throws an error, and quits.</p>
 <div class="admonition seealso">
@@ -495,6 +516,12 @@ and handle errors.</p>
 and handle errors.</p>
 </dd>
 <dt><strong>fname</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The path to the file to check.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>_</strong><span class="classifier">bool</span></dt><dd><p>Whether the file is readable.</p>
 </dd>
 </dl>
 </dd>
@@ -525,7 +552,7 @@ Linux, or MacOS.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.get_bare_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">get_bare_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floc_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.get_bare_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">get_bare_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floc_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.get_bare_file" title="Link to this definition">#</a></dt>
 <dd><p>Determine the path to a file given all input sources</p>
 <p>There are 4 places that might store information regarding the file’s path,
 which should be considered in a set order.</p>
@@ -705,12 +732,12 @@ Does not check whether the file is of a readable format.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="GMAP.src.tools.html"
+       href="GMAP.src.tools.DefaultMapFunctions.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">GMAP.src.tools package</p>
+        <p class="prev-next-title">GMAP.src.tools.DefaultMapFunctions module</p>
       </div>
     </a>
     <a class="right-next"
