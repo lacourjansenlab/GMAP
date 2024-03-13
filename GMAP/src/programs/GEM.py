@@ -3,7 +3,7 @@ Usage:
 
     GMAP GEM
     GMAP GEM help
-prints this help
+Prints this help.
 
     GMAP GEM demo
 Launches GEM in demo-mode. Performs a basic calculation to demonstrate basic
