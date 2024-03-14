@@ -34,35 +34,40 @@ def Setup(callcommand, Files, Printer):
              This is the folder to which the user copies the maps.
     """
 
-    target = callcommand[1]
+    target = Path(callcommand[1]).resolve()
 
-    if not Path(target).is_dir():
-        Printer.warning(
-            f"{target} is not a valid directory, please submit a valid target "
-            "target directory.", "SU_Setup_1", True
-        )
+    target_srcdir = target / "sourcefiles_copy"
+    target_mapdir = target / "maps_copy"
 
-    target_srcdir = target + "\\sourcefiles_copy"
-    target_mapdir = target + "\\maps_copy"
-
-    if Path(target_srcdir).exists():
-        Printer.warning(
-            f"The folder {target_srcdir} already exist. Please rename it or "
-            "select another target folder.",
-            "SU_Setup_2", True
-        )
-    if Path(target_srcdir).exists():
-        Printer.warning(
-            f"The folder {target_mapdir} already exist. Please rename it or "
-            "select another target folder.",
-            "SU_Setup_3", True
-        )
+    verify_target(target, target_srcdir, target_mapdir, Printer)
 
     src_dir = Files.sourcedir_hc
     map_dir = Files.mapdir_hc
 
     shutil.copytree(src_dir, target_srcdir)
     shutil.copytree(map_dir, target_mapdir)
+
+
+def verify_target(target, target_srcdir, target_mapdir, Printer):
+    if not target.is_dir():
+        Printer.warning(
+            f"{target} is not a valid directory, please submit a valid target "
+            "target directory.", "Setup_1", True
+        )
+
+    if Path(target_srcdir).exists():
+        Printer.warning(
+            f"The folder {target_srcdir} already exist. Please rename it or "
+            "select another target folder.",
+            "Setup_2", True
+        )
+
+    if Path(target_srcdir).exists():
+        Printer.warning(
+            f"The folder {target_mapdir} already exist. Please rename it or "
+            "select another target folder.",
+            "Setup_3", True
+        )
 
 
 def main():
