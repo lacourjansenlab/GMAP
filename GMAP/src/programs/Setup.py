@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 # local imports
-from GMAP.src.tools.PrintTools import devprint as dpr
+# from GMAP.src.tools.PrintTools import devprint as dpr
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.PrintTools as GM_PT
 
@@ -42,9 +42,12 @@ def Setup(callcommand, Files, Printer):
         The object that allows to cleanly log and print during runtime,
         and handle errors.
     """
+    Printer.program_state = "running"
+    Printer.verbose = 0
+    Printer.verbose_logfile = 1
 
     target = Path(callcommand[1]).resolve()
-    dpr(type(target))
+
     target_srcdir = target / "sourcefiles_copy"
     target_mapdir = target / "maps_copy"
 
@@ -55,6 +58,8 @@ def Setup(callcommand, Files, Printer):
 
     shutil.copytree(src_dir, target_srcdir)
     shutil.copytree(map_dir, target_mapdir)
+
+    Printer.print(0, f"Copied folders to {target} succesfully!")
 
 
 def verify_target(target, target_srcdir, target_mapdir, Printer):

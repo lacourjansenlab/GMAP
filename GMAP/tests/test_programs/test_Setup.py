@@ -63,12 +63,16 @@ def test_verify_target(tmp_path):
     GM_Setup.verify_target(tmp_path, sourcefiles_dir, mapfiles_dir, Printer)
 
 
-def test_Setup(tmp_path):
+def test_Setup(tmp_path, capsys):
     callcommand = ["Setup", tmp_path]
     Files = GM_FH.FileLocations()
     Printer = GM_PT.Printer(Files)
 
     GM_Setup.Setup(callcommand, Files, Printer)
+
+    captured = capsys.readouterr()
+    assert captured.out.endswith(f"Copied folders to {tmp_path} "
+                                 "succesfully!\n")
 
 
 def base_tests(tmp_path):  # Not a test
