@@ -71,7 +71,7 @@ def test_Setup(tmp_path, capsys):
     GM_Setup.Setup(callcommand, Files, Printer)
 
     captured = capsys.readouterr()
-    assert captured.out.endswith(f"Copied folders to {tmp_path} "
+    assert captured.out.endswith(f"Copied folders to\n{tmp_path}\n"
                                  "succesfully!\n")
 
 
