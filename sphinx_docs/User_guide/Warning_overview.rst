@@ -364,9 +364,13 @@ There is no bond information in the supplied MD system, but this information is 
   - Charmm: .psf
   - NAMD: .psf
 
-***********
-Other codes
-***********
+*************************
+Codes starting with Setup
+*************************
+
+
+Setup
+=====
 
 Setup_1
 -------
@@ -379,6 +383,10 @@ A file named sourcefiles_copy already exists in the directory that is being copi
 Setup_3
 -------
 A file named maps_copy already exists in the directory that is being copied to.
+
+***********
+Other codes
+***********
 
 howtogethere
 ============
