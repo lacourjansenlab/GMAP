@@ -42,9 +42,7 @@ def Setup(callcommand, Files, Printer):
         The object that allows to cleanly log and print during runtime,
         and handle errors.
     """
-    Printer.program_state = "running"
-    Printer.verbose = 0
-    Printer.verbose_logfile = 1
+    Printer.set_state("running", 2, 3)
 
     target = Path(callcommand[1]).resolve()
 
@@ -59,7 +57,7 @@ def Setup(callcommand, Files, Printer):
     shutil.copytree(src_dir, target_srcdir)
     shutil.copytree(map_dir, target_mapdir)
 
-    Printer.print(0, f"Copied folders to {target} succesfully!")
+    Printer.print(1, f"Copied folders to {target} successfully!")
 
 
 def verify_target(target, target_srcdir, target_mapdir, Printer):
@@ -72,12 +70,12 @@ def verify_target(target, target_srcdir, target_mapdir, Printer):
 
     Parameters:
     ----------
-    target : :class:'pathlib.WindowsPath' | 'pathlib.PosixPath'
+    target : :class:'pathlib.Path'
         The object that is the path leading to the target folder.
-    target_srcdir : :class:'pathlib.WindowsPath' | 'pathlib.PosixPath'
+    target_srcdir : :class:'pathlib.Path'
         The object that is the path that will be the location where the
         sourcefiles folder copy will reside.
-    target_mapdir : :class:'pathlib.WindowsPath' | 'pathlib.PosixPath'
+    target_mapdir : :class:'pathlib.Path'
         The object that is the path that will be the location where the
         maps folder copy will reside.
     Printer : :class:`GMAP.src.tools.PrintTools.Printer`
