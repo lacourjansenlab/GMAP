@@ -796,10 +796,8 @@ class TestRunPars:
             curpath / "../test_MathFunctions.py").resolve()
         assert RunPars.path_test_free_new == Path(
             curpath / "../Data/tost_outfile.txt").resolve()
-
         # assert RunPars.path_test_choice == Path(
         #     curpath / "../test_Mathfunctions.py").resolve()
-        
         assert RunPars.path_test_free_new_list == [
             Path(curpath / "../Data/test_outfile_0_1.txt").resolve(),
             Path(curpath / "../Data/test_outfile_0_2.txt").resolve()

@@ -64,8 +64,8 @@ def get_get_dipole(Printer, map_):
     # dpr(envelop_int("1-0", "pos(", ")"))
     # dpr(envelop_int("np.cross(1, 0)", "pos(", ")"))
     # dpr(envelop_int("(1+0)/2.0", "pos(", ")"))
-    dpr(map_.rawcore["r_vec"])
-    dpr(codestring)
+    # dpr(map_.rawcore["r_vec"])
+    # dpr(codestring)
 
     try:
         # exec(codestring, globals(), locals())
@@ -146,7 +146,7 @@ def get_get_rotation_matrix(Printer, map_):
     # now, combine into array to return
     codestring += "    return np.array([x_uvec, y_uvec, z_uvec])\n"
 
-    dpr(codestring)
+    # dpr(codestring)
 
     try:
         # exec(codestring, globals(), locals())
