@@ -31,7 +31,7 @@ def Setup(callcommand, Files, Printer):
     a new folder that is specified by the user with an absolute path.
     src and maps will both go into the same folder.
 
-    Parameters:
+    Parameters
     ----------
     callcommand : list of str
         This is the user input into the terminal.
@@ -68,7 +68,7 @@ def verify_target(target, target_srcdir, target_mapdir, Printer):
     and the GMAP\\maps directory will be copied into the target
     directory.
 
-    Parameters:
+    Parameters
     ----------
     target : 'pathlib.Path'
         The object that is the path leading to the target folder.

@@ -243,6 +243,10 @@ MI_MR_5
 -------
 An extra core file was requested to be appended to the given core file. However, some error occurred while trying to do this. This is an issue that most likely needs to be fixed by the developer of this map.
 
+MI_MR_6
+-------
+An extra core file was requested to be appended to the given core file. However, no file of the requested name could be found. If the developer did not provide additional instructions on extra files to add, this is an issue that most likely needs to be fixed by the developer of this map.
+
 
 MI_MC
 =====
@@ -360,6 +364,25 @@ There is no bond information in the supplied MD system, but this information is 
   - Charmm: .psf
   - NAMD: .psf
 
+*************************
+Codes starting with Setup
+*************************
+
+
+Setup
+=====
+
+Setup_1
+-------
+The directory to which the sourcefiles and the maps are attempted to be copied, do not exist.
+
+Setup_2
+-------
+A file named sourcefiles_copy already exists in the directory that is being copied to.
+
+Setup_3
+-------
+A file named maps_copy already exists in the directory that is being copied to.
 
 ***********
 Other codes
