@@ -1,0 +1,41 @@
+# This file is made with consideration for very large functional groups.
+# Instead of defining a group on a single line with the same format as AIM
+# did, here, each line becomes a section, and each element on a line becomes
+# a line.
+
+
+newstruct  # flag to indicate a new structure
+           # blank line is fully optional
+[ASN]        # name of the residue. If multiple options, separate by, euh, what?
+
+CG         # name of atom that will get index 0 in the array
+OD1        # name of atom that will get index 1 in the array
+CB(1         # index 2
+ND2(1)      # index 3
+HD21
+HD22
+
+
+newstruct
+
+[GLN]
+
+CD
+OE1
+CG
+NE2
+HE21
+HE22
+
+
+# dict- k=functional_group, val=list(1)  -> later becomes class (attr).
+# each item in list(1) corresponds to single struct, is itself a list(2).
+# each item in list(2) corresponds to a single residue, is itself a list(3).
+# each residue (list(3)) consists of 2 items - the first for the residue name (list of str), the second for atom names - is itself a list(4)
+# each item in list(4) corresponds to an atom - is itself a list of str.
+
+# atom bonds:
+# each item in list(1)  corresponds to single struct, is itself a list(2)
+# each item in list2 corresponds to a bond, is list of 2 items - ix of each atom in the bond.
+
+

@@ -296,7 +296,7 @@ class Map():
         if not self.success:
             return
 
-        dpr(self.code.GM_get_dipole)
+        # dpr(self.code.GM_get_dipole)
         # dpr(self.code.GM_get_dipole())
 
     def append_core(self, Printer):
@@ -341,6 +341,8 @@ class Map():
                         "that name could be found",
                         "MI_MR_6", False, exception=ex
                     )
+                    self.success = False
+                    return
                 except Exception as ex:
                     Printer.warning(
                         f"\nThe file {fpaths[0]} was requested to be added to "
@@ -556,7 +558,7 @@ class Map():
             The contents of the file, not yet analyzed for validity.
         """
 
-        if not file_contents:
+        if file_contents is None:
             file_contents = {}
 
         with open(filepath) as fhand:
@@ -717,6 +719,8 @@ class Core():
             )
         else:
             self.electrostatic_choice = None
+        if not self.success:
+            return
 
         self.type = self.parse_type(Printer, rawcore, Map.directory)
         if not self.success:
@@ -774,8 +778,8 @@ class Core():
         # step 2: if the 'separate-file' method is used for the definition,
         #         translate it to the in-file method, and store it as such.
         if fgfile_par in rawcore:
-            fname = (mapdir / rawcore[fgfile_par]).resolve()
-            if not fname.isfile():
+            fname = (mapdir / rawcore[fgfile_par][0]).resolve()
+            if not fname.is_file():
                 Printer.warning(
                     f"\nThe file {corefile} wants to use the file {fname}"
                     " to define the functional groups for that map. "
@@ -815,7 +819,9 @@ class Core():
             if not self.success:
                 return
 
-            self.check_bonds(Printer)
+            self.check_bonds(Printer, corefile)
+            if not self.success:
+                return
 
         if "requires_bonds" in rawcore:
             if rawcore["requires_bonds"][0].lower() in ("t", "true"):
@@ -1515,6 +1521,6 @@ def scan_mapdirs(mapdirs):
                 ]
 
             for ssdir in ssdirs:
-                mapp = Map(ssdir, available_files_sub + available_files)
-                all_maps[mapp.name] = mapp
+                map_ = Map(ssdir, available_files_sub + available_files)
+                all_maps[map_.name] = map_
     return all_maps

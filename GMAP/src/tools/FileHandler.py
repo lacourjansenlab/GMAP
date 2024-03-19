@@ -402,7 +402,7 @@ def check_file_readability(Printer, fname, doquit=True):
         Whether the file is readable.
     """
     try:
-        with open(fname) as file:
+        with open(fname, 'r', encoding='utf-8') as file:
             for _ in file:
                 pass
     except UnicodeDecodeError:
