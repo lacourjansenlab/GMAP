@@ -60,7 +60,13 @@ def test_Setup_3(capsys, tmp_path):   # Tests if mapdir doesn't exist yet
 def test_verify_target(tmp_path):
     Printer, sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
 
-    GM_Setup.verify_target(tmp_path, sourcefiles_dir, mapfiles_dir, Printer)
+    try:
+        GM_Setup.verify_target(tmp_path, sourcefiles_dir,
+                               mapfiles_dir, Printer)
+    except BaseException:
+        assert False
+    else:
+        assert True
 
 
 def test_Setup(tmp_path, capsys):
@@ -73,6 +79,12 @@ def test_Setup(tmp_path, capsys):
     captured = capsys.readouterr()
     assert captured.out.endswith(GM_PT.prettifier("Copied folders to "
                                  f"{tmp_path} successfully!\n"))
+
+    target_srcdir = tmp_path / "sourcefiles_copy"
+    target_mapdir = tmp_path / "maps_copy"
+
+    assert target_srcdir.exists()
+    assert target_mapdir.exists()
 
 
 def base_tests(tmp_path):  # Not a test

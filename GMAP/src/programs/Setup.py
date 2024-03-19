@@ -70,15 +70,15 @@ def verify_target(target, target_srcdir, target_mapdir, Printer):
 
     Parameters:
     ----------
-    target : :class:'pathlib.Path'
+    target : 'pathlib.Path'
         The object that is the path leading to the target folder.
-    target_srcdir : :class:'pathlib.Path'
+    target_srcdir : 'pathlib.Path'
         The object that is the path that will be the location where the
         sourcefiles folder copy will reside.
-    target_mapdir : :class:'pathlib.Path'
+    target_mapdir : 'pathlib.Path'
         The object that is the path that will be the location where the
         maps folder copy will reside.
-    Printer : :class:`GMAP.src.tools.PrintTools.Printer`
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
     """
