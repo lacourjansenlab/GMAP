@@ -3,6 +3,7 @@
 
 # 3rd party imports
 import pytest
+from pathlib import Path
 
 # local imports
 from GMAP.src.programs import Setup as GM_Setup
@@ -60,19 +61,21 @@ def test_Setup_3(capsys, tmp_path):   # Tests if mapdir doesn't exist yet
 def test_verify_target(tmp_path):
     Printer, sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
 
-    try:
-        GM_Setup.verify_target(tmp_path, sourcefiles_dir,
-                               mapfiles_dir, Printer)
-    except BaseException:
-        assert False
-    else:
-        assert True
+    assert GM_Setup.verify_target(
+        tmp_path, sourcefiles_dir, mapfiles_dir, Printer
+    ) is None
 
 
 def test_Setup(tmp_path, capsys):
     callcommand = ["Setup", tmp_path]
     Files = GM_FH.FileLocations()
     Printer = GM_PT.Printer(Files)
+
+    src_dir = Files.sourcedir_hc
+    map_dir = Files.mapdir_hc
+
+    sourcefiles_original = [file.name for file in Path(src_dir).iterdir()]
+    map_original = [file.name for file in Path(map_dir).iterdir()]
 
     GM_Setup.Setup(callcommand, Files, Printer)
 
@@ -83,8 +86,14 @@ def test_Setup(tmp_path, capsys):
     target_srcdir = tmp_path / "sourcefiles_copy"
     target_mapdir = tmp_path / "maps_copy"
 
+    sourcefiles_copies = [file.name for file in Path(target_srcdir).iterdir()]
+    map_copies = [file.name for file in Path(target_mapdir).iterdir()]
+
     assert target_srcdir.exists()
     assert target_mapdir.exists()
+
+    assert sourcefiles_original == sourcefiles_copies
+    assert map_original == map_copies
 
 
 def base_tests(tmp_path):  # Not a test

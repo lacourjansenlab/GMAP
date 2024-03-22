@@ -1,0 +1,7 @@
+
+The directory
+C:\Users\tim\Documents\GitHub\GEMAIM-dev\GMAP\this_directory_doesnt_exist was
+requested for the parameter path_test_dir1, for the map testmap1, but could not
+be found, or is not a directory. Please make sure you specified it correctly.
+More information can be found in the documentation user pages using the
+following error code: SU_NP_3
