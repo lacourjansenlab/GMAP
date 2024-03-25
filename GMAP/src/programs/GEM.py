@@ -203,7 +203,7 @@ alljobs = [
 ]
 
 
-def main():
+def main(callcommand):
     """Fakes behaviour as if called from __main__.
 
     During normal operation (user types 'GMAP ...' in the command line),
@@ -211,7 +211,6 @@ def main():
     'normal' behaviour so partial tests are possible.
     """
 
-    callcommand = sys.argv
     if len(callcommand) == 1:
         print(__doc__)
     else:
@@ -221,4 +220,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    callcommand = sys.argv
+    main(callcommand)

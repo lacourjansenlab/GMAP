@@ -35,8 +35,7 @@ def AIM(callcommand, Files, Printer):
     GM_PT.devprint("entered main of AIM - yet to be constructed")
 
 
-def main():
-    callcommand = sys.argv
+def main(callcommand):
     if len(callcommand) == 1:
         print(__doc__)
     else:
@@ -46,4 +45,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    callcommand = sys.argv
+    main(callcommand)
