@@ -152,8 +152,6 @@ def get_parameters(Files, Printer, in_parfile, argslist):
     mapdict = GM_MR.scan_mapdirs(mapdirs)
     for map_ in mapdict.values():
         map_.find_refpars(Printer)
-        if map_.RefPars:
-            dpr(map_.RefPars.choices)
 
     # step 12 (finish parsing cmdline, inparfile, defparfile)
 

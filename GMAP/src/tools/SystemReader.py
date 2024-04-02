@@ -208,7 +208,7 @@ class System:
         self.residues = Residues(self)
 
         # TO DO - way to find molnums for non-gromacs systems
-        #         ?is this necessary? or can we make due without??
+        #         ?is this necessary? or can we make do without??
 
         self.molnums = self.universe.atoms.molnums
 
@@ -319,7 +319,8 @@ class System:
                 )
             self.influencers_atix = atgroup.atoms.ix.tolist()
         else:  # must be a separate file
-            choice = GM_PP.parse_influencerfile(Printer, RunPars.influencers)
+            choice = GM_PP.parse_influencerfile(
+                Printer, RunPars.influencers, groupdict)
             if "choice" in choice:
                 choice = choice["choice"]
             else:
@@ -935,7 +936,7 @@ def gen_universe(Printer, RunPars):
             "the names are correct.",
             "MD_SU_1", True, exeption=ex
         )
-    except TypeError as ex:
+    except ValueError as ex:
         Printer.warning(
             "\nThe given topology and/or trajectory files are of the "
             "wrong type."

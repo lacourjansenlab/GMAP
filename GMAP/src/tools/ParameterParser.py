@@ -1264,7 +1264,7 @@ class RawPars:
                 "influencers_blacklist"
             ] + [")"]
         elif "influencers_file" in self.choices:
-            self.choices["influencers"] = self.choices["influencers_file"]
+            self.choices["influencers"] = self.choices["influencers_file"][0]
         elif "influencers_select_atoms" in self.choices:
             self.choices["influencers"] = " ".join(
                 self.choices["influencers_select_atoms"]
@@ -2138,10 +2138,10 @@ def parse_influencerfile_line(Printer, line, groupdict, fname):
     specialchars = "-&|^()"
     allowed_chars = " :" + namechars + specialchars
 
-    dpr(line)
-    dpr(allowed_chars)
+    # dpr(line)
+    # dpr(allowed_chars)
     problem_chars = [char for char in line if char not in allowed_chars]
-    dpr(problem_chars)
+    # dpr(problem_chars)
 
     if problem_chars:
         Printer.warning(
@@ -2174,7 +2174,7 @@ def parse_influencerfile_line(Printer, line, groupdict, fname):
                 curname = ""
                 is_name = False
             final_choice += char
-    else:
+    else:  # after we're done, flush out the last bit.
         if is_name:
             if fromdict:
                 final_choice += "groupdict['" + curname + "']"
@@ -2182,7 +2182,7 @@ def parse_influencerfile_line(Printer, line, groupdict, fname):
             else:
                 final_choice += "set(['" + curname + "'])"
 
-    dpr(final_choice)
+    # dpr(final_choice)
 
     try:
         exec(final_choice)

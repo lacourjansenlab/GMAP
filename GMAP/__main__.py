@@ -3,15 +3,17 @@ import sys
 
 # local imports
 import GMAP
+# from GMAP.src import programs
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.PrintTools as GM_PT
+# from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 def _report_unknown_choice(Printer):
     """Wrapper for warning call SU_GM_1."""
     Printer.warning(
         "\nChoice of program wasn't recognized. Please type the following "
-        "for more\ninformation on how to use this package:\n\nGMP\n\n",
+        "for more\ninformation on how to use this package:\n\nGMAP\n\n",
         "SU_GM_1", True
     )
 
@@ -57,6 +59,17 @@ def cmd_interface(callcommand):
             Printer.quit_early()
         else:
             _report_unknown_choice(Printer)
+
+    # else:
+    #     dpr(dir(programs))
+    #     dpr(choice in dir(programs))
+    #     modch = getattr(
+    #         programs, choice, _report_unknown_choice(Printer))
+    #     if subch.lower() in allhelps:
+    #         Printer.print(0, modch.__doc__)
+    #     else:
+    #         getattr(modch, choice)(callcommand[1:], Files, Printer)
+    #         # modch.main(callcommand[1:], FILES)
 
     elif choice in GMAP.alltools:
         modch = getattr(GMAP, choice)

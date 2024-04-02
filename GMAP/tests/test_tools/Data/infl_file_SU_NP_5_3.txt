@@ -13,4 +13,3 @@ Lipid             DMPC | POP
 
 Protein_ext       LYSH | HSD | HIE
 
-choice   :Solvent

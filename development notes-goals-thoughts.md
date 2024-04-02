@@ -332,8 +332,6 @@ TO DO
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
 - (KvA) TODO:
-  - RefPars objects now have a third parameter upon initialization that indicates whether they are the main refpars. This is not yet properly implemented in tests!
-  - New parameters have been added - test_parameterparser will need an update!
   - More polished prints and reporting to the user
   - Maybe extra functionality that gives an overview as to what the system looks like (residue and/or atom names)???
   - Theory page in documentation for explanation of hamiltonians etc.

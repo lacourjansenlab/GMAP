@@ -552,7 +552,7 @@ class TestRawPars:
 
         infltest(
             ["--influencers_file", "sourcefiles/infl_file_base.txt"],
-            [Path("sourcefiles/infl_file_base.txt")]
+            Path("sourcefiles/infl_file_base.txt")
         )
 
         infltest(
