@@ -16,6 +16,10 @@ how about adding these?
  - calculate_dipole()
 """
 
+import numpy as np
+
+import GMAP.src.tools.MathFunctions as GM_MF
+
 
 # A function to adjust the parameters of the map. For some kinds of
 # parameter (especially if theres multiple that are linked), the way
@@ -87,24 +91,168 @@ def GM_adjust_map_core_raw(Files, Printer, Map):
 # For example, this function could remove some of the oscillators for
 # some reason, and return the rest.
 def GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list):
+    """Makes the necessary changes to the list of oscillators.
+
+    The program finds all oscillators mathing the instructions from
+    core.txt. However, there is no way for the program to avoid double
+    counting symmetrical groups (like the cystbridge mockup example).
+    If a map knows its group is symmetrical, this function can be
+    designed to only return half of the inputs.
+
+    Another possible use is for the code of the map to get to know its
+    oscillators. When all oscillators are passed through this function,
+    the (global) atom number of the first atom of this group (for
+    example) can be linked to a specific property the group might need
+    to know. This might be useful if a map needs to cover two very
+    similar oscillators.
+
+    .. note::
+        This function is called separately for each struct that the map
+        defines. So take into account that the function could be called
+        multiple times within a single simulation!
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+        Contains all currently known paths and other file-related
+        properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    Map : :class:`~GMAP.src.tools.MapReader.Map`
+        The object that stores everything the program currently knows
+        about this map.
+    Syst : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    oscillator_list : list of :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        All oscillators belonging to a single struct of this map.
+
+    Returns
+    -------
+    oscillator_list : list of :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        All oscillators belonging to a single struct of this map.
+    """
+
     return oscillator_list
 
 
+# !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
+# GMAP will not actually 'see' this function and use it. If you want to
+# have this function, just use `def GM_get_rotation_matrix` - see the manual
+# for more information. This placeholder is just here for illustration (but
+# this map does not actually need this function).
 def placeholder_GM_get_rotation_matrix(
     Files, Printer, Map, Syst, osc
 ):
-    pass
+    """Finds the rotation matrix for a given oscillator.
+
+    Most maps are encoded in local cartesian coordinates (a rotation
+    and/or translation of the global cartesian coordinates - not sheared
+    or box coordinates). So in order to be able to apply the map, the
+    transformation must be performed.
+
+    .. note::
+        This function is called by the program every time it needs to
+        know how
+        to rotate for this group. This rotation will be different for
+        each individual oscillator (so each molecule), each frame.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+        Contains all currently known paths and other file-related
+        properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    Map : :class:`~GMAP.src.tools.MapReader.Map`
+        The object that stores everything the program currently knows
+        about this map.
+    Syst : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The specific oscillator for which the transformation is required.
+
+    Returns
+    -------
+    rotation_matrix : `np.ndarray`
+        A 3*3 matrix containing the rotation matrix. If a vector in
+        global coordinates is multiplied with this matrix, the result
+        should be that vector expressed in the coordinate system of this
+        oscillator.
+    """
+
+    x_uvec = (osc.positions_box[1] - osc.positions_box[0]) @ Syst.boxvects
+    x_uvec /= GM_MF.vec3_len(x_uvec)
+    y_uvec = (osc.positions_box[3] - osc.positions_box[0]) @ Syst.boxvects
+    y_uvec = GM_MF.project(x_uvec, y_uvec)
+    y_uvec /= GM_MF.vec3_len(y_uvec)
+    z_uvec = GM_MF.crossprod(x_uvec, y_uvec)
+    z_uvec /= GM_MF.vec3_len(z_uvec)
+
+    return np.array([x_uvec, y_uvec, z_uvec])
 
 
 # returns the dipole position and vector for osc. To be used during a
 # frame - must be fast.
 # A map creator can write this function themselves, or let it be automatically
 # generated by GEM during runtime
+
+# !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
+# GMAP will not actually 'see' this function and use it. If you want to
+# have this function, just use `def GM_get_dipole` - see the manual for
+# more information. This placeholder is just here for illustration (but
+# this map does not actually need this function).
 def placeholder_GM_get_dipole(Files, Printer, Map, Syst, osc):
-    r_vec = (
-        Syst.positions[osc.used_atoms[1]]
-        - Syst.positions[osc.used_atoms[0]]
-    )
+    """Finds the dipole moment and its position of a given oscillator.
+
+    Most spectroscopic techniques require to know the dipole moment of
+    each oscillator. Usually, this dipole moment can be approximated
+    easily without calculating it. When defining a dipole moment just
+    in terms of atom positions (as facilitated in core.txt) does not
+    suffice, this function can be used.
+
+    .. note::
+        This function is called by the program every time it needs to
+        know the dipole moment
+        of this group. This dipole will be different for
+        each individual oscillator (so each molecule), each frame.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+        Contains all currently known paths and other file-related
+        properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    Map : :class:`~GMAP.src.tools.MapReader.Map`
+        The object that stores everything the program currently knows
+        about this map.
+    Syst : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The specific oscillator for which the transformation is required.
+
+    Returns
+    -------
+    rotation_matrix : `np.ndarray`
+        A 3*3 matrix containing the rotation matrix. If a vector in
+        global coordinates is multiplied with this matrix, the result
+        should be that vector expressed in the coordinate system of this
+        oscillator.
+    """
+
+    r_vec = (osc.positions_box[1] - osc.positions_box[0]) @ Syst.boxvects
     r_pos = Syst.positions[osc.used_atoms[0]]
     return r_vec, r_pos
 
