@@ -69,10 +69,10 @@ def cmd_interface(callcommand):
         _report_unknown_choice(Printer)
 
 
-def main():
-    callcommand = sys.argv
+def main(callcommand):
     cmd_interface(callcommand)
 
 
 if __name__ == "__main__":
-    main()
+    callcommand = sys.argv
+    main(callcommand)
