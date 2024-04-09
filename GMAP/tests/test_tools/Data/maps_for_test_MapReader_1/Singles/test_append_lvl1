@@ -1,0 +1,2 @@
+add_corefile       test_append_lvl2
+influencer_group   testgroup1  TST

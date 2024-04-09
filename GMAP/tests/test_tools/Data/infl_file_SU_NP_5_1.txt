@@ -1,0 +1,7 @@
+# :All contains the alphabet (caps)
+
+# to test: union (|), intersect (&), difference (-), symdif (^)
+
+vowels    A ( E | I | O | U
+
+choice   :vowels | K

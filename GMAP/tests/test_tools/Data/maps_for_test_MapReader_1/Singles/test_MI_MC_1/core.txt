@@ -1,0 +1,4 @@
+functional_group [CYS] N H CA C O CB SG(1) [DEF] ND HD CAD CD OD CBD SGD(1)
+functional_group [A,B] A11,A12 A2 A3 A41,A42
+
+functional_group_file   funcgroup.txt

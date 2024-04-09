@@ -41,6 +41,7 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_out/GMAP.src.programs.GEM';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="GMAP.src.tools package" href="GMAP.src.tools.html" />
@@ -146,6 +147,13 @@
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -161,7 +169,7 @@
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -258,6 +266,13 @@ document.write(`
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -273,7 +288,7 @@ document.write(`
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -316,17 +331,23 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.src.tools.html">GMAP.src.tools package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.DefaultMapFunctions.html">GMAP.src.tools.DefaultMapFunctions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.FileHandler.html">GMAP.src.tools.FileHandler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MapReader.html">GMAP.src.tools.MapReader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html">GMAP.src.tools.MathFunctions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html">GMAP.src.tools.ParameterParser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.PrintTools.html">GMAP.src.tools.PrintTools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.SystemReader.html">GMAP.src.tools.SystemReader module</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="GMAP.tests.html">GMAP.tests package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="GMAP.tests.test_MathFunctions.html">GMAP.tests.test_MathFunctions module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.tests.test_tools.html">GMAP.tests.test_tools package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_MathFunctions.html">GMAP.tests.test_tools.test_MathFunctions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_ParameterParser.html">GMAP.tests.test_tools.test_ParameterParser module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -371,7 +392,7 @@ document.write(`
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP Code documentation</a></li>
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP</a></li>
     
     
     <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
@@ -426,11 +447,65 @@ to deal with specific chromophores have to be included in the corresponding
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.get_parameters">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_parfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argslist</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.programs.GEM.get_parameters" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Collect all provided parameters, and store them.</p>
+<p>Parameters are defined (along with default choices) in the reference
+parameter file. Users can have a different set of defaults defined
+in the default parameter file, and specific choices for this (set of)
+runs in the input parameter file and the command line. This function
+uses the functionality in src/tools/ParameterParser.py to collect
+all choices, and construct a final set of choices from them. All
+generated options are then returned.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Files</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>in_parfile</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The path to the requested input parameter file.</p>
+</dd>
+<dt><strong>argslist</strong><span class="classifier">list of str</span></dt><dd><p>The slice of sys.argv containing all parameter choices given on
+the command line.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+<dt><strong>mapdict</strong><span class="classifier">dict of str: <a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> pairs</span></dt><dd><p>Stores all the <a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> objects for
+each map supplied. The keys are the Map.name attributes corresponding
+to the maps stored as values.</p>
+</dd>
+<dt><strong>CmdPars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></span></dt><dd><p>Contains any parameter choices made on the command line</p>
+</dd>
+<dt><strong>InPars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></span></dt><dd><p>Contains any parameter choices made in the input parameter file</p>
+</dd>
+<dt><strong>DefPars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></span></dt><dd><p>Contains all default parameter choices. Might be RefPars, might be
+from a separate default parameters file.</p>
+</dd>
+<dt><strong>RefPars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></span></dt><dd><p>Contains all available parameters from GMAP itself (not map-specific)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.main">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.programs.GEM.main" title="Link to this definition">#</a></dt>
+<dd><p>Fakes behaviour as if called from __main__.</p>
+<p>During normal operation (user types ‘GMAP …’ in the command line),
+this function should never be called. This function replicates the
+‘normal’ behaviour so partial tests are possible.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.programs.GEM.run">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">System</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.programs.GEM.run" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -482,6 +557,7 @@ to deal with specific chromophores have to be included in the corresponding
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.programs.GEM.GEM"><code class="docutils literal notranslate"><span class="pre">GEM()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.programs.GEM.get_parameters"><code class="docutils literal notranslate"><span class="pre">get_parameters()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.programs.GEM.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.programs.GEM.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
 </ul>
   </nav></div>
 

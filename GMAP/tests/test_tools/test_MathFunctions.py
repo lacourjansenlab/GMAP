@@ -14,6 +14,26 @@ import pytest
 from GMAP.src.tools import MathFunctions as GM_MF
 
 
+@pytest.mark.parametrize(("vect", "expt", "boxvects"), [
+    ([3, 7, 2], [3, -3, 2], [[10, 0, 0], [0, 10, 0], [0, 0, 10]]),
+    ([33, 77, 22], [3, -3, 2], [[10, 0, 0], [0, 10, 0], [0, 0, 10]]),
+    ([33, 22, 11], [3, 2, 1], [[10, 0, 0], [10, 10, 0], [10, 10, 10]]),
+])
+def test_PBC_triclinic(vect, expt, boxvects):
+    """
+    See that vectors (points) are moved back into the box.
+    """
+
+    vect = np.array(vect)
+    expt = np.array(expt)
+    boxvects = np.array(boxvects)
+    boxvects_inv = np.linalg.inv(boxvects)
+    translated_point = GM_MF.PBC_triclinic(vect, boxvects, boxvects_inv)
+    assert np.all(
+        np.round(translated_point, 3) == expt
+    )
+
+
 @pytest.mark.parametrize(("vector1", "vector2"), [
     ([1, 5, 7], [1, 5, 7]),
     ([1, 5, 7], [-3, 0, 4]),

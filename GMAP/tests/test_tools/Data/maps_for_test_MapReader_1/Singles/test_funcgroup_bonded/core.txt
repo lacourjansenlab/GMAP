@@ -1,0 +1,5 @@
+functional_group [CYS] N H CA C O CB SG [DEF] ND HD CAD CD OD CBD SGD
+
+functional_group_bonds 6-13
+
+requires_bonds True
