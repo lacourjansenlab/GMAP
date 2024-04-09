@@ -38,14 +38,14 @@ This is a rough overview of the different steps (in order) that are needed to ge
 - Step 0: (Done!) Gmap interface, command prompt menu to navigate the different tools
 - Step 1: (Done!) Create test suite, documentation system
 - Step 2: (Done!) Parameter parsing
-- Step 3: Map parsing (maybe also already develop a map? - requires core algorithms?)
+- Step 3: (Done!) Map parsing (maybe also already develop a map? - requires core algorithms?)
   - ?? create file like reference parameters that specifies what things a map can contain?
   - for each map, interpret the core.txt file. reject map if incomplete/wrong.
   - for each map, see if there is a main.py file. If so, import and check for completeness.
   - if incomplete, alias default functions for the missing ones.
   - write those default functions in a separate file (sourcefiles?) - This file can function for these functions much like reference parameter files work for parameters.
   - If the user requests the use of this map, throw error if map was loaded unsuccessfully.
-- Step 4: System analysis (requires map parsing for group recognition)
+- Step 4: (Done!) System analysis (requires map parsing for group recognition)
   - Load in system (mda universe)
   - extract 'basic' data (positions, masses, charges, etc)
   - find requested oscgroup atoms
@@ -53,7 +53,7 @@ This is a rough overview of the different steps (in order) that are needed to ge
   - A function to calculate just potentials (perhaps multiple depending on algorithm)
   - A function to calculate potentials + fields (perhaps multiple depending on algorithm)
   - A function to calculate potentials + fields + gradients (perhaps multiple depending on algorithm)
-- Step 6: Map creation (or maybe already during parsing?)
+- Step 6: (Done!) Map creation (or maybe already during parsing?)
 - Step 7: Performing per-frame calculation
 - Step 8: Adding extra functionality
   - Black-/whitelists - what kind of typing would they need? a new one?
@@ -62,9 +62,9 @@ Other things for GMAP
 - Include AIM
 - Add more functions for GEM, like
 - run (current WIP) - 'just' do the intended calculation
-  - demo - like run, but for a pre-generated file (and pre-generated settings)? So user can see how the program is supposed to run, and whether there are technical issues?
-  - setup - As GEM needs different files to run (most notably inside the maps directory and the sourcefiles directory) - copy these to a target location, so the user can make their own changes (just like the installable AIM)
-  - trial - same as run, but without the perframe loop. Or, alternatively (maybe setting?), a single frame. This way, the user can see how the system will be interpreted (and get a legend for the hamiltonian, the parameters.txt, etc), and possibly a calculation-time estimate, file size estimate, etc?
+  - (issue made) demo - like run, but for a pre-generated file (and pre-generated settings)? So user can see how the program is supposed to run, and whether there are technical issues?
+  - (issue made) setup - As GEM needs different files to run (most notably inside the maps directory and the sourcefiles directory) - copy these to a target location, so the user can make their own changes (just like the installable AIM)
+  - (issue made) trial - same as run, but without the perframe loop. Or, alternatively (maybe setting?), a single frame. This way, the user can see how the system will be interpreted (and get a legend for the hamiltonian, the parameters.txt, etc), and possibly a calculation-time estimate, file size estimate, etc?
   - maptest - a way for a map-developer to test whether their map is correct (the program can understand, no errors, etc) ?
   - ?? Way to output any already calculated property.
 
@@ -75,8 +75,8 @@ Other things for GMAP
 - Create 'scan' functionality -> run all GEM/AIM preparations, but not the actual per-frame, just to see how the system is recognized. also, resnum info for black/whitelists (get an overview of which element in the hamiltonian corresponds to which residue number)
 - Parallelization? Not if we don't expect this to make a huge difference, instead, create an embarassingly parallel example.
 - Assign each (type/family of) error a code, so the user can silence (a specified amount of) them, similar to GROMACS' maxwarn parameter.
-- Print cmdline call to log file!
-- also output a 'legend' file. it would contain a description of every entry in the hamiltonian, so a user could retrace which is which.
+- (issue made) Print cmdline call to log file!
+- (issue made) also output a 'legend' file. it would contain a description of every entry in the hamiltonian, so a user could retrace which is which.
 
 [back to top](#quick-menu)
 

@@ -24,13 +24,13 @@ HE22
 
 
 # dict- k=functional_group, val=list(1)  -> later becomes class (attr).
-# each item in list(1) corresponds to single struct, is itself a list(2).
-# each item in list(2) corresponds to a single residue, is itself a list(3).
-# each residue (list(3)) consists of 2 items - the first for the residue name (list of str), the second for atom names - is itself a list(4)
-# each item in list(4) corresponds to an atom - is itself a list of str.
+# each item in list(1) corresponds to single struct and is itself a list(2).
+# each item in list(2) corresponds to a single residue and is itself a list(3).
+# each residue (list(3)) consists of 2 items - the first for the residue name (list of str), the second for atom names ( a list(4) )
+# each item in list(4) corresponds to an atom and is itself a list of str.
 
 # atom bonds:
-# each item in list(1)  corresponds to single struct, is itself a list(2)
+# each item in list(1)  corresponds to single struct and is itself a list(2)
 # each item in list2 corresponds to a bond, is list of 2 items - ix of each atom in the bond.
 
 
