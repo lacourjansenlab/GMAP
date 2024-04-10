@@ -3,6 +3,7 @@
 import inspect
 import pathlib
 import sys
+import time
 from traceback import TracebackException as TbEx
 
 
@@ -57,6 +58,8 @@ class Printer:
         # 'demo' for when running in demo mode
         # 'running' for when running normally
         self.program_state = "startup"
+
+        self.Timer = Timer(start=Files.start)
 
         Files.set_exec_os(self)
 
@@ -172,6 +175,29 @@ class Printer:
         if new_logfile:
             self.logfile = new_logfile
             self.print_backlog()
+
+    def add_time(self, verbose_level, msg, precision='s'):
+        self.Timer.add_time(msg)
+        self.print(
+            verbose_level,
+            f"{msg} at: {time_to_str(self.Timer.get_time(msg), precision)}"
+        )
+
+
+class Timer:
+    def __init__(self, start=None):
+        if start is None:
+            self.zero = time.perf_counter_ns()
+        else:
+            self.zero = start
+
+        self.times = {}
+
+    def add_time(self, name):
+        self.times[name] = time.perf_counter_ns()
+
+    def get_time(self, msg):
+        return self.times[msg] - self.zero
 
 
 def prettifier(string, deslen=79):
@@ -398,3 +424,53 @@ def rangestrlist(start, stop):
         return [str(start), str(stop)]
     else:
         return [f"{start}-{stop}"]
+
+
+def time_to_str(ns_time, precision="s"):
+    """Converts an amount of ns into a formatted string.
+
+    Parameters
+    ----------
+    ns_time : int
+        An amount of nanoseconds
+    precision : str, default=s
+        To what precision the string should be printed. 's' for seconds,
+        'ms' for milliseconds, 'us' for microseconds or 'ns' for
+        nanoseconds.
+
+    Returns
+    -------
+    str_time : str
+        The input time formatted into a string.
+    """
+
+    ns = ns_time % 1000
+    remainder = ns_time // 1000  # this is now in units of us
+
+    us = remainder % 1000
+    remainder //= 1000  # this is now in units of ms
+
+    ms = remainder % 1000
+    remainder //= 1000  # this is now in units of s
+
+    s = remainder % 60
+    remainder //= 60   # this is now in units of m
+
+    m = remainder % 60
+    remainder //= 60  # this is now in units of h
+
+    h = remainder % 24
+    d = remainder // 24
+
+    str_time = f"{d}-{h}:{m}:{s}"
+
+    if precision in ("ms", "us", "ns"):
+        str_time += f".{ms}"
+
+    if precision in {"us", "ns"}:
+        str_time += f".{us}"
+
+    if precision == "ns":
+        str_time += f".{ns}"
+
+    return str_time

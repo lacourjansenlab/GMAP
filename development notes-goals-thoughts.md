@@ -332,13 +332,17 @@ TO DO
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
 - (KvA) TODO:
-  - More polished prints and reporting to the user
-  - Maybe extra functionality that gives an overview as to what the system looks like (residue and/or atom names)???
-  - Theory page in documentation for explanation of hamiltonians etc.
   - Links to relevant packages etc in explanation in main documentation page.
-  - More info on AIM - link papers that use custom groups? Thomas & Rike's SCN paper?
-  - src/tools/SystemReader.System.abs_resnums() only uses changes in residue numbers. But software like charm (resetting resnum with new segment) can have a new residue without changing resnum (through having a 1-residue segment) - Fix it!
-  - Add list of function examples for maps to docpages (or just a tutorial on how to create a map?)
+  - GEM.manage_frame - add a print of frame number and ETA (following AIM)
+  - GEM.manage_frame - add a check whether the calculation can be continued (or whether there is not enough time left)
+  - System.update properties (or somewhere around its call in the perframe loop) - add a check to see whether the calculation can even continue (whether the potential sphere radius still fits)
+  - write PhysicsFunctions.calc_dipoles(), as well as any other necessary support (also preframe/prerun)
+  - write PhysicsFunctions.calc_frequencies(), as well as any other necessary support (also preframe/prerun)
+  - write PhysicsFunctions.calc_couplings(), as well as any other necessary support (also preframe/prerun)
+  - Add output positions (for NISE LD/CD)
+  - Add output dipoles (for NISE Raman/SFG)
+  - Print report at end of program
+  - References!!!
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.

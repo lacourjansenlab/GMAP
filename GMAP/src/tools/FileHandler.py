@@ -4,6 +4,10 @@ import ctypes as ct
 import datetime
 from pathlib import Path
 import sys
+import time
+
+# 3rd party lib imports
+import numpy as np
 
 # local imports
 import GMAP
@@ -51,6 +55,7 @@ class FileLocations:
     """
 
     def __init__(self) -> None:
+        self.start = time.perf_counter_ns()
         self.script_dir = Path(GMAP.__file__).parent.resolve()
         self.cwd = Path(".").resolve()
         self.now = datetime.datetime.now()
@@ -414,3 +419,73 @@ def check_file_readability(Printer, fname, doquit=True):
             )
         return False
     return True
+
+
+def write_output(RunPars, framenum, hamiltonian, dipoles):
+    """Write the output for a single frame to files.
+
+    Writes all outputs - all (requested) datastructures in all
+    (requested) formats.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    framenum : int
+        The number of the frame currently being written
+    hamiltonian : `np.ndarray`
+        The computed hamiltonian for this frame.
+    dipoles : `np.ndarray`
+        The computed dipoles for this frame.
+    """
+
+    framenum_arr = np.array([framenum], dtype='float32')
+
+    if "ham" in RunPars.output_data:
+        reshaped = hamiltonian[np.triu_indices_from(hamiltonian)]
+        write_single(
+            RunPars, framenum, framenum_arr,
+            RunPars.output_hamiltonian_filename, reshaped
+        )
+
+    if "dip" in RunPars.output_data:
+        reshaped = dipoles.T.flatten()
+        write_single(
+            RunPars, framenum, framenum_arr,
+            RunPars.output_dipole_filename, reshaped
+        )
+
+
+def write_single(RunPars, framenum, framenum_arr, fname, data):
+    """Write a single datastructure to files of given name.
+
+    Writes to all different requested formats at once.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    framenum : int
+        The number of the frame currently being written
+    framenum_arr : `np.ndarray`
+        The framenumber as float32 array, ready for binary writing
+    fname : `pathlib.Path`
+        The name + location of the file to which to write. This filename
+        should not include the extension!
+    data : `np.ndarray`
+        The data that should be written to the file.
+    """
+
+    if "bin" in RunPars.output_format:
+        with open(fname.parent / f"{fname.name}.bin", "ab+") as fhand:
+            framenum_arr.tofile(fhand)  # write frame number
+            data.tofile(fhand)  # write hamiltonian
+
+    if "txt" in RunPars.output_format:
+        with open(fname.parent / f"{fname.name}.txt", "a+") as fhand:
+            fhand.write(f"{framenum} ")  # write frame number
+            data = np.round(data, decimals=6)
+            data.tofile(fhand, sep=" ")  # write hamiltonian
+            fhand.write("\n")

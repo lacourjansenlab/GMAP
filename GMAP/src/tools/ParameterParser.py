@@ -1238,6 +1238,8 @@ class RawPars:
             and handle errors.
         """
 
+        # first - influencers!
+
         # see how many influencer parameters are present - only one can be!
         n_present = sum([parameter in (
             "influencers_whitelist",
@@ -1248,8 +1250,8 @@ class RawPars:
 
         if n_present > 1 and not self.is_default:
             Printer.warning(
-                "Encountered an issue with the following parameter source: "
-                f" {self.fname}. The source should contain only one of the "
+                "\nEncountered an issue with the following parameter source: "
+                f"{self.fname}. The source should contain only one of the "
                 "parameters 'influencers_whitelist', 'influencers_blacklist', "
                 "'influencers_file' and influencers_select_atoms, but "
                 "contains more than one.",
@@ -1269,6 +1271,34 @@ class RawPars:
             self.choices["influencers"] = " ".join(
                 self.choices["influencers_select_atoms"]
             )
+
+        # next - frame numbers!
+        start_frame = self.choices.get("start_frame", None)
+        number_frames = self.choices.get("number_frames", None)
+        stop_frame = self.choices.get("stop_frame", None)
+        n_pars = len([
+            x for x in (start_frame, number_frames, stop_frame)
+            if x is not None
+        ])
+
+        msg = (
+            "\nEncountered an issue with the following parameter source: "
+            f"{self.fname}. This source can contain any combination of the "
+            "parameters start_frame, number_frames and stop_frame, but the "
+            "values should make sense: the value for stop_frame (if present) "
+            "should always be bigger than both start_frame and number_frames, "
+            "and if all three are present, the following equation should hold "
+            "true: start_frame + number_frames = stop_frame"
+        )
+
+        if n_pars == 3:
+            if start_frame + number_frames != stop_frame:
+                Printer.warning(msg, "SU_WP_17", True)
+        elif n_pars == 2:
+            if start_frame is None and stop_frame < number_frames:
+                Printer.warning(msg, "SU_WP_17", True)
+            elif number_frames is None and stop_frame < start_frame:
+                Printer.warning(msg, "SU_WP_17", True)
 
     def finalize_map_pars(self, Printer):
         """Check whether `not_found` is empty
@@ -1398,7 +1428,8 @@ class RunPars:
             )
 
         # Resolve conflicts due to choices, change any settings that need to
-        # be changed, due to parameters
+        # be changed, due to parameters that interlock.
+        self.resolve(CmdPars, InPars, DefPars, RefPars)
 
     def get_pars(self, Printer, CmdPars, InPars, DefPars, RefPars):
         """Sets attribute for each non-path parameter.
@@ -1729,6 +1760,102 @@ class RunPars:
                     setattr(self, file_parname, files_found)
                 else:
                     setattr(self, file_parname, files_found[0])
+
+    def resolve(self, CmdPars, InPars, DefPars, RefPars):
+        """Fix any issues that may arise from the combination of sources.
+
+        This either means checking if there are no invalid combinations
+        (where a choice for a parameter doesn't make sense given the one
+        for a different one), or it means combining choices from
+        different sources when their values are interdependent.
+        """
+
+        all_parameter_names = ("start_frame", "stop_frame", "number_frames")
+        found = {}
+        for source in (CmdPars, InPars, DefPars, RefPars):
+            newdict = {
+                parameter: choice[0]
+                for parameter, choice in source.choices.items()
+                if parameter in all_parameter_names
+            }
+
+            # how many did we find before looking at this source?
+            match len(found):
+                # if we didn't have anything yet, just go to next.
+                case 0:
+                    found.update(newdict)
+                    continue
+
+                # if we find three at once, it's easy!
+                case 3:
+                    for parameter, choice in found.items():
+                        setattr(self, parameter, choice)
+                    break
+
+                # if we find two at once, finding third is easy!
+                case 2:
+                    found = add_missing_frame_parameter(found)
+                    for parameter, choice in found.items():
+                        setattr(self, parameter, choice)
+                    break
+
+            # now, only the case of 1 parameter in found remains.
+
+            # skip if the new source doesn't have anything
+            if len(newdict) == 0:
+                continue
+
+            # skip if the new source doesn't have anything new
+            foundpar = found.keys()[0]
+            if len(newdict) == 1 and foundpar in newdict:
+                continue
+
+            # now, merging the second source with the first.
+
+            # add the most important secondary parameter
+            for parameter in all_parameter_names:
+                if parameter not in found and parameter in newdict:
+                    found[parameter] = newdict[parameter]
+                    break
+
+            # find third
+            found = add_missing_frame_parameter(found)
+            for parameter, choice in found.items():
+                setattr(self, parameter, choice)
+            break
+
+
+def add_missing_frame_parameter(pardict):
+    """Adds in the missing frame number parameter with a sensible value.
+
+    Expects that the other two are present, and we only need the third.
+    All values in the dictionary are expected to be integers (so no
+    lists of a single int, like RawPars.choices).
+
+    Returns the same dict, but with the missing item added in.
+
+    Parameters
+    ----------
+    pardict : dict
+        The dictionary containing two of the three frame parameters.
+
+    Returns
+    -------
+    pardict : dict
+        The input dictionary, with the third item added in.
+    """
+
+    if "start_frame" not in pardict:
+        pardict["start_frame"] = (
+            pardict["stop_frame"] - pardict["number_frames"])
+    elif "number_frames" not in pardict:
+        pardict["number_frames"] = (
+            pardict["stop_frame"] - pardict["start_frame"])
+    else:
+        pardict["stop_frame"] = (
+            pardict["number_frames"] + pardict["start_frame"])
+
+    return pardict
 
 
 def parse_commandline(

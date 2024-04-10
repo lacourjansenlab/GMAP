@@ -25,11 +25,15 @@ For more information, check the manual on N/A.
 # standard lib imports
 import sys
 
+# 3rd party lib imports
+import numpy as np
+
 # local imports
 import GMAP.src.tools.FileHandler as GM_FH
 # import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
+import GMAP.src.tools.PhysicsFunctions as GM_PF
 import GMAP.src.tools.PrintTools as GM_PT
 from GMAP.src.tools.PrintTools import devprint as dpr
 import GMAP.src.tools.SystemReader as GM_SR
@@ -180,28 +184,71 @@ def get_parameters(Files, Printer, in_parfile, argslist):
     return RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
 
 
+def manage_frame(frame, Printer, RunPars):
+    framenum = frame.frame
+    if framenum >= RunPars.stop_frame:
+        return True
+
+    # Do a frame number print here! (for ETA type prints)
+    # Check if there is enough time to do another batch of frames
+    # (to avoid running longer than the max amount of time)
+
+
 # TO DO inside!
-def run(System):
+def trj_loop(Printer, RunPars, System):
 
     # first, do precalc
 
     # create empty structures, initialize whats needed
-    # call pre-calc funcs of maps
+
     # compare runpar endframe to mda nframes - adjust endframe
+    if RunPars.stop_frame >= len(System.universe.trajectory):
+        RunPars.stop_frame = len(System.universe.trajectory)
+
+    # GEM is now done - let maps initialize as well
+    for mapname in System.oscillators_ordered.keys():
+        map_ = RunPars.requested_mapdict[mapname]
+        map_.code.GM_pre_run(Printer, map_, System)
+
+    Printer.add_time(3, "Starting on frames", "ms")
 
     trj = System.universe.trajectory
-    for frame in trj:  # add slice here to make it faster!
+    for frame in trj[RunPars.start_frame:]:
         # manage frame number (if not in range, skip, prints, ETA, etc)
+        if manage_frame(frame, Printer, RunPars):
+            break
+
         # rebuild the frame-specific data (positions, box, etc)
+        System.update_properties()
+        for oscillator in System.oscillators:
+            oscillator.frame_update(System)
+
         # (only if needed) recalc COM
+
         # initialize output structures (like Ham)
+        hamiltonian = np.zeros((System.nosc, System.nosc), dtype="float32")
+        dipoles = np.zeros((System.nosc, 3), dtype="float32")
+
         # call pre-frame funcs of maps
+        for mapname in System.oscillators_ordered.keys():
+            map_ = RunPars.requested_mapdict[mapname]
+            map_.code.GM_pre_frame(Printer, map_, System)
+
         # perform the actual calculations
+        GM_PF.calc_frame(Printer, RunPars, System, dipoles, hamiltonian)
+
         # call post-frame functions of maps
+        for mapname in System.oscillators_ordered.keys():
+            map_ = RunPars.requested_mapdict[mapname]
+            map_.code.GM_post_frame(Printer, map_, System)
+
         # write calculated data to files
-        pass
+        GM_FH.write_output(RunPars, frame.frame, hamiltonian, dipoles)
 
     # lastly, do postcalc:
+    for mapname in System.oscillators_ordered.keys():
+        map_ = RunPars.requested_mapdict[mapname]
+        map_.code.GM_post_run(Printer, map_, System)
 
     # print all that the user does not yet know
     # (profiler?)
@@ -223,6 +270,8 @@ def GEM(callcommand, Files, Printer):
     RunPars, mapdict, CmdPars, InPars, DefPars, RefPars = get_parameters(
         Files, Printer, in_parfile, argslist
     )
+
+    Printer.add_time(3, "Parsed GMAP parameters", "ms")
 
     # end of SU errors
 
@@ -257,30 +306,21 @@ def GEM(callcommand, Files, Printer):
     else:
         RunPars.detected_requires_bonds = False
 
+    Printer.add_time(3, "Added all maps", "ms")
+
     # next - MD system!
     System = GM_SR.System(Files, Printer, RunPars)
-    dpr(System.universe)
 
-    # dpr(System.positions[System.oscillators[0].used_atoms[0]])
-    # testvect = GM_MF.PBCvect(
-    #     System.positions[System.oscillators[0].used_atoms[0]],
-    #     System.boxvects, System.boxvects_inv
-    # )
-    # dpr(testvect, testvect.boxvects)
-    # dpr(testvect + 30)
-    # dpr(testvect * 3)
-    # dpr(testvect @ [[2, 0, 0], [0, 2, 0], [0, 0, 2]])
-    # oscvects = System.positions[System.oscillators[0].used_atoms]
-    # PBCoscvects = GM_MF.PBCvect(
-    #     oscvects, System.boxvects, System.boxvects_inv)
-    # dpr(oscvects)
-    # dpr(PBCoscvects)
-    # dpr(oscvects[1]-oscvects[0])
-    # dpr(PBCoscvects[1]-PBCoscvects[0])
-    # dpr(oscvects[1]**2)
-    # dpr(PBCoscvects[1]**2)
+    Printer.add_time(3, "Initialized MD system", "ms")
 
-    dpr(dir(System))
+    # GEM is now done - let maps initialize as well
+    for mapname in System.oscillators_ordered.keys():
+        map_ = RunPars.requested_mapdict[mapname]
+        map_.code.GM_post_init(Files, Printer, map_, System)
+
+    Printer.add_time(2, "Initialization complete", "ms")
+
+    trj_loop(Printer, RunPars, System)
 
     GM_PT.devprint("entered main of GEM - yet to be constructed")
 

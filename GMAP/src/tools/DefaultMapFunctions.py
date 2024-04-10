@@ -30,6 +30,26 @@ def get_adjust_oscillators():
     return returns_last
 
 
+def get_post_init():
+    return does_nothing
+
+
+def get_pre_run():
+    return does_nothing
+
+
+def get_pre_frame():
+    return does_nothing
+
+
+def get_post_frame():
+    return does_nothing
+
+
+def get_post_run():
+    return does_nothing
+
+
 def get_get_dipole(Printer, map_):
     """Default for obtaining the dipole
 
@@ -163,6 +183,7 @@ def get_get_rotation_matrix(Printer, map_):
     # return GM_get_dipole
     return locals()["GM_get_rotation_matrix"]
 
+
 # ------------------------
 # Base functions
 # ------------------------
@@ -174,6 +195,11 @@ def does_nothing(*args):
 
 def returns_last(*args):
     return args[-1]
+
+
+# ------------------------
+# Useful tools
+# ------------------------
 
 
 def envelop_int(string, pre, post):
