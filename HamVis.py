@@ -17,13 +17,29 @@ class HamVisException(Exception):
 
 
 def get_data(fname):
+	r"""Gets the data from fname and returns it as a list of lists.
+
+	Parameters
+	----------
+	fname : str
+		The name of the file from where data is extracted.
+
+	Returns
+	-------
+	data : list of list of float
+		Each sublist represents a frame each float within each sublist
+		represents either a frequency or a coupling, for a more detailed
+		overview please read the manual.
+	size : int
+		The size that the hamiltonian will have. As it is a size * size matrix.
+	"""
 	try:
 		with open(fname) as fhand:
-			data = fhand.readlines()[:28]   # Hammy.txt is corrupted past line 28
+			data = fhand.readlines()   # Hammy.txt is corrupted past line 28
 		data = [frame.split() for frame in data]
 		data = [[float(number) for number in frame][1:] for frame in data]
 
-		size = int(np.sqrt(2 * len(data[0]) + 0.25) + 0.5) - 1
+		size = int(np.sqrt(2 * len(data[0]) + 0.25) + 0.5) - 1  # triangle sum
 	except Exception:
 		raise HamVisException(
 			f"There was an error extracting data from {fname}, please verify "
@@ -35,6 +51,23 @@ def get_data(fname):
 
 
 def format_hammy(data, size):
+	"""Formats the data into the shape of the hamiltonian.
+
+	Parameters
+	----------
+	data : list of list of float
+		Each sublist represents a frame each float within each sublist
+		represents either a frequency or a coupling, for a more detailed
+		overview please read the manual.
+	size : int
+		The size that the hamiltonian will have. As it is a size * size matrix.
+
+	Returns
+	-------
+	ham : 'ndarray'
+		This array is the hamiltonian, with frequencies on the diagonal
+		and couplings on the offdiagonal.
+	"""
 	try:
 		ham = np.zeros((size, size))
 		ham[np.triu_indices(size)] = data
@@ -47,6 +80,23 @@ def format_hammy(data, size):
 
 
 def logify_hammy(ham, size):
+	"""Rewrites the off-diagonal elements into powers of 2.
+
+	Parameters
+	----------
+	ham : 'ndarray'
+		This array is the hamiltonian, with frequencies on the diagonal
+		and couplings on the off-diagonal.
+	size : int
+		The size that the hamiltonian will have. As it is a size * size
+		matrix.
+
+	Returns
+	-------
+	logs : 'ndarray'
+		This is the same as ham, but the off-diagonal components are
+		written as powers of 2.
+	"""
 	try:
 		minimum = 0.001
 		ham[abs(ham) < minimum] = 0
@@ -65,6 +115,17 @@ def logify_hammy(ham, size):
 
 
 def hammy_saver(hammy, idx, outname):
+	"""Saves the hamiltonian a pdf.
+
+	Parameters
+	----------
+	ham : 'ndarray'
+		This array is the hamiltonian, with frequencies on the diagonal
+		and couplings on the off-diagonal.
+	idx: int
+		The index of the 
+	"""
+
 	try:
 		off_diag = masked_array(hammy, hammy > 100)
 		on_diag = masked_array(hammy, hammy <= 100)
