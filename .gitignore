@@ -3,3 +3,4 @@ env_**
 **.pyc
 **.DS_Store
 **_offsets.**
+.vscode
