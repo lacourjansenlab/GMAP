@@ -12,6 +12,8 @@ def calc_frame(Printer, RunPars, System, dipoles, hamiltonian):
 
     # for every oscillator pair (that should be covered) - calc_coupling
 
+    return hamiltonian, dipoles
+
 
 def calc_dipole():
     return

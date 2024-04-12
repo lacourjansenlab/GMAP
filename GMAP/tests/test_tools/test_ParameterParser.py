@@ -37,6 +37,8 @@ class TestRefPars:
         assert RefPars.options == {
             "verbose": [0, 1, 2, 3, 4],
             "verbose_logfile": [0, 1, 2, 3, 4],
+            "output_format": ["bin", "txt"],
+            "output_data": ["ham", "dip"],
             "str_test_choice": ["pick_this", "not_this", "or_this"],
             "str_test_choice_list": [
                 "pick_this", "and_this", "not_this", "or_this"
@@ -50,24 +52,6 @@ class TestRefPars:
             "float_test_choice": [83.7, 66.6],
             "float_test_choice_list": [99.9, 71.5, 43.0, 88.4],
             "float_test_choice_list2": [44.5, 33.0, 12.8, 42.7],
-            # "path_test_choice": [
-            #     Path("../test_ParameterParser.py"),
-            #     Path("../test_MathFunctions.py")
-            # ],
-            # "path_test_rel12_choice": [
-            #     Path("test_ParameterParser.py"),
-            #     Path("test_MathFunctions.py")
-            # ],
-            # "path_test_rel23_new_choice": [
-            #     Path("test_outfile_2_3_1.txt"),
-            #     Path("test_outfile_2_3_2.txt")
-            # ],
-            # "path_test_rel24_new_choice_list": [
-            #     Path("test_outfile_2_4_1.txt"),
-            #     Path("test_outfile_2_4_2.txt"),
-            #     Path("test_outfile_2_4_3.txt"),
-            #     Path("test_outfile_2_4_4.txt")
-            # ]
         }
         assert RefPars.choices == {
             "topology_file": [Path("../../../sourcefiles/pdb_1AKI.tpr")],
@@ -76,6 +60,8 @@ class TestRefPars:
             )],
             "source_directory": [Path("../../../sourcefiles")],
             "log_filename": [Path("log.log")],
+            "output_hamiltonian_filename": [Path("hamiltonian")],
+            "output_dipole_filename": [Path("dipoles")],
             "map_directory": [Path("../../../maps")],
             "maps_to_use": ["AmideSC"],
             "influencers_whitelist": [":All"],
@@ -88,8 +74,13 @@ class TestRefPars:
             "verbose": [2],
             "verbose_logfile": [2],
             "prevent_overwrite": [False],
+            "output_format": ["bin"],
+            "output_data": ["ham", "dip"],
             "neutral_charge_threshold": [0.0001],
             "guess_bonds": [False],
+            "start_frame": [0],
+            "number_frames": [999999999],
+            "stop_frame": [999999999],
             "str_test_free": ["freechoice"],
             "str_test_choice": ["pick_this"],
             "str_test_free_list": ["freechoice1", "freechoice2"],
@@ -110,29 +101,24 @@ class TestRefPars:
             "float_test_choice_list2": [33.0, 42.7],
             "path_test_free": [Path("../test_MathFunctions.py")],
             "path_test_free_new": [Path("test_outfile.txt")],
-            # "path_test_choice": [Path("../test_ParameterParser.py")],
             "path_test_free_new_list": [
                 Path("test_outfile_0_1.txt"), Path("test_outfile_0_2.txt")
             ],
             "path_test_dir1": [Path("../../test_tools")],
             "path_test_dir2": [Path("../Data")],
             "path_test_rel11": [Path("test_MathFunctions.py")],
-            # "path_test_rel12_choice": [Path("test_ParameterParser.py")],
             "path_test_rel21_new": [Path("test_outfile_2_1.txt")],
             "path_test_rel22_new_list": [
                 Path("test_outfile_2_2_1.txt"), Path("test_outfile_2_2_2.txt")
             ],
-            # "path_test_rel23_new_choice": [Path("test_outfile_2_3_2.txt")],
-            # "path_test_rel24_new_choice_list": [
-            #     Path("test_outfile_2_4_3.txt"),
-            #     Path("test_outfile_2_4_4.txt")
-            # ]
         }
         assert RefPars.shorthands == {
             "top": "topology_file",
             "trj": "trajectory_file",
             "sd": "source_directory",
             "dpf": "default_parameter_filename",
+            "ohf": "output_hamiltonian_filename",
+            "odf": "output_dipole_filename",
             "md": "map_directory",
             "um": "maps_to_use",
             "ts1": "str_test_free",
@@ -156,26 +142,18 @@ class TestRefPars:
             "tf5": "float_test_choice_list2",
             "tp1": "path_test_free",
             "tp2": "path_test_free_new",
-            # "tp3": "path_test_choice",
             "tp4": "path_test_dir1",
             "tp5": "path_test_dir2",
             "tp6": "path_test_rel11",
-            # "tp7": "path_test_rel12_choice",
             "tp8": "path_test_rel21_new",
             "tp9": "path_test_rel22_new_list",
-            # "tp10": "path_test_rel23_new_choice",
-            # "tp11": "path_test_rel24_new_choice_list"
         }
         assert RefPars.organized_filepars == {
             "source_directory": ["default_parameter_filename"],
             "log_directory": ["log_filename"],
-            # "path_test_dir1": ["path_test_rel11", "path_test_rel12_choice"],
+            "output_directory": [
+                "output_hamiltonian_filename", "output_dipole_filename"],
             "path_test_dir1": ["path_test_rel11"],
-            # "path_test_dir2": [
-            #     "path_test_rel21_new", "path_test_rel22_new_list",
-            #     "path_test_rel23_new_choice",
-            #     "path_test_rel24_new_choice_list"
-            # ]
             "path_test_dir2": [
                 "path_test_rel21_new", "path_test_rel22_new_list"
             ]
@@ -183,6 +161,7 @@ class TestRefPars:
         assert RefPars.organized_filepars_id == {
             "sd": "source_directory",
             "lg": "log_directory",
+            "op": "output_directory",
             "t1": "path_test_dir1",
             "t2": "path_test_dir2"
         }
@@ -193,34 +172,36 @@ class TestRefPars:
             "default_parameter_filename",
             "log_directory",
             "log_filename",
+            "output_directory",
+            "output_hamiltonian_filename",
+            "output_dipole_filename",
             "map_directory",
             "influencers_file",
             "path_test_free",
             "path_test_free_new",
-            # "path_test_choice",
             "path_test_free_new_list",
             "path_test_dir1",
             "path_test_dir2",
             "path_test_rel11",
-            # "path_test_rel12_choice",
             "path_test_rel21_new",
             "path_test_rel22_new_list",
-            # "path_test_rel23_new_choice",
-            # "path_test_rel24_new_choice_list",
             "path_test_nodef"
         ]
         assert RefPars.filepars_create == [
             "log_filename",
+            "output_hamiltonian_filename",
+            "output_dipole_filename",
             "path_test_free_new",
             "path_test_free_new_list",
             "path_test_rel21_new",
             "path_test_rel22_new_list",
-            # "path_test_rel23_new_choice",
-            # "path_test_rel24_new_choice_list"
         ]
         assert RefPars.intpars == [
             "verbose",
             "verbose_logfile",
+            "start_frame",
+            "number_frames",
+            "stop_frame",
             "int_test_free",
             "int_test_choice",
             "int_test_free_list",
@@ -248,6 +229,8 @@ class TestRefPars:
             "influencers_whitelist",
             "influencers_blacklist",
             "influencers_select_atoms",
+            "output_format",
+            "output_data",
             "str_test_free",
             "str_test_choice",
             "str_test_free_list",
@@ -257,6 +240,7 @@ class TestRefPars:
         assert RefPars.not_expected_in_deffile == [
             "default_parameter_filename",
             "log_directory",
+            "output_directory",
             "int_test_nodef",
             "path_test_nodef"
         ]
@@ -266,6 +250,8 @@ class TestRefPars:
             "influencers_whitelist",
             "influencers_blacklist",
             "influencers_select_atoms",
+            "output_format",
+            "output_data",
             "str_test_free_list",
             "str_test_choice_list",
             "str_test_choice_list2",
@@ -277,7 +263,6 @@ class TestRefPars:
             "float_test_choice_list2",
             "path_test_free_new_list",
             "path_test_rel22_new_list",
-            # "path_test_rel24_new_choice_list"
             "influencers",
         ]
 
@@ -424,6 +409,8 @@ class TestRawPars:
             "trajectory_file": [sd / "pdb_1AKI_50frame.xtc"],
             "source_directory": [sd],
             "log_filename": [Path("log.log")],
+            "output_hamiltonian_filename": [Path("hamiltonian")],
+            "output_dipole_filename": [Path("dipoles")],
             "map_directory": [Path("../../../maps")],
             "maps_to_use": ["AmideSC"],
             "influencers_whitelist": [":All"],
@@ -434,8 +421,13 @@ class TestRawPars:
             "verbose": [3],
             "verbose_logfile": [1],
             "prevent_overwrite": [False],
+            "output_format": ["bin", "txt"],
+            "output_data": ["ham", "dip"],
             "neutral_charge_threshold": [0.0001],
             "guess_bonds": [False],
+            "start_frame": [0],
+            "number_frames": [999999999],
+            "stop_frame": [999999999],
             "str_test_free": ["freechoice"],
             "str_test_choice": ["not_this"],
             "str_test_free_list": ["freechoice1", "freechoice2"],

@@ -1273,9 +1273,9 @@ class RawPars:
             )
 
         # next - frame numbers!
-        start_frame = self.choices.get("start_frame", None)
-        number_frames = self.choices.get("number_frames", None)
-        stop_frame = self.choices.get("stop_frame", None)
+        start_frame = self.choices.get("start_frame", [None])[0]
+        number_frames = self.choices.get("number_frames", [None])[0]
+        stop_frame = self.choices.get("stop_frame", [None])[0]
         n_pars = len([
             x for x in (start_frame, number_frames, stop_frame)
             if x is not None
