@@ -20,6 +20,9 @@ This program will create the required files for calculating electronic spectra.
 
 from .src.programs import AIM
 from .src.programs import GEM
+from . import __main__ as main_
+
+main = main_.main
 
 alltools = {
     "AIM": AIM,

@@ -462,15 +462,15 @@ def time_to_str(ns_time, precision="s"):
     h = remainder % 24
     d = remainder // 24
 
-    str_time = f"{d}-{h}:{m}:{s}"
+    str_time = f"{d}-{h:02d}:{m:02d}:{s:02d}"
 
     if precision in ("ms", "us", "ns"):
-        str_time += f".{ms}"
+        str_time += f".{ms:03d}"
 
     if precision in {"us", "ns"}:
-        str_time += f".{us}"
+        str_time += f".{us:03d}"
 
     if precision == "ns":
-        str_time += f".{ns}"
+        str_time += f".{ns:03d}"
 
     return str_time

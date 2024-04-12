@@ -1806,7 +1806,7 @@ class RunPars:
                 continue
 
             # skip if the new source doesn't have anything new
-            foundpar = found.keys()[0]
+            foundpar = [*found.keys()][0]
             if len(newdict) == 1 and foundpar in newdict:
                 continue
 

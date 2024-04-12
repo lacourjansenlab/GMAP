@@ -980,6 +980,94 @@ class TestRunPars:
             assert RunPars.def_nod_file == exp_dnf
             assert RunPars.nod_nod_file == exp_nnf
 
+    def test_framenumbers(self):
+        pardict = {
+            "start_frame": ["4"],
+            "int_test_nodef": ["33"],
+            "path_test_nodef": [Path("test_MathFunctions.py")]
+        }
+
+        curpath = Path(__file__).resolve()
+
+        cmdline = []
+
+        (
+            Files, Printer, RefPars, DefPars, InPars, _, CmdPars
+        ) = self.setup_for_runpars(pardict, curpath, cmdline)
+
+        RunPars = GM_PP.RunPars(
+            Files, Printer, CmdPars, InPars, DefPars, RefPars, True
+        )
+
+        assert RunPars.start_frame == 4
+        assert RunPars.number_frames == 999999995
+        assert RunPars.stop_frame == 999999999
+
+        pardict = {
+            "start_frame": ["4"],
+            "number_frames": ["20"],
+            "int_test_nodef": ["33"],
+            "path_test_nodef": [Path("test_MathFunctions.py")]
+        }
+
+        curpath = Path(__file__).resolve()
+
+        (
+            Files, Printer, RefPars, DefPars, InPars, _, CmdPars
+        ) = self.setup_for_runpars(pardict, curpath, cmdline)
+
+        RunPars = GM_PP.RunPars(
+            Files, Printer, CmdPars, InPars, DefPars, RefPars, True
+        )
+
+        assert RunPars.start_frame == 4
+        assert RunPars.number_frames == 20
+        assert RunPars.stop_frame == 24
+
+        pardict = {
+            "number_frames": ["4"],
+            "int_test_nodef": ["33"],
+            "path_test_nodef": [Path("test_MathFunctions.py")]
+        }
+
+        curpath = Path(__file__).resolve()
+
+        cmdline = ["--stop_frame", "8"]
+
+        (
+            Files, Printer, RefPars, DefPars, InPars, _, CmdPars
+        ) = self.setup_for_runpars(pardict, curpath, cmdline)
+
+        RunPars = GM_PP.RunPars(
+            Files, Printer, CmdPars, InPars, DefPars, RefPars, True
+        )
+
+        assert RunPars.start_frame == 4
+        assert RunPars.number_frames == 4
+        assert RunPars.stop_frame == 8
+
+        pardict = {
+            "stop_frame": ["4"],
+            "int_test_nodef": ["33"],
+            "path_test_nodef": [Path("test_MathFunctions.py")]
+        }
+
+        curpath = Path(__file__).resolve()
+
+        cmdline = ["--stop_frame", "8"]
+
+        (
+            Files, Printer, RefPars, DefPars, InPars, _, CmdPars
+        ) = self.setup_for_runpars(pardict, curpath, cmdline)
+
+        RunPars = GM_PP.RunPars(
+            Files, Printer, CmdPars, InPars, DefPars, RefPars, True
+        )
+
+        assert RunPars.start_frame == 0
+        assert RunPars.number_frames == 8
+        assert RunPars.stop_frame == 8
+
     def test_SU_NP_1(self, capsys):
         cmdline = [
             "--path_test_nodef", "tests/test_tools/test_MathFunctions.py"

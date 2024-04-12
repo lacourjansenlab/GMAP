@@ -185,6 +185,27 @@ def get_parameters(Files, Printer, in_parfile, argslist):
 
 
 def manage_frame(frame, Printer, RunPars):
+    """Performs all the checks involved with starting a new frame.
+
+    Future/TODO:
+    Checks if the new frame should be treated (or is out of range).
+    Prints the new frame number, along with an ETA (to know how much
+    longer the calculation will take). Also confirms whether there is
+    enough time to start on the next batch of frames before time runs
+    out.
+
+    Parameters
+    ----------
+    frame : `MDA.Timestep`
+        The frame that will be treated next.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    """
+
     framenum = frame.frame
     if framenum >= RunPars.stop_frame:
         return True
@@ -196,6 +217,23 @@ def manage_frame(frame, Printer, RunPars):
 
 # TO DO inside!
 def trj_loop(Printer, RunPars, System):
+    """Performs the main per-frame loop for GEM.
+
+    Does the last bit of initialization that needs to happen, and then
+    treats each frame.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The class containing all the information on the system of the
+        MD trajectory.
+    """
 
     # first, do precalc
 
