@@ -4,6 +4,7 @@ import numpy as np
 
 # local imports
 import GMAP.src.tools.MathFunctions as GM_MF
+import GMAP.src.tools.PhysicsFunctions as GM_PF
 from GMAP.src.tools.PrintTools import devprint as dpr
 dpr("", end="")  # to disable error of dpr unused
 
@@ -50,6 +51,148 @@ def get_post_run():
     return does_nothing
 
 
+def get_get_VEG_ref(Printer, map_):
+    """Creates the function GM_get_VEG_ref.
+
+    Recognizes requested method and finds relevant function.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+        The map instance which this function will belong to.
+
+    Returns
+    -------
+    GM_get_VEG_ref : function
+        The function that should be called to find the VEG centre for
+        this oscillator.
+    """
+
+    instructions = map_.rawcore["VEG_reference"]
+    method = instructions[0]
+    details = instructions[1]
+
+    match method.lower():
+        case "residues":
+            GM_get_VEG_ref = VEG_from_residues(details)
+        case "com":
+            GM_get_VEG_ref = VEG_from_com(details)
+        case "position":
+            GM_get_VEG_ref = VEG_from_position(Printer, map_, details)
+    return GM_get_VEG_ref
+
+
+def VEG_from_residues(local_atoms):
+    """Creates the function GM_get_VEG_ref for given residues.
+
+    Each residue is defined by an atom that is part of it. All atoms of
+    the given residues will count towards the centre of mass.
+
+    Parameters
+    ----------
+    local_atoms : list of str
+        All these strings must be convertable to ints using int(). Each
+        of these atoms is assumed to be in a different residue.
+
+    Returns
+    -------
+    GM_get_VEG_ref : function
+        The function that should be called to find the VEG centre for
+        this oscillator.
+    """
+
+    def GM_get_VEG_ref(Printer, Map, Syst, osc):
+        atnums = []
+        for atom in local_atoms:
+            resnum = Syst.resnums[osc.used_atoms[atom]]
+            atnums.extend([*range(
+                Syst.residues.first_ix[resnum],
+                Syst.residues.last_ix[resnum] + 1
+            )])
+        CoM = GM_PF.calc_CoM(Syst, atnums)
+        return CoM
+
+    local_atoms = [int(num) for num in local_atoms]
+    return GM_get_VEG_ref
+
+
+def VEG_from_com(local_atoms):
+    """Creates the function GM_get_VEG_ref for given atoms.
+
+    Each atom given will count towards the VEG centre.
+
+    Parameters
+    ----------
+    local_atoms : list of str
+        All these strings must be convertable to ints using int(). Each
+        value corresponds to an atom (using local indices)
+
+    Returns
+    -------
+    GM_get_VEG_ref : function
+        The function that should be called to find the VEG centre for
+        this oscillator.
+    """
+
+    def GM_get_VEG_ref(Printer, Map, Syst, osc):
+        atnums = [osc.used_atoms[ix] for ix in local_atoms]
+        CoM = GM_PF.calc_CoM(Syst, atnums)
+        return CoM
+
+    local_atoms = [int(num) for num in local_atoms]
+    return GM_get_VEG_ref
+
+
+def VEG_from_position(Printer, map_, details):
+    """Creates the function GM_get_VEG_ref for given atoms.
+
+    Each atom given will count towards the VEG centre.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+        The map instance which this function will belong to.
+    details : list of str
+        The string(s) explaining what to do. Ints will be converted to
+        the box positions of the atoms with that int as used_ix.
+
+    Returns
+    -------
+    GM_get_VEG_ref : function
+        The function that should be called to find the VEG centre for
+        this oscillator.
+    """
+
+    codestring = "\ndef GM_get_VEG_ref"
+    codestring += "(Printer, Map, Syst, osc):\n"
+
+    codestring += "    CoM = " + envelop_int(
+        " ".join(details), "osc.positions_box[", "]"
+    ) + "\n"
+    codestring += "    CoM = (CoM - np.floor(CoM + 0.5)) @ Syst.boxvects"
+    codestring += "    return CoM"
+
+    try:
+        exec(codestring)
+    except Exception as ex:
+        corefile = (map_.directory / 'core.txt').resolve()
+        Printer.warning(
+            f"\nThe file {corefile} does not contain a valid definition of "
+            "VEG_reference.",
+            "MI_MC_9", exception=ex
+        )
+        return None
+
+    # return GM_get_VEG_ref
+    return locals()["GM_get_VEG_ref"]
+
+
 def get_get_dipole(Printer, map_):
     """Default for obtaining the dipole
 
@@ -68,7 +211,7 @@ def get_get_dipole(Printer, map_):
     """
 
     # based on the r_vec and r_pos lines in the map core, build a function.
-    codestring = "\ndef GM_get_dipole(Files, Printer, Map, Syst, osc):\n"
+    codestring = "\ndef GM_get_dipole(Printer, Map, Syst, osc):\n"
     codestring += "    r_vec = " + envelop_int(
         " ".join(map_.rawcore["r_vec"]),
         # "GM_MF.PBCvect(Syst.positions[osc.used_atoms[", "]])"
@@ -79,6 +222,7 @@ def get_get_dipole(Printer, map_):
         # "GM_MF.PBCvect(Syst.positions[osc.used_atoms[", "]])"
         "osc.positions_box[", "]"
     ) + "\n"
+    codestring += "    r_pos = (r_pos - np.floor(r_pos + 0.5))\n"
     codestring += "    return r_vec @ Syst.boxvects, r_pos @ Syst.boxvects\n"
 
     # dpr(envelop_int("1-0", "pos(", ")"))
@@ -125,7 +269,7 @@ def get_get_rotation_matrix(Printer, map_):
     given_directions = [key for key in map_.rawcore if key in allparnames]
 
     codestring = "\ndef GM_get_rotation_matrix"
-    codestring += "(Files, Printer, Map, Syst, osc):\n"
+    codestring += "(Printer, Map, Syst, osc):\n"
 
     # the first direction should be taken as is
     direc = given_directions[0]

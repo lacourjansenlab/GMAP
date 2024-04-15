@@ -4,6 +4,7 @@ trajectory_file(trj)[path_sep]                    ../sourcefiles/pdb_1AKI_50fram
 
 source_directory(sd)[path_dir_sd]                 ../sourcefiles
 default_parameter_filename(dpf)[path_rel_sd]      [N/A]
+VEG_clib_file[path_rel_sd]                        VEG.dll      
 
 log_directory[path_dir_lg]                        [N/A]
 log_filename[path_rel_lg_c]                       log.log

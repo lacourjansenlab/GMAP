@@ -1,5 +1,4 @@
 verbose 4
 #map_directory GMAP
-testmap1.par1 1
 
 maps_to_use   AmideSC AmideBB CystBridge

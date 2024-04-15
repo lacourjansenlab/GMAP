@@ -29,6 +29,7 @@ import sys
 import numpy as np
 
 # local imports
+import GMAP.src.tools.CLibLoader as GM_CL
 import GMAP.src.tools.FileHandler as GM_FH
 # import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.MapReader as GM_MR
@@ -184,6 +185,7 @@ def get_parameters(Files, Printer, in_parfile, argslist):
     return RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
 
 
+# TO DO inside!
 def manage_frame(frame, Printer, RunPars):
     """Performs all the checks involved with starting a new frame.
 
@@ -357,6 +359,9 @@ def GEM(callcommand, Files, Printer):
         map_.code.GM_post_init(Files, Printer, map_, System)
 
     Printer.add_time(2, "Initialization complete", "ms")
+
+    # initialize C library
+    GM_CL.VEG_CLib(Printer, RunPars)
 
     trj_loop(Printer, RunPars, System)
 

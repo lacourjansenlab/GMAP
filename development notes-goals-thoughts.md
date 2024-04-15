@@ -331,19 +331,11 @@ TO DO
 
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
+
+- (KvA) TODO before PR:
+  - Add instructions on VEG_reference in mapcore to documentation.
 - (KvA) TODO:
   - Links to relevant packages etc in explanation in main documentation page.
-  - GEM.manage_frame - add a print of frame number and ETA (following AIM)
-  - GEM.manage_frame - add a check whether the calculation can be continued (or whether there is not enough time left)
-  - System.update properties (or somewhere around its call in the perframe loop) - add a check to see whether the calculation can even continue (whether the potential sphere radius still fits)
-  - write PhysicsFunctions.calc_dipole(), as well as any other necessary support (also preframe/prerun)
-  - write PhysicsFunctions.calc_frequency(), as well as any other necessary support (also preframe/prerun)
-  - write PhysicsFunctions.calc_coupling(), as well as any other necessary support (also preframe/prerun)
-  - Add output positions (for NISE LD/CD)
-  - Add output raman tensor (for NISE Raman/SFG)
-  - Print report at end of program
-  - References!!!
-  - Add a way to only output frequencies (1D hamiltonian)
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.

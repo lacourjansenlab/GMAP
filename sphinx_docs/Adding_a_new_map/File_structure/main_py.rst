@@ -238,7 +238,7 @@ oscillator_list : list of :class:`~GMAP.src.tools.SystemReader.Oscillator`
 GM_post_init(Files, Printer, Map, Syst)
 =======================================
 
-Allows the user to do some final initialization steps. These can include building lookup-tables, or computing some basic properties for later use.
+Allows the user to do some final initialization steps. These can include building lookup-tables, or computing some basic properties for later use. This function is called when all initialization is done (maps, MD system, etc).
 
 Is expected to not return anything.
 
@@ -253,6 +253,11 @@ The map requires further information on the system
 Some mappings require further information. One example are the backbone amides - these live in a covalently bound chain, which makes it important to know which other oscillators are (closely) bound. It is easiest (and fastest) if this information is readily available during the calculation. Furthermore, this property will not change during the calculation / between frames.
 
 This kind of information should be collected as part of the initialization. This function should be used to look this information up, and store it as an attribute of the Map object that is passed to this function.
+
+
+Setting different values for certain parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Some parameters are only set simply. Like local_ix. If a more complex selection of local_ix is desired, it can be enforced here.
 
 
 Available attributes of Map

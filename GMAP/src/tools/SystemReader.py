@@ -7,6 +7,7 @@ import numpy as np
 
 # local imports
 import GMAP.src.tools.ParameterParser as GM_PP
+import GMAP.src.tools.PhysicsFunctions as GM_PF
 import GMAP.src.tools.PrintTools as GM_PT
 from GMAP.src.tools.PrintTools import devprint as dpr
 dpr("", end="")  # to disable error of dpr unused
@@ -179,9 +180,9 @@ class System:
         self.atnames = self.universe.atoms.names
         self.resnums = self.universe.atoms.resnums
         self.resnames = self.universe.atoms.resnames
-        self.positions = self.universe.atoms.positions
-        self.masses = self.universe.atoms.masses
-        self.charges = self.universe.atoms.charges
+        self.positions = self.universe.atoms.positions.astype('float32')
+        self.masses = self.universe.atoms.masses.astype('float32')
+        self.charges = self.universe.atoms.charges.astype('float32')
         self.types = self.universe.atoms.types
         self.segids = self.universe.atoms.segids
 
@@ -264,9 +265,9 @@ class System:
         self.angles = self.universe.dimensions[3:].astype('float32')
         self.boxvects = MDA.lib.mdamath.triclinic_vectors(
             self.universe.dimensions
-        )
+        ).astype('float32')
         self.safesphere = 0.5 * self.boxvects.diagonal().min()
-        self.boxvects_inv = np.linalg.inv(self.boxvects)
+        self.boxvects_inv = np.linalg.inv(self.boxvects).astype('float32')
 
     def find_influencers(self, Printer, RunPars):
         """Find the indices of all atoms that are influencers
@@ -781,8 +782,13 @@ class System:
                 self.oscillators_ordered[mapname].append(oscillator)
 
     def update_properties(self):
-        self.positions = self.universe.atoms.positions
+        self.positions = self.universe.atoms.positions.astype('float32')
         self.determine_box()
+        self.residues.CoM = GM_PF.system_CoM(
+            self.positions, self.masses, self.boxvects_inv,
+            self.boxvects, self.residues.first_ix, self.residues.last_ix,
+            self.nres
+        )
 
 
 class Residues:
@@ -799,11 +805,11 @@ class Residues:
 
     Attributes
     ----------
-    first_ix : list of int
-        A list as long as there are residues in the MD system. For each
+    first_ix : np.ndarray
+        An array as long as there are residues in the MD system. For each
         residue, it stores the index of the first atom.
-    last_ix : list of int
-        A list as long as there are residues in the MD system. For each
+    last_ix : np.ndarray
+        An array as long as there are residues in the MD system. For each
         residue, it stores the index of the last atom.
     resnames : list of str
         A list as long as there are residues in the MD system. For each
@@ -812,6 +818,9 @@ class Residues:
         All residue names that are considered influencers this run.
     influencer_ix : list of int
         The indices of all residues that are influencers.
+    CoM : np.ndarray
+        An array as long as there are residues in the MD system. For each
+        residue, it stores its center of mass.
     """
 
     def __init__(self, syst):
@@ -932,6 +941,11 @@ class Oscillator:
         """
         self.positions_box = (
             Syst.positions[self.used_atoms] @ Syst.boxvects_inv)
+
+    def get_VEG_ref(self, Printer, System):
+        return self.Map.code.GM_get_VEG_ref(
+            Printer, self.Map, System, self
+        )
 
 
 def gen_universe(Printer, RunPars):

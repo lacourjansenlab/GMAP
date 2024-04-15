@@ -19,6 +19,7 @@ how about adding these?
 import numpy as np
 
 import GMAP.src.tools.MathFunctions as GM_MF
+import GMAP.src.tools.PhysicsFunctions as GM_PF
 
 
 # A function to adjust the parameters of the map. For some kinds of
@@ -180,7 +181,7 @@ def GM_post_run(Printer, Map, Syst):
 # for more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
 def placeholder_GM_get_rotation_matrix(
-    Files, Printer, Map, Syst, osc
+    Printer, Map, Syst, osc
 ):
     """Finds the rotation matrix for a given oscillator.
 
@@ -197,10 +198,6 @@ def placeholder_GM_get_rotation_matrix(
 
     Parameters
     ----------
-    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
-        Contains all currently known paths and other file-related
-        properties.
-        Has to be updated after RunPars is finalized.
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
@@ -244,7 +241,7 @@ def placeholder_GM_get_rotation_matrix(
 # have this function, just use `def GM_get_dipole` - see the manual for
 # more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
-def placeholder_GM_get_dipole(Files, Printer, Map, Syst, osc):
+def placeholder_GM_get_dipole(Printer, Map, Syst, osc):
     """Finds the dipole moment and its position of a given oscillator.
 
     Most spectroscopic techniques require to know the dipole moment of
@@ -261,10 +258,6 @@ def placeholder_GM_get_dipole(Files, Printer, Map, Syst, osc):
 
     Parameters
     ----------
-    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
-        Contains all currently known paths and other file-related
-        properties.
-        Has to be updated after RunPars is finalized.
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
@@ -290,6 +283,36 @@ def placeholder_GM_get_dipole(Files, Printer, Map, Syst, osc):
     r_vec = (osc.positions_box[1] - osc.positions_box[0]) @ Syst.boxvects
     r_pos = Syst.positions[osc.used_atoms[0]]
     return r_vec, r_pos
+
+
+# !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
+# GMAP will not actually 'see' this function and use it. If you want to
+# have this function, just use `def GM_get_VEG_ref` - see the manual for
+# more information. This placeholder is just here for illustration (but
+# this map does not actually need this function).
+def placeholder_GM_get_VEG_ref_residues(Printer, Map, Syst, osc):
+    atnums = []
+    for atom in [0]:
+        resnum = Syst.resnums[osc.used_atoms[atom]]
+        atnums.extend([*range(
+            Syst.residues.first_ix[resnum],
+            Syst.residues.last_ix[resnum] + 1
+        )])
+    CoM = GM_PF.calc_CoM(Syst, atnums)
+    return CoM
+
+
+# !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
+# GMAP will not actually 'see' this function and use it. If you want to
+# have this function, just use `def GM_get_VEG_ref` - see the manual for
+# more information. This placeholder is just here for illustration (but
+# this map does not actually need this function).
+def placeholder_GM_get_VEG_ref_com(Printer, Map, Syst, osc):
+    atnums = []
+    for atom in [0, 1, 3, 4]:
+        atnums.append(osc.used_atoms[atom])
+    CoM = GM_PF.calc_CoM(Syst, atnums)
+    return CoM
 
 
 # A function to adjust the final python objects built out of the
