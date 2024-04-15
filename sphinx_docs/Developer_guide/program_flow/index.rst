@@ -17,5 +17,6 @@ Program flows within GEM
 
 .. toctree::
     GEM/run
+    Setup
 
 

@@ -18,23 +18,23 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../../../_static/documentation_options.js?v=8dde47fa"></script>
     <script src="../../../_static/doctools.js?v=888ff710"></script>
@@ -44,6 +44,8 @@
     <link rel="icon" href="../../../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Setup" href="../Setup.html" />
+    <link rel="prev" title="Program flow" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -53,10 +55,9 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>
@@ -97,7 +98,7 @@
 </form></div>
   </div>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
   <label class="sidebar-toggle primary-toggle" for="__primary">
     <span class="fa-solid fa-bars"></span>
@@ -129,17 +130,18 @@
       
         <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -151,7 +153,7 @@
                     </li>
                 
 
-                    <li class="nav-item">
+                    <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="../../index.html">
                         Developers guide
                       </a>
@@ -225,12 +227,15 @@ document.write(`
   
 </div>
 
-    </nav>
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
       
-      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -241,17 +246,18 @@ document.write(`
         
           <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -263,7 +269,7 @@ document.write(`
                     </li>
                 
 
-                    <li class="nav-item">
+                    <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="../../index.html">
                         Developers guide
                       </a>
@@ -301,6 +307,24 @@ document.write(`
     
   </div>
   
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../Useful_resources.html">Useful resources</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Program flow</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">GEM - run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Setup.html">Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../Code_Style.html">Code Style</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
@@ -333,6 +357,12 @@ document.write(`
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Developers guide</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Program flow</a></li>
+    
     <li class="breadcrumb-item active" aria-current="page">GEM - run</li>
   </ul>
 </nav>
@@ -348,7 +378,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="gem-run">
 <h1>GEM - run<a class="headerlink" href="#gem-run" title="Link to this heading">#</a></h1>
@@ -361,14 +391,14 @@ document.write(`
 <li><p>Create a temporary dict from the input parameter file, if there is one.</p></li>
 <li><p>Using the command line arguments and the temporary input file dict (if present), find the default parameter file location. If there was no choice given, the filename of the hardcoded reference parameter file is used.</p></li>
 <li><p>Store the contents of the found default parameter file:
-- If the file ends in ‘.txt’, create a <a class="reference internal" href="../../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a> instance.
-- elif the filename is the same as that of the reference parameter file, make DefPars an alias of RefPars, and create an attribute named ‘not_found’ (assigned value is an empty dictionary), so it can mimick the behaviour of a <a class="reference internal" href="../../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a> instance.
-- elif the filename ends in ‘.ref’, create a <a class="reference internal" href="../../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a> instance. (This is not yet supported, see error SU_FP_1)</p></li>
-<li><p>Create a <a class="reference internal" href="../../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a> instance for the input parameter file (an empty one if no file was supplied).</p></li>
+- If the file ends in ‘.txt’, create a <a class="reference internal" href="../../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a> instance.
+- elif the filename is the same as that of the reference parameter file, make DefPars an alias of RefPars, and create an attribute named ‘not_found’ (assigned value is an empty dictionary), so it can mimick the behaviour of a <a class="reference internal" href="../../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a> instance.
+- elif the filename ends in ‘.ref’, create a <a class="reference internal" href="../../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a> instance. (This is not yet supported, see error SU_FP_1)</p></li>
+<li><p>Create a <a class="reference internal" href="../../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a> instance for the input parameter file (an empty one if no file was supplied).</p></li>
 <li><p>Find all the map directories the program should use, using information from command line and input-, default-, and reference parameter files.</p></li>
-<li><p>Search through the found map directories for maps. Create a <a class="reference internal" href="../../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> instance for each found map, it only stores its name, and the location where its files can be found.</p></li>
-<li><p>For each map, see if there is a reference parameter file, and if there is, make a <a class="reference internal" href="../../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a> instance for each.</p></li>
-<li><p>Finish parsing the command line, and make its own <a class="reference internal" href="../../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a> instance. This can only be done now, as we need the map-specific <a class="reference internal" href="../../../api_out/GMAP.src.tools.html#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a> instances to know how many arguments a map-specific parameter takes.</p></li>
+<li><p>Search through the found map directories for maps. Create a <a class="reference internal" href="../../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> instance for each found map, it only stores its name, and the location where its files can be found.</p></li>
+<li><p>For each map, see if there is a reference parameter file, and if there is, make a <a class="reference internal" href="../../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a> instance for each.</p></li>
+<li><p>Finish parsing the command line, and make its own <a class="reference internal" href="../../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RawPars" title="GMAP.src.tools.ParameterParser.RawPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></a> instance. This can only be done now, as we need the map-specific <a class="reference internal" href="../../../api_out/GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RefPars" title="GMAP.src.tools.ParameterParser.RefPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></a> instances to know how many arguments a map-specific parameter takes.</p></li>
 <li><p>For each map, go through CmdPars, InPars and DefPars to find all parameters for that map, and put them in a map specific CmdPars, InPars and DefPars.</p></li>
 <li><p>Check if all parameters supplied to CmdPars, InPars and DefPars have been recognized. If not, throw warning.</p></li>
 <li><p>Combine the ‘main’ CmdPars, InPars and DefPars into RunPars - following the correct precedence, find the final choice to use for each parameter.</p></li>
@@ -388,6 +418,24 @@ document.write(`
                 <footer class="prev-next-footer">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="../index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Program flow</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../Setup.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Setup</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -396,6 +444,7 @@ document.write(`
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
 
@@ -419,8 +468,8 @@ document.write(`
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -453,7 +502,7 @@ document.write(`
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.14.4.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
 </p></div>
       
     </div>
