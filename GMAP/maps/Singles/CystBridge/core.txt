@@ -1,4 +1,16 @@
 
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#         ATTENTION
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# This is not an actual map, but rather a test for the group-detection
+# algorithm, to see whether it can detect two specifically linked (bonded)
+# residues that are an unknown distance apart.
+
+# -----------------------------------------------------------------------------
+
+
 functional_group [CYS] N H CA C O CB SG(1) [CYS] N H CA C O CB SG(1)
 
 
