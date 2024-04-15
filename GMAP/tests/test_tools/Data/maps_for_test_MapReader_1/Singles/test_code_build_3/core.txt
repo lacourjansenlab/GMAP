@@ -1,0 +1,12 @@
+functional_group       [A] A1 A2 A3
+
+used_atoms             0 1 2
+electrostatic_atoms    2
+electrostatic_choice   E
+type                   linear
+
+r_vec                  2-0
+r_pos                  1
+
+z_uvec                 2-0
+

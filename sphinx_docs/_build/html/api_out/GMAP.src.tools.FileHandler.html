@@ -18,33 +18,34 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../_static/documentation_options.js?v=8dde47fa"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_out/GMAP.src.tools.FileHandler';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="GMAP.src.tools.MapReader module" href="GMAP.src.tools.MapReader.html" />
-    <link rel="prev" title="GMAP.src.tools package" href="GMAP.src.tools.html" />
+    <link rel="prev" title="GMAP.src.tools.DefaultMapFunctions module" href="GMAP.src.tools.DefaultMapFunctions.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -54,10 +55,9 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>
@@ -98,7 +98,7 @@
 </form></div>
   </div>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
   <label class="sidebar-toggle primary-toggle" for="__primary">
     <span class="fa-solid fa-bars"></span>
@@ -130,17 +130,18 @@
       
         <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -161,7 +162,7 @@
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -226,10 +227,13 @@ document.write(`
   
 </div>
 
-    </nav>
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -242,17 +246,18 @@ document.write(`
         
           <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -273,7 +278,7 @@ document.write(`
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -316,17 +321,23 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="GMAP.src.tools.html">GMAP.src.tools package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.DefaultMapFunctions.html">GMAP.src.tools.DefaultMapFunctions module</a></li>
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">GMAP.src.tools.FileHandler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MapReader.html">GMAP.src.tools.MapReader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html">GMAP.src.tools.MathFunctions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html">GMAP.src.tools.ParameterParser module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.PrintTools.html">GMAP.src.tools.PrintTools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.SystemReader.html">GMAP.src.tools.SystemReader module</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="GMAP.tests.html">GMAP.tests package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="GMAP.tests.test_MathFunctions.html">GMAP.tests.test_MathFunctions module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.tests.test_tools.html">GMAP.tests.test_tools package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_MathFunctions.html">GMAP.tests.test_tools.test_MathFunctions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_ParameterParser.html">GMAP.tests.test_tools.test_ParameterParser module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -371,7 +382,7 @@ document.write(`
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP Code documentation</a></li>
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP</a></li>
     
     
     <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
@@ -394,7 +405,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="module-GMAP.src.tools.FileHandler">
 <span id="gmap-src-tools-filehandler-module"></span><h1>GMAP.src.tools.FileHandler module<a class="headerlink" href="#module-GMAP.src.tools.FileHandler" title="Link to this heading">#</a></h1>
@@ -478,7 +489,7 @@ and handle errors.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.check_file_readability">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">check_file_readability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.check_file_readability" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">check_file_readability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doquit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.check_file_readability" title="Link to this definition">#</a></dt>
 <dd><p>Checks if a given file can be read.</p>
 <p>If not, throws an error, and quits.</p>
 <div class="admonition seealso">
@@ -495,6 +506,12 @@ and handle errors.</p>
 and handle errors.</p>
 </dd>
 <dt><strong>fname</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The path to the file to check.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>_</strong><span class="classifier">bool</span></dt><dd><p>Whether the file is readable.</p>
 </dd>
 </dl>
 </dd>
@@ -525,7 +542,7 @@ Linux, or MacOS.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.get_bare_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">get_bare_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floc_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.get_bare_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">get_bare_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floc_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.get_bare_file" title="Link to this definition">#</a></dt>
 <dd><p>Determine the path to a file given all input sources</p>
 <p>There are 4 places that might store information regarding the file’s path,
 which should be considered in a set order.</p>
@@ -705,12 +722,12 @@ Does not check whether the file is of a readable format.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="GMAP.src.tools.html"
+       href="GMAP.src.tools.DefaultMapFunctions.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">GMAP.src.tools package</p>
+        <p class="prev-next-title">GMAP.src.tools.DefaultMapFunctions module</p>
       </div>
     </a>
     <a class="right-next"
@@ -731,12 +748,14 @@ Does not check whether the file is of a readable format.</p>
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-  <div class="sidebar-secondary-item">
 
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc">
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.FileLocations"><code class="docutils literal notranslate"><span class="pre">FileLocations</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.FileLocations.set_exec_os"><code class="docutils literal notranslate"><span class="pre">FileLocations.set_exec_os()</span></code></a></li>
@@ -773,8 +792,8 @@ Does not check whether the file is of a readable format.</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -807,7 +826,7 @@ Does not check whether the file is of a readable format.</p>
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.14.4.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
 </p></div>
       
     </div>

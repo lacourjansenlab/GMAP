@@ -1,7 +1,7 @@
 
-=========
+#########
 GEM - run
-=========
+#########
 
 These steps are always performed by GEM, regardless of method:
 - First parse of command line - extract the job GEM is requested to do, the name of the input parameter file as requested, and the parameters requested for the run.

@@ -18,32 +18,33 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../../_static/documentation_options.js?v=8dde47fa"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Developer_guide/program_flow/index';</script>
+    <link rel="icon" href="../../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="GMAP" href="../../api_out/modules.html" />
+    <link rel="next" title="GEM - run" href="GEM/run.html" />
     <link rel="prev" title="Useful resources" href="../Useful_resources.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -54,10 +55,9 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>
@@ -98,7 +98,7 @@
 </form></div>
   </div>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
   <label class="sidebar-toggle primary-toggle" for="__primary">
     <span class="fa-solid fa-bars"></span>
@@ -130,17 +130,18 @@
       
         <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -226,10 +227,13 @@ document.write(`
   
 </div>
 
-    </nav>
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -242,17 +246,18 @@ document.write(`
         
           <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -309,7 +314,12 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../Useful_resources.html">Useful resources</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Program flow</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Program flow</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="GEM/run.html">GEM - run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Setup.html">Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Code_Style.html">Code Style</a></li>
 </ul>
 </div>
 </nav></div>
@@ -365,7 +375,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="program-flow">
 <h1>Program flow<a class="headerlink" href="#program-flow" title="Link to this heading">#</a></h1>
@@ -373,16 +383,18 @@ document.write(`
 <p>Calling ‘GMAP’ from the command line (with or without further arguments) starts the function ‘main()’ from the file ‘GMAP/__main__.py’. This function does the following:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>A <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a> instance is created. It stores the location of GMAP, the current working directory, the time at which the program was started, as well as the hard-coded locations of the sourcefiles directory, maps directory and reference parameters file.</p></li>
-<li><p>A <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a> instance is created. It stores the name/location of the log file (which for now, upon creation is a temporary name of the format f”crash_{Files.now_str}.log”), the backlog, and program state. It will store verbose levels in the future, too. When asked to print, prints will be sent to the backlog while program_state == startup. This way, if all goes well, the temporary log file is not used, and when the final file is found, the program state is changed, and the backlog emptied to the final choice of file.</p></li>
+<li><p>A <a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a> instance is created. It stores the location of GMAP, the current working directory, the time at which the program was started, as well as the hard-coded locations of the sourcefiles directory, maps directory and reference parameters file.</p></li>
+<li><p>A <a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a> instance is created. It stores the name/location of the log file (which for now, upon creation is a temporary name of the format f”crash_{Files.now_str}.log”), the backlog, and program state. It will store verbose levels in the future, too. When asked to print, prints will be sent to the backlog while program_state == startup. This way, if all goes well, the temporary log file is not used, and when the final file is found, the program state is changed, and the backlog emptied to the final choice of file.</p></li>
 <li><p>Print the main header/logo of GMAP</p></li>
 <li><p>See what (if any) other information was on the command line. If a ‘help’ is requested, the corresponding docstrings are printed. If a specific program is requested (GEM, AIM), that program is started.</p></li>
 </ul>
 </div></blockquote>
-<p>Program flows within GEM
-.. toctree:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">GEM</span><span class="o">/</span><span class="n">run</span>
-</pre></div>
+<p>Program flows within GEM</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="GEM/run.html">GEM - run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Setup.html">Setup</a></li>
+</ul>
 </div>
 </section>
 
@@ -406,11 +418,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="../../api_out/modules.html"
+       href="GEM/run.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">GMAP</p>
+        <p class="prev-next-title">GEM - run</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -422,6 +434,7 @@ document.write(`
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
 
@@ -445,8 +458,8 @@ document.write(`
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -479,7 +492,7 @@ document.write(`
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.14.4.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
 </p></div>
       
     </div>

@@ -3,7 +3,7 @@ Usage:
 
     GMAP GEM
     GMAP GEM help
-prints this help
+Prints this help.
 
     GMAP GEM demo
 Launches GEM in demo-mode. Performs a basic calculation to demonstrate basic
@@ -27,10 +27,12 @@ import sys
 
 # local imports
 import GMAP.src.tools.FileHandler as GM_FH
+# import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
 import GMAP.src.tools.PrintTools as GM_PT
 from GMAP.src.tools.PrintTools import devprint as dpr
+import GMAP.src.tools.SystemReader as GM_SR
 
 
 def get_parameters(Files, Printer, in_parfile, argslist):
@@ -60,6 +62,13 @@ def get_parameters(Files, Printer, in_parfile, argslist):
 
     Returns
     -------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.Map` pairs
+        Stores all the :class:`~GMAP.src.tools.MapReader.Map` objects for
+        each map supplied. The keys are the Map.name attributes corresponding
+        to the maps stored as values.
     CmdPars : :class:`RawPars`
         Contains any parameter choices made on the command line
     InPars : :class:`RawPars`
@@ -69,10 +78,6 @@ def get_parameters(Files, Printer, in_parfile, argslist):
         from a separate default parameters file.
     RefPars : :class:`RefPars`
         Contains all available parameters from GMAP itself (not map-specific)
-    mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.Map` pairs
-        Stores all the :class:`~GMAP.src.tools.MapReader.Map` objects for
-        each map supplied. The keys are the Map.name attributes corresponding
-        to the maps stored as values.
     """
 
     # very basic parsing of cmd
@@ -111,7 +116,7 @@ def get_parameters(Files, Printer, in_parfile, argslist):
     ref_parfile = Files.sourcedir_hc / Files.refparfilename_hc
     # step 7 (parse refparfile)
     GM_FH.check_file_readability(Printer, ref_parfile)  # check if file is UTF8
-    RefPars = GM_PP.RefPars(Printer, ref_parfile)
+    RefPars = GM_PP.RefPars(Printer, ref_parfile, True)
 
     # step 8 (parse defparfile)
     if def_parfile.suffix == ".txt":
@@ -138,7 +143,7 @@ def get_parameters(Files, Printer, in_parfile, argslist):
         InPars = GM_PP.RawPars.from_dict(
             Printer, in_parfile, in_pardict, RefPars, False)
     else:
-        InPars = GM_PP.RawPars.create_empty()
+        InPars = GM_PP.RawPars.create_empty(Printer)
 
     # step 10 (find mapdir in cmdline > inparfile > defparfile)
     mapdirs = GM_PP.find_mapdir(Files, Printer, argslist, InPars, DefPars)
@@ -147,8 +152,6 @@ def get_parameters(Files, Printer, in_parfile, argslist):
     mapdict = GM_MR.scan_mapdirs(mapdirs)
     for map_ in mapdict.values():
         map_.find_refpars(Printer)
-        if map_.RefPars:
-            dpr(map_.RefPars.choices)
 
     # step 12 (finish parsing cmdline, inparfile, defparfile)
 
@@ -174,7 +177,34 @@ def get_parameters(Files, Printer, in_parfile, argslist):
     for map_ in mapdict.values():
         map_.find_runpars(Files, Printer, RunPars)
 
-    return CmdPars, InPars, DefPars, RefPars, mapdict
+    return RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+
+
+# TO DO inside!
+def run(System):
+
+    # first, do precalc
+
+    # create empty structures, initialize whats needed
+    # call pre-calc funcs of maps
+    # compare runpar endframe to mda nframes - adjust endframe
+
+    trj = System.universe.trajectory
+    for frame in trj:  # add slice here to make it faster!
+        # manage frame number (if not in range, skip, prints, ETA, etc)
+        # rebuild the frame-specific data (positions, box, etc)
+        # (only if needed) recalc COM
+        # initialize output structures (like Ham)
+        # call pre-frame funcs of maps
+        # perform the actual calculations
+        # call post-frame functions of maps
+        # write calculated data to files
+        pass
+
+    # lastly, do postcalc:
+
+    # print all that the user does not yet know
+    # (profiler?)
 
 
 # still a placeholder - this function still has to grow. Should in the
@@ -190,9 +220,68 @@ def GEM(callcommand, Files, Printer):
         Files, Printer, callcommand, alljobs, "GMAP GEM", exp_inpfile, True
     )
 
-    CmdPars, InPars, DefPars, RefPars, mapdict = get_parameters(
+    RunPars, mapdict, CmdPars, InPars, DefPars, RefPars = get_parameters(
         Files, Printer, in_parfile, argslist
     )
+
+    # end of SU errors
+
+    for map_ in mapdict.values():
+        map_.initialize(Files, Printer)
+
+    for map_ in mapdict:
+        dpr(map_)
+    mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
+
+    dpr("successful:")
+    for map_ in mapdict.values():
+        dpr(map_.name)
+        dpr(map_.Core.functional_group)
+
+    for map_choice in RunPars.maps_to_use:
+        if map_choice not in mapdict:
+            Printer.warning(
+                f"The map {map_choice} was requested for use. However, it "
+                "either does not exist, or the map was loaded unsuccessfully "
+                "due to issues with its definition.",
+                "MI_GEM_1", True
+            )
+
+    requested_mapdict = {
+        map_.name: map_ for map_ in mapdict.values()
+        if map_.name in RunPars.maps_to_use
+    }
+    RunPars.requested_mapdict = requested_mapdict
+    if any(map_.Core.requires_bonds for map_ in requested_mapdict.values()):
+        RunPars.detected_requires_bonds = True
+    else:
+        RunPars.detected_requires_bonds = False
+
+    # next - MD system!
+    System = GM_SR.System(Files, Printer, RunPars)
+    dpr(System.universe)
+
+    # dpr(System.positions[System.oscillators[0].used_atoms[0]])
+    # testvect = GM_MF.PBCvect(
+    #     System.positions[System.oscillators[0].used_atoms[0]],
+    #     System.boxvects, System.boxvects_inv
+    # )
+    # dpr(testvect, testvect.boxvects)
+    # dpr(testvect + 30)
+    # dpr(testvect * 3)
+    # dpr(testvect @ [[2, 0, 0], [0, 2, 0], [0, 0, 2]])
+    # oscvects = System.positions[System.oscillators[0].used_atoms]
+    # PBCoscvects = GM_MF.PBCvect(
+    #     oscvects, System.boxvects, System.boxvects_inv)
+    # dpr(oscvects)
+    # dpr(PBCoscvects)
+    # dpr(oscvects[1]-oscvects[0])
+    # dpr(PBCoscvects[1]-PBCoscvects[0])
+    # dpr(oscvects[1]**2)
+    # dpr(PBCoscvects[1]**2)
+
+    dpr(dir(System))
+
     GM_PT.devprint("entered main of GEM - yet to be constructed")
 
 

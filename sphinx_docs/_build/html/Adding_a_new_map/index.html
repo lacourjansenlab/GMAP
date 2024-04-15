@@ -18,33 +18,34 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../_static/documentation_options.js?v=8dde47fa"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Adding_a_new_map/index';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="File structure" href="File_structure/index.html" />
-    <link rel="prev" title="GMAP documentation" href="../index.html" />
+    <link rel="prev" title="Periodic boundary conditions (PBC)" href="../Theory/PBC.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -54,10 +55,9 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>
@@ -98,7 +98,7 @@
 </form></div>
   </div>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
   <label class="sidebar-toggle primary-toggle" for="__primary">
     <span class="fa-solid fa-bars"></span>
@@ -130,14 +130,22 @@
       
         <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="#">
                         Adding a new map
@@ -154,7 +162,7 @@
 
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../api_out/modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -219,10 +227,13 @@ document.write(`
   
 </div>
 
-    </nav>
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -235,14 +246,22 @@ document.write(`
         
           <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../User_guide/index.html">
+                        User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="#">
                         Adding a new map
@@ -259,7 +278,7 @@ document.write(`
 
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../api_out/modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -295,7 +314,9 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="File_structure/index.html">File structure</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="File_structure/core.html">Core.txt file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="File_structure/parameters.html">parameters.ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="File_structure/main_py.html">main.py</a></li>
 </ul>
 </li>
 </ul>
@@ -350,7 +371,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="adding-a-new-map">
 <span id="userguide-page-adding-map"></span><h1>Adding a new map<a class="headerlink" href="#adding-a-new-map" title="Link to this heading">#</a></h1>
@@ -360,7 +381,95 @@ object.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="File_structure/index.html">File structure</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="File_structure/parameters.html">parameters.ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="File_structure/core.html">Core.txt file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#functional-group">functional_group</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/core.html#step-1-an-oscillator-on-a-single-residue">Step 1 - An oscillator on a single residue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/core.html#step-2-an-oscillator-on-multiple-residues">Step 2 - An oscillator on multiple residues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/core.html#step-3-multiple-choices-of-names">Step 3 - multiple choices of names</a></li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/core.html#step-4-multiple-atoms-with-the-same-name">Step 4 - multiple atoms with the same name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/core.html#bonus-counting-atoms">Bonus - counting atoms</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#functional-group-file">functional_group_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#functional-group-bonds">functional_group_bonds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#used-atoms">used_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#electrostatic-atoms">electrostatic_atoms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#electrostatic-choice">electrostatic_choice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#type-and-xyz-uvec">type and xyz_uvec</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/core.html#type">type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/core.html#xyz-uvec">xyz_uvec</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#r-pos-and-r-vec">r_pos and r_vec</a></li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#influencer-group">influencer_group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#add-corefile">add_corefile</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="File_structure/parameters.html">parameters.ref</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/parameters.html#file-layout">File layout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="File_structure/main_py.html">main.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/main_py.html#basic-structure">Basic structure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#map">Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#files">Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#printer">Printer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/main_py.html#overview-of-all-functions">Overview of all functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-adjust-runpars-files-printer-map">GM_adjust_RunPars(Files, Printer, Map)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#example-uses">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#interlinked-parameters">interlinked parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#dependent-parameters">dependent parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#available-attributes-of-map">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#parameters">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-adjust-map-core-raw-files-printer-map">GM_adjust_map_core_raw(Files, Printer, Map)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id1">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#dependency-on-map-parameters">Dependency on map parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id2">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id3">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-adjust-oscillators-files-printer-map-syst-oscillator-list">GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id4">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#a-map-needs-to-deal-with-two-kinds-of-oscillator">A map needs to deal with two kinds of oscillator</a></li>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#a-functional-group-is-fully-symmetrical">A functional group is fully symmetrical</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id5">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id6">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-get-rotation-matrix-files-printer-map-syst-osc">GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id7">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">The default method of providing the rotation matrix is not sufficient</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id8">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id9">Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#returns">Returns</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-get-dipole-files-printer-map-syst-osc">GM_get_dipole(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id10">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id11">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id12">Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id13">Returns</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -378,12 +487,12 @@ object.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../index.html"
+       href="../Theory/PBC.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">GMAP documentation</p>
+        <p class="prev-next-title">Periodic boundary conditions (PBC)</p>
       </div>
     </a>
     <a class="right-next"
@@ -403,6 +512,7 @@ object.</p>
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
 
@@ -426,8 +536,8 @@ object.</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -460,7 +570,7 @@ object.</p>
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.14.4.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
 </p></div>
       
     </div>

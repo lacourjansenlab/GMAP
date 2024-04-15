@@ -15,13 +15,17 @@ This program will create the required files for calculating infrared spectra.
     GMAP GEM
 This program will create the required files for calculating electronic spectra.
 
+    GMAP Setup
+This program will copy the source code and maps to target folder.
 """
 
 
 from .src.programs import AIM
 from .src.programs import GEM
+from .src.programs import Setup
 
 alltools = {
     "AIM": AIM,
-    "GEM": GEM
+    "GEM": GEM,
+    "Setup": Setup
 }

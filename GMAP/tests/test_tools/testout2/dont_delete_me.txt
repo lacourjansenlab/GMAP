@@ -1,3 +1,0 @@
-While this file is not directly used for anything, it has to be here for git(hub desktop) to see this directory and sync it to github. If this directory does not exist, some tests will fail.
-
-tldr: remove this file, tests will break.
