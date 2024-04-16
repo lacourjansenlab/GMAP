@@ -115,15 +115,21 @@ def logify_hammy(ham, size):
 
 
 def hammy_saver(hammy, idx, outname):
-	"""Saves the hamiltonian a pdf.
+	"""Saves one matrix as (outname)_(idx).pdf.
+
+	The matrix can represent the average of a selection of frames or a
+	single frame.
 
 	Parameters
 	----------
 	ham : 'ndarray'
 		This array is the hamiltonian, with frequencies on the diagonal
 		and couplings on the off-diagonal.
-	idx: int
-		The index of the 
+	idx : int
+		The index of the frame that is being plotted, or a list of
+		frames for an average.
+	outname : str
+		A name used to name the file that is created.
 	"""
 
 	try:
@@ -154,12 +160,40 @@ def hammy_saver(hammy, idx, outname):
 
 
 def format_frame_selection(frames, data):
+	"""Turns the frames from a string into a list of integers.
+
+	If frames contains integers seperated by commas, the integers will
+	correspond to the frames of the data that will be processed. A list
+	of them is returned. If frames is "all", a list containing all
+	indexes in frames is returned, starting at 1 for the first frame.
+
+	Parameters
+	----------
+	frames : str
+		Contains integers split by commas or is the string "all". If if
+		is integers split by commas, the integers will correspond to the
+		one-based indexes frames of the data that will be processed.
+		"all" will create a list containing all one-based indexes of
+		all of the frames contained in data for the first
+		frame.
+	data : list of list of float
+		Each sublist represents a frame each float within each sublist
+		represents either a frequency or a coupling, for a more detailed
+		overview please read the manual.
+
+	Returns
+	-------
+	frames_int : list of int
+		Contains a list of integers that correspond to a one-based index
+		frames of the data.
+	"""
+
 	if frames == "all":
-		frames = range(1, len(data) + 1)
+		frames_int = range(1, len(data) + 1)
 	else:
 		frames = list(frames.split(","))
 		try:
-			frames = [int(frame) for frame in frames]
+			frames_int = [int(frame) for frame in frames]
 		except ValueError:
 			raise HamVisException(
 				"Frames can only be given as integers and seperated by "
@@ -171,10 +205,12 @@ def format_frame_selection(frames, data):
 					"A frame was selected for rendering that does not exist "
 					"in the selected sourcefile."
 				)
-	return frames
+	return frames_int
 
 
 def average_ham(average, ham_list, frames):
+	"""Returns an updated ham_list and frames if average is True.
+	"""
 	if average == "True":
 		ham_list = [sum(ham_list) / len(ham_list)]
 		frames = [frames]
