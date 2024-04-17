@@ -1,4 +1,11 @@
-r"""Usage description goes here
+r"""This module works independantly from all other GMAP code.
+Invoking this module with the correct arguments will create images of
+the Hamiltonians stored in the selected file.
+
+The functions in this module are not tested with pytest because this
+module is not supposed to interact with the rest of GMAP, nor be
+modified. If this changes in the future this module should be subject to\
+testing.
 """
 
 # standard libary imports
@@ -35,11 +42,13 @@ def get_data(fname):
 	"""
 	try:
 		with open(fname) as fhand:
-			data = fhand.readlines()   # Hammy.txt is corrupted past line 28
-		data = [frame.split() for frame in data]
+			data = fhand.readlines()
+		data = [frame.split() for frame in data][:25]
 		data = [[float(number) for number in frame][1:] for frame in data]
 
-		size = int(np.sqrt(2 * len(data[0]) + 0.25) + 0.5) - 1  # triangle sum
+		# len(data[0]) is a triangular number, size is the integer used
+		# to construct that triangular number.
+		size = int(np.sqrt(2 * len(data[0]) + 0.25) + 0.5) - 1
 	except Exception:
 		raise HamVisException(
 			f"There was an error extracting data from {fname}, please verify "
@@ -118,11 +127,11 @@ def hammy_saver(hammy, idx, outname):
 	"""Saves one matrix as (outname)_(idx).pdf.
 
 	The matrix can represent the average of a selection of frames or a
-	single frame.
+	single frame. The matrix is stored in hammy
 
 	Parameters
 	----------
-	ham : 'ndarray'
+	hammy : 'ndarray'
 		This array is the hamiltonian, with frequencies on the diagonal
 		and couplings on the off-diagonal.
 	idx : int
@@ -199,7 +208,7 @@ def format_frame_selection(frames, data):
 				"Frames can only be given as integers and seperated by "
 				"nothing but a comma. To select all frames, specify 'all'."
 			) from None
-		for frame in frames:
+		for frame in frames_int:
 			if frame > len(data):
 				raise HamVisException(
 					"A frame was selected for rendering that does not exist "
@@ -209,7 +218,42 @@ def format_frame_selection(frames, data):
 
 
 def average_ham(average, ham_list, frames):
-	"""Returns an updated ham_list and frames if average is True.
+	"""Returns an updated ham_list and frames if average is 'True'.
+
+	The function changes frames and ham_list depending on wether on the
+	value of average. If True, frames will be a list that contains the
+	input list as its only entry and ham_list will only have one entry,
+	which will be the average of the input. ham_list and frames remain
+	the same if average is 'False'
+
+	Parameters
+	----------
+	average : str
+		This should be 'False' or 'True'. If this is 'True' the function
+		average all entries in ham_list and puts frames into a sublist.
+	ham_list : list of 'ndarray' of float
+		This is a list of numpy arrays. The numpy arrays each contain a
+		matrix that represents one Hamiltonian.
+	frames : str
+		Contains integers split by commas or is the string "all". If if
+		is integers split by commas, the integers will correspond to the
+		one-based indexes frames of the data that will be processed.
+		"all" will create a list containing all one-based indexes of
+		all of the frames contained in data for the first
+		frame.
+
+	Returns
+	-------
+	ham_list : list of 'ndarray' of float
+		This is a list of numpy arrays. The numpy arrays each contain a
+		matrix that represents one Hamiltonian.
+	frames : str
+		Contains integers split by commas or is the string "all". If if
+		is integers split by commas, the integers will correspond to the
+		one-based indexes frames of the data that will be processed.
+		"all" will create a list containing all one-based indexes of
+		all of the frames contained in data for the first
+		frame.
 	"""
 	if average == "True":
 		ham_list = [sum(ham_list) / len(ham_list)]
@@ -223,13 +267,37 @@ def average_ham(average, ham_list, frames):
 
 
 def cut_ham(cut, ham_list):
+	"""This function slices the hamiltonian so only a part is shown.
+
+	This is mostly intended to allow the user to zoom in on certain
+	sections of a Hamiltonian. It slices all of the Hamiltonians of
+	ham_list at the same time according to cut. If cut is 'False', the
+	function returns simply the original ham_list.
+
+	Parameters
+	----------
+	cut : str
+		This is formatted as either four integers seperated by commas or
+		as 'False'. If it is 'False' the Hamiltonians in ham_list are
+		not cut. Otherwise cut should be x1,x2,y1,y2. This slices the
+		elements of ham_list as ham[x1:x2,y1:y2].
+	ham_list : list of 'ndarray' of float
+		This is a list of numpy arrays. The numpy arrays each contain a
+		matrix that represents one Hamiltonian.
+
+	Returns
+	-------
+	ham_list : list of 'ndarray' of float
+		This is a list of numpy arrays. The numpy arrays each contain a
+		matrix that represents one Hamiltonian.
+	"""
 	try:
 		if cut != "False":
 			cut = list(cut.split(","))
 			cut = [int(cutidx) for cutidx in cut]
 			if len(cut) != 4:
 				raise Exception
-			ham_list = [ham[cut[0]:cut[1], cut[2]:cut[3]] for ham in ham_list]
+			ham_list = [ham[cut[2]:cut[3], cut[0]:cut[1]] for ham in ham_list]
 	except Exception:
 		raise HamVisException(
 			"cut was incorrectly specified, please see the manual for more "
@@ -239,6 +307,33 @@ def cut_ham(cut, ham_list):
 
 
 def HamVis(fname, frames, average, cut, outname):
+	"""Saves frames of Hamiltonians and saves them as a pdf image.
+
+	It doesn't do much itself, it merely functions as a body to connect
+	other functions in this module.
+
+	Parameters
+	----------
+	fname : str
+		The name of the file from where data is extracted.
+	frames : str
+		Contains integers split by commas or is the string "all". If if
+		is integers split by commas, the integers will correspond to the
+		one-based indexes frames of the data that will be processed.
+		"all" will create a list containing all one-based indexes of
+		all of the frames contained in data for the first
+		frame.
+	average : str
+		This should be 'False' or 'True'. If this is 'True' the function
+		average all entries in ham_list and puts frames into a sublist.
+	cut : str
+		This is formatted as either four integers seperated by commas or
+		as 'False'. If it is 'False' the Hamiltonians in ham_list are
+		not cut. Otherwise cut should be x1,x2,y1,y2. This slices the
+		elements of ham_list as ham[x1:x2,y1:y2].
+	outname : str
+		A name used to name the file that is created.
+	"""
 	ham_list = []
 	data, size = get_data(fname)
 	frames = format_frame_selection(frames, data)
@@ -256,7 +351,6 @@ def HamVis(fname, frames, average, cut, outname):
 
 
 if __name__ == "__main__":
-
 	warnings.simplefilter("ignore")
 
 	if len(sys.argv) != 6:
@@ -268,8 +362,8 @@ if __name__ == "__main__":
 			"frames are the frames you want to investigate, seperated by ','.\n"
 			"average should be True or False depending on wether to average "
 			"the frames.\n"
-			"cut is the area you want to plot given as 'x0,x1,y0,y1',"
-			"or 'False if you dont want to exclude anything.'\n"
+			"cut is the area you want to plot given as 'x0,x1,y0,y1', "
+			"or 'False' if you dont want to exclude anything.'\n"
 			"outname is the name the output files should have.\n\n"
 			"For examples please see the manual."
 		)
