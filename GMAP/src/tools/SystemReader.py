@@ -558,6 +558,7 @@ class System:
                         continue
                     atoms_ix[local_ix] = atom_ix
                     atoms_found[local_ix] = True
+                    break
 
         if all(atoms_found):
             return atoms_ix
