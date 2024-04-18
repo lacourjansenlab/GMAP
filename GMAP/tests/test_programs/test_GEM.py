@@ -14,7 +14,7 @@ from GMAP.src.tools import PrintTools as GM_PT
 
 # Now, we also test whether the program can actually run.
 def test_if_runs():
-    GMAP.main(["GMAP", "GEM", "run", "../test_inpar.txt"])
+    GMAP.mainy.cmd_interface(["GMAP", "GEM", "run", "../test_inpar.txt"])
 
 
 def test_get_parameters():
