@@ -1659,8 +1659,7 @@ class RunPars:
                 Files, dir_parname, [dir_hc], RefPars.fname.parent,
                 CmdPars.choices, dirlist, fnamelist
             )
-            dpr(dir_hc[0])
-            name = dir_hc[0]
+            name = dir_hc[0].resolve()
 
             if name.is_dir():
                 setattr(self, dir_parname, name.resolve())
