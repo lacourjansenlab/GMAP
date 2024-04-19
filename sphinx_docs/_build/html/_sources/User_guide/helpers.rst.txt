@@ -1,0 +1,46 @@
+.. _UserGuide_page_helpers:
+
+=======
+Helpers
+=======
+
+Helpers are intended to provide the user with functionality
+that isn't or isn't yet integrated into GMAP. They are not a core part
+of GMAP: helpers dont rely on GMAP and vice versa. 
+
+If you have created any code that is small in scope, easy to use and 
+that you would like to share thats tangental to GMAP, you can ask the 
+developers to add them as a helper.
+
+HamVis
+------
+
+HamVis is intended to visualize Hamiltonians.
+
+
+It can be called with:
+`python HamVis.py fname frames average cut outname` whilst you are in
+GMAP/helpers
+These symbols mean:
+
+`fname` is the .txt file containing your Hamiltonians. 
+
+`frames` are the one-based indices of the Hamiltonians you want to 
+create images of, specified either as integers seperated by only a comma
+to select a number of frames or specified as 'all' to select all frames.
+
+`average` should be True or False. If True, only one Hamiltonian will be
+created which will be the average of the Hamiltonians in the selected
+frames. If False, the selected Hamiltonians will each get their own 
+image. 
+
+`cut` should be False or 4 integers seperated only by commas, as 
+x0,x1,y0,y1. If cut is False the entire Hamiltonian will be graphed. 
+Otherwise, only the items between x0 and x1 and between y0 and y1 will
+ be graphed. These numbers are zero-based. 
+
+`outname` is simply a name that is used to create the name of the output
+file.
+
+The output graphs will be named as {outname}_{frames}.pdf where frames 
+specifically are the frames used to create the graph.

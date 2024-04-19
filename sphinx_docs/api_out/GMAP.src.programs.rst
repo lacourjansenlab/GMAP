@@ -20,14 +20,6 @@ GMAP.src.programs.GEM module
    :undoc-members:
    :show-inheritance:
 
-GMAP.src.programs.HamVis module
-----------------------------
-
-.. automodule:: GMAP.src.programs.HamVis
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

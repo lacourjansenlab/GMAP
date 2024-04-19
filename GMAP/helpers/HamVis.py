@@ -9,11 +9,13 @@ testing.
 """
 
 # standard libary imports
-import numpy as np
-from numpy.ma import masked_array
-import matplotlib.pyplot as plt
 import sys
 import warnings
+
+# 3rd party library imports
+import matplotlib.pyplot as plt
+import numpy as np
+from numpy.ma import masked_array
 
 
 class HamVisException(Exception):
@@ -59,7 +61,7 @@ def get_data(fname):
 	return data, size
 
 
-def format_hammy(data, size):
+def format_ham(data, size):
 	"""Formats the data into the shape of the hamiltonian.
 
 	Parameters
@@ -88,7 +90,7 @@ def format_hammy(data, size):
 	return ham
 
 
-def logify_hammy(ham, size):
+def logify_ham(ham, size):
 	"""Rewrites the off-diagonal elements into powers of 2.
 
 	Parameters
@@ -123,15 +125,15 @@ def logify_hammy(ham, size):
 	return logs
 
 
-def hammy_saver(hammy, idx, outname):
+def ham_saver(ham, idx, outname):
 	"""Saves one matrix as (outname)_(idx).pdf.
 
 	The matrix can represent the average of a selection of frames or a
-	single frame. The matrix is stored in hammy
+	single frame. The matrix is stored in ham.
 
 	Parameters
 	----------
-	hammy : 'ndarray'
+	ham : 'ndarray'
 		This array is the hamiltonian, with frequencies on the diagonal
 		and couplings on the off-diagonal.
 	idx : int
@@ -142,8 +144,8 @@ def hammy_saver(hammy, idx, outname):
 	"""
 
 	try:
-		off_diag = masked_array(hammy, hammy > 100)
-		on_diag = masked_array(hammy, hammy <= 100)
+		off_diag = masked_array(ham, ham > 100)
+		on_diag = masked_array(ham, ham <= 100)
 
 		fig, ax = plt.subplots()
 		pa = ax.imshow(
@@ -339,15 +341,15 @@ def HamVis(fname, frames, average, cut, outname):
 	frames = format_frame_selection(frames, data)
 
 	for frame in frames:
-		ham = format_hammy(data[frame - 1], size)
-		ham = logify_hammy(ham, size)
+		ham = format_ham(data[frame - 1], size)
+		ham = logify_ham(ham, size)
 		ham_list.append(ham)
 
 	ham_list = cut_ham(cut, ham_list)
 	ham_list, frames = average_ham(average, ham_list, frames)
 
-	for idx, hammy in zip(frames, ham_list):
-		hammy_saver(hammy, idx, outname)
+	for idx, ham in zip(frames, ham_list):
+		ham_saver(ham, idx, outname)
 
 
 if __name__ == "__main__":
