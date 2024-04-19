@@ -6,6 +6,9 @@ source_directory                ../../../sourcefiles
 log_directory
 log_filename                    log.log
 
+output_hamiltonian_filename     hamiltonian
+output_dipole_filename          dipoles
+
 map_directory                   ../../../maps
 maps_to_use                     AmideSC
 influencers_whitelist           :All
@@ -16,9 +19,14 @@ influencers_select_atoms        segid *
 verbose                         3
 verbose_logfile                 1
 prevent_overwrite               False
+output_format                           bin txt
+output_data                             ham dip
 
 neutral_charge_threshold                   0.0001
 guess_bonds                                False
+start_frame                                 0
+number_frames                               999999999
+stop_frame                                  999999999
 
 
 # testing array

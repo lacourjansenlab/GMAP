@@ -127,6 +127,11 @@ SU_WP_16
 --------
 For some groups of parameters, only one of the parameters can be used. Multiple parameters from such a group were used, make sure to only use one of those mentioned in the error message.
 
+SU_WP_17
+--------
+Some groups of parameters are linked, meaning that the available choices for one parameter might depend on the choice(s) provided for (an)other(s). The mentioned parameters are linked, but their choices don't match.
+
+
 SU_NP
 =====
 

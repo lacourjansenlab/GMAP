@@ -53,6 +53,10 @@ Overview of all functions
 The function are in the order at which they're called by the program. This means that if any functions create additional attributes for the class, any functions listed below those functions will have access to those attributes, any functions listed above them will not.
 
 
+
+
+
+
 GM_adjust_RunPars(Files, Printer, Map)
 ======================================
 Makes the necessary changes to Map.RunPar.
@@ -100,6 +104,10 @@ Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
+
+
+
+
 
 
 GM_adjust_map_core_raw(Files, Printer, Map)
@@ -154,6 +162,10 @@ Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
+
+
+
+
 
 
 GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list)
@@ -217,6 +229,288 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
     The object that stores everyting the program currently knows about the MD system.
 oscillator_list : list of :class:`~GMAP.src.tools.SystemReader.Oscillator`
     The oscillators that were identified as a good match for this map.
+
+
+
+
+
+
+GM_post_init(Files, Printer, Map, Syst)
+=======================================
+
+Allows the user to do some final initialization steps. These can include building lookup-tables, or computing some basic properties for later use.
+
+Is expected to not return anything.
+
+If the property is position/frame dependent, it should instead be computed in GM_pre_frame. 
+
+
+Example uses
+------------
+
+The map requires further information on the system
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Some mappings require further information. One example are the backbone amides - these live in a covalently bound chain, which makes it important to know which other oscillators are (closely) bound. It is easiest (and fastest) if this information is readily available during the calculation. Furthermore, this property will not change during the calculation / between frames.
+
+This kind of information should be collected as part of the initialization. This function should be used to look this information up, and store it as an attribute of the Map object that is passed to this function.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+    Contains all currently known paths and other file-related properties.
+    Has to be updated after RunPars is finalized.
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+
+
+
+
+
+
+GM_pre_run(Printer, Map, Syst)
+=======================================
+
+Allows the user to prepare the structures needed for the run.
+
+Is expected to not return anything.
+
+
+Example uses
+------------
+
+New output type
+^^^^^^^^^^^^^^^
+If the map wants to compute a new property / output type, the data structure storing that property could be initialized here.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+
+
+
+
+
+
+GM_pre_frame(Printer, Map, Syst)
+=======================================
+
+Allows the user to compute information that will change for each frame.
+
+Is expected to not return anything.
+
+If such a property is only needed once, it should be calculated at the time it is needed. But if multiple outputs (frequency and dipole, for example) or multiple oscillators need it, it should go here. If the property is not position/frame dependent, it should be computed in GM_pre_run.
+
+
+Example uses
+------------
+
+To be added
+^^^^^^^^^^^
+To be explained.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+
+
+
+
+
+
+GM_post_frame(Printer, Map, Syst)
+=======================================
+
+Allows the user to finalize the frame.
+
+Is expected to not return anything.
+
+
+Example uses
+------------
+
+New output type
+^^^^^^^^^^^^^^^
+If the map wants to compute a new property / output type, the computed data should be written to a file here.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+
+
+
+
+
+
+GM_post_run(Printer, Map, Syst)
+=======================================
+
+Allows the user to do some final reports.
+
+Is expected to not return anything.
+
+
+Example uses
+------------
+
+Reporting on the calculation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+If the user should know anything about the computation that has been performed, they can be told by this function.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+
+
+
 
 
 
@@ -287,6 +581,8 @@ Returns
 -------
 rotation_matrix : `np.ndarray`
     The matrix that should be used to convert the electrostatic properties. rotation_matrix[0] should return a vector of length 3 defining what the box-x vector should look like, in cartesian coordinates. Same for [1] giving the y, and [2] giving the z. The three vectors are orthonormal.
+
+
 
 
 

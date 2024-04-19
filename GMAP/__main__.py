@@ -82,7 +82,10 @@ def cmd_interface(callcommand):
         _report_unknown_choice(Printer)
 
 
-def main(callcommand):
+def main(callcommand=None):
+    if callcommand is None:
+        callcommand = sys.argv
+
     cmd_interface(callcommand)
 
 

@@ -22,7 +22,12 @@ This program will copy the source code and maps to target folder.
 
 from .src.programs import AIM
 from .src.programs import GEM
+from . import __main__ as main_
 from .src.programs import Setup
+
+main = main_.main
+
+
 
 alltools = {
     "AIM": AIM,

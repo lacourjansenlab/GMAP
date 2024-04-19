@@ -139,6 +139,41 @@ def GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list):
     return oscillator_list
 
 
+# A place to do further initialization if a map requires it. Think of
+# things like building further lookup tables, for instance.
+# (for AmideBB - find neighbours!)
+def GM_post_init(Files, Printer, Map, Syst):
+    pass
+
+
+# A place to do things before the main loop starts (create datastructures
+# to be filled in, for example). GEM itself builds the coupling table at
+# this point in time. Any preparation stuff that only requires constant
+# properties (masses, charges, bonds, for example) should be done here.
+def GM_pre_run(Printer, Map, Syst):
+    pass
+
+
+# A place to do things before the properties for this frame are being
+# calculated. Any preparation stuff that requires frame-dependent
+# data should be done here. AIM calculated the CoMs here, GEM also
+# builds hamiltonian (as its contents change per frame)
+def GM_pre_frame(Printer, Map, Syst):
+    pass
+
+
+# A place to do things with the results from this frame. GEM itself
+# writes information like the hamiltonian to files at this point in time.
+def GM_post_frame(Printer, Map, Syst):
+    pass
+
+
+# A place to wrap up the entire calculation. GEM itself reports on
+# calculation time and treated frames at this point in time.
+def GM_post_run(Printer, Map, Syst):
+    pass
+
+
 # !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
 # GMAP will not actually 'see' this function and use it. If you want to
 # have this function, just use `def GM_get_rotation_matrix` - see the manual

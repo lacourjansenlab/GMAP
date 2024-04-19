@@ -109,6 +109,11 @@ class System:
         ones calculations will be performed on.
     influencers_atix : list of int
         The indices of all atoms that should be considered influencers.
+    nosc : int
+        The amount of oscillators present in the system.
+    ordered_oscillators : dict of str: \
+        :class:`~GMAP.src.tools.SystemReader.Oscillator` pairs
+        All oscillators, but grouped by the map they belong to.
     """
 
     def __init__(self, Files, Printer, RunPars):
@@ -119,6 +124,7 @@ class System:
         self.find_influencers(Printer, RunPars)
 
         self.find_oscillators(Files, Printer, RunPars)
+        self.order_oscillators()
 
     def basic_boxchecks(self, Printer, RunPars):
         """Performs the first basic analyses on the provided universe.
@@ -168,6 +174,7 @@ class System:
 
         Extracts them from self.universe.atoms, and saves them in self.
         """
+
         self.atnums = self.universe.atoms.ix
         self.atnames = self.universe.atoms.names
         self.resnums = self.universe.atoms.resnums
@@ -194,15 +201,7 @@ class System:
 
         self.nres = np.int32(self.resnums[-1] + 1)
 
-        self.boxdims = self.universe.dimensions[:3].astype('float32')
-        self.halfbox = self.boxdims/2
-        self.halfbox = self.halfbox.astype('float32')
-        self.angles = self.universe.dimensions[3:].astype('float32')
-        self.boxvects = MDA.lib.mdamath.triclinic_vectors(
-            self.universe.dimensions
-        )
-        self.safesphere = 0.5 * self.boxvects.diagonal().min()
-        self.boxvects_inv = np.linalg.inv(self.boxvects)
+        self.determine_box()
 
         # TO DO - analogue of AIMs ResidueFinder and IXFinder
         self.residues = Residues(self)
@@ -256,6 +255,18 @@ class System:
                 writeresnum += 1
             self.resnums[atomnum] = writeresnum
             prevresnum = resnum
+
+    def determine_box(self):
+        """Find out what the simulation box looks like."""
+        self.boxdims = self.universe.dimensions[:3].astype('float32')
+        self.halfbox = self.boxdims/2
+        self.halfbox = self.halfbox.astype('float32')
+        self.angles = self.universe.dimensions[3:].astype('float32')
+        self.boxvects = MDA.lib.mdamath.triclinic_vectors(
+            self.universe.dimensions
+        )
+        self.safesphere = 0.5 * self.boxvects.diagonal().min()
+        self.boxvects_inv = np.linalg.inv(self.boxvects)
 
     def find_influencers(self, Printer, RunPars):
         """Find the indices of all atoms that are influencers
@@ -443,6 +454,7 @@ class System:
             oscillator for oscillators in checked_oscillators
             for oscillator in oscillators
         ]
+        self.nosc = len(self.oscillators)
 
     def find_oscillators_perstruct(self, struct, map_):
         """Finds all oscillators matching the given structure.
@@ -755,6 +767,21 @@ class System:
                     new_osc[index] = new_residue[struct.indices[index][1]]
                 outlist.append(new_osc)
         return outlist
+
+    def order_oscillators(self):
+        """Sort all present oscillators by their map."""
+
+        self.oscillators_ordered = {}
+        for oscillator in self.oscillators:
+            mapname = oscillator.Map.name
+            if mapname not in self.oscillators_ordered:
+                self.oscillators_ordered[mapname] = [oscillator]
+            else:
+                self.oscillators_ordered[mapname].append(oscillator)
+
+    def update_properties(self):
+        self.positions = self.universe.atoms.positions
+        self.determine_box()
 
 
 class Residues:

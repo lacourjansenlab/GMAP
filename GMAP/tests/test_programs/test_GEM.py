@@ -6,9 +6,15 @@ from pathlib import Path
 import pytest
 
 # local imports
+import GMAP
 from GMAP.src.programs import GEM as GM_GEM
 from GMAP.src.tools import FileHandler as GM_FH
 from GMAP.src.tools import PrintTools as GM_PT
+
+
+# Now, we also test whether the program can actually run.
+def test_if_runs():
+    GMAP.main(["GMAP", "GEM", "run", "../test_inpar.txt"])
 
 
 def test_get_parameters():

@@ -296,8 +296,14 @@ class Map():
         if not self.success:
             return
 
-        # dpr(self.code.GM_get_dipole)
-        # dpr(self.code.GM_get_dipole())
+        # Add in the remaining code
+        self.complete_code((
+            "post_init",
+            "pre_run",
+            "pre_frame",
+            "post_frame",
+            "post_run"
+        ))
 
     def append_core(self, Printer):
         """Interprets the choice in core.txt for add_corefile.
