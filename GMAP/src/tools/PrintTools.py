@@ -3,6 +3,7 @@
 import inspect
 import pathlib
 import sys
+import time
 from traceback import TracebackException as TbEx
 
 
@@ -57,6 +58,8 @@ class Printer:
         # 'demo' for when running in demo mode
         # 'running' for when running normally
         self.program_state = "startup"
+
+        self.Timer = Timer(start=Files.start)
 
         Files.set_exec_os(self)
 
@@ -173,6 +176,29 @@ class Printer:
             self.logfile = new_logfile
             self.print_backlog()
 
+    def add_time(self, verbose_level, msg, precision='s'):
+        self.Timer.add_time(msg)
+        self.print(
+            verbose_level,
+            f"{msg} at: {time_to_str(self.Timer.get_time(msg), precision)}"
+        )
+
+
+class Timer:
+    def __init__(self, start=None):
+        if start is None:
+            self.zero = time.perf_counter_ns()
+        else:
+            self.zero = start
+
+        self.times = {}
+
+    def add_time(self, name):
+        self.times[name] = time.perf_counter_ns()
+
+    def get_time(self, msg):
+        return self.times[msg] - self.zero
+
 
 def prettifier(string, deslen=79):
     """Formats a given string to create soft-wrap-like behaviour.
@@ -242,3 +268,209 @@ def devprint(*args, **kwargs):
         f"(from {funcname} in {filename})",
         **kwargs
     )
+
+
+def make_header(
+    title, buffer_char, overline=True, underline=True, padding=0
+):
+    """Returns a pretty header for distinguishing prints
+
+    The header will be under and/or overlined with the character
+    buffer_char. These lines will have the same length as the title,
+    plus extra padding if requested.
+
+    Parameters
+    ----------
+    title : str
+        The text that should be within the header.
+    buffer_char : str
+        The character that should be used for the over/underline.
+    overline, underline : bool, default=True
+        Whether there should be an over-, and/or underline.
+    padding : int, default=0
+        How much extra space there should be. Over and underlines will
+        get longer by twice this amount, the title itself gets this
+        amount of whitespaces before and after the text.
+
+    Returns
+    -------
+    header : str
+        The header, ready for printing.
+    """
+
+    length = len(title)
+
+    header = buffer_char * (length + padding*2)
+    header += "\n" + padding*" " + title + padding*" " + "\n"
+    header += buffer_char * (length + padding*2)
+
+    return header
+
+
+def intlist_to_rangelist(intlist, n_int, make_shadow=True):
+    """Takes a list of integers and packs it into ranges.
+
+    Parameters
+    ----------
+    intlist : list of int
+        The list of integers to be packed.
+    n_int : int
+        The amount of integers that can at most be there.
+    make_shadow : bool, default=True
+        Whether the opposite should also be built - a list of all indices
+        that weren't in the intlist
+
+    Returns
+    -------
+    result : list of str
+        All indices (grouped in ranges) that were in intlist.
+    shadow : list of str or None
+        All indices (grouped in ranges) that weren't in intlist.
+
+    Examples
+    --------
+    Groups of 3 integers or larger will be grouped
+
+    >>> intlist = [*range(10)]
+    >>> intlist.remove(5)
+    >>> intlist_to_rangelist(intlist, 10)
+    (["0-4", "6-9"], ["5"])
+
+    Groups of 2 integers are left as is
+
+    >>> intlist = [0, 1, 5, 8, 9, 10]
+    >>> intlist_to_rangelist(intlist, 11)
+    (["0", "1", "5", "8-10"], ["2-4", "6", "7"])
+    """
+
+    result = []
+    prevnum = intlist[0]  # loop will go over [1:]
+    range_start = intlist[0]
+    # so we don't need for-else to deal with last item
+    intlist = intlist + [None]
+
+    if make_shadow:
+        if prevnum != 0:
+            shadow = rangestrlist(0, prevnum)  # all numbers not in intlist
+        else:
+            shadow = []
+    else:
+        shadow = None
+
+    for num in intlist[1:]:
+        # if we don't logically count to the next one
+        if num != prevnum + 1:
+
+            # put missing numbers in the shadow list
+            if make_shadow:
+                if num is None:
+                    end = n_int
+                else:
+                    end = num
+                if prevnum + 1 != end:
+                    shadow += rangestrlist(prevnum + 1, end)
+
+            # the last number was 'alone'
+            result += rangestrlist(range_start, prevnum)
+
+            range_start = num
+
+        prevnum = num
+
+    return result, shadow
+
+
+def rangestrlist(start, stop):
+    """Given a start and stop, return separate items or range. Inclusive.
+
+    Meant as a helper function for :func"`intlist_to_rangelist`, not
+    intended for separate use.
+
+    Parameters
+    ----------
+    start : int
+        The first int to be included.
+    stop : int
+        The last int to be included.
+
+    Returns
+    -------
+    out : list of str
+        The grouped ints.
+
+    Examples
+    --------
+    Groups are shortened:
+
+    >>> rangestrlist(3, 60)
+    ["3-60"]
+
+    >>> rangestrlist(3, 5)
+    ["3-5"]
+
+    Pairs are left as-is
+
+    >>> rangestrlist(3, 4)
+    ["3", "4"]
+
+    Single values are left alone
+
+    >>> rangestrlist(3, 3)
+    ["3"]
+    """
+    if start == stop:
+        return [str(start)]
+    elif start == stop - 1:
+        return [str(start), str(stop)]
+    else:
+        return [f"{start}-{stop}"]
+
+
+def time_to_str(ns_time, precision="s"):
+    """Converts an amount of ns into a formatted string.
+
+    Parameters
+    ----------
+    ns_time : int
+        An amount of nanoseconds
+    precision : str, default=s
+        To what precision the string should be printed. 's' for seconds,
+        'ms' for milliseconds, 'us' for microseconds or 'ns' for
+        nanoseconds.
+
+    Returns
+    -------
+    str_time : str
+        The input time formatted into a string.
+    """
+
+    ns = ns_time % 1000
+    remainder = ns_time // 1000  # this is now in units of us
+
+    us = remainder % 1000
+    remainder //= 1000  # this is now in units of ms
+
+    ms = remainder % 1000
+    remainder //= 1000  # this is now in units of s
+
+    s = remainder % 60
+    remainder //= 60   # this is now in units of m
+
+    m = remainder % 60
+    remainder //= 60  # this is now in units of h
+
+    h = remainder % 24
+    d = remainder // 24
+
+    str_time = f"{d}-{h:02d}:{m:02d}:{s:02d}"
+
+    if precision in ("ms", "us", "ns"):
+        str_time += f".{ms:03d}"
+
+    if precision in {"us", "ns"}:
+        str_time += f".{us:03d}"
+
+    if precision == "ns":
+        str_time += f".{ns:03d}"
+
+    return str_time

@@ -1,0 +1,14 @@
+# :All contains the alphabet (caps)
+
+# to test: union (|), intersect (&), difference (-), symdif (^)
+
+vowels    A | E | I | O | U
+consonants   :All - :vowels
+straight_only    A | E | F | H | I | K | L | M | N | T | V | W | X | Y | Z
+curved_only    C | J | O | Q | S | U
+curvestr   :All - (:straight_only | :curved_only)
+
+straight_only_vowels   :vowels & :straight_only
+curved_or_vowel   :vowels ^ :curved_only
+
+choice   :curved_or_vowel | K

@@ -1,0 +1,82 @@
+
+topology_file                ../../../sourcefiles/pdb_1AKI.tpr
+trajectory_file              ../../../sourcefiles/pdb_1AKI_50frame.xtc
+
+source_directory                ../../../sourcefiles
+
+log_directory
+log_filename                    log.log
+
+output_hamiltonian_filename     hamiltonian
+output_dipole_filename          dipoles
+
+map_directory                   ../../../maps
+maps_to_use                     AmideSC
+influencers_whitelist           :All
+influencers_blacklist           :None
+influencers_file                ../../../sourcefiles/infl_file_base.txt
+influencers_select_atoms        segid *
+
+verbose                         3
+verbose_logfile                 1
+prevent_overwrite               False
+output_format                           bin txt
+output_data                             ham dip
+
+neutral_charge_threshold                   0.0001
+guess_bonds                                False
+start_frame                                 0
+number_frames                               999999999
+stop_frame                                  999999999
+
+
+# # testing array
+# def_def_dir     ../test_def
+# def_def_file    fromdef.txt
+# nod_def_file    fromdef.txt
+# def_nod_dir     ../test_def
+
+
+
+
+# test strings
+# testmap1.str_test_free                   freechoice
+testmap1.str_doesnt_exist                whatsthis
+testmap1.str_test_choice                 not_this
+testmap1.str_test_free_list              freechoice1 freechoice2
+testmap1.str_test_choice_list            not_this
+testmap1.str_test_choice_list2           dont_pick_this but_this
+
+# test bools
+testmap1.bool_test1                      True
+testmap1.bool_test2                      False
+testmap1.bool_test3                      True
+
+# test ints
+testmap1.int_test_free                   243
+testmap1.int_test_choice                 65
+testmap1.int_test_free_list              46 77
+testmap1.int_test_choice_list            64
+testmap1.int_test_choice_list2           12 85
+
+# test floats
+testmap1.float_test_free                 6.2
+testmap1.float_test_choice               83.7
+testmap1.float_test_free_list            32 87
+testmap1.float_test_choice_list          99.9
+testmap1.float_test_choice_list2         44.5 33
+
+# test paths
+testmap1.path_test_free                   ../test_MathFunctions.py
+testmap1.path_test_free_new               tost_outfile.txt
+# testmap1.path_test_choice                 ../../../../test_MathFunctions.py
+testmap1.path_test_free_new_list          test_outfile_0_1.txt test_outfile_0_2.txt
+testmap1.path_test_dir1                   ../../test_tools
+testmap1.path_test_dir2                   ../Data/testout
+testmap1.path_test_rel11                  test_ParameterParser.py
+# testmap1.path_test_rel12_choice           test_MathFunctions.py
+testmap1.path_test_rel21_new              tost_outfile_2_1.txt
+testmap1.path_test_rel22_new_list         test_outfile_2_2_1.txt tost_outfile_2_2_2.txt
+# testmap1.path_test_rel23_new_choice       test_outfile_2_3_1.txt
+# testmap1.path_test_rel24_new_choice_list  test_outfile_2_4_1.txt test_outfile_2_4_4.txt
+

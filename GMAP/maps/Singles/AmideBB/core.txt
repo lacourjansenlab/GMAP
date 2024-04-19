@@ -1,0 +1,23 @@
+
+# does not cover prepros
+functional_group [anyprot] N CA C(1) O [anyprot] N(1) H CA C
+
+# pre-prolines!
+functional_group [anyprot] N CA C(1) O [PRO] N(1) CD CA C
+
+
+add_corefile       proteincore.txt
+
+
+#   C O CA N H CA
+used_atoms               2 3 1 4 5 6
+electrostatic_atoms      0 3
+electrostatic_choice     E
+
+x_uvec    1-0   # vec from C to O
+y_uvec    3-0   # vec from C to N
+
+r_vec     1-0   # vec from C to O
+r_pos     0     # pos of C
+
+type standard

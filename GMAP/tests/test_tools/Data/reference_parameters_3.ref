@@ -1,0 +1,34 @@
+
+topology_file(top)[path_sep]                      ../../../sourcefiles/pdb_1AKI.tpr
+trajectory_file(trj)[path_sep]                    ../../../sourcefiles/pdb_1AKI_50frame.xtc
+
+source_directory(sd)[path_dir_sd]                 ../../../sourcefiles
+default_parameter_filename(dpf)[path_rel_sd]    [N/A]
+
+log_directory[path_dir_lg]                        [N/A]
+log_filename[path_rel_lg_c]                       log.log
+
+output_directory[path_dir_op]                     [N/A]
+output_hamiltonian_filename(ohf)[path_rel_op_c]   hamiltonian
+output_dipole_filename(odf)[path_rel_op_c]        dipoles
+
+map_directory(md)[list_path_sep]               ../../../maps
+maps_to_use(um)[list_str]                         AmideSC
+influencers_blacklist[list_str]                   :None
+influencers_whitelist[list_str]                   :All
+influencers_file[path_sep]                        ../../../sourcefiles/infl_file_base.txt
+influencers_select_atoms[list_str]                segid *
+
+verbose[int]                                      0 1 [2] 3 4
+verbose_logfile[int]                              0 1 [2] 3 4
+prevent_overwrite[bool]                           False
+output_format[list_str]                           [bin] txt
+output_data[list_str]                             [ham] [dip]
+
+neutral_charge_threshold[float]                   0.0001
+guess_bonds[bool]                                 False
+
+# in order to allow start+number=stop, stop is exclusive.
+start_frame[int]                                  0
+number_frames[int]                                999999999
+stop_frame[int]                                   999999999

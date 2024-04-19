@@ -1,8 +1,8 @@
-==========
+##########
 User guide
-==========
+##########
 
-These pages will contain information specifically for developers of the program.
+These pages will contain information relevant for common use of the program.
 
 .. toctree::
     :maxdepth: 2
@@ -10,4 +10,6 @@ These pages will contain information specifically for developers of the program.
     Warning_overview
     specifying_parameters
     parameter_overview
+    influencer_specification
+    GMAP_Setup
     helpers

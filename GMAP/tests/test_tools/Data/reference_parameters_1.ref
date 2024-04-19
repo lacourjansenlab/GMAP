@@ -1,5 +1,6 @@
 
-
+topology_file(top)[path_sep]                      ../../../sourcefiles/pdb_1AKI.tpr
+trajectory_file(trj)[path_sep]                    ../../../sourcefiles/pdb_1AKI_50frame.xtc
 
 source_directory(sd)[path_dir_sd]                 ../../../sourcefiles
 default_parameter_filename(dpf)[path_rel_sd]    [N/A]
@@ -7,11 +8,30 @@ default_parameter_filename(dpf)[path_rel_sd]    [N/A]
 log_directory[path_dir_lg]                        [N/A]
 log_filename[path_rel_lg_c]                       log.log
 
+output_directory[path_dir_op]                     [N/A]
+output_hamiltonian_filename(ohf)[path_rel_op_c]   hamiltonian
+output_dipole_filename(odf)[path_rel_op_c]        dipoles
+
 map_directory(md)[list_path_sep]               ../../../maps
+maps_to_use(um)[list_str]                         AmideSC
+influencers_whitelist[list_str]                   :All
+influencers_blacklist[list_str]                   :None
+influencers_file[path_sep]                        ../../../sourcefiles/infl_file_base.txt
+influencers_select_atoms[list_str]                segid *
 
 verbose[int]                                      0 1 [2] 3 4
 verbose_logfile[int]                              0 1 [2] 3 4
 prevent_overwrite[bool]                           False
+output_format[list_str]                           [bin] txt
+output_data[list_str]                             [ham] [dip]
+
+neutral_charge_threshold[float]                   0.0001
+guess_bonds[bool]                                 False
+
+# in order to allow start+number=stop, stop is exclusive.
+start_frame[int]                                  0
+number_frames[int]                                999999999
+stop_frame[int]                                   999999999
 
 
 # test strings
@@ -44,14 +64,14 @@ float_test_choice_list2(tf5)[list_float]     44.5 [33] 12.8 [42.7]
 # test paths
 path_test_free(tp1)[path_sep]                ../test_MathFunctions.py
 path_test_free_new(tp2)[path_sep_c]          test_outfile.txt
-path_test_choice(tp3)[path_sep]              [../test_ParameterParser.py] ../test_MathFunctions.py
+# path_test_choice(tp3)[path_sep]              [../test_ParameterParser.py] ../test_MathFunctions.py
 path_test_free_new_list[list_path_sep_c]     test_outfile_0_1.txt test_outfile_0_2.txt
 path_test_dir1(tp4)[path_dir_t1]             ../../test_tools
 path_test_dir2(tp5)[path_dir_t2]             ../Data
 path_test_rel11(tp6)[path_rel_t1]            test_MathFunctions.py
-path_test_rel12_choice(tp7)[path_rel_t1]     [test_ParameterParser.py] test_MathFunctions.py
+# path_test_rel12_choice(tp7)[path_rel_t1]     [test_ParameterParser.py] test_MathFunctions.py
 path_test_rel21_new(tp8)[path_rel_t2_c]      test_outfile_2_1.txt
 path_test_rel22_new_list(tp9)[list_path_rel_t2_c]  test_outfile_2_2_1.txt test_outfile_2_2_2.txt
-path_test_rel23_new_choice(tp10)[path_rel_t2_c]  test_outfile_2_3_1.txt [test_outfile_2_3_2.txt]
-path_test_rel24_new_choice_list(tp11)[list_path_rel_t2_c] test_outfile_2_4_1.txt test_outfile_2_4_2.txt [test_outfile_2_4_3.txt] [test_outfile_2_4_4.txt]
+# path_test_rel23_new_choice(tp10)[path_rel_t2_c]  test_outfile_2_3_1.txt [test_outfile_2_3_2.txt]
+# path_test_rel24_new_choice_list(tp11)[list_path_rel_t2_c] test_outfile_2_4_1.txt test_outfile_2_4_2.txt [test_outfile_2_4_3.txt] [test_outfile_2_4_4.txt]
 path_test_nodef[path_sep]                    [N/A]

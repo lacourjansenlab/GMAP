@@ -1,0 +1,10 @@
+
+
+influencer_group   prot_charged   ARG | HIS | LYS | ASP | GLU
+influencer_group   prot_polar    SER | THR | ASN | GLN
+influencer_group   prot_special_can    CYS | GLY | PRO   # cannonical 'specials'
+influencer_group   prot_hydrophobic    ALA | VAL | ILE | LEU | MET | PHE | TYR | TRP
+influencer_group   protein_cannonical    :prot_charged | :prot_polar | :prot_special_can | :prot_hydrophobic
+
+influencer_group   protein_extended   :protein_cannonical | (LYSH | HSD | HIE)
+

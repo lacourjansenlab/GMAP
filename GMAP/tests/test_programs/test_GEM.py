@@ -6,10 +6,16 @@ from pathlib import Path
 import pytest
 
 # local imports
+import GMAP
 from GMAP.src.programs import GEM as GM_GEM
 from GMAP.src.tools import FileHandler as GM_FH
 from GMAP.src.tools import PrintTools as GM_PT
 from GMAP.src.tools.PrintTools import devprint as dpr
+
+
+# Now, we also test whether the program can actually run.
+def test_if_runs():
+    GMAP.main(["GMAP", "GEM", "run", "../test_inpar.txt"])
 
 
 def test_get_parameters():
@@ -19,7 +25,9 @@ def test_get_parameters():
     in_parfile = Path("../test_inpar.txt").resolve()
     argslist = []
 
-    CmdPars, InPars, DefPars, RefPars, mapdict = GM_GEM.get_parameters(
+    (
+        RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+    ) = GM_GEM.get_parameters(
         Files, Printer, in_parfile, argslist
     )
 
@@ -28,10 +36,12 @@ def test_get_parameters():
     dpr(mapdict)
     assert InPars.fname.name == "test_inpar.txt"
     assert DefPars == RefPars
-    assert len(mapdict) == 3
+    assert len(mapdict) == 6
     assert CmdPars.choices == {}
 
-    CmdPars, InPars, DefPars, RefPars, mapdict = GM_GEM.get_parameters(
+    (
+        RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+    ) = GM_GEM.get_parameters(
         Files, Printer, None, argslist
     )
 
@@ -39,7 +49,9 @@ def test_get_parameters():
 
     argslist = ["-dpf", "../test_defpar.txt"]
 
-    CmdPars, InPars, DefPars, RefPars, mapdict = GM_GEM.get_parameters(
+    (
+        RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+    ) = GM_GEM.get_parameters(
         Files, Printer, in_parfile, argslist
     )
 

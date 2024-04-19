@@ -4,10 +4,14 @@ import ctypes as ct
 import datetime
 from pathlib import Path
 import sys
+import time
+
+# 3rd party lib imports
+import numpy as np
 
 # local imports
 import GMAP
-# from GMAP.src.tools.PrintTools import devprint as dpr
+from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class FileLocations:
@@ -51,6 +55,7 @@ class FileLocations:
     """
 
     def __init__(self) -> None:
+        self.start = time.perf_counter_ns()
         self.script_dir = Path(GMAP.__file__).parent.resolve()
         self.cwd = Path(".").resolve()
         self.now = datetime.datetime.now()
@@ -103,7 +108,8 @@ def find_exec_os(Printer):
             exec_os = "Win64bit"
         else:
             Printer.warning(
-                "Environment was determined to be windows, but it is neither a"
+                "\nEnvironment was determined to be windows, but it is "
+                "neither a"
                 f" 32, nor 64 bit version. It appears to be {bits} bit. Please"
                 " contact the developers to solve this.",
                 "howtogethere", True
@@ -114,7 +120,7 @@ def find_exec_os(Printer):
         exec_os = "Linux"
     else:
         Printer.warning(
-            f"executing OS not recognised... sys.platform = {sys.platform}. "
+            f"\nexecuting OS not recognised... sys.platform = {sys.platform}. "
             "Please contact the developers to solve this. ",
             "howtogethere", True
         )
@@ -212,8 +218,8 @@ def get_file(
 
 
 def get_bare_file(
-    Files, file_parname, files_hc, floc_hc, cmd_pardict, pardicts=[],
-    parfilelocs=[]
+    Files, file_parname, files_hc, floc_hc, cmd_pardict, pardicts=None,
+    parfilelocs=None
 ):
     """Determine the path to a file given all input sources
 
@@ -259,6 +265,11 @@ def get_bare_file(
         The path to the desired file
     """
 
+    if pardicts is None:
+        pardicts = []
+    if parfilelocs is None:
+        parfilelocs = []
+
     dicts = [cmd_pardict]
     flocs = [Files.cwd]
 
@@ -267,12 +278,20 @@ def get_bare_file(
             dicts.append(dict_)
             flocs.append(floc.parent)
 
+    if file_parname == "path_test_dir2":
+        dpr([dict_.get("path_test_dir2", None) for dict_ in dicts], files_hc)
+        dpr([flocs], floc_hc)
+
     for dict_, floc in zip(dicts, flocs):
         if file_parname in dict_:
             names = [floc / name for name in dict_[file_parname]]
             break
     else:
         names = [floc_hc / name for name in files_hc]
+
+    if file_parname == "path_test_dir2":
+        dpr(names)
+        dpr()
 
     return names
 
@@ -365,7 +384,7 @@ def try_file(fname):
         return None
 
 
-def check_file_readability(Printer, fname):
+def check_file_readability(Printer, fname, doquit=True):
     """Checks if a given file can be read.
 
     If not, throws an error, and quits.
@@ -381,14 +400,92 @@ def check_file_readability(Printer, fname):
         and handle errors.
     fname : `pathlib.Path`
         The path to the file to check.
+
+    Returns
+    -------
+    _ : bool
+        Whether the file is readable.
     """
     try:
-        with open(fname) as file:
+        with open(fname, 'r', encoding='utf-8') as file:
             for _ in file:
                 pass
     except UnicodeDecodeError:
-        Printer.warning(
-            f"\n The file {fname} is of the wrong type, please make sure "
-            "it is a plain text file. ",
-            "SU_FH_3", True
+        if Printer:
+            Printer.warning(
+                f"\n The file {fname} is of the wrong type, please make sure "
+                "it is a plain text file. ",
+                "SU_FH_3", doquit
+            )
+        return False
+    return True
+
+
+def write_output(RunPars, framenum, hamiltonian, dipoles):
+    """Write the output for a single frame to files.
+
+    Writes all outputs - all (requested) datastructures in all
+    (requested) formats.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    framenum : int
+        The number of the frame currently being written
+    hamiltonian : `np.ndarray`
+        The computed hamiltonian for this frame.
+    dipoles : `np.ndarray`
+        The computed dipoles for this frame.
+    """
+
+    framenum_arr = np.array([framenum], dtype='float32')
+
+    if "ham" in RunPars.output_data:
+        reshaped = hamiltonian[np.triu_indices_from(hamiltonian)]
+        write_single(
+            RunPars, framenum, framenum_arr,
+            RunPars.output_hamiltonian_filename, reshaped
         )
+
+    if "dip" in RunPars.output_data:
+        reshaped = dipoles.T.flatten()
+        write_single(
+            RunPars, framenum, framenum_arr,
+            RunPars.output_dipole_filename, reshaped
+        )
+
+
+def write_single(RunPars, framenum, framenum_arr, fname, data):
+    """Write a single datastructure to files of given name.
+
+    Writes to all different requested formats at once.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    framenum : int
+        The number of the frame currently being written
+    framenum_arr : `np.ndarray`
+        The framenumber as float32 array, ready for binary writing
+    fname : `pathlib.Path`
+        The name + location of the file to which to write. This filename
+        should not include the extension!
+    data : `np.ndarray`
+        The data that should be written to the file.
+    """
+
+    if "bin" in RunPars.output_format:
+        with open(fname.parent / f"{fname.name}.bin", "ab+") as fhand:
+            framenum_arr.tofile(fhand)  # write frame number
+            data.tofile(fhand)  # write hamiltonian
+
+    if "txt" in RunPars.output_format:
+        with open(fname.parent / f"{fname.name}.txt", "a+") as fhand:
+            fhand.write(f"{framenum} ")  # write frame number
+            data = np.round(data, decimals=6)
+            data.tofile(fhand, sep=" ")  # write hamiltonian
+            fhand.write("\n")
