@@ -1,6 +1,6 @@
-==========
+##########
 Code Style
-==========
+##########
 
 
     The Zen of Python, by Tim Peters
@@ -29,8 +29,9 @@ Code Style
 In order to have a legible, uniform codebase, there are some rules to which any and all code part of this project must adhere to. This document strives to summarize all of those. While we encourage possible code within maps to adhere to these guidelines too, we understand it might be less feasible.
 
 
+***********************
 General tips and tricks
-=======================
+***********************
 
 - Most of the style guide is a summary of the most common/applicable points from `PEP8 <https://peps.python.org/pep-0008/>`__. The rest are additions to it (hopefully in the same spirit) that are specific for this project, or that should guide towards better practices.
 - While The Zen of Python was `included in python <https://peps.python.org/pep-0020/>`__ as a joke, it still has very good advice. PEP8 are the rules of programming, The Zen is the spirit.    
@@ -40,8 +41,9 @@ General tips and tricks
 - Comments are amazing -- let's do more of those!
 
 
+*******
 Remarks
-=======
+*******
 
 - This codebase is object oriented. For consistency, functional programming should be avoided.
 - **Always** use pathlib over os. The os module is deprecated.
@@ -49,8 +51,9 @@ Remarks
 - Argparse has been considered, but will not be used.
 
 
+*************
 General rules
-=============
+*************
 
 - Documentation, documentation! When writing code, document all the choices/assumptions/etc you make. If it is too much to immediately document them neatly, use the 'development notes-goals-thoughts.md' file. It has a dump section where you can put them down. Add your initials, so someone else can come remind you later.
 - Whenever the function of a piece of code isn't easily discernable, use comments.
@@ -64,8 +67,9 @@ General rules
 - When creating strings to be printed, f-strings are the preferred method.
 
 
+***********
 Code layout
-===========
+***********
 
 - Any document should have the following structure (omit what isn't needed):
 
@@ -98,8 +102,9 @@ Code layout
 - Don’t use too many indentation levels. Within a function, don’t go more than three colons deep! (prevents cramped, tiny code lines).
 
 
+**************
 Variable names
-==============
+**************
 
 - Names of ‘simple’ variables and functions should be in lowercase, separated using underscores: variable_or_function_name
 - Names of (instances of) classes (including exception classes) should have every word capitalized: FileParser
@@ -111,16 +116,18 @@ Variable names
 - If a variable name is already a built-in, but would be very useful, append the variable name with an underscore.
 
 
+*******
 Imports
-=======
+*******
 
 - Never import everything from a source (from numpy import \*) – this makes the source of methods used very unclear. Things like ‘import numpy’, ‘import numpy as np’, and ‘from numpy import pi’ are okay.
 - For local imports, use absolute imports wherever possible – exception to this are large projects where absolute imports are unwieldy, and relative are more legible
 - The module os is deprecated – use pathlib instead.
 
 
+*************
 Documentation
-=============
+*************
 
 - Module, classes, class (instance) methods and functions take docstrings. All of them! A good function docstring briefly (but clearly) indicates what the function does, lists required (and optional) arguments, their semantic meaning, and datatype, and the same for outputs: for each output, the semantic meaning and datatype.
 - In this project, docstrings are written in the numpydoc format.
@@ -129,8 +136,9 @@ Documentation
 - When commenting on a single line, place comment at the end of the line. First two spaces, then ‘#’, then another space, then text. If the comment is too long, place it above the line of code. The ‘#’ is on the same indentation level as the line of code, and ‘#’ is followed by a space, then text.
 
 
+*******************
 General good advice
-===================
+*******************
 
 - Files are always opened using ‘with open(fname) as fhand:’ – this prevents you from forgetting to close the file after reading it.
 - Don’t store the contents of an entire file in memory (e.g. file.readlines()) – especially when unclear about expected file size. Usually, ‘for line in file’ is the go-to file parsing method.

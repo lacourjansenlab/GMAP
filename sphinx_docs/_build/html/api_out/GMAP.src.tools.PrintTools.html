@@ -18,32 +18,33 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script src="../_static/documentation_options.js?v=8dde47fa"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_out/GMAP.src.tools.PrintTools';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="GMAP.tests package" href="GMAP.tests.html" />
+    <link rel="next" title="GMAP.src.tools.SystemReader module" href="GMAP.src.tools.SystemReader.html" />
     <link rel="prev" title="GMAP.src.tools.ParameterParser module" href="GMAP.src.tools.ParameterParser.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -54,10 +55,9 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
-
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>
@@ -98,7 +98,7 @@
 </form></div>
   </div>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
 <div class="bd-header__inner bd-page-width">
   <label class="sidebar-toggle primary-toggle" for="__primary">
     <span class="fa-solid fa-bars"></span>
@@ -130,17 +130,18 @@
       
         <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -161,7 +162,7 @@
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -226,10 +227,13 @@ document.write(`
   
 </div>
 
-    </nav>
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -242,17 +246,18 @@ document.write(`
         
           <div class="navbar-item">
 <nav class="navbar-nav">
-  <p class="sidebar-header-items__title"
-     role="heading"
-     aria-level="1"
-     aria-label="Site Navigation">
-    Site Navigation
-  </p>
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -273,7 +278,7 @@ document.write(`
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="modules.html">
-                        GMAP Code documentation
+                        GMAP
                       </a>
                     </li>
                 
@@ -316,17 +321,23 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="GMAP.src.tools.html">GMAP.src.tools package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.DefaultMapFunctions.html">GMAP.src.tools.DefaultMapFunctions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.FileHandler.html">GMAP.src.tools.FileHandler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MapReader.html">GMAP.src.tools.MapReader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.MathFunctions.html">GMAP.src.tools.MathFunctions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html">GMAP.src.tools.ParameterParser module</a></li>
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">GMAP.src.tools.PrintTools module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.src.tools.SystemReader.html">GMAP.src.tools.SystemReader module</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="GMAP.tests.html">GMAP.tests package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-5"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="GMAP.tests.test_MathFunctions.html">GMAP.tests.test_MathFunctions module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="GMAP.tests.test_tools.html">GMAP.tests.test_tools package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-6"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_MathFunctions.html">GMAP.tests.test_tools.test_MathFunctions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="GMAP.tests.test_tools.test_ParameterParser.html">GMAP.tests.test_tools.test_ParameterParser module</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -371,7 +382,7 @@ document.write(`
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP Code documentation</a></li>
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">GMAP</a></li>
     
     
     <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
@@ -394,7 +405,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="module-GMAP.src.tools.PrintTools">
 <span id="gmap-src-tools-printtools-module"></span><h1>GMAP.src.tools.PrintTools module<a class="headerlink" href="#module-GMAP.src.tools.PrintTools" title="Link to this heading">#</a></h1>
@@ -528,7 +539,7 @@ to re-chose those three values, allowing ‘importing’ them after
 </dd>
 <dt><strong>error_code</strong><span class="classifier">str</span></dt><dd><p>The error code belonging to the warning that is raised - to be
 reported to the user. See the
-<span class="xref std std-ref">warning overview</span> page.</p>
+<a class="reference internal" href="../User_guide/Warning_overview.html#userguide-page-warning-overview"><span class="std std-ref">warning overview</span></a> page.</p>
 </dd>
 <dt><strong>exitbool</strong><span class="classifier">bool, default=False</span></dt><dd><p>Whether the program should stop due to this error.</p>
 </dd>
@@ -566,6 +577,78 @@ be easily retraced and removed after they’re no longer useful.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.intlist_to_rangelist">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">intlist_to_rangelist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intlist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_shadow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.intlist_to_rangelist" title="Link to this definition">#</a></dt>
+<dd><p>Takes a list of integers and packs it into ranges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>intlist</strong><span class="classifier">list of int</span></dt><dd><p>The list of integers to be packed.</p>
+</dd>
+<dt><strong>n_int</strong><span class="classifier">int</span></dt><dd><p>The amount of integers that can at most be there.</p>
+</dd>
+<dt><strong>make_shadow</strong><span class="classifier">bool, default=True</span></dt><dd><p>Whether the opposite should also be built - a list of all indices
+that weren’t in the intlist</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>result</strong><span class="classifier">list of str</span></dt><dd><p>All indices (grouped in ranges) that were in intlist.</p>
+</dd>
+<dt><strong>shadow</strong><span class="classifier">list of str or None</span></dt><dd><p>All indices (grouped in ranges) that weren’t in intlist.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Groups of 3 integers or larger will be grouped</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">intlist</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intlist</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intlist_to_rangelist</span><span class="p">(</span><span class="n">intlist</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">([&quot;0-4&quot;, &quot;6-9&quot;], [&quot;5&quot;])</span>
+</pre></div>
+</div>
+<p>Groups of 2 integers are left as is</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">intlist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intlist_to_rangelist</span><span class="p">(</span><span class="n">intlist</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="go">([&quot;0&quot;, &quot;1&quot;, &quot;5&quot;, &quot;8-10&quot;], [&quot;2-4&quot;, &quot;6&quot;, &quot;7&quot;])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.make_header">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">make_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_char</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">underline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.make_header" title="Link to this definition">#</a></dt>
+<dd><p>Returns a pretty header for distinguishing prints</p>
+<p>The header will be under and/or overlined with the character
+buffer_char. These lines will have the same length as the title,
+plus extra padding if requested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>title</strong><span class="classifier">str</span></dt><dd><p>The text that should be within the header.</p>
+</dd>
+<dt><strong>buffer_char</strong><span class="classifier">str</span></dt><dd><p>The character that should be used for the over/underline.</p>
+</dd>
+<dt><strong>overline, underline</strong><span class="classifier">bool, default=True</span></dt><dd><p>Whether there should be an over-, and/or underline.</p>
+</dd>
+<dt><strong>padding</strong><span class="classifier">int, default=0</span></dt><dd><p>How much extra space there should be. Over and underlines will
+get longer by twice this amount, the title itself gets this
+amount of whitespaces before and after the text.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>header</strong><span class="classifier">str</span></dt><dd><p>The header, ready for printing.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.prettifier">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">prettifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deslen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">79</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.prettifier" title="Link to this definition">#</a></dt>
 <dd><p>Formats a given string to create soft-wrap-like behaviour.</p>
@@ -586,6 +669,50 @@ necessary.</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.rangestrlist">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.PrintTools.</span></span><span class="sig-name descname"><span class="pre">rangestrlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.rangestrlist" title="Link to this definition">#</a></dt>
+<dd><p>Given a start and stop, return separate items or range. Inclusive.</p>
+<p>Meant as a helper function for :func”<cite>intlist_to_rangelist</cite>, not
+intended for separate use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>start</strong><span class="classifier">int</span></dt><dd><p>The first int to be included.</p>
+</dd>
+<dt><strong>stop</strong><span class="classifier">int</span></dt><dd><p>The last int to be included.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>out</strong><span class="classifier">list of str</span></dt><dd><p>The grouped ints.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Groups are shortened:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rangestrlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+<span class="go">[&quot;3-60&quot;]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rangestrlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="go">[&quot;3-5&quot;]</span>
+</pre></div>
+</div>
+<p>Pairs are left as-is</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rangestrlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="go">[&quot;3&quot;, &quot;4&quot;]</span>
+</pre></div>
+</div>
+<p>Single values are left alone</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rangestrlist</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="go">[&quot;3&quot;]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -610,11 +737,11 @@ necessary.</p>
       </div>
     </a>
     <a class="right-next"
-       href="GMAP.tests.html"
+       href="GMAP.src.tools.SystemReader.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">GMAP.tests package</p>
+        <p class="prev-next-title">GMAP.src.tools.SystemReader module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -627,12 +754,14 @@ necessary.</p>
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-  <div class="sidebar-secondary-item">
 
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> On this page
   </div>
-  <nav class="bd-toc-nav page-toc">
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer"><code class="docutils literal notranslate"><span class="pre">Printer</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.print"><code class="docutils literal notranslate"><span class="pre">Printer.print()</span></code></a></li>
@@ -643,7 +772,10 @@ necessary.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.devprint"><code class="docutils literal notranslate"><span class="pre">devprint()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.intlist_to_rangelist"><code class="docutils literal notranslate"><span class="pre">intlist_to_rangelist()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.make_header"><code class="docutils literal notranslate"><span class="pre">make_header()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.prettifier"><code class="docutils literal notranslate"><span class="pre">prettifier()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.rangestrlist"><code class="docutils literal notranslate"><span class="pre">rangestrlist()</span></code></a></li>
 </ul>
   </nav></div>
 
@@ -669,8 +801,8 @@ necessary.</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -703,7 +835,7 @@ necessary.</p>
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.14.4.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.2.
 </p></div>
       
     </div>

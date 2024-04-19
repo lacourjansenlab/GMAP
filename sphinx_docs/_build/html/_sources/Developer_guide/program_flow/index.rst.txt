@@ -1,8 +1,8 @@
 
 
-============
+############
 Program flow
-============
+############
 
 These pages give an overview of the steps taken by GMAP during runtime.
 
@@ -14,7 +14,9 @@ Calling 'GMAP' from the command line (with or without further arguments) starts 
  - See what (if any) other information was on the command line. If a 'help' is requested, the corresponding docstrings are printed. If a specific program is requested (GEM, AIM), that program is started.
 
 Program flows within GEM
+
 .. toctree::
     GEM/run
+    Setup
 
 

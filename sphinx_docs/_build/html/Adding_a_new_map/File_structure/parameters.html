@@ -41,10 +41,11 @@
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Adding_a_new_map/File_structure/parameters';</script>
+    <link rel="icon" href="../../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Developers guide" href="../../Developer_guide/index.html" />
-    <link rel="prev" title="File structure" href="index.html" />
+    <link rel="next" title="main.py" href="main_py.html" />
+    <link rel="prev" title="Core.txt file" href="core.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -134,6 +135,13 @@
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -247,6 +255,13 @@ document.write(`
                     </li>
                 
 
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="../index.html">
                         Adding a new map
@@ -299,7 +314,9 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">File structure</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="core.html">Core.txt file</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">parameters.ref</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main_py.html">main.py</a></li>
 </ul>
 </li>
 </ul>
@@ -366,7 +383,7 @@ document.write(`
 <span id="userguide-page-map-parameters"></span><h1>parameters.ref<a class="headerlink" href="#parameters-ref" title="Link to this heading">#</a></h1>
 <p>This is an optional file containing all keyword parameters the map needs. The file must be of the name ‘parameters.ref’ for it to be recognized.</p>
 <p>Any parameter specified here can be set/supplied by the user, so choices can vary for each calculation.</p>
-<p>In the program, the contents of this file are stored in the map-specific instance of a <a class="reference internal" href="../../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> object, as the <cite>RefPars</cite> attribute.</p>
+<p>In the program, the contents of this file are stored in the map-specific instance of a <a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> object, as the <cite>RefPars</cite> attribute.</p>
 <p>For a good example, you can look at the file ‘reference_parameters.ref’ in the sourcefiles directory. It contains all the parameters used by the program.</p>
 <section id="file-layout">
 <h2>File layout<a class="headerlink" href="#file-layout" title="Link to this heading">#</a></h2>
@@ -401,20 +418,20 @@ Please note that implicit to the parameter type, bools can only take ‘True’ 
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="index.html"
+       href="core.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">File structure</p>
+        <p class="prev-next-title">Core.txt file</p>
       </div>
     </a>
     <a class="right-next"
-       href="../../Developer_guide/index.html"
+       href="main_py.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Developers guide</p>
+        <p class="prev-next-title">main.py</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

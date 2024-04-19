@@ -41,10 +41,11 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Developer_guide/index';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Useful resources" href="Useful_resources.html" />
-    <link rel="prev" title="parameters.ref" href="../Adding_a_new_map/File_structure/parameters.html" />
+    <link rel="prev" title="main.py" href="../Adding_a_new_map/File_structure/main_py.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -134,6 +135,13 @@
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -248,6 +256,13 @@ document.write(`
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -299,7 +314,11 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="Useful_resources.html">Useful resources</a></li>
-<li class="toctree-l1"><a class="reference internal" href="program_flow/index.html">Program flow</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="program_flow/index.html">Program flow</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="program_flow/GEM/run.html">GEM - run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="program_flow/Setup.html">Setup</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="Code_Style.html">Code Style</a></li>
 </ul>
 </div>
@@ -360,7 +379,7 @@ document.write(`
 <p>These pages will contain information specifically for developers of the program.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Map != map()! Two main programs in the GMAP package (GEM and AIM) serve a specific purpose: converting an md trajectory into a Hamiltonian trajectory. In the spectroscopic community, this conversion is traditionally done using so-called maps. In this package, <a class="reference internal" href="../api_out/GMAP.src.tools.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> objects contain all information on such a spectroscopic map. Do not confuse these objects with python’s built-in map() function - it doesn’t occur yet in the program as of writing this text (january 2024), and is not expected to, either.</p>
+<p>Map != map()! Two main programs in the GMAP package (GEM and AIM) serve a specific purpose: converting an md trajectory into a Hamiltonian trajectory. In the spectroscopic community, this conversion is traditionally done using so-called maps. In this package, <a class="reference internal" href="../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> objects contain all information on such a spectroscopic map. Do not confuse these objects with python’s built-in map() function - it doesn’t occur yet in the program as of writing this text (january 2024), and is not expected to, either.</p>
 </div>
 <div class="toctree-wrapper compound">
 <ul>
@@ -373,7 +392,11 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="program_flow/index.html">Program flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="program_flow/index.html">Program flow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="program_flow/GEM/run.html">GEM - run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="program_flow/Setup.html">Setup</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="Code_Style.html">Code Style</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Code_Style.html#general-tips-and-tricks">General tips and tricks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Code_Style.html#remarks">Remarks</a></li>
@@ -400,12 +423,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../Adding_a_new_map/File_structure/parameters.html"
+       href="../Adding_a_new_map/File_structure/main_py.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">parameters.ref</p>
+        <p class="prev-next-title">main.py</p>
       </div>
     </a>
     <a class="right-next"

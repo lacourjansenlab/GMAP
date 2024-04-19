@@ -41,6 +41,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <link rel="icon" href="_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="User guide" href="User_guide/index.html" />
@@ -133,6 +134,13 @@
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -249,6 +257,13 @@ document.write(`
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -341,14 +356,14 @@ document.write(`
 <a class="sd-stretched-link reference internal" href="User_guide/index.html"><span class="doc"></span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row sd-mt-0 sd-mb-3 sd-ml-0 sd-mr-0 docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
 <div class="sd-card-header docutils">
-<p class="sd-card-text"><strong>Scientific literature</strong></p>
+<p class="sd-card-text"><strong>Theory</strong></p>
 </div>
 <div class="sd-card-body docutils">
-<p class="sd-card-text">It would be really nice to have a concise overview of the relevant scientific literature here!</p>
+<p class="sd-card-text">An overview of all the theory (and relevant publications) behind GMAP.</p>
 </div>
-</div>
+<a class="sd-stretched-link reference internal" href="Theory/index.html"><span class="doc"></span></a></div>
 </div>
 <div class="sd-col sd-d-flex-row sd-mt-0 sd-mb-3 sd-ml-0 sd-mr-0 docutils">
 <div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-card-hover docutils">
@@ -356,7 +371,7 @@ document.write(`
 <p class="sd-card-text"><strong>Customizable maps</strong></p>
 </div>
 <div class="sd-card-body docutils">
-<p class="sd-card-text">Users can use community-created maps to include many different functional groups, models, and techniques</p>
+<p class="sd-card-text">Users can use community-created maps to include many different functional groups, models, and techniques.</p>
 </div>
 <a class="sd-stretched-link reference internal" href="Adding_a_new_map/index.html"><span class="doc"></span></a></div>
 </div>
@@ -366,7 +381,7 @@ document.write(`
 <p class="sd-card-text"><strong>Developers guide</strong></p>
 </div>
 <div class="sd-card-body docutils">
-<p class="sd-card-text">Here, developers can find more in-depth information about the program</p>
+<p class="sd-card-text">Here, developers can find more in-depth information about the program.</p>
 </div>
 <a class="sd-stretched-link reference internal" href="Developer_guide/index.html"><span class="doc"></span></a></div>
 </div>
@@ -384,12 +399,33 @@ document.write(`
 </div>
 <div class="toctree-wrapper compound">
 </div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
+<section id="what-does-gmap-do">
+<h2>What does GMAP do?<a class="headerlink" href="#what-does-gmap-do" title="Link to this heading">#</a></h2>
+<p>Gmap combines different spectroscopic tools into one convenient package. All of these tools play a role in computing a spectrum from a simple atomistic structure.</p>
+<a class="reference internal image-reference" href="_images/Spectroscopy_workflow.png"><img alt="A schematic representation of the spectroscopy workflow." class="align-right" src="_images/Spectroscopy_workflow.png" style="width: 300px;" /></a>
+<p>The figure on the right shows the general workflow for computing a spectrum when given a starting structure. It is basically a three-step process:</p>
+<ol class="arabic simple">
+<li><p>The first step is to create an MD trajectory from the starting structure. It can be seen as creating a movie from a single frame. It is usually performed by molecular dynamics packages like Gromacs, Amber, Charmm and NAMD.</p></li>
+<li><p>GMAP performs the second step - converting each frame of the MD trajectory into a hamiltonian, creating a hamiltonian trajectory.</p></li>
+<li><p>The last step of converting the hamiltonian trajectory into a spectrum can be done by solving the schrödinger equation for the hamiltonian trajectory, for example using NISE.</p></li>
+</ol>
+<section id="goal-of-aim">
+<h3>Goal of AIM<a class="headerlink" href="#goal-of-aim" title="Link to this heading">#</a></h3>
+<p>Previously released as a standalone program, AIM is included here for convenience. The program can treat any functional group, as long as the map describing it does not require more than 6 atoms. This means that it is intended for (and limited to) vibrational groups, and therefore vibrational spectra, like FTIR, 2D-IR, Raman, 2D-IR-Raman, SFG and CD. While originally created for the amide-I stretch of proteins, it has evolved to also accept maps for other types of groups and different systems.</p>
+</section>
+<section id="goal-of-gem">
+<h3>Goal of GEM<a class="headerlink" href="#goal-of-gem" title="Link to this heading">#</a></h3>
+<p>GEM is intended to be the more generalist successor of AIM - no longer aimed specifically at proteins, no longer limited to vibrational spectroscopy.</p>
+</section>
+<section id="concept-of-maps">
+<h3>Concept of maps<a class="headerlink" href="#concept-of-maps" title="Link to this heading">#</a></h3>
+<p>Both AIM and GEM make use of maps. A map basically encodes a relationship. Usually between one or more electrostatic properties, and a spectroscopic one. A simple example is the Tokmakoff map - it relates the strength of the electric field at a given point in a given direction to the frequency at which an amide group is expected to oscillate.</p>
+<p>Maps allow to combine ab initio methods and advantages with that of molecular dynamics. Again using the Tokmakoff map as an example, a protein would be too large to calculate the different frequencies of using ab initio methods, but the frequencies have too much quantum nature to be treated classically. The relationship encoded in a map, luckily, does not require an entire protein, but a smaller model system that can be treated using ab initio methods. The map can then be applied to the classically-generated MD trajectory, resulting in much faster computation times, but still considering the quantum nature.</p>
+<a class="reference internal image-reference" href="_images/Map_workflow.png"><img alt="A schematic representation of the workflow for creating a map." class="align-right" src="_images/Map_workflow.png" style="width: 300px;" /></a>
+<p>The figure on the right is a visual representation of this process. A model system is placed in many random enviroments. For each enviroment, the electrostatic potential, the electric field and/or the electric field gradient is calculated, and an ab initio calculation is applied to calculate the desired property. Then, a relation is found between (some of) the inputs and the output.</p>
+<p>Then, the same electrostatic properties are calculated for each group in the MD system. The same relation can than be applied to find the desired property for each of the groups.</p>
+</section>
+</section>
 <section id="indices-and-tables">
 <h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -437,6 +473,12 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-does-gmap-do">What does GMAP do?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#goal-of-aim">Goal of AIM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#goal-of-gem">Goal of GEM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#concept-of-maps">Concept of maps</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
   </nav></div>

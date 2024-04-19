@@ -41,10 +41,11 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/design-tabs.js?v=36754332"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Developer_guide/Code_Style';</script>
+    <link rel="icon" href="../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="GMAP" href="../api_out/modules.html" />
-    <link rel="prev" title="Program flow" href="program_flow/index.html" />
+    <link rel="prev" title="Setup" href="program_flow/Setup.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -134,6 +135,13 @@
                     <li class="nav-item">
                       <a class="nav-link nav-internal" href="../User_guide/index.html">
                         User guide
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
                       </a>
                     </li>
                 
@@ -248,6 +256,13 @@ document.write(`
                 
 
                     <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../Theory/index.html">
+                        Theory
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="../Adding_a_new_map/index.html">
                         Adding a new map
                       </a>
@@ -299,7 +314,11 @@ document.write(`
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="Useful_resources.html">Useful resources</a></li>
-<li class="toctree-l1"><a class="reference internal" href="program_flow/index.html">Program flow</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="program_flow/index.html">Program flow</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="program_flow/GEM/run.html">GEM - run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="program_flow/Setup.html">Setup</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Code Style</a></li>
 </ul>
 </div>
@@ -414,9 +433,9 @@ document.write(`
 <li><p>Don’t worry about efficiency/speed of a function if it doesnt take more than 1% of total calculation time. This doesn’t mean we should aim for blatantly needlessly expensive code -  ‘good means good enough’.</p></li>
 <li><p>Printing should <strong>always</strong> be done using a custom print command, <strong>never</strong> using python’s own <code class="docutils literal notranslate"><span class="pre">print()</span></code>. Unless, of course, when defining the custom print commands.</p>
 <ul>
-<li><p>If you want to report something to the user, the <a class="reference internal" href="../api_out/GMAP.src.tools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a> object has the <code class="docutils literal notranslate"><span class="pre">print</span></code> method. This method takes care of verbose settings, log files, etc.</p></li>
-<li><p>If you want to report an issue, use the warning method of the <a class="reference internal" href="../api_out/GMAP.src.tools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a> object. These can also halt the program if the issue is severe enough.</p></li>
-<li><p>If you just want to print something for testing during development, use the <a class="reference internal" href="../api_out/GMAP.src.tools.html#GMAP.src.tools.PrintTools.devprint" title="GMAP.src.tools.PrintTools.devprint"><code class="xref py py-func docutils literal notranslate"><span class="pre">devprint()</span></code></a> function inside PrintTools. Import it at the top of the document as dpr to make it convenient to use.</p></li>
+<li><p>If you want to report something to the user, the <a class="reference internal" href="../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a> object has the <code class="docutils literal notranslate"><span class="pre">print</span></code> method. This method takes care of verbose settings, log files, etc.</p></li>
+<li><p>If you want to report an issue, use the warning method of the <a class="reference internal" href="../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a> object. These can also halt the program if the issue is severe enough.</p></li>
+<li><p>If you just want to print something for testing during development, use the <a class="reference internal" href="../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.devprint" title="GMAP.src.tools.PrintTools.devprint"><code class="xref py py-func docutils literal notranslate"><span class="pre">devprint()</span></code></a> function inside PrintTools. Import it at the top of the document as dpr to make it convenient to use.</p></li>
 </ul>
 </li>
 <li><p>When creating strings to be printed, f-strings are the preferred method.</p></li>
@@ -512,12 +531,12 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="program_flow/index.html"
+       href="program_flow/Setup.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Program flow</p>
+        <p class="prev-next-title">Setup</p>
       </div>
     </a>
     <a class="right-next"
