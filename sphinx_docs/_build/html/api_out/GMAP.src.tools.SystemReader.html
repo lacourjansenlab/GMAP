@@ -449,6 +449,13 @@ coordinates.</p>
 </tr>
 </tbody>
 </table>
+<table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>get_VEG_ref</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Oscillator.frame_update">
 <span class="sig-name descname"><span class="pre">frame_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Syst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update" title="Link to this definition">#</a></dt>
@@ -465,6 +472,11 @@ updated, too.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Oscillator.get_VEG_ref">
+<span class="sig-name descname"><span class="pre">get_VEG_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">System</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Oscillator.get_VEG_ref" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -485,10 +497,10 @@ MD trajectory.</p>
 </dd>
 <dt class="field-even">Attributes<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>first_ix</strong><span class="classifier">list of int</span></dt><dd><p>A list as long as there are residues in the MD system. For each
+<dt><strong>first_ix</strong><span class="classifier">np.ndarray</span></dt><dd><p>An array as long as there are residues in the MD system. For each
 residue, it stores the index of the first atom.</p>
 </dd>
-<dt><strong>last_ix</strong><span class="classifier">list of int</span></dt><dd><p>A list as long as there are residues in the MD system. For each
+<dt><strong>last_ix</strong><span class="classifier">np.ndarray</span></dt><dd><p>An array as long as there are residues in the MD system. For each
 residue, it stores the index of the last atom.</p>
 </dd>
 <dt><strong>resnames</strong><span class="classifier">list of str</span></dt><dd><p>A list as long as there are residues in the MD system. For each
@@ -497,6 +509,9 @@ residue, it stores its residue name.</p>
 <dt><strong>influencer_names</strong><span class="classifier">set()</span></dt><dd><p>All residue names that are considered influencers this run.</p>
 </dd>
 <dt><strong>influencer_ix</strong><span class="classifier">list of int</span></dt><dd><p>The indices of all residues that are influencers.</p>
+</dd>
+<dt><strong>CoM</strong><span class="classifier">np.ndarray</span></dt><dd><p>An array as long as there are residues in the MD system. For each
+residue, it stores its center of mass.</p>
 </dd>
 </dl>
 </dd>
@@ -650,6 +665,10 @@ ones calculations will be performed on.</p>
 </dd>
 <dt><strong>influencers_atix</strong><span class="classifier">list of int</span></dt><dd><p>The indices of all atoms that should be considered influencers.</p>
 </dd>
+<dt><strong>nosc</strong><span class="classifier">int</span></dt><dd><p>The amount of oscillators present in the system.</p>
+</dd>
+<dt><strong>ordered_oscillators</strong><span class="classifier">dict of str:         <a class="reference internal" href="#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a> pairs</span></dt><dd><p>All oscillators, but grouped by the map they belong to.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -668,29 +687,42 @@ ones calculations will be performed on.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.confirm_internal_bond" title="GMAP.src.tools.SystemReader.System.confirm_internal_bond"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confirm_internal_bond</span></code></a>(oscillator, bond)</p></td>
 <td><p>Check whether the given bond exists in the given oscillator</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.extend_oscillator" title="GMAP.src.tools.SystemReader.System.extend_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend_oscillator</span></code></a>(found_local_ix, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.determine_box" title="GMAP.src.tools.SystemReader.System.determine_box"><code class="xref py py-obj docutils literal notranslate"><span class="pre">determine_box</span></code></a>()</p></td>
+<td><p>Find out what the simulation box looks like.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.extend_oscillator" title="GMAP.src.tools.SystemReader.System.extend_oscillator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extend_oscillator</span></code></a>(found_local_ix, ...)</p></td>
 <td><p>Add all residues that are correctly bonded.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_influencers" title="GMAP.src.tools.SystemReader.System.find_influencers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_influencers</span></code></a>(Printer, RunPars)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_influencers" title="GMAP.src.tools.SystemReader.System.find_influencers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_influencers</span></code></a>(Printer, RunPars)</p></td>
 <td><p>Find the indices of all atoms that are influencers</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators" title="GMAP.src.tools.SystemReader.System.find_oscillators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators</span></code></a>(Files, Printer, RunPars)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators" title="GMAP.src.tools.SystemReader.System.find_oscillators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators</span></code></a>(Files, Printer, RunPars)</p></td>
 <td><p>Finds all the oscillators in the MD system</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_atoms" title="GMAP.src.tools.SystemReader.System.find_oscillators_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_atoms</span></code></a>(resnum, residue_atoms)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_atoms" title="GMAP.src.tools.SystemReader.System.find_oscillators_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_atoms</span></code></a>(resnum, residue_atoms)</p></td>
 <td><p>See if the found residue indeed matches the desired template</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_perstruct" title="GMAP.src.tools.SystemReader.System.find_oscillators_perstruct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_perstruct</span></code></a>(struct, map_)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_perstruct" title="GMAP.src.tools.SystemReader.System.find_oscillators_perstruct"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_perstruct</span></code></a>(struct, map_)</p></td>
 <td><p>Finds all oscillators matching the given structure.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_residue" title="GMAP.src.tools.SystemReader.System.find_oscillators_residue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_residue</span></code></a>(residue)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.find_oscillators_residue" title="GMAP.src.tools.SystemReader.System.find_oscillators_residue"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_oscillators_residue</span></code></a>(residue)</p></td>
 <td><p>Finds all oscillators matching the given residue template.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.match_residues" title="GMAP.src.tools.SystemReader.System.match_residues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match_residues</span></code></a>(all_oscillators, struct)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.match_residues" title="GMAP.src.tools.SystemReader.System.match_residues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">match_residues</span></code></a>(all_oscillators, struct)</p></td>
 <td><p>Finds the full oscillator from component residues</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.order_oscillators" title="GMAP.src.tools.SystemReader.System.order_oscillators"><code class="xref py py-obj docutils literal notranslate"><span class="pre">order_oscillators</span></code></a>()</p></td>
+<td><p>Sort all present oscillators by their map.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.set_properties" title="GMAP.src.tools.SystemReader.System.set_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_properties</span></code></a>(Printer)</p></td>
 <td><p>Sets the basic properties of the system.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>update_properties</strong></p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -770,6 +802,12 @@ the bond.</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.determine_box">
+<span class="sig-name descname"><span class="pre">determine_box</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.determine_box" title="Link to this definition">#</a></dt>
+<dd><p>Find out what the simulation box looks like.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -973,11 +1011,22 @@ contains.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.order_oscillators">
+<span class="sig-name descname"><span class="pre">order_oscillators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.order_oscillators" title="Link to this definition">#</a></dt>
+<dd><p>Sort all present oscillators by their map.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.set_properties">
 <span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.set_properties" title="Link to this definition">#</a></dt>
 <dd><p>Sets the basic properties of the system.</p>
 <p>Extracts them from self.universe.atoms, and saves them in self.</p>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.update_properties">
+<span class="sig-name descname"><span class="pre">update_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.update_properties" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -1106,6 +1155,7 @@ parameters.</p>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator"><code class="docutils literal notranslate"><span class="pre">Oscillator</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update"><code class="docutils literal notranslate"><span class="pre">Oscillator.frame_update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator.get_VEG_ref"><code class="docutils literal notranslate"><span class="pre">Oscillator.get_VEG_ref()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Residues"><code class="docutils literal notranslate"><span class="pre">Residues</span></code></a><ul class="nav section-nav flex-column">
@@ -1118,6 +1168,7 @@ parameters.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.basic_boxchecks"><code class="docutils literal notranslate"><span class="pre">System.basic_boxchecks()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.confirm_bond"><code class="docutils literal notranslate"><span class="pre">System.confirm_bond()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.confirm_internal_bond"><code class="docutils literal notranslate"><span class="pre">System.confirm_internal_bond()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.determine_box"><code class="docutils literal notranslate"><span class="pre">System.determine_box()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.extend_oscillator"><code class="docutils literal notranslate"><span class="pre">System.extend_oscillator()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_influencers"><code class="docutils literal notranslate"><span class="pre">System.find_influencers()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators()</span></code></a></li>
@@ -1125,7 +1176,9 @@ parameters.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators_perstruct"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators_perstruct()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.find_oscillators_residue"><code class="docutils literal notranslate"><span class="pre">System.find_oscillators_residue()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.match_residues"><code class="docutils literal notranslate"><span class="pre">System.match_residues()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.order_oscillators"><code class="docutils literal notranslate"><span class="pre">System.order_oscillators()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.set_properties"><code class="docutils literal notranslate"><span class="pre">System.set_properties()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.System.update_properties"><code class="docutils literal notranslate"><span class="pre">System.update_properties()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.check_box_charge"><code class="docutils literal notranslate"><span class="pre">check_box_charge()</span></code></a></li>

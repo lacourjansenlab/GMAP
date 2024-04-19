@@ -220,6 +220,8 @@ class System:
         #         whether OPLS is being used?
 
         # TO DO - C support?
+        self.positions_c = np.ctypeslib.as_ctypes(np.ravel(self.positions))
+        self.charges_c = np.ctypeslib.as_ctypes(self.charges)
         # if RunPar.use_c_lib:
         #     self.charges = self.charges.astype('float32')
         #     self.charges_c = np.ctypeslib.as_ctypes(self.charges)
@@ -268,6 +270,9 @@ class System:
         ).astype('float32')
         self.safesphere = 0.5 * self.boxvects.diagonal().min()
         self.boxvects_inv = np.linalg.inv(self.boxvects).astype('float32')
+
+        self.boxdims_c = np.ctypeslib.as_ctypes(self.boxdims)
+        self.halfbox_c = np.ctypeslib.as_ctypes(self.halfbox)
 
     def find_influencers(self, Printer, RunPars):
         """Find the indices of all atoms that are influencers
@@ -410,6 +415,7 @@ class System:
         # - For the bonds, see which residues they actually connect.
 
         # Find the oscillators as defined in the maps
+        dpr("start looking")
         allgroups = [
             self.find_oscillators_perstruct(struct, map_)
             for map_ in RunPars.requested_mapdict.values()
@@ -420,6 +426,8 @@ class System:
         # at them / edit.
         checked_oscillators = []
         for oscillators in allgroups:
+            dpr(len(oscillators))
+            dpr("")
             map_ = oscillators[0].Map
             checked = map_.code.GM_adjust_oscillators(
                 Files, Printer, map_, self, oscillators
@@ -455,6 +463,8 @@ class System:
             oscillator for oscillators in checked_oscillators
             for oscillator in oscillators
         ]
+        for osc in self.oscillators:
+            dpr(osc.used_atoms)
         self.nosc = len(self.oscillators)
 
     def find_oscillators_perstruct(self, struct, map_):
@@ -781,14 +791,23 @@ class System:
             else:
                 self.oscillators_ordered[mapname].append(oscillator)
 
-    def update_properties(self):
+    def update_properties(self, Printer):
+
+        Printer.add_time(4, "positions:", "ms")
         self.positions = self.universe.atoms.positions.astype('float32')
+        Printer.add_time(4, "positions_c:", "ms")
+        self.positions_c = np.ctypeslib.as_ctypes(np.ravel(self.positions))
+        Printer.add_time(4, "box:", "ms")
         self.determine_box()
+        Printer.add_time(4, "COM:", "ms")
         self.residues.CoM = GM_PF.system_CoM(
             self.positions, self.masses, self.boxvects_inv,
             self.boxvects, self.residues.first_ix, self.residues.last_ix,
             self.nres
         )
+        Printer.add_time(4, "COM_c:", "ms")
+        self.residues.CoM_c = np.ctypeslib.as_ctypes(
+            np.ravel(self.residues.CoM))
 
 
 class Residues:
@@ -867,6 +886,8 @@ class Residues:
 
         self.first_ix = np.array(self.first_ix)
         self.last_ix = np.array(self.last_ix)
+        self.first_ix_c = np.ctypeslib.as_ctypes(self.first_ix)
+        self.last_ix_c = np.ctypeslib.as_ctypes(self.last_ix)
 
     def manage_influencers(self, influencerset):
         """Return all atom indices with one of the given residue names
@@ -926,8 +947,28 @@ class Oscillator:
             self.used_atoms[index]
             for index in self.Map.Core.electrostatic_atoms
         ]
+        self.local_atoms = [
+            self.used_atoms[index] for index in self.Map.Core.local_atoms
+        ]
 
-    def frame_update(self, Syst):
+        # for c integration - here, or should this part be called later?
+        self.electrostatic_atoms_c = np.ctypeslib.as_ctypes(np.array(
+            self.electrostatic_atoms, dtype="int32"))
+        self.local_atoms_c = np.ctypeslib.as_ctypes(np.array(
+            self.local_atoms, dtype="int32"
+        ))
+        # dpr(dir(self.Map))
+        self.n_estatic_atoms = np.int32(len(self.electrostatic_atoms))
+        self.n_local_atoms = np.int32(len(self.local_atoms))
+        estat_choice_dir = {None: 0, "V": 1, "E": 4, "G": 10}
+        self.VEGout = np.zeros(
+            (self.n_estatic_atoms, estat_choice_dir[
+                self.Map.Core.electrostatic_choice]),
+            dtype="float32"
+        )
+        self.VEGout_c = np.ctypeslib.as_ctypes(np.ravel(self.VEGout))
+
+    def frame_update(self, Printer, Syst):
         """Update the frame-specific attributes of the instance.
 
         When a new frame starts, the system positions array is updated,
@@ -941,6 +982,8 @@ class Oscillator:
         """
         self.positions_box = (
             Syst.positions[self.used_atoms] @ Syst.boxvects_inv)
+        self.VEG_refpos = self.get_VEG_ref(Printer, Syst)
+        self.VEG_refpos_c = np.ctypeslib.as_ctypes(self.VEG_refpos)
 
     def get_VEG_ref(self, Printer, System):
         return self.Map.code.GM_get_VEG_ref(

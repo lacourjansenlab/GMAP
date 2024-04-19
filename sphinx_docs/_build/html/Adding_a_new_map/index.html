@@ -395,6 +395,7 @@ object.</p>
 <li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#used-atoms">used_atoms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#electrostatic-atoms">electrostatic_atoms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#electrostatic-choice">electrostatic_choice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#local-atoms">local_atoms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="File_structure/core.html#type-and-xyz-uvec">type and xyz_uvec</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="File_structure/core.html#type">type</a></li>
 <li class="toctree-l4"><a class="reference internal" href="File_structure/core.html#xyz-uvec">xyz_uvec</a></li>
@@ -446,24 +447,70 @@ object.</p>
 <li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id6">Parameters</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-get-rotation-matrix-files-printer-map-syst-osc">GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-post-init-files-printer-map-syst">GM_post_init(Files, Printer, Map, Syst)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id7">Example uses</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">The default method of providing the rotation matrix is not sufficient</a></li>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#the-map-requires-further-information-on-the-system">The map requires further information on the system</a></li>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#setting-different-values-for-certain-parameters">Setting different values for certain parameters</a></li>
 </ul>
 </li>
 <li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id8">Available attributes of Map</a></li>
 <li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id9">Parameters</a></li>
-<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#returns">Returns</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-get-dipole-files-printer-map-syst-osc">GM_get_dipole(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-pre-run-printer-map-syst">GM_pre_run(Printer, Map, Syst)</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id10">Example uses</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#new-output-type">New output type</a></li>
 </ul>
 </li>
 <li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id11">Available attributes of Map</a></li>
 <li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id12">Parameters</a></li>
-<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id13">Returns</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-pre-frame-printer-map-syst">GM_pre_frame(Printer, Map, Syst)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id13">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#to-be-added">To be added</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id14">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id15">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-post-frame-printer-map-syst">GM_post_frame(Printer, Map, Syst)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id16">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#id17">New output type</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id18">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id19">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-post-run-printer-map-syst">GM_post_run(Printer, Map, Syst)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id20">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#reporting-on-the-calculation">Reporting on the calculation</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id21">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id22">Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-get-rotation-matrix-files-printer-map-syst-osc">GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id23">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">The default method of providing the rotation matrix is not sufficient</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id24">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id25">Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#returns">Returns</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="File_structure/main_py.html#gm-get-dipole-files-printer-map-syst-osc">GM_get_dipole(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id26">Example uses</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="File_structure/main_py.html#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id27">Available attributes of Map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id28">Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="File_structure/main_py.html#id29">Returns</a></li>
 </ul>
 </li>
 </ul>

@@ -10,6 +10,7 @@ log_directory[path_dir_lg]                        [N/A]
 log_filename[path_rel_lg_c]                       log.log
 
 output_directory[path_dir_op]                     [N/A]
+output_estatics_filename(oef)[path_rel_op_c]      estatics.txt
 output_hamiltonian_filename(ohf)[path_rel_op_c]   hamiltonian
 output_dipole_filename(odf)[path_rel_op_c]        dipoles
 
@@ -28,6 +29,14 @@ output_data[list_str]                             [ham] [dip]
 
 neutral_charge_threshold[float]                   0.0001
 guess_bonds[bool]                                 False
+
+# charges up to a distance of (estatic_range - (estatic_smooth_range/2)) are
+# treated fully. Then, for a distance of estatic_smooth_range, they 'count'
+# less and less, until the distance of
+# (estatic_range + (estatic_smooth_range/2)), where no charges are considered
+# anymore.
+estatic_range[float]                              20  # this is in angstrom
+estatic_smooth_range[float]                       5  # this is in angstrom
 
 # in order to allow start+number=stop, stop is exclusive.
 start_frame[int]                                  0

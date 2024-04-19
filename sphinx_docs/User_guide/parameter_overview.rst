@@ -59,7 +59,7 @@ output_hamiltonian_filename
 ===========================
 (shorthand: -ohf)
 
-The filename of the hamiltonian output file, without extension! Depending on the output format of choice, this file may either be in binary, or in txt format. The path stored here will be assumed to be relative to the directory given in the parameter output_directory when applicable.
+The filename of the Hamiltonian output file, without extension! Depending on the output format of choice, this file may either be in binary, or in txt format. The path stored here will be assumed to be relative to the directory given in the parameter output_directory when applicable.
 
 
 output_dipole_filename
@@ -124,7 +124,7 @@ output_format
 | (no shorthand available)
 | (options: bin, txt)
 
-In what format the output files should be created. Bin for binary format, txt for text. Both are in the form that NISE can read them. In case multiple options are provided, a file will be created in each requested format.
+In what format the output files should be created. Bin for binary format, txt for text. Both are in a format that NISE can read them. In case multiple options are provided, a file will be created in each requested format.
 
 
 output_data
@@ -132,7 +132,7 @@ output_data
 | (no shorthand available)
 | (options: ham, dip)
 
-What kind of output(s) the program should generate. Multiple choices can be provided. Ham lets the program output a hamiltonian for each frame, dip for dipoles. 
+What kind of data the program should generate. Multiple choices can be provided. Ham lets the program output Hamiltonian for each frame, dip for dipoles. 
 
 
 **********************************************

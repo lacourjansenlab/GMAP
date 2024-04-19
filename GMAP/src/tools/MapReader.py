@@ -713,23 +713,25 @@ class Core():
             return
 
         self.used_atoms = self.parse_used_atoms(
-            Printer, rawcore, Map.directory
-        )
+            Printer, rawcore, Map.directory)
         if not self.success:
             return
 
         self.electrostatic_atoms = self.parse_estatic_atoms(
-            Printer, rawcore, Map.directory
-        )
+            Printer, rawcore, Map.directory)
         if not self.success:
             return
 
         if self.electrostatic_atoms:
             self.electrostatic_choice = self.parse_estatic_choice(
-                Printer, rawcore, Map.directory
-            )
+                Printer, rawcore, Map.directory)
         else:
             self.electrostatic_choice = None
+        if not self.success:
+            return
+
+        self.local_atoms = self.parse_local_atoms(
+            Printer, rawcore, Map.directory)
         if not self.success:
             return
 
@@ -1633,6 +1635,39 @@ class Residue():
     def __repr__(self):
         mylist = [self.resnames, self.atoms]
         return f"{self.__class__.__name__}({repr(mylist)})"
+
+
+def manage_maps(Files, Printer, RunPars, mapdict):
+    for map_ in mapdict.values():
+        map_.initialize(Files, Printer)
+
+    for map_ in mapdict:
+        dpr(map_)
+    mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
+
+    # dpr("successful:")
+    # for map_ in mapdict.values():
+    #     dpr(map_.name)
+    #     dpr(map_.Core.functional_group)
+
+    for map_choice in RunPars.maps_to_use:
+        if map_choice not in mapdict:
+            Printer.warning(
+                f"The map {map_choice} was requested for use. However, it "
+                "either does not exist, or the map was loaded unsuccessfully "
+                "due to issues with its definition.",
+                "MI_GEM_1", True
+            )
+
+    requested_mapdict = {
+        map_.name: map_ for map_ in mapdict.values()
+        if map_.name in RunPars.maps_to_use
+    }
+    RunPars.requested_mapdict = requested_mapdict
+    if any(map_.Core.requires_bonds for map_ in requested_mapdict.values()):
+        RunPars.detected_requires_bonds = True
+    else:
+        RunPars.detected_requires_bonds = False
 
 
 def scan_mapdirs(mapdirs):

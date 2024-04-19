@@ -73,8 +73,7 @@ def get_get_VEG_ref(Printer, map_):
 
     instructions = map_.rawcore["VEG_reference"]
     method = instructions[0]
-    details = instructions[1]
-
+    details = instructions[1:]
     match method.lower():
         case "residues":
             GM_get_VEG_ref = VEG_from_residues(details)
@@ -175,7 +174,7 @@ def VEG_from_position(Printer, map_, details):
     codestring += "    CoM = " + envelop_int(
         " ".join(details), "osc.positions_box[", "]"
     ) + "\n"
-    codestring += "    CoM = (CoM - np.floor(CoM + 0.5)) @ Syst.boxvects"
+    codestring += "    CoM = (CoM - np.floor(CoM + 0.5)) @ Syst.boxvects\n"
     codestring += "    return CoM"
 
     try:

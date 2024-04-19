@@ -591,24 +591,21 @@ about this map.</p>
 </dl>
 </section>
 </section>
-<section id="gm-get-rotation-matrix-files-printer-map-syst-osc">
-<h3>GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-rotation-matrix-files-printer-map-syst-osc" title="Link to this heading">#</a></h3>
-<p>Returns the rotation matrix for the provided oscillator osc.</p>
-<p>A map usually requires the electrostatic properties to be given in a certain coordinate basis. Usually, this is not the global cartesian coordinates, but rather those rotated in a certain way. The rotation matrix defines the desired basis in global cartesian coordinates.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>The electrostatic field/gradient should only be rotated, not sheared or scaled. Therefore, the provided rotation matrix should consist of three orthonormal vectors.</p>
-</div>
-<p>If this function is not provided in the main.py file, the information stored in the parameters xyz_uvec in the core.txt file will be used instead to build a function with.</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found <a class="reference internal" href="../../Theory/PBC.html#theory-page-pbc"><span class="std std-ref">in the theory section</span></a>. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.</p>
-</div>
+<section id="gm-post-init-files-printer-map-syst">
+<h3>GM_post_init(Files, Printer, Map, Syst)<a class="headerlink" href="#gm-post-init-files-printer-map-syst" title="Link to this heading">#</a></h3>
+<p>Allows the user to do some final initialization steps. These can include building lookup-tables, or computing some basic properties for later use. This function is called when all initialization is done (maps, MD system, etc).</p>
+<p>Is expected to not return anything.</p>
+<p>If the property is position/frame dependent, it should instead be computed in GM_pre_frame.</p>
 <section id="id7">
 <h4>Example uses<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
-<section id="the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">
-<h5>The default method of providing the rotation matrix is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient" title="Link to this heading">#</a></h5>
-<p>Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.</p>
+<section id="the-map-requires-further-information-on-the-system">
+<h5>The map requires further information on the system<a class="headerlink" href="#the-map-requires-further-information-on-the-system" title="Link to this heading">#</a></h5>
+<p>Some mappings require further information. One example are the backbone amides - these live in a covalently bound chain, which makes it important to know which other oscillators are (closely) bound. It is easiest (and fastest) if this information is readily available during the calculation. Furthermore, this property will not change during the calculation / between frames.</p>
+<p>This kind of information should be collected as part of the initialization. This function should be used to look this information up, and store it as an attribute of the Map object that is passed to this function.</p>
+</section>
+<section id="setting-different-values-for-certain-parameters">
+<h5>Setting different values for certain parameters<a class="headerlink" href="#setting-different-values-for-certain-parameters" title="Link to this heading">#</a></h5>
+<p>Some parameters are only set simply. Like local_ix. If a more complex selection of local_ix is desired, it can be enforced here.</p>
 </section>
 </section>
 <section id="id8">
@@ -651,30 +648,18 @@ about this map.</p>
 </dd>
 <dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
 </dd>
-<dt>osc<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>The oscillator for which the rotation matrix should be determined.</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h4>Returns<a class="headerlink" href="#returns" title="Link to this heading">#</a></h4>
-<dl>
-<dt>rotation_matrix<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The matrix that should be used to convert the electrostatic properties. rotation_matrix[0] should return a vector of length 3 defining what the box-x vector should look like, in cartesian coordinates. Same for [1] giving the y, and [2] giving the z. The three vectors are orthonormal.</p>
-</dd>
 </dl>
 </section>
 </section>
-<section id="gm-get-dipole-files-printer-map-syst-osc">
-<h3>GM_get_dipole(Files, Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-dipole-files-printer-map-syst-osc" title="Link to this heading">#</a></h3>
-<p>Returns the dipole vector and its position in cartesian coordinates.</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found <a class="reference internal" href="../../Theory/PBC.html#theory-page-pbc"><span class="std std-ref">in the theory section</span></a>. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.</p>
-</div>
+<section id="gm-pre-run-printer-map-syst">
+<h3>GM_pre_run(Printer, Map, Syst)<a class="headerlink" href="#gm-pre-run-printer-map-syst" title="Link to this heading">#</a></h3>
+<p>Allows the user to prepare the structures needed for the run.</p>
+<p>Is expected to not return anything.</p>
 <section id="id10">
 <h4>Example uses<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
-<section id="the-default-method-of-providing-the-dipole-vector-is-not-sufficient">
-<h5>The default method of providing the dipole vector is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient" title="Link to this heading">#</a></h5>
-<p>Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.</p>
+<section id="new-output-type">
+<h5>New output type<a class="headerlink" href="#new-output-type" title="Link to this heading">#</a></h5>
+<p>If the map wants to compute a new property / output type, the data structure storing that property could be initialized here.</p>
 </section>
 </section>
 <section id="id11">
@@ -706,6 +691,220 @@ about this map.</p>
 <section id="id12">
 <h4>Parameters<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
 <dl>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-pre-frame-printer-map-syst">
+<h3>GM_pre_frame(Printer, Map, Syst)<a class="headerlink" href="#gm-pre-frame-printer-map-syst" title="Link to this heading">#</a></h3>
+<p>Allows the user to compute information that will change for each frame.</p>
+<p>Is expected to not return anything.</p>
+<p>If such a property is only needed once, it should be calculated at the time it is needed. But if multiple outputs (frequency and dipole, for example) or multiple oscillators need it, it should go here. If the property is not position/frame dependent, it should be computed in GM_pre_run.</p>
+<section id="id13">
+<h4>Example uses<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
+<section id="to-be-added">
+<h5>To be added<a class="headerlink" href="#to-be-added" title="Link to this heading">#</a></h5>
+<p>To be explained.</p>
+</section>
+</section>
+<section id="id14">
+<h4>Available attributes of Map<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id15">
+<h4>Parameters<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
+<dl>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-post-frame-printer-map-syst">
+<h3>GM_post_frame(Printer, Map, Syst)<a class="headerlink" href="#gm-post-frame-printer-map-syst" title="Link to this heading">#</a></h3>
+<p>Allows the user to finalize the frame.</p>
+<p>Is expected to not return anything.</p>
+<section id="id16">
+<h4>Example uses<a class="headerlink" href="#id16" title="Link to this heading">#</a></h4>
+<section id="id17">
+<h5>New output type<a class="headerlink" href="#id17" title="Link to this heading">#</a></h5>
+<p>If the map wants to compute a new property / output type, the computed data should be written to a file here.</p>
+</section>
+</section>
+<section id="id18">
+<h4>Available attributes of Map<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id19">
+<h4>Parameters<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
+<dl>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-post-run-printer-map-syst">
+<h3>GM_post_run(Printer, Map, Syst)<a class="headerlink" href="#gm-post-run-printer-map-syst" title="Link to this heading">#</a></h3>
+<p>Allows the user to do some final reports.</p>
+<p>Is expected to not return anything.</p>
+<section id="id20">
+<h4>Example uses<a class="headerlink" href="#id20" title="Link to this heading">#</a></h4>
+<section id="reporting-on-the-calculation">
+<h5>Reporting on the calculation<a class="headerlink" href="#reporting-on-the-calculation" title="Link to this heading">#</a></h5>
+<p>If the user should know anything about the computation that has been performed, they can be told by this function.</p>
+</section>
+</section>
+<section id="id21">
+<h4>Available attributes of Map<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id22">
+<h4>Parameters<a class="headerlink" href="#id22" title="Link to this heading">#</a></h4>
+<dl>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-get-rotation-matrix-files-printer-map-syst-osc">
+<h3>GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-rotation-matrix-files-printer-map-syst-osc" title="Link to this heading">#</a></h3>
+<p>Returns the rotation matrix for the provided oscillator osc.</p>
+<p>A map usually requires the electrostatic properties to be given in a certain coordinate basis. Usually, this is not the global cartesian coordinates, but rather those rotated in a certain way. The rotation matrix defines the desired basis in global cartesian coordinates.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The electrostatic field/gradient should only be rotated, not sheared or scaled. Therefore, the provided rotation matrix should consist of three orthonormal vectors.</p>
+</div>
+<p>If this function is not provided in the main.py file, the information stored in the parameters xyz_uvec in the core.txt file will be used instead to build a function with.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found <a class="reference internal" href="../../Theory/PBC.html#theory-page-pbc"><span class="std std-ref">in the theory section</span></a>. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.</p>
+</div>
+<section id="id23">
+<h4>Example uses<a class="headerlink" href="#id23" title="Link to this heading">#</a></h4>
+<section id="the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">
+<h5>The default method of providing the rotation matrix is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient" title="Link to this heading">#</a></h5>
+<p>Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.</p>
+</section>
+</section>
+<section id="id24">
+<h4>Available attributes of Map<a class="headerlink" href="#id24" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id25">
+<h4>Parameters<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
+<dl>
 <dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
 Has to be updated after RunPars is finalized.</p>
 </dd>
@@ -721,8 +920,74 @@ about this map.</p>
 </dd>
 </dl>
 </section>
-<section id="id13">
-<h4>Returns<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
+<section id="returns">
+<h4>Returns<a class="headerlink" href="#returns" title="Link to this heading">#</a></h4>
+<dl>
+<dt>rotation_matrix<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The matrix that should be used to convert the electrostatic properties. rotation_matrix[0] should return a vector of length 3 defining what the box-x vector should look like, in cartesian coordinates. Same for [1] giving the y, and [2] giving the z. The three vectors are orthonormal.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-get-dipole-files-printer-map-syst-osc">
+<h3>GM_get_dipole(Files, Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-dipole-files-printer-map-syst-osc" title="Link to this heading">#</a></h3>
+<p>Returns the dipole vector and its position in cartesian coordinates.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found <a class="reference internal" href="../../Theory/PBC.html#theory-page-pbc"><span class="std std-ref">in the theory section</span></a>. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.</p>
+</div>
+<section id="id26">
+<h4>Example uses<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
+<section id="the-default-method-of-providing-the-dipole-vector-is-not-sufficient">
+<h5>The default method of providing the dipole vector is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient" title="Link to this heading">#</a></h5>
+<p>Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.</p>
+</section>
+</section>
+<section id="id27">
+<h4>Available attributes of Map<a class="headerlink" href="#id27" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id28">
+<h4>Parameters<a class="headerlink" href="#id28" title="Link to this heading">#</a></h4>
+<dl>
+<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+<dt>osc<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>The oscillator for which the rotation matrix should be determined.</p>
+</dd>
+</dl>
+</section>
+<section id="id29">
+<h4>Returns<a class="headerlink" href="#id29" title="Link to this heading">#</a></h4>
 <dl>
 <dt>r_vec<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The vector that represents the dipole of this oscillator.</p>
 </dd>
@@ -816,24 +1081,70 @@ about this map.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Parameters</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-rotation-matrix-files-printer-map-syst-osc">GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-post-init-files-printer-map-syst">GM_post_init(Files, Printer, Map, Syst)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Example uses</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">The default method of providing the rotation matrix is not sufficient</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-map-requires-further-information-on-the-system">The map requires further information on the system</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-different-values-for-certain-parameters">Setting different values for certain parameters</a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Available attributes of Map</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">Parameters</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#returns">Returns</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-dipole-files-printer-map-syst-osc">GM_get_dipole(Files, Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-pre-run-printer-map-syst">GM_pre_run(Printer, Map, Syst)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Example uses</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#new-output-type">New output type</a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Available attributes of Map</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Parameters</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Returns</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-pre-frame-printer-map-syst">GM_pre_frame(Printer, Map, Syst)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#to-be-added">To be added</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Parameters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-post-frame-printer-map-syst">GM_post_frame(Printer, Map, Syst)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">New output type</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Parameters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-post-run-printer-map-syst">GM_post_run(Printer, Map, Syst)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#reporting-on-the-calculation">Reporting on the calculation</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Parameters</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-rotation-matrix-files-printer-map-syst-osc">GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">The default method of providing the rotation matrix is not sufficient</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#returns">Returns</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-dipole-files-printer-map-syst-osc">GM_get_dipole(Files, Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">Returns</a></li>
 </ul>
 </li>
 </ul>

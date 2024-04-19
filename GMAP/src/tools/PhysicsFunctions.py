@@ -5,6 +5,7 @@ import numpy as np
 
 # local imports
 import GMAP.src.tools.CLibLoader as GM_CL
+from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 def calc_CoM(System, atomlist):
@@ -62,17 +63,25 @@ def calc_frame(Printer, RunPars, System, dipoles, hamiltonian):
     VEGlib = GM_CL.VEG_CLib()
 
     for oscix, oscillator in enumerate(System.oscillators):
-
         if any(data in RunPars.output_data for data in ("ham", "dip")):
-            VEG_refpos = oscillator.get_VEG_ref(Printer, System)
+            if oscillator.Map.Core.electrostatic_choice in ("V", "E", "G"):
+                # calculate VEG
+                VEGlib.calcPot_perres_mm(System, RunPars, oscillator)
+                V = oscillator.VEGout[:, 0]
+            else:
+                V = None
+            if oscillator.Map.Core.electrostatic_choice in ("E", "G"):
+                E = oscillator.VEGout[:, 1:4]
+            else:
+                E = None
+            if oscillator.Map.Core.electrostatic_choice == "G":
+                G = oscillator.VEGout[:, 4:]
+            else:
+                G = None
 
-            # remove! just for linter silencing
-            if True or VEG_refpos and VEGlib:
-                pass
+            dpr(V, E, G)
 
-            # calculate VEG
-
-            dipoles[oscix:] = calc_dipole()
+            dipoles[oscix] = calc_dipole()
 
         if "ham" in RunPars.output_data:
             hamiltonian[oscix, oscix] = calc_frequency()

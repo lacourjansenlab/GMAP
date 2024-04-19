@@ -650,6 +650,19 @@ functional_group_bonds  1-2 2-3 1-3
 </pre></div>
 </div>
 </section>
+<section id="local-atoms">
+<h2>local_atoms<a class="headerlink" href="#local-atoms" title="Link to this heading">#</a></h2>
+<p><em>Mandatory parameter</em></p>
+<p>Calculating the electrostatics for an oscillator is involved. Not all atoms will contribute to the electrostatic environment of the oscillator - most notably, the atoms of the oscillator itself.</p>
+<p>The program is naive in calculating elecctrostatics - every atom within range can and will contribute to the elecctrostatics, unless it is specifically excluded. This parameter allows for excluding - any atoms mentioned here will be assumed part of the oscillator, and not contribute to the elecctrostatics. The atoms are selected from used_atoms. Lets look at the amide sidechain example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">functional_group</span>        <span class="p">[</span><span class="n">ASN</span><span class="p">]</span>    <span class="n">CG</span>  <span class="n">OD1</span>  <span class="n">CB</span>  <span class="n">ND2</span>  <span class="n">HD21</span>  <span class="n">HD22</span>
+<span class="n">used_atoms</span>              <span class="mi">0</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span>   <span class="c1"># CG OD1 ND2 HD21 HD22</span>
+<span class="n">local_atoms</span>             <span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>Here, we say we dont want to include the atoms in used atoms, through giving the index of all five separately.</p>
+<p>It might happen that a map is more complex. If a mapping would like to exclude more atoms, the recommended method is to add these to used_atoms. If the exclusion is variable (might be different for different oscillators), the local_ix of the separate oscillators must be changed manually. This can be done in main.py, the recommended place is within GM_post_init().</p>
+</section>
 <section id="type-and-xyz-uvec">
 <h2>type and xyz_uvec<a class="headerlink" href="#type-and-xyz-uvec" title="Link to this heading">#</a></h2>
 <p><em>Half-mandatory parameters</em></p>
@@ -811,6 +824,7 @@ functional_group_bonds  1-2 2-3 1-3
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#used-atoms">used_atoms</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrostatic-atoms">electrostatic_atoms</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#electrostatic-choice">electrostatic_choice</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#local-atoms">local_atoms</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#type-and-xyz-uvec">type and xyz_uvec</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#type">type</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#xyz-uvec">xyz_uvec</a></li>

@@ -832,6 +832,10 @@ extern "C" {
                                 }
 
                                 out[subix] += potential_linear(dist, charge, min_dist, maxdist, smooth_domain);
+                                // if second is true first should be, too. however,
+                                // that isn't always the case, therefore, first
+                                // check is added.
+                                // second means 'if we don't want to smooth'.
                                 if (dist <= min_dist || smooth_domain == 0){
                                     temp_charge[subix] += charge;
                                 } else {
@@ -870,8 +874,12 @@ extern "C" {
                                 if (dist > maxdist) {
                                      continue;
                                 }
-
+                                // replace potPtr with pot_hard from PEG.cpp
                                 out[subix] += (potentialPtr)(dist, charge, min_dist, maxdist, smooth_domain);
+                                // if second is true first should be, too. however,
+                                // that isn't always the case, therefore, first
+                                // check is added.
+                                // second means 'if we don't want to smooth'.
                                 if (dist <= min_dist || smooth_domain == 0){
                                     temp_charge[subix] += charge;
                                 } else {
@@ -885,6 +893,7 @@ extern "C" {
             }
         }
         for (int subix = 0; subix < nOscAts; subix++) {
+            // replace potPtr with pot_hard from PEG.cpp
             out[subix] -= (potentialPtr)(maxdist, temp_charge[subix], maxdist, maxdist, smooth_domain);
         }
 

@@ -416,6 +416,81 @@ document.write(`
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.VEG_from_com">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">VEG_from_com</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_atoms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.VEG_from_com" title="Link to this definition">#</a></dt>
+<dd><p>Creates the function GM_get_VEG_ref for given atoms.</p>
+<p>Each atom given will count towards the VEG centre.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>local_atoms</strong><span class="classifier">list of str</span></dt><dd><p>All these strings must be convertable to ints using int(). Each
+value corresponds to an atom (using local indices)</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_get_VEG_ref</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to find the VEG centre for
+this oscillator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.VEG_from_position">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">VEG_from_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.VEG_from_position" title="Link to this definition">#</a></dt>
+<dd><p>Creates the function GM_get_VEG_ref for given atoms.</p>
+<p>Each atom given will count towards the VEG centre.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The map instance which this function will belong to.</p>
+</dd>
+<dt><strong>details</strong><span class="classifier">list of str</span></dt><dd><p>The string(s) explaining what to do. Ints will be converted to
+the box positions of the atoms with that int as used_ix.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_get_VEG_ref</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to find the VEG centre for
+this oscillator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.VEG_from_residues">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">VEG_from_residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_atoms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.VEG_from_residues" title="Link to this definition">#</a></dt>
+<dd><p>Creates the function GM_get_VEG_ref for given residues.</p>
+<p>Each residue is defined by an atom that is part of it. All atoms of
+the given residues will count towards the centre of mass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>local_atoms</strong><span class="classifier">list of str</span></dt><dd><p>All these strings must be convertable to ints using int(). Each
+of these atoms is assumed to be in a different residue.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_get_VEG_ref</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to find the VEG centre for
+this oscillator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.does_nothing">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">does_nothing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.does_nothing" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
@@ -480,6 +555,31 @@ document.write(`
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_get_VEG_ref">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_get_VEG_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_get_VEG_ref" title="Link to this definition">#</a></dt>
+<dd><p>Creates the function GM_get_VEG_ref.</p>
+<p>Recognizes requested method and finds relevant function.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The map instance which this function will belong to.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_get_VEG_ref</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to find the VEG centre for
+this oscillator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_get_dipole">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole" title="Link to this definition">#</a></dt>
 <dd><p>Default for obtaining the dipole</p>
@@ -524,6 +624,31 @@ and handle errors.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_post_frame">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_post_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_post_frame" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_post_init">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_post_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_post_init" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_post_run">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_post_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_post_run" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_pre_frame">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_pre_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_pre_frame" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_pre_run">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_pre_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_pre_run" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.returns_last">
@@ -584,13 +709,22 @@ and handle errors.</p>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.NewModule"><code class="docutils literal notranslate"><span class="pre">NewModule</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.VEG_from_com"><code class="docutils literal notranslate"><span class="pre">VEG_from_com()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.VEG_from_position"><code class="docutils literal notranslate"><span class="pre">VEG_from_position()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.VEG_from_residues"><code class="docutils literal notranslate"><span class="pre">VEG_from_residues()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.does_nothing"><code class="docutils literal notranslate"><span class="pre">does_nothing()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.envelop_int"><code class="docutils literal notranslate"><span class="pre">envelop_int()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_adjust_RunPars"><code class="docutils literal notranslate"><span class="pre">get_adjust_RunPars()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_adjust_map_core_raw"><code class="docutils literal notranslate"><span class="pre">get_adjust_map_core_raw()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_adjust_oscillators"><code class="docutils literal notranslate"><span class="pre">get_adjust_oscillators()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_get_VEG_ref"><code class="docutils literal notranslate"><span class="pre">get_get_VEG_ref()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole"><code class="docutils literal notranslate"><span class="pre">get_get_dipole()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_get_rotation_matrix"><code class="docutils literal notranslate"><span class="pre">get_get_rotation_matrix()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_post_frame"><code class="docutils literal notranslate"><span class="pre">get_post_frame()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_post_init"><code class="docutils literal notranslate"><span class="pre">get_post_init()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_post_run"><code class="docutils literal notranslate"><span class="pre">get_post_run()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_pre_frame"><code class="docutils literal notranslate"><span class="pre">get_pre_frame()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_pre_run"><code class="docutils literal notranslate"><span class="pre">get_pre_run()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.returns_last"><code class="docutils literal notranslate"><span class="pre">returns_last()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.unused_user"><code class="docutils literal notranslate"><span class="pre">unused_user()</span></code></a></li>
 </ul>

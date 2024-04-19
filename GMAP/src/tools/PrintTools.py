@@ -193,8 +193,8 @@ class Timer:
 
         self.times = {}
 
-    def add_time(self, name):
-        self.times[name] = time.perf_counter_ns()
+    def add_time(self, msg):
+        self.times[msg] = time.perf_counter_ns()
 
     def get_time(self, msg):
         return self.times[msg] - self.zero

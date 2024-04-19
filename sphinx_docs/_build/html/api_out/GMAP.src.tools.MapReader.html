@@ -458,26 +458,32 @@ positions of the atoms in used_atoms, starting counting at 0.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.check_bonds" title="GMAP.src.tools.MapReader.Core.check_bonds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_bonds</span></code></a>(Printer, corefile)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.check_VEG_reference" title="GMAP.src.tools.MapReader.Core.check_VEG_reference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_VEG_reference</span></code></a>(Printer, rawcore, mapdir)</p></td>
+<td><p>Check the choice for the parameter VEG_reference.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.check_bonds" title="GMAP.src.tools.MapReader.Core.check_bonds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_bonds</span></code></a>(Printer, corefile)</p></td>
 <td><p>Checks whether the indices supplied for bonds actually exist.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.funcgroup_parse_infile" title="GMAP.src.tools.MapReader.Core.funcgroup_parse_infile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcgroup_parse_infile</span></code></a>(funcgroup)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.funcgroup_parse_infile" title="GMAP.src.tools.MapReader.Core.funcgroup_parse_infile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcgroup_parse_infile</span></code></a>(funcgroup)</p></td>
 <td><p>Parse the choice made for functional_groups</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile" title="GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcgroupfile_to_infile</span></code></a>(fname)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile" title="GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcgroupfile_to_infile</span></code></a>(fname)</p></td>
 <td><p>Parses the functional_group_file from a map into infile format.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_estatic_atoms" title="GMAP.src.tools.MapReader.Core.parse_estatic_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_estatic_atoms</span></code></a>(Printer, rawcore, mapdir)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_estatic_atoms" title="GMAP.src.tools.MapReader.Core.parse_estatic_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_estatic_atoms</span></code></a>(Printer, rawcore, mapdir)</p></td>
 <td><p>Parse the choice for the parameter electrostatic_atoms</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_estatic_choice" title="GMAP.src.tools.MapReader.Core.parse_estatic_choice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_estatic_choice</span></code></a>(Printer, rawcore, mapdir)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_estatic_choice" title="GMAP.src.tools.MapReader.Core.parse_estatic_choice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_estatic_choice</span></code></a>(Printer, rawcore, mapdir)</p></td>
 <td><p>Parse the choice for the parameter electrostatic_choice</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_fg_bonds" title="GMAP.src.tools.MapReader.Core.parse_fg_bonds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_fg_bonds</span></code></a>(Printer, corefile, bonds)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_fg_bonds" title="GMAP.src.tools.MapReader.Core.parse_fg_bonds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_fg_bonds</span></code></a>(Printer, corefile, bonds)</p></td>
 <td><p>Parses the choice for functional_group_bonds in core.txt.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_functional_group" title="GMAP.src.tools.MapReader.Core.parse_functional_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_functional_group</span></code></a>(Printer, rawcore, mapdir)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_functional_group" title="GMAP.src.tools.MapReader.Core.parse_functional_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_functional_group</span></code></a>(Printer, rawcore, mapdir)</p></td>
 <td><p>Parses the input for keywords functional_group(_file) in core.txt</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_local_atoms" title="GMAP.src.tools.MapReader.Core.parse_local_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_local_atoms</span></code></a>(Printer, rawcore, mapdir)</p></td>
+<td><p>Parse the choice for the parameter electrostatic_atoms</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_type" title="GMAP.src.tools.MapReader.Core.parse_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_type</span></code></a>(Printer, rawcore, mapdir)</p></td>
 <td><p>Parse the choice for the parameter type</p></td>
@@ -487,6 +493,28 @@ positions of the atoms in used_atoms, starting counting at 0.</p>
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Core.check_VEG_reference">
+<span class="sig-name descname"><span class="pre">check_VEG_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rawcore</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapdir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Core.check_VEG_reference" title="Link to this definition">#</a></dt>
+<dd><p>Check the choice for the parameter VEG_reference.</p>
+<p>Confirms the validity of the choice for VEG_reference. Does the
+chosen method exist? Is the type of the rest of the arguments
+correct?</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>rawcore</strong><span class="classifier">dict of str - list of str pairs</span></dt><dd><p>The raw contents of the file core.txt</p>
+</dd>
+<dt><strong>mapdir</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The path to the directory in which the map is defined.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Core.check_bonds">
 <span class="sig-name descname"><span class="pre">check_bonds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corefile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Core.check_bonds" title="Link to this definition">#</a></dt>
@@ -689,6 +717,33 @@ and handle errors.</p>
 <dt><strong>rawcore</strong><span class="classifier">dict of str: list of str pairs</span></dt><dd><p>The raw contents of the file core.txt</p>
 </dd>
 <dt><strong>mapdir</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The path to the directory in which the map is defined.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Core.parse_local_atoms">
+<span class="sig-name descname"><span class="pre">parse_local_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rawcore</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapdir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Core.parse_local_atoms" title="Link to this definition">#</a></dt>
+<dd><p>Parse the choice for the parameter electrostatic_atoms</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>rawcore</strong><span class="classifier">dict of str - list of str pairs</span></dt><dd><p>The raw contents of the file core.txt</p>
+</dd>
+<dt><strong>mapdir</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The path to the directory in which the map is defined.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>local_atoms</strong><span class="classifier">list of int</span></dt><dd><p>The indices of the atoms in used_atoms that should actually
+be used in electrostatic calculations. The indices are the
+positions of the atoms in used_atoms, starting counting at 0.</p>
 </dd>
 </dl>
 </dd>
@@ -1362,6 +1417,7 @@ is created by <a class="reference internal" href="GMAP.src.tools.ParameterParser
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core"><code class="docutils literal notranslate"><span class="pre">Core</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.check_VEG_reference"><code class="docutils literal notranslate"><span class="pre">Core.check_VEG_reference()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.check_bonds"><code class="docutils literal notranslate"><span class="pre">Core.check_bonds()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.funcgroup_parse_infile"><code class="docutils literal notranslate"><span class="pre">Core.funcgroup_parse_infile()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile"><code class="docutils literal notranslate"><span class="pre">Core.funcgroupfile_to_infile()</span></code></a></li>
@@ -1369,6 +1425,7 @@ is created by <a class="reference internal" href="GMAP.src.tools.ParameterParser
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_estatic_choice"><code class="docutils literal notranslate"><span class="pre">Core.parse_estatic_choice()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_fg_bonds"><code class="docutils literal notranslate"><span class="pre">Core.parse_fg_bonds()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_functional_group"><code class="docutils literal notranslate"><span class="pre">Core.parse_functional_group()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_local_atoms"><code class="docutils literal notranslate"><span class="pre">Core.parse_local_atoms()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_type"><code class="docutils literal notranslate"><span class="pre">Core.parse_type()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_used_atoms"><code class="docutils literal notranslate"><span class="pre">Core.parse_used_atoms()</span></code></a></li>
 </ul>

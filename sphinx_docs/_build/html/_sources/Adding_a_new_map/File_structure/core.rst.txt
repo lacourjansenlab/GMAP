@@ -333,6 +333,25 @@ While some maps only need to know the electrostatic potential at certain points,
     electrostatic_choice    G   # calculate the potential, the electric field, and the gradient
 
 
+***********
+local_atoms
+***********
+
+*Mandatory parameter*
+
+Calculating the electrostatics for an oscillator is involved. Not all atoms will contribute to the electrostatic environment of the oscillator - most notably, the atoms of the oscillator itself.
+
+The program is naive in calculating elecctrostatics - every atom within range can and will contribute to the elecctrostatics, unless it is specifically excluded. This parameter allows for excluding - any atoms mentioned here will be assumed part of the oscillator, and not contribute to the elecctrostatics. The atoms are selected from used_atoms. Lets look at the amide sidechain example::
+    
+    functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+    used_atoms              0 1 3 4 5   # CG OD1 ND2 HD21 HD22
+    local_atoms             0 1 2 3 4
+
+Here, we say we dont want to include the atoms in used atoms, through giving the index of all five separately.
+
+It might happen that a map is more complex. If a mapping would like to exclude more atoms, the recommended method is to add these to used_atoms. If the exclusion is variable (might be different for different oscillators), the local_ix of the separate oscillators must be changed manually. This can be done in main.py, the recommended place is within GM_post_init(). 
+
+
 *****************
 type and xyz_uvec
 *****************

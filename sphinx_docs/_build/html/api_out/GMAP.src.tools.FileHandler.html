@@ -709,6 +709,54 @@ Does not check whether the file is of a readable format.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.write_output">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">write_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hamiltonian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dipoles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.write_output" title="Link to this definition">#</a></dt>
+<dd><p>Write the output for a single frame to files.</p>
+<p>Writes all outputs - all (requested) datastructures in all
+(requested) formats.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+<dt><strong>framenum</strong><span class="classifier">int</span></dt><dd><p>The number of the frame currently being written</p>
+</dd>
+<dt><strong>hamiltonian</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The computed hamiltonian for this frame.</p>
+</dd>
+<dt><strong>dipoles</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The computed dipoles for this frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.FileHandler.write_single">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.FileHandler.</span></span><span class="sig-name descname"><span class="pre">write_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.FileHandler.write_single" title="Link to this definition">#</a></dt>
+<dd><p>Write a single datastructure to files of given name.</p>
+<p>Writes to all different requested formats at once.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+<dt><strong>framenum</strong><span class="classifier">int</span></dt><dd><p>The number of the frame currently being written</p>
+</dd>
+<dt><strong>framenum_arr</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The framenumber as float32 array, ready for binary writing</p>
+</dd>
+<dt><strong>fname</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The name + location of the file to which to write. This filename
+should not include the extension!</p>
+</dd>
+<dt><strong>data</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The data that should be written to the file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -767,6 +815,8 @@ Does not check whether the file is of a readable format.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.get_def_parfile"><code class="docutils literal notranslate"><span class="pre">get_def_parfile()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.get_file"><code class="docutils literal notranslate"><span class="pre">get_file()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.try_file"><code class="docutils literal notranslate"><span class="pre">try_file()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.write_output"><code class="docutils literal notranslate"><span class="pre">write_output()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.FileHandler.write_single"><code class="docutils literal notranslate"><span class="pre">write_single()</span></code></a></li>
 </ul>
   </nav></div>
 
