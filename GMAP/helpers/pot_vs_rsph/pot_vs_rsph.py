@@ -1,3 +1,12 @@
+"""
+This is a temporary helper script to plot the calculated potential vs
+the electrostatics sphere. The goal is to understand how a certain
+method of computing electrostatics performs.
+
+Eventually, this script is to be fully replaced by DEPICT.
+"""
+
+
 import subprocess
 import numpy as np
 import matplotlib.pyplot as plt
@@ -21,6 +30,12 @@ def do_run(estatic_range):
 
 
 def gen_data():
+    """Generates one line of data.
+
+    If multiple datasets are desired, the other settings should either
+    be changed in the call here or in the input parameter file used.
+    Then this script / function can be called again.
+    """
     length = 1
     start = 10
     subprocess.run(
@@ -42,6 +57,10 @@ def gen_data():
 
 
 def plot_data():
+    """Make a simple plot of the collected data.
+
+    Very specific, not meant for use by separate users.
+    """
     files = [
         "pots_perres_sr0L_neutral_",
         "pots_perres_sr2L_neutral_",

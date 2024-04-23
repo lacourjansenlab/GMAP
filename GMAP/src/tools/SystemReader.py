@@ -792,6 +792,17 @@ class System:
                 self.oscillators_ordered[mapname].append(oscillator)
 
     def update_properties(self, Printer):
+        """Reloads the frame-dependent properties of the system.
+
+        This function is supposed to be called at the beginning of every
+        frame to ensure that the properties stored inside are up to date.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
 
         Printer.add_time(4, "positions:", "ms")
         self.positions = self.universe.atoms.positions.astype('float32')
@@ -935,9 +946,30 @@ class Oscillator:
     electrostatic_atoms : list of int
         The system indices of all atoms that the map should calculate
         the electrostatic properties for.
+    local_atoms : list of int
+        The system indices of all atoms that the map should calculate
+        the electrostatic properties for.
+    electrostatic_atoms_c : `ctypes.Array`
+        The c-friendly variant of self.electrostatic_atoms
+    local_atoms_c : `ctypes.Array`
+        The c-friendly variant of self.local_atoms
+    n_estatic_atoms : `np.int32`
+        The c-friendly form for the length of self.electrostatic_atoms
+    n_local_atoms : `np.int32`
+        The c-friendly form for the length of self.local_atoms
+    VEGout : `np.ndarray`
+        The array to which the output of the VEG calculations will be
+        written
+    VEGout_c : `ctypes.Array`
+        The c-friendly variant of self.VEGout
     positions_box : `np.ndarray`
         The positions of all atoms given in used_atoms, in box
         coordinates.
+    VEG_refpos = `np.ndarray`
+        The position on which the sphere defining the electrostatics
+        should be centered.
+    VEG_refpos_c = `ctypes.Array`
+        The c-friendly variant of self.VEG_refpos_c
     """
 
     def __init__(self, atoms, map_):

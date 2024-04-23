@@ -1,4 +1,30 @@
-# Dependence of Electrostatic Properties on Individual Charges Taken
+r"""
+Usage:
+
+    GMAP DEPICT
+    GMAP DEPICT help
+prints this help
+
+    GMAP DEPICT calculate [name of input file] [optional parameters]
+Calculates all datapoints for a potential vs estatic_range graph.
+
+    GMAP DEPICT show [name of input file] [optional parameters]
+Displays all data calculated previously using calculate.
+
+    GMAP DEPICT calcshow [name of input file] [optional parameters]
+Performs the functions of both 'calculate' and 'show'
+
+
+Dependence of Electrostatic Properties on Individual Charges Taken
+
+The purpose of DEPICT is to visualize how the calculated electrostatic
+potential changes with estatic_range. This aids in determining what
+value for estatic_range should be used, and what method for calculating
+the electrostatic properties.
+
+For more information, check the manual on N/A.
+"""
+
 
 # 3rd party lib imports
 import numpy as np

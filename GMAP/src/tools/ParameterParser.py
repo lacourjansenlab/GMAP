@@ -1829,6 +1829,12 @@ class RunPars:
             break
 
     def manage_dtypes(self):
+        """Convert any values that might need it to the correct datatype.
+
+        This is mostly in preparation for numba and/or c algorithms that
+        are not capable of dealing with the uncertain (system-dependent)
+        choice of datatype that python and numpy have.
+        """
         self.estatic_range = np.float32(self.estatic_range)
         self.estatic_smooth_range = np.float32(self.estatic_smooth_range)
 

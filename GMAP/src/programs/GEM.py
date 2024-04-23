@@ -13,6 +13,8 @@ use and to verify the program is installed correctly.
 Performs a run of GEM using the parameters specified in the included file.
 
 
+Groningen Electrostatic Maps
+
 The purpose of GEM is to take an MD trajectory and compute the time-dependent
 Hamiltonian to be used in electronic spectral calculations. Instructions on how
 to deal with specific chromophores have to be included in the corresponding

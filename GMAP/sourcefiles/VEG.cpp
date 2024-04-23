@@ -17,6 +17,7 @@ extern "C" {
 
 
 extern "C" {
+    // to be removed
     int testadd(int a, int b) {
         return (a + b);
     }
@@ -25,6 +26,23 @@ extern "C" {
         float *vect1, float *vect2, float *halfbox, float *boxdims,
         float *vectout
     ) {
+        /*Calculates the difference vect1 - vect2, assuming a cubic MD
+        system, and assuming vect1 and vect2 are inside the system
+        currently.
+
+        Parameters
+        ----------
+        vect1, vect2 : float[3]
+            The positions between which the difference vector should be
+            calculated.
+        halfbox, boxdims : float[3]
+            The size of the PBC (MD system size). Halfbox is assumed to
+            equal boxdims/2.
+        vectout : float[3]
+            The output will be written here. It is the difference vector
+            between vect1 and vect2, corrected for the PBC.
+        */
+
         for (int i = 0; i < 3; i++){
             vectout[i] = vect1[i] - vect2[i];
 			if (vectout[i] > halfbox[i]) {
@@ -37,6 +55,19 @@ extern "C" {
     }
 
     inline float veclen2(float *vec) {
+        /*Calculates the square of the length of the input vector.
+
+        Parameters
+        ----------
+        vec : float[3]
+            The input vector.
+
+        Returns
+        -------
+        len2 : float
+            The length of the input vector, squared.
+        */
+
         return (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
     }
 
@@ -44,6 +75,47 @@ extern "C" {
     int in_ordered_array_int(
         int *ordered_array, int to_find, int start, int arr_length, int *endpos
     ) {
+        /*Sees if the requested integer is present in the provided array.
+
+        This function only works if the provided array is sorted (most
+        negative value first), and if any subsequent calls are also
+        sorted (most negative value first).
+
+        The function is designed to live in a big loop. Looping over a
+        (sorted!) array of values x, for each of them, see if they are
+        present in a second (sorted!) array y. As both are sorted, they
+        can be scanned in lock-step, we just need to remember the
+        current position in both. The loop calling this function keeps
+        track of the position in x, this function reads and writes the
+        position of y from/into to_find/endpos resp.
+        In the calls to this function, to_find and endpos should most
+        likely refer to the same value - to_find is the value itself,
+        endpos is its address.
+
+        Parameters
+        ----------
+        ordered_array : int[arr_length]
+            The array in which the requested value may or may not be
+            present.
+        to_find : int
+            The value which we are hoping to find in ordered_array
+        start : int
+            At what position in the array we should start looking (as we
+            are certain to_find will not occur before then).
+        arr_length : int
+            The length of ordered_array.
+        endpos : &int
+            A pointer to the integer which we should overwrite. The
+            position at which the next integer (the smallest one that is
+            larger than to_find) is located.
+
+        Returns
+        -------
+        is_present : int
+            Whether to_find is present in ordered_array. 1 if it is,
+            0 if it is not.
+        */
+        
         for (int pos = start; pos < arr_length; pos++) {
             if (ordered_array[pos] < to_find) {
                 continue;
@@ -56,6 +128,62 @@ extern "C" {
             }
         }
         return 0;
+    }
+
+    inline float getweight_linear_smoothing(
+        float dist2, float puredist, float *charges, int sysix, float r_smooth
+    ) {
+        /*Get the weighted charge for an atom considering its distance
+        and the smoothing rules.
+
+        Parameters
+        ----------
+        dist2 : float
+            The square of the distance of this atom to the VEG reference.
+        puredist : float
+            The distance up until which charges should get the maximum
+            weight.
+        charges : float[unknown]
+            The charges of all atoms in the system.
+        sysix : int
+            The system index of the atom of which we want to know the
+            weighted charge.
+        r_smooth : float
+            The distance over which the weighted charges should decrease
+            to zero.
+        */
+
+        float dist = sqrt(dist2);
+        if (dist > puredist) {
+            return charges[sysix] * (
+                1 - ((dist - puredist) / r_smooth));
+        } else {
+            return charges[sysix];
+        }
+    }
+
+    inline float getweight_linear_nosmooth(
+        float dist2, float puredist, float *charges, int sysix, float r_smooth
+    ) {
+        /*Get the (weighted) charge for an atom considering there is no
+        smoothing.
+
+        Parameters
+        ----------
+        dist2 : float
+            Unused, present for universal signature.
+        puredist : float
+            Unused, present for universal signature.
+        charges : float[unknown]
+            The charges of all atoms in the system.
+        sysix : int
+            The system index of the atom of which we want to know the
+            weighted charge.
+        r_smooth : float
+            Unused, present for universal signature
+        */
+
+        return charges[sysix];
     }
 
     /*
@@ -90,6 +218,70 @@ extern "C" {
         float *boxdims,  // the size of the CUBIC box
         float *out  // output is stored here
     ) {
+        /*Calculates the potential on any number of points.
+
+        The potential is caused by a group of atoms, each of which is
+        within r_sphere + r_smooth/2 of spherepos. If an atom is given
+        in local_atoms, it should never attribute to the potential,
+        regardless of its distance to spherepos.
+
+        This method takes into account periodic boundary conditions.
+
+        Parameters
+        ----------
+        tocalc : int[n_osc_ats]
+            The indices of the atoms at whose position the potential
+            should be calculated.
+        n_osc_ats : int
+            The amount of atoms of which we want to know the potential
+        spherepos : float[3]
+            The center of the group of charges that may influence the
+            potential on each of the atoms in tocalc
+        positions : float[3 * unknown]
+            The positions of all atoms in the MD system. Any provided
+            indices into this function are guaranteed to exist in this
+            array. The size of this array is exactly three times that
+            of charges.
+        charges : float[unknown]
+            The charges of all atoms in the MD system. Any provided
+            indices into this function are guaranteed to exist in this
+            array. The size of this array is exactly one third that
+            of positions.
+        COMs : float[3 * n_res]
+            The centre of mass of each residue present in the MD system
+        res_first_ix : int[n_res]
+            The (global/system) index of the first atom of each residue
+            present in the MD system
+        last_first_ix : int[n_res]
+            The (global/system) index of the last atom of each residue
+            present in the MD sytem
+        n_res : int
+            The amount of residues present in the MD system.
+        local_atoms : int[n_locals]
+            These atoms should never contribute to the potential
+            calculated by this function.
+        n_locals : int
+            The amount of atoms that should never contribute to the
+            potential calculated by this function.
+        r_sphere : float
+            The radius of the sphere defining the contributing charges.
+        r_smooth : float
+            The distance over which the charges (and their contributions)
+            should be smoothed. This distance is placed around the
+            boundary of r_sphere.
+        halfbox, boxdims : float[3]
+            The size of the PBC (MD system size). Halfbox is assumed to
+            equal boxdims/2.
+        out : float[n_osc_atoms]
+            The output array to which all potentials will be written.
+        */
+        
+        using smoothfunc = float(*)(float, float, float *, int, float);
+        smoothfunc get_weighted_charge = getweight_linear_nosmooth;
+        if (r_smooth > 0) {
+            smoothfunc get_weighted_charge = getweight_linear_smoothing;
+        }
+
         // build refpos array (positions of osc ats)
         float *refpos;
         refpos = (float *)calloc(3*n_osc_ats, sizeof(float));
@@ -131,19 +323,6 @@ extern "C" {
             if (dist2 > maxdist2) {
                 continue;
             }
-            // dist = sqrt(dist2);
-
-
-            // // check whether this residue is part of smoothing
-            // if (dist > puredist) {
-            //     smooth_factor = 1 - ((dist - puredist) / r_smooth);
-            // } else {
-            //     smooth_factor = 1;
-            // }
-            smooth_factor = 1;
-
-            // loop over all atoms in this residue (together with residue loop,
-            // this becomes all atoms in the system)
             for (
                 sysix = res_first_ix[resnum];
                 sysix <= res_last_ix[resnum];
@@ -164,18 +343,13 @@ extern "C" {
                 if (dist2 > maxdist2) {
                     continue;
                 }
-                // weighted_charge = charges[sysix];  // no smoothing
-                // dist = sqrt(dist2);  // yes smoothing
-                // if (dist > puredist) {  // yes smoothing
-                //     weighted_charge = charges[sysix] * (
-                //         1 - ((dist - puredist) / r_smooth));
-                // } else {
-                //     weighted_charge = charges[sysix];
-                // }
-                // end of perat basis smoothing
+
+                weighted_charge = get_weighted_charge(
+                    dist2, puredist, charges, sysix, r_smooth
+                );
 
                 // Use this line when smoothing on perres basis
-                weighted_charge = charges[sysix] * smooth_factor;
+                // weighted_charge = charges[sysix] * smooth_factor;
 
 
                 // loop over the atoms of the oscillator

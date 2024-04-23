@@ -2,12 +2,48 @@
 # standard lib imports
 import ctypes as ct
 
-# local imports
-from GMAP.src.tools.PrintTools import devprint as dpr
-
 
 class Singleton(type):
-    """Metaclassing this class makes any class a singleton."""
+    """Metaclassing this class makes any class a singleton.
+
+    Examples
+    --------
+
+    Singleton behaviour (Everything executed in the same session):
+
+    >>> class MyClass1(metaclass=Singleton):
+    >>>     def __init__(self, val=None):
+    >>>         self.val = val
+
+    >>> class MyClass2(metaclass=Singleton):
+    >>>     def __init__(self, val=None):
+    >>>         self.val = val
+
+    >>> MyClass1(1).val
+    1
+    >>> MyClass1(2).val
+    1
+    >>> MyClass2(3).val  # Now, instantiate other class.
+    3
+    >>> Myclass1(4).val
+    1
+    >>> MyClass2(5).val
+    3
+    >>> MyClass1().val
+    1
+    >>> MyClass2().val
+    3
+
+    Each of the classes keeps the value it got when it was instantiated.
+    As they are singletons, they are only instantiated once, and
+    subsequent calls that look like a new instance actually are not.
+
+    The different classes metaclassing this singleton don't influence
+    each other.
+
+    Finally, as they are only instantiated once, any subsequent calls
+    don't even have to supply the (mandatory) parameters.
+    """
 
     _instances = {}
 
@@ -19,6 +55,44 @@ class Singleton(type):
 
 
 class VEG_CLib(metaclass=Singleton):
+    """Stores and manages all c functions regarding electrostatics.
+
+    Each (external) function in the library has it's own associated
+    method on this class. The calls to C are ugly and convoluted due
+    to c functions needing so many parameters (either single values
+    or numpy arrays), so these methods make their calls more pythonic.
+    They each require just the relevant classes, and unpack the required
+    attributes themselves.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+
+    Notes
+    -----
+    C functions cannot return more than a single value. Therefore, most
+    will write their output into an array provided as an input. This
+    array must be of a c-friendly datatype, use
+    ``np.ctypeslib.as_ctypes()``
+    for creating these. This version must be saved along with the
+    original, so, for example, you have both ``my_arr`` and
+    ``my_arr_c``, where ``my_arr_c`` is defined as
+    ``np.ctypeslib.as_ctypes(my_arr)``. This results in two views of the
+    same array, meaning that any changes to any values made in
+    ``my_arr`` will also apply to ``my_arr_c``, and vice versa.
+
+    Attributes
+    ----------
+    clib : `ctypes.CDLL`
+        The actual compiled c-code. Must be compiled to be a library,
+        so a .dll (windows), .so (linux) or .dylib (macOS) file.
+    """
+
     def __init__(self, Printer, RunPars):
         try:
             self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
@@ -54,21 +128,34 @@ class VEG_CLib(metaclass=Singleton):
         ]
         self.clib.calcPot_perres_mm.restype = None
 
+    # to be removed - just for testing
     def testadd(self, a, b):
         return self.clib.testadd(int(a), int(b))
 
     def calcPot_perres_mm(self, System, RunPars, oscillator):
-        # This function does not return anything directly. Instead,
-        # output is saved in the input parameter out.
-        # dpr("1")
-        # dpr("tocalc", oscillator.electrostatic_atoms)
-        # dpr("nosc", oscillator.n_estatic_atoms)
-        # dpr("spherepos", oscillator.VEG_refpos)
-        # dpr("locals", oscillator.local_atoms)
-        # dpr("n_locals", oscillator.n_local_atoms)
-        # dpr("r_sphere", RunPars.estatic_range)
-        # dpr("r_smooth", RunPars.estatic_smooth_range)
-        # dpr("out", oscillator.VEGout)
+        """Calculate the potential on each of the requested points.
+
+        This is basically a wrapper for the c function of the same
+        name. As c cannot return arrays, the output is instead written
+        into the provided input array of the name ``VEGout_c`` (in
+        python; in c it is called ``out``), which is an attribute of
+        ``oscillator``. If you want to retrieve these values, read them
+        from ``oscillator.VEGout``.
+
+        Parameters
+        ----------
+        System : :class:`~GMAP.src.tools.SystemReader.System
+            The object that stores everything the program currently knows
+            about the system being treated (names, numbers, types, masses,
+            charges of all atoms, for example)
+        RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+            The 'main' RunPars instance containing all the basic
+            run-defining parameters.
+        oscillator : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+            The specific oscillator for which the potentials are required.
+        """
+
+        # each input has as a comment the name of that variable in c.
         self.clib.calcPot_perres_mm(
             oscillator.electrostatic_atoms_c,  # tocalc
             oscillator.n_estatic_atoms,  # n_osc_ats
@@ -87,4 +174,3 @@ class VEG_CLib(metaclass=Singleton):
             System.boxdims_c,  # boxdims
             oscillator.VEGout_c  # out
         )
-        # dpr("2")

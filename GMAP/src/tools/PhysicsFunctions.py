@@ -9,6 +9,25 @@ from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 def calc_CoM(System, atomlist):
+    """Calculate the centre of mass of a given set of atoms.
+
+    Parameters
+    ----------
+    System : :class:`~GMAP.src.tools.SystemReader.System
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    atomlist : list of int
+        The indices of all the atoms of which the (combined) centre of
+        mass should be calculated.
+
+    Returns
+    -------
+    CoM : `np.ndarray`
+        A numpy array of length 3 containing the position of the
+        centre of mass.
+    """
+
     allpos_box = System.positions[atomlist] @ System.boxvects_inv
     masses = System.masses[atomlist]
 
@@ -23,20 +42,24 @@ def system_CoM(
     boxvects: np.ndarray, res_first_ix: np.ndarray, res_last_ix: np.ndarray,
     nres: int
 ) -> np.ndarray:
-    """Calculates the cross product between two vectors of size 3.
-
-    This is faster than the dedicated np method, as there are no checks for the
-    correctness of the provided vectors. The method is njitted for added speed.
+    """Calculate the centre of mass of each residue in the system.
 
     Parameters
     ----------
-    vect1, vect2 : `np.ndarray`
-        The length-3 vectors of which to take the cross product.
-
-    Returns
-    -------
-    vect3 : `np.ndarray`
-        The cross product of `vect1` and `vect2`.
+    positions : `np.ndarray`
+        The positions of all atoms in the system.
+    masses : `np.ndarray`
+        The masses of all atoms in the system.
+    boxvects_inv : `np.ndarray`
+        The inverse of the boxvects array.
+    boxvects : `np.ndarray`
+        The array storing the vectors defining the MD simulation box.
+    res_first_ix : `np.ndarray`
+        Stores the system index of the first atom in each residue.
+    res_last_ix : `np.ndarray`
+        Stores the system index of the last atom in each residue.
+    nres : int
+        The amount of residues in the system.
     """
 
     CoM_array = np.empty((res_first_ix.shape[0], 3), dtype="float32")
@@ -59,6 +82,13 @@ def system_CoM(
 
 
 def calc_frame(Printer, RunPars, System, dipoles, hamiltonian):
+    """The heart of the per-frame loop. Does the actual calculations.
+
+    Currently, for each oscillator, the potential is calculated (if
+    requested). In the future, frequency, dipole, etc will also be
+    calculated here.
+    Next, in a separate loop, the couplings will be computed.
+    """
 
     VEGlib = GM_CL.VEG_CLib()
 

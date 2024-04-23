@@ -1638,6 +1638,25 @@ class Residue():
 
 
 def manage_maps(Files, Printer, RunPars, mapdict):
+    """Initializes and manages the detected maps.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+        Contains all currently known paths and other file-related properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.Map` pairs
+        Stores all the :class:`~GMAP.src.tools.MapReader.Map` objects for
+        each map supplied. The keys are the Map.name attributes corresponding
+        to the maps stored as values.
+    """
+
     for map_ in mapdict.values():
         map_.initialize(Files, Printer)
 
