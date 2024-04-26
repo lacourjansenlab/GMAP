@@ -265,7 +265,7 @@ class TestCode:
         )
         map_ = mapdict[mapname]
 
-        boxvects = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        boxvects = np.array([[10, 0, 0], [0, 10, 0], [0, 0, 10]])
         Syst = Custom(
             ["boxvects", boxvects],
             ["boxvects_inv", np.linalg.inv(boxvects)]
@@ -283,7 +283,7 @@ class TestCode:
 
         map_.code_add_builds(Printer)
         r_vec, r_pos = map_.code.GM_get_dipole(
-            Files, Printer, map_, Syst, osc
+            Printer, map_, Syst, osc
         )
         r_vec_dir = np.array([-1.5, 1, 0])
         assert (np.round(r_vec, 4) == np.round(r_vec_dir, 4)).all()
@@ -293,7 +293,7 @@ class TestCode:
         ).all()
 
         rotation_matrix = np.round(map_.code.GM_get_rotation_matrix(
-            Files, Printer, map_, Syst, osc
+            Printer, map_, Syst, osc
         ), 4)
 
         xvec = np.array([1.5, 1, 0])
@@ -341,17 +341,21 @@ class TestCode:
 
         map_.code_add_builds(Printer)
         r_vec, r_pos = map_.code.GM_get_dipole(
-            Files, Printer, map_, Syst, osc
+            Printer, map_, Syst, osc
         )
         r_vec_dir = np.array([1.125, 1.25, 0])
         assert (np.round(r_vec, 4) == np.round(r_vec_dir, 4)).all()
 
+        # answer should be (2.5, 2.3333, 0), but because yvec is quite short
+        # (only (4, 3)), the y coordinate doesnt fit (extends more than half
+        # a box), so 1 yvec is subtracted. (2.5, 2.3333, 0) - (4, 3, 0) =
+        # (-2.5, -0.6666, 0)
         assert (
-            np.round(r_pos, 4) == np.round(np.array([1.5, 2.3333333, 0]), 4)
+            np.round(r_pos, 4) == np.round(np.array([-2.5, -0.666666, 0]), 4)
         ).all()
 
         rotation_matrix = np.round(map_.code.GM_get_rotation_matrix(
-            Files, Printer, map_, Syst, osc
+            Printer, map_, Syst, osc
         ), 4)
 
         zvec = np.array([0, 2, 0], dtype=np.float64)
@@ -396,7 +400,7 @@ class TestCode:
 
         map_.code_add_builds(Printer)
         r_vec, r_pos = map_.code.GM_get_dipole(
-            Files, Printer, map_, Syst, osc
+            Printer, map_, Syst, osc
         )
         r_vec_dir = np.array([2, 2, 2])
         assert (np.round(r_vec, 4) == np.round(r_vec_dir, 4)).all()
@@ -406,7 +410,7 @@ class TestCode:
         ).all()
 
         rotation_matrix = np.round(map_.code.GM_get_rotation_matrix(
-            Files, Printer, map_, Syst, osc
+            Printer, map_, Syst, osc
         ), 4)
 
         zvec = np.array([2, 2, 2], dtype=np.float64)

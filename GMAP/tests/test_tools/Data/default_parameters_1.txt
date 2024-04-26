@@ -5,8 +5,10 @@ trajectory_file              ../../../sourcefiles/pdb_1AKI_50frame.xtc
 source_directory                ../../../sourcefiles
 
 log_directory
+VEG_clib_file                   VEG.dll
 log_filename                    log.log
 
+output_estatics_filename        estatics.txt
 output_hamiltonian_filename     hamiltonian
 output_dipole_filename          dipoles
 
@@ -26,6 +28,10 @@ output_data                             ham dip
 
 neutral_charge_threshold                   0.0001
 guess_bonds                                False
+
+estatic_range                               20  # this is in angstrom
+estatic_smooth_range                        5  # this is in angstrom
+
 start_frame                                 0
 number_frames                               999999999
 stop_frame                                  999999999

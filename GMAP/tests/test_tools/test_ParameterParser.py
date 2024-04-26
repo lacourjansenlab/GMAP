@@ -59,7 +59,9 @@ class TestRefPars:
                 "../../../sourcefiles/pdb_1AKI_50frame.xtc"
             )],
             "source_directory": [Path("../../../sourcefiles")],
+            "VEG_clib_file": [Path("VEG.dll")],
             "log_filename": [Path("log.log")],
+            "output_estatics_filename": [Path("estatics.txt")],
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],
             "map_directory": [Path("../../../maps")],
@@ -78,6 +80,8 @@ class TestRefPars:
             "output_data": ["ham", "dip"],
             "neutral_charge_threshold": [0.0001],
             "guess_bonds": [False],
+            "estatic_range": [20.0],
+            "estatic_smooth_range": [5.0],
             "start_frame": [0],
             "number_frames": [999999999],
             "stop_frame": [999999999],
@@ -117,6 +121,7 @@ class TestRefPars:
             "trj": "trajectory_file",
             "sd": "source_directory",
             "dpf": "default_parameter_filename",
+            "oef": "output_estatics_filename",
             "ohf": "output_hamiltonian_filename",
             "odf": "output_dipole_filename",
             "md": "map_directory",
@@ -149,9 +154,12 @@ class TestRefPars:
             "tp9": "path_test_rel22_new_list",
         }
         assert RefPars.organized_filepars == {
-            "source_directory": ["default_parameter_filename"],
+            "source_directory": [
+                "default_parameter_filename",
+                "VEG_clib_file"],
             "log_directory": ["log_filename"],
             "output_directory": [
+                "output_estatics_filename",
                 "output_hamiltonian_filename", "output_dipole_filename"],
             "path_test_dir1": ["path_test_rel11"],
             "path_test_dir2": [
@@ -170,9 +178,11 @@ class TestRefPars:
             "trajectory_file",
             "source_directory",
             "default_parameter_filename",
+            "VEG_clib_file",
             "log_directory",
             "log_filename",
             "output_directory",
+            "output_estatics_filename",
             "output_hamiltonian_filename",
             "output_dipole_filename",
             "map_directory",
@@ -189,6 +199,7 @@ class TestRefPars:
         ]
         assert RefPars.filepars_create == [
             "log_filename",
+            "output_estatics_filename",
             "output_hamiltonian_filename",
             "output_dipole_filename",
             "path_test_free_new",
@@ -211,6 +222,8 @@ class TestRefPars:
         ]
         assert RefPars.floatpars == [
             "neutral_charge_threshold",
+            "estatic_range",
+            "estatic_smooth_range",
             "float_test_free",
             "float_test_choice",
             "float_test_free_list",
@@ -408,7 +421,9 @@ class TestRawPars:
             "topology_file": [sd / "pdb_1AKI.tpr"],
             "trajectory_file": [sd / "pdb_1AKI_50frame.xtc"],
             "source_directory": [sd],
+            "VEG_clib_file": [Path("VEG.dll")],
             "log_filename": [Path("log.log")],
+            "output_estatics_filename": [Path("estatics.txt")],
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],
             "map_directory": [Path("../../../maps")],
@@ -425,6 +440,8 @@ class TestRawPars:
             "output_data": ["ham", "dip"],
             "neutral_charge_threshold": [0.0001],
             "guess_bonds": [False],
+            "estatic_range": [20.0],
+            "estatic_smooth_range": [5.0],
             "start_frame": [0],
             "number_frames": [999999999],
             "stop_frame": [999999999],
@@ -1705,6 +1722,45 @@ class TestMapPars:
         return Files, Printer, RefPars, DefPars, InPars, CmdPars, mapdict
 
 
+def test_get_parameters():
+    Files = GM_FH.FileLocations()
+    Printer = GM_PT.Printer(Files)
+
+    in_parfile = Path("../test_inpar.txt").resolve()
+    argslist = []
+
+    (
+        RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+    ) = GM_PP.get_parameters(
+        Files, Printer, in_parfile, argslist
+    )
+
+    # A huuuuge amount of tests would be needed here, but all of GM_PP
+    # has already been tested separately.
+    assert InPars.fname.name == "test_inpar.txt"
+    assert DefPars == RefPars
+    assert len(mapdict) == 4
+    assert CmdPars.choices == {}
+
+    (
+        RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+    ) = GM_PP.get_parameters(
+        Files, Printer, None, argslist
+    )
+
+    assert InPars.choices == {}
+
+    argslist = ["-dpf", "../test_defpar.txt"]
+
+    (
+        RunPars, mapdict, CmdPars, InPars, DefPars, RefPars
+    ) = GM_PP.get_parameters(
+        Files, Printer, in_parfile, argslist
+    )
+
+    assert DefPars.fname.name == "test_defpar.txt"
+
+
 def test_parse_commandline():
     Files = GM_FH.FileLocations()
     Printer = GM_PT.Printer(Files)
@@ -1808,6 +1864,41 @@ def test_parse_influencerfile():
 def test_parse_influencer_par():
     assert GM_PP.parse_influencer_par("A B C") == "A | B | C"
     assert GM_PP.parse_influencer_par("A & B C") == "A & B C"
+
+
+def test_SU_FP_1(capsys):
+    Files = GM_FH.FileLocations()
+    Printer = GM_PT.Printer(Files)
+
+    in_parfile = Path("../test_inpar.txt").resolve()
+
+    # this map no longer exists
+    # argslist = ["-dpf", "maps/Singles/testmap1/parameters.ref"]
+    argslist = ["-dpf", "tests/test_tools/Data/reference_parameters_2.ref"]
+
+    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        _ = GM_PP.get_parameters(
+            Files, Printer, in_parfile, argslist
+        )
+    assert pytest_wrapped_sysexit.type is SystemExit
+    captured = capsys.readouterr()
+    assert captured.out.endswith("SU_FP_1\n")
+
+
+def test_SU_GEM_1(capsys):
+    Files = GM_FH.FileLocations()
+    Printer = GM_PT.Printer(Files)
+
+    in_parfile = Path("../test_inpar.txt").resolve()
+    argslist = ["-dpf", "__main__.py"]
+
+    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        _ = GM_PP.get_parameters(
+            Files, Printer, in_parfile, argslist
+        )
+    assert pytest_wrapped_sysexit.type is SystemExit
+    captured = capsys.readouterr()
+    assert captured.out.endswith("SU_GEM_1\n")
 
 
 def test_SU_PP_1(capsys):
