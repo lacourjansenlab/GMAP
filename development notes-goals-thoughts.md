@@ -333,7 +333,7 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
-  - Add instructions on VEG_reference in mapcore to documentation.
+  - Done!
 - (KvA) TODO:
   - have c code for potential take the influencers into account (possibly not within c code, but create mirror of system? new position/charges/etc array containing only valid influencers?)
   - Links to relevant packages etc in explanation in main documentation page.

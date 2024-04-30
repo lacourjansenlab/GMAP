@@ -5,8 +5,6 @@ import numpy as np
 # local imports
 import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.PhysicsFunctions as GM_PF
-from GMAP.src.tools.PrintTools import devprint as dpr
-dpr("", end="")  # to disable error of dpr unused
 
 
 class NewModule:
@@ -224,12 +222,6 @@ def get_get_dipole(Printer, map_):
     codestring += "    r_pos = (r_pos - np.floor(r_pos + 0.5))\n"
     codestring += "    return r_vec @ Syst.boxvects, r_pos @ Syst.boxvects\n"
 
-    # dpr(envelop_int("1-0", "pos(", ")"))
-    # dpr(envelop_int("np.cross(1, 0)", "pos(", ")"))
-    # dpr(envelop_int("(1+0)/2.0", "pos(", ")"))
-    # dpr(map_.rawcore["r_vec"])
-    # dpr(codestring)
-
     try:
         # exec(codestring, globals(), locals())
         exec(codestring)
@@ -308,8 +300,6 @@ def get_get_rotation_matrix(Printer, map_):
 
     # now, combine into array to return
     codestring += "    return np.array([x_uvec, y_uvec, z_uvec])\n"
-
-    # dpr(codestring)
 
     try:
         # exec(codestring, globals(), locals())

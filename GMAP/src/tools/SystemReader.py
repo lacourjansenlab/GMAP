@@ -9,8 +9,6 @@ import numpy as np
 import GMAP.src.tools.ParameterParser as GM_PP
 import GMAP.src.tools.PhysicsFunctions as GM_PF
 import GMAP.src.tools.PrintTools as GM_PT
-from GMAP.src.tools.PrintTools import devprint as dpr
-dpr("", end="")  # to disable error of dpr unused
 
 
 class System:
@@ -188,14 +186,6 @@ class System:
 
         self.natoms = np.int32(self.resnums.shape[0])
 
-        # dpr(set(self.masses))
-        # for name, mass, type1, type2 in zip(
-        #     self.atnames, self.masses, self.types,
-        #     self.universe.atoms.elements
-        # ):
-        #     if int(mass) == 14:
-        #         dpr(name, mass, type1, type2)
-
         # make sure resums always follow AIM-convention (regardless of MD input
         # used)
         self.abs_resnums(Printer)
@@ -305,9 +295,6 @@ class System:
                     Printer, group_def, groupdict, map_.corepath
                 )
 
-        for key, val in groupdict.items():
-            dpr(key, val)
-
         Printer.print(1, f"\n{GM_PT.make_header('Influencers', '-')}\n\n")
 
         if isinstance(RunPars.influencers, list):
@@ -415,7 +402,6 @@ class System:
         # - For the bonds, see which residues they actually connect.
 
         # Find the oscillators as defined in the maps
-        dpr("start looking")
         allgroups = [
             self.find_oscillators_perstruct(struct, map_)
             for map_ in RunPars.requested_mapdict.values()
@@ -426,8 +412,6 @@ class System:
         # at them / edit.
         checked_oscillators = []
         for oscillators in allgroups:
-            dpr(len(oscillators))
-            dpr("")
             map_ = oscillators[0].Map
             checked = map_.code.GM_adjust_oscillators(
                 Files, Printer, map_, self, oscillators
@@ -435,36 +419,10 @@ class System:
             if checked:
                 checked_oscillators.append(checked)
 
-        # PRINTS!!!!
-
-        # PRINT FOUND OSCILLATORS
-        # for oscillators in checked_oscillators:
-        #     if not oscillators:
-        #         continue
-        #     dpr(oscillators[0].Map.name, len(oscillators))
-        #     for oscillator in oscillators:
-        #         dpr(
-        #             self.resnames[oscillator.used_atoms[0]],
-        #             [(ix, self.atnames[ix]) for ix in oscillator.used_atoms]
-        #         )
-
-        # PRINT ATOMS OF CERTAIN GROUP FOR SCANNING PURPOSES
-        # for ix, name in enumerate(self.residues.resnames):
-        #     if name == "CYS":
-        #         for atix in range(
-        #             self.residues.first_ix[ix],
-        #             self.residues.last_ix[ix] + 1
-        #         ):
-        #             dpr(atix, self.atnames[atix])
-        #             if self.atnames[atix] == "SG":
-        #                 dpr(self.universe.atoms[atix].bonded_atoms)
-
         self.oscillators = [
             oscillator for oscillators in checked_oscillators
             for oscillator in oscillators
         ]
-        for osc in self.oscillators:
-            dpr(osc.used_atoms)
         self.nosc = len(self.oscillators)
 
     def find_oscillators_perstruct(self, struct, map_):
@@ -989,7 +947,6 @@ class Oscillator:
         self.local_atoms_c = np.ctypeslib.as_ctypes(np.array(
             self.local_atoms, dtype="int32"
         ))
-        # dpr(dir(self.Map))
         self.n_estatic_atoms = np.int32(len(self.electrostatic_atoms))
         self.n_local_atoms = np.int32(len(self.local_atoms))
         estat_choice_dir = {None: 0, "V": 1, "E": 4, "G": 10}

@@ -7,8 +7,6 @@ import sys
 import GMAP.src.tools.DefaultMapFunctions as GM_DMF
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.ParameterParser as GM_PP
-from GMAP.src.tools.PrintTools import devprint as dpr
-dpr("", end="")  # to disable error of dpr unused
 
 
 class Map():
@@ -831,6 +829,11 @@ class Core():
             )
             self.success = False
             return
+        n_bonds = sum([len(bonds) for bonds in self.bonds])
+        if n_bonds:
+            self.requires_bonds = True
+        else:
+            self.requires_bonds = False
 
         if "functional_group_bonds" in rawcore:
             self.parse_fg_bonds(
@@ -846,10 +849,6 @@ class Core():
         if "requires_bonds" in rawcore:
             if rawcore["requires_bonds"][0].lower() in ("t", "true"):
                 self.requires_bonds = True
-            else:
-                self.requires_bonds = False
-        else:
-            self.requires_bonds = False
 
         self.functional_group = [
             Structure(struct, bonds) for struct, bonds in zip(
@@ -1551,7 +1550,6 @@ class Structure():
     """
 
     def __init__(self, struct, bonds):
-        # dpr(struct)
         self.residues = [Residue(res) for res in struct]
         self.bonds = bonds
 
@@ -1593,15 +1591,12 @@ class Structure():
         # now, see if the bonds couple the multiple residues.
 
         resnums = [set([ix]) for ix in range(len(self.residues))]
-        # dpr(resnums)
         for bond in self.bonds:
             res1 = self.indices[bond[0]][0]
             res2 = self.indices[bond[1]][0]
             newset = resnums[res1] | resnums[res2]
             resnums[res1] = newset
             resnums[res2] = newset
-            # dpr(resnums)
-        # dpr(len(resnums), len(resnums[0]))
         if len(resnums) != len(resnums[0]):
             self.success = False
         else:
@@ -1660,14 +1655,7 @@ def manage_maps(Files, Printer, RunPars, mapdict):
     for map_ in mapdict.values():
         map_.initialize(Files, Printer)
 
-    for map_ in mapdict:
-        dpr(map_)
     mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
-
-    # dpr("successful:")
-    # for map_ in mapdict.values():
-    #     dpr(map_.name)
-    #     dpr(map_.Core.functional_group)
 
     for map_choice in RunPars.maps_to_use:
         if map_choice not in mapdict:

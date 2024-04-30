@@ -1,7 +1,19 @@
 """
-tests still missing, and why:
+Tests all the functions/classes/methods in the file:
+src/tools/PhysicsFunctions.py.
 
-- MI_MR_5 - unsure how to trigger.
+Missing tests:
+
+(@ apr 29th '24):
+357-365, 740, 1117 (6 missed statements)
+
+(CUHTAT - currently unknown how to access this )
+- Map.append_core() - there was some issue with the corefile (CUHTAT) (357-365)
+  Any stuff wrong with the corefile will have its own warning call (and not
+  use raise) - MI_MC_5
+- Map.parse_type was not successful, so we stop map reading  (740)
+- The structure of the map has no bonds (but the parameter giving bonds has
+  been used) (1117)
 """
 
 
@@ -9,7 +21,7 @@ tests still missing, and why:
 from pathlib import Path
 
 # 3rd party imports
-# import pytest
+import pytest
 import numpy as np
 
 # local imports
@@ -1040,6 +1052,46 @@ class TestCore:
             ))
         assert CoreBase.type is None
 
+    def test_parse_local_atoms(self):
+        cmdline = [
+            "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        ]
+        inpardict = {}
+        mapname = "test_Core"
+
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+        ) = basic_setup(
+            cmdline, inpardict, finish_before="Core", mapname=mapname
+        )
+        map_ = mapdict[mapname]
+        CoreBase = basic_setup_core(
+            Printer, map_, finish_before="local_atoms")
+        setattr(CoreBase, "local_atoms", CoreBase.parse_local_atoms(
+            Printer, map_.rawcore, map_.directory
+        ))
+        assert CoreBase.local_atoms == [2, 3]
+
+    def test_local_atoms_None(self):
+        cmdline = [
+            "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        ]
+        inpardict = {}
+        mapname = "test_local_None"
+
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+        ) = basic_setup(
+            cmdline, inpardict, finish_before="Core", mapname=mapname
+        )
+        map_ = mapdict[mapname]
+        CoreBase = basic_setup_core(
+            Printer, map_, finish_before="local_atoms")
+        setattr(CoreBase, "local_atoms", CoreBase.parse_local_atoms(
+            Printer, map_.rawcore, map_.directory
+        ))
+        assert CoreBase.local_atoms == []
+
     def test_MI_MC_1(self, capfd):
         self.basis_test_MI_MC("MI_MC_1", capfd, finish_before="used_atoms")
 
@@ -1071,13 +1123,19 @@ class TestCore:
         self.basis_test_MI_MC(
             "MI_MC_6", capfd, "test_MI_MC_6_3", "type")
         self.basis_test_MI_MC(
-            "MI_MC_6", capfd, "test_MI_MC_6_4")
+            "MI_MC_6", capfd, "test_MI_MC_6_4", "local_atoms")
+        self.basis_test_MI_MC(
+            "MI_MC_6", capfd, "test_MI_MC_6_6", "VEG_reference")
+        self.basis_test_MI_MC(
+            "MI_MC_6", capfd, "test_MI_MC_6_7", "end")
 
     def test_MI_MC_7(self, capfd):
         self.basis_test_MI_MC(
             "MI_MC_7", capfd, "test_MI_MC_7_1", "estatic_atoms")
         self.basis_test_MI_MC(
             "MI_MC_7", capfd, "test_MI_MC_7_2", "estatic_choice")
+        self.basis_test_MI_MC(
+            "MI_MC_7", capfd, "test_MI_MC_7_3", "VEG_reference")
 
     def test_MI_MC_8(self, capfd):
         self.basis_test_MI_MC(
@@ -1087,7 +1145,13 @@ class TestCore:
         self.basis_test_MI_MC(
             "MI_MC_8", capfd, "test_MI_MC_8_3", "type")
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_4")
+            "MI_MC_8", capfd, "test_MI_MC_8_4", "local_atoms")
+        self.basis_test_MI_MC(
+            "MI_MC_8", capfd, "test_MI_MC_8_5", "VEG_reference")
+        self.basis_test_MI_MC(
+            "MI_MC_8", capfd, "test_MI_MC_8_6", "end")
+        self.basis_test_MI_MC(
+            "MI_MC_8", capfd, "test_MI_MC_8_7", "end")
 
     def test_MI_MC_9(self, capfd):
         self.basis_test_MI_MC("MI_MC_9", capfd, finish_before="used_atoms")
@@ -1126,6 +1190,61 @@ class Custom():
     def __init__(self, *args):
         for arg in args:
             setattr(self, arg[0], arg[1])
+
+
+def test_manage_maps():
+    # basically the same as GM_PP.get_parameters, but can take list and dict
+    # instead of commandline and inparfile
+    maplist = ["AmideSC", "AmideBB"]
+    inpars = {
+        "maps_to_use": maplist
+    }
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+    ) = basic_setup([], inpars, finish_before="extract_code")
+
+    GM_MR.manage_maps(Files, Printer, RunPars, mapdict)
+
+    assert all(
+        key in RunPars.requested_mapdict.keys()
+        for key in maplist
+    )
+    assert len(RunPars.requested_mapdict.keys()) == len(maplist)
+
+    # ---
+
+    maplist = ["AmideSC"]
+    inpars = {
+        "maps_to_use": maplist
+    }
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+    ) = basic_setup([], inpars, finish_before="extract_code")
+
+    GM_MR.manage_maps(Files, Printer, RunPars, mapdict)
+
+    assert all(
+        key in RunPars.requested_mapdict.keys()
+        for key in maplist
+    )
+    assert len(RunPars.requested_mapdict.keys()) == len(maplist)
+
+
+def test_MI_GEM_1(capsys):
+    maplist = ["AmideSC", "doesntexist"]
+    inpars = {
+        "maps_to_use": maplist
+    }
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+    ) = basic_setup([], inpars, finish_before="extract_code")
+
+    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        GM_MR.manage_maps(Files, Printer, RunPars, mapdict)
+
+    assert pytest_wrapped_sysexit.type is SystemExit
+    captured = capsys.readouterr()
+    assert captured.out.endswith("MI_GEM_1\n")
 
 
 def basic_setup(
@@ -1266,4 +1385,20 @@ def basic_setup_core(Printer, map_, finish_before=None):
     setattr(CoreBase, "type", CoreBase.parse_type(
         Printer, map_.rawcore, map_.directory
     ))
-    return CoreBase
+
+    if finish_before == "local_atoms":
+        return CoreBase
+
+    setattr(CoreBase, "local_atoms", CoreBase.parse_local_atoms(
+        Printer, map_.rawcore, map_.directory
+    ))
+
+    if finish_before == "VEG_reference":
+        return CoreBase
+
+    CoreBase.check_VEG_reference(
+        Printer, map_.rawcore, map_.directory
+    )
+
+    if finish_before == "end":  # so we can ctrl+F later
+        return CoreBase

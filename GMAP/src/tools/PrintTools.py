@@ -86,15 +86,6 @@ class Printer:
         if verbose_level <= self.verbose_logfile:
             print(prettifier(str(toprint)), file=open(self.logfile, "a"))
 
-    def quit_early(self):
-        """Called when the program is quitted early
-
-        Prints the backlog if there is any.
-        """
-
-        if self.backlog:
-            self.print_backlog()
-
     def print_backlog(self):
         """Prints the backlog so the program can stop.
 
@@ -315,7 +306,8 @@ def intlist_to_rangelist(intlist, n_int, make_shadow=True):
     intlist : list of int
         The list of integers to be packed.
     n_int : int
-        The amount of integers that can at most be there.
+        The amount of integers that can at most be there. (The provided value
+        itself will never appear!)
     make_shadow : bool, default=True
         Whether the opposite should also be built - a list of all indices
         that weren't in the intlist
@@ -368,7 +360,7 @@ def intlist_to_rangelist(intlist, n_int, make_shadow=True):
                 else:
                     end = num
                 if prevnum + 1 != end:
-                    shadow += rangestrlist(prevnum + 1, end)
+                    shadow += rangestrlist(prevnum + 1, end - 1)
 
             # the last number was 'alone'
             result += rangestrlist(range_start, prevnum)

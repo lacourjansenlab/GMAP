@@ -94,19 +94,15 @@ class VEG_CLib(metaclass=Singleton):
     """
 
     def __init__(self, Printer, RunPars):
+        print(str(RunPars.VEG_clib_file))
         try:
             self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
         except Exception as ex:
             Printer.warning(
                 f"\nThe file {RunPars.VEG_clib_file} was requested to be used "
-                "as the VEG c-library. However, the file is invalid. "
+                "as the VEG c-library. However, the file is invalid. ",
                 "CL_VG_1", True, exception=ex
             )
-
-        self.clib.testadd.argtypes = [
-            ct.c_int, ct.c_int
-        ]
-        self.clib.testadd.restype = ct.c_int
 
         self.clib.calcPot_perres_mm.argtypes = [
             ct.POINTER(ct.c_int),  # tocalc
@@ -127,10 +123,6 @@ class VEG_CLib(metaclass=Singleton):
             ct.POINTER(ct.c_float)  # out
         ]
         self.clib.calcPot_perres_mm.restype = None
-
-    # to be removed - just for testing
-    def testadd(self, a, b):
-        return self.clib.testadd(int(a), int(b))
 
     def calcPot_perres_mm(self, System, RunPars, oscillator):
         """Calculate the potential on each of the requested points.

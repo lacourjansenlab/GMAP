@@ -1,17 +1,17 @@
 """
 tests missing:
 
-- non-rightangled system
+(@ apr 26th '24):
+148, 159-164, 250, 581, 1050, 1093  (9 missed statements)
+
+- non-rightangled system    (148, 1093)
 - MDA system without bond information (both testing it with, and without
-  needing this information)
+  needing this information)   (159-164)
 - MDA system which does not contain ascending atom indices starting elsewhere
-  than 0 (Do these exist?)
+  than 0 (Do these exist?)   (250)
 - An oscillator (and MD file to support it) that has the same atom name
-  multiple times in a single residue
-- An oscillator with more complicated structure (and the first bond not being
-  in the first residue)
-- Oscillator.frame_update()
-- MDA.Universe FileNotFoundError (can we even trigger this one?)
+  multiple times in a single residue   (581)
+- MDA.Universe FileNotFoundError (can we even trigger this one?)   (1050)
 
 """
 
@@ -206,6 +206,36 @@ class TestSystem:
         System = GM_SR.System(Files, Printer, RunPars)
 
         assert len(System.oscillators) == 17
+
+    def test_multiple_res_osc(self):
+        # This is a map of a triple ALA subchain - only 1 present in 1AKI
+        mapname = "test_multiple_res_osc"
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            CmdPars, mapdict
+        ) = parameter_getter(mapname)
+
+        System = GM_SR.System(Files, Printer, RunPars)
+        System.update_properties(Printer)
+
+        assert len(System.oscillators) == 1
+
+        onlyosc = System.oscillators[0]
+        onlyosc.frame_update(Printer, System)
+        # triple ALA lies on resnums 8-10, atnums 135-164, select 2nd AmideBB
+        assert onlyosc.used_atoms == [153, 154, 147, 155, 156, 157]
+
+        # position C = (46.96, 28.12, 37.08)
+        # position N = (46.26, 28.74, 36.11)
+        # average    = (46.61, 28.43, 36.595)
+
+        # box dims   = (69.5689, 69.5689, 69.5689)
+        # average in (-0.5, 0.5) boxdims:  (-22.9589, 28.4300, -32.9739)
+        tocheck = np.round(onlyosc.get_VEG_ref(Printer, System), 4)
+        answer = np.round(
+            np.array([-22.9589, 28.43, -32.9739], dtype="float32"), 4)
+
+        assert np.all(tocheck == answer)
 
     def test_SU_NP_5(self, capsys):
         mapname = "AmideSC"

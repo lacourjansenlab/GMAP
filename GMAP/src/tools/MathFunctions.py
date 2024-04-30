@@ -2,9 +2,6 @@
 from numba import njit
 import numpy as np
 
-from GMAP.src.tools.PrintTools import devprint as dpr
-dpr("", end="")  # to disable error of dpr unused
-
 
 def PBC_triclinic(vect, boxvects, boxvects_inv):
     """Translates the vector to within the box centred around the origin
@@ -37,7 +34,6 @@ def PBC_triclinic(vect, boxvects, boxvects_inv):
         The vector that has been corrected for PBC
     """
 
-    # dpr("triclin")
     unit_vec = vect @ boxvects_inv
     return (unit_vec - np.floor(unit_vec + 0.5)) @ boxvects
 

@@ -38,7 +38,6 @@ import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
 import GMAP.src.tools.PhysicsFunctions as GM_PF
 import GMAP.src.tools.PrintTools as GM_PT
-from GMAP.src.tools.PrintTools import devprint as dpr
 import GMAP.src.tools.SystemReader as GM_SR
 
 

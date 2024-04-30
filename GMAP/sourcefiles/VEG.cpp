@@ -9,7 +9,6 @@ of points.
 */
 
 extern "C" {
-    __declspec(dllexport) int testadd(int a, int b);
     __declspec(dllexport) void calcPot_perres_mm(
         int *tocalc, int n_osc_ats, float *spherepos, float *positions, float *charges, float *COMs, int *res_first_ix, int *res_last_ix, int n_res, int *local_atoms, int n_locals, float r_sphere, float r_smooth, float *halfbox, float *boxdims, float *out
     );
@@ -17,11 +16,6 @@ extern "C" {
 
 
 extern "C" {
-    // to be removed
-    int testadd(int a, int b) {
-        return (a + b);
-    }
-
     void PBC_diff_cubic(
         float *vect1, float *vect2, float *halfbox, float *boxdims,
         float *vectout
@@ -155,8 +149,7 @@ extern "C" {
 
         float dist = sqrt(dist2);
         if (dist > puredist) {
-            return charges[sysix] * (
-                1 - ((dist - puredist) / r_smooth));
+            return (charges[sysix] * (1 - ((dist - puredist) / r_smooth)));
         } else {
             return charges[sysix];
         }
@@ -182,7 +175,6 @@ extern "C" {
         r_smooth : float
             Unused, present for universal signature
         */
-
         return charges[sysix];
     }
 
@@ -279,7 +271,7 @@ extern "C" {
         using smoothfunc = float(*)(float, float, float *, int, float);
         smoothfunc get_weighted_charge = getweight_linear_nosmooth;
         if (r_smooth > 0) {
-            smoothfunc get_weighted_charge = getweight_linear_smoothing;
+            get_weighted_charge = getweight_linear_smoothing;
         }
 
         // build refpos array (positions of osc ats)
@@ -365,11 +357,11 @@ extern "C" {
             }
         }  // per-residue loop
 
-        // correction for if the total charge is not 0 within the sphere.
-        for (oscix = 0; oscix < n_osc_ats; oscix++) {
-            // placing the remaining charge on the edge of the sphere.
-            out[oscix] -= total_charge[oscix] / maxdist;
-        }
+        // // correction for if the total charge is not 0 within the sphere.
+        // for (oscix = 0; oscix < n_osc_ats; oscix++) {
+        //     // placing the remaining charge on the edge of the sphere.
+        //     out[oscix] -= total_charge[oscix] / maxdist;
+        // }
 
         free(refpos), free(total_charge);  // free(diff)
     }

@@ -8,8 +8,6 @@ import numpy as np
 # local imports
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.MapReader as GM_MR
-from GMAP.src.tools.PrintTools import devprint as dpr
-dpr("", end="")  # to disable error of dpr unused
 
 
 class RefPars:
@@ -1828,6 +1826,7 @@ class RunPars:
                 setattr(self, parameter, choice)
             break
 
+    # Called by GEM.trj_loop()
     def manage_dtypes(self):
         """Convert any values that might need it to the correct datatype.
 
@@ -2424,10 +2423,7 @@ def parse_influencerfile_line(Printer, line, groupdict, fname):
     specialchars = "-&|^()"
     allowed_chars = " :" + namechars + specialchars
 
-    # dpr(line)
-    # dpr(allowed_chars)
     problem_chars = [char for char in line if char not in allowed_chars]
-    # dpr(problem_chars)
 
     if problem_chars:
         Printer.warning(
@@ -2467,8 +2463,6 @@ def parse_influencerfile_line(Printer, line, groupdict, fname):
                 fromdict = False
             else:
                 final_choice += "set(['" + curname + "'])"
-
-    # dpr(final_choice)
 
     try:
         exec(final_choice)

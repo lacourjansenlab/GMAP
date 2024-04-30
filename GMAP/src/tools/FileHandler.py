@@ -11,7 +11,6 @@ import numpy as np
 
 # local imports
 import GMAP
-from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class FileLocations:
@@ -278,10 +277,6 @@ def get_bare_file(
             dicts.append(dict_)
             flocs.append(floc.parent)
 
-    if file_parname == "path_test_dir2":
-        dpr([dict_.get("path_test_dir2", None) for dict_ in dicts], files_hc)
-        dpr([flocs], floc_hc)
-
     for dict_, floc in zip(dicts, flocs):
         if file_parname in dict_:
             names = [floc / name for name in dict_[file_parname]]
@@ -289,15 +284,11 @@ def get_bare_file(
     else:
         names = [floc_hc / name for name in files_hc]
 
-    if file_parname == "path_test_dir2":
-        dpr(names)
-        dpr()
-
     return names
 
 
 def get_def_parfile(
-    Files, Printer, cmd_pardict, in_parfile=None, in_pardict={}
+    Files, Printer, cmd_pardict, in_parfile=None, in_pardict=None
 ):
     """
     Given the parameter information on the command line, a new Files instance,
@@ -323,6 +314,9 @@ def get_def_parfile(
         The parameters supplied in the input parameter file.
     """
 
+    if in_pardict is None:
+        in_pardict = {}
+
     name, file_is_hc = get_file(
         Files, "source_directory", "default_parameter_filename",
         Files.sourcedir_hc, [Files.refparfilename_hc],
@@ -340,7 +334,7 @@ def get_def_parfile(
         )
 
     # We need a file to check if the default file is complete (AIM did this
-    # using )
+    # using hard-coded parameters)
     if file_is_hc:
         check_file_found = file_found
     else:

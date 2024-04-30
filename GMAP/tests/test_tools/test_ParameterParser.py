@@ -3,16 +3,23 @@ Tests all the functions/classes/methods in the file:
 src/tools/ParameterParser.py.
 
 Missing tests:
-    SU_FP_7 (currently unknown how to access this)
-    SU_FP_8
-    SU_WP_16
-    SU_NP_4-6
+
+(@ apr 29th '24):
+369-370, 429, 1080, 1543-1544, 1810 (7 missed statements)
+
+(CUHTAT - currently unknown how to access this )
+- SU_FP_7 (CUHTAT)   (369-370)
+- RefPars parse choice - unknown dtype (CUHTAT)  (429)
+- RawPars verify choice - unknown dtype (CUHTAT)  (1080)
+- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1543-1544)
+- RunPars framenums - empty source (CUHTAT)   (1810)
 """
 
 # standard library imports
 from pathlib import Path
 
 # 3rd party imports
+import numpy as np
 import pytest
 
 # local imports
@@ -577,7 +584,7 @@ class TestRawPars:
         cmdline = ["--unknown_map.does_not_exist", "42"]
         self.systest_cmdline(cmdline, "SU_WP_2", capsys)
 
-        cmdline = ["-testmap1.noudtp", "22"]
+        cmdline = ["-AmideSC.noudtp", "22"]
         self.systest_cmdline(cmdline, "SU_WP_2", capsys)
 
     def test_SU_WP_3(self, capsys):
@@ -678,6 +685,26 @@ class TestRawPars:
         }
         self.systest_pardict(pardict, "SU_WP_16", capsys, isdef=False)
 
+    def test_SU_WP_17(self, capsys):
+        pardict = {
+            "start_frame": [0],
+            "number_frames": [5],
+            "stop_frame": [10]
+        }
+        self.systest_pardict(pardict, "SU_WP_17", capsys, isdef=False)
+
+        pardict = {
+            "number_frames": [10],
+            "stop_frame": [5]
+        }
+        self.systest_pardict(pardict, "SU_WP_17", capsys, isdef=False)
+
+        pardict = {
+            "start_frame": [10],
+            "stop_frame": [5]
+        }
+        self.systest_pardict(pardict, "SU_WP_17", capsys, isdef=False)
+
     @staticmethod
     def setup_test_SU_WP_cmd(cmdline):
         Files, Printer, RefPars = TestRawPars.setup_test_SU_WP_base()
@@ -751,6 +778,7 @@ class TestRunPars:
             "-notb3",
             "-tp9", "tast_outfile_2_2_4.txt", "tast_outfile_2_2_0.txt\\;",
             "--log_directory", "tests/test_tools/Data",
+            "--output_directory", "tests/test_tools/Data",
             "--path_test_nodef", "tests/test_tools/test_MathFunctions.py"
         ]
 
@@ -763,20 +791,49 @@ class TestRunPars:
         RunPars = GM_PP.RunPars(
             Files, Printer, CmdPars, InPars, DefPars, RefPars, True
         )
+        RunPars.manage_dtypes()
+        print(RefPars.choices["output_format"])
 
         assert RunPars.is_main is True
 
         # now, assert all choices...
+        assert RunPars.topology_file == Path(
+            curpath / "../../../sourcefiles/pdb_1AKI.tpr").resolve()
+        assert RunPars.trajectory_file == Path(
+            curpath / "../../../sourcefiles/pdb_1AKI_50frame.xtc").resolve()
         assert RunPars.source_directory == Path(
             curpath / "../../../sourcefiles").resolve()
+        assert RunPars.VEG_clib_file == Path(
+            curpath / "../../../sourcefiles/VEG.dll").resolve()
         assert RunPars.log_directory == Path(curpath / "../Data").resolve()
         assert RunPars.log_filename == Path(
             curpath / "../Data/log.log").resolve()
+        assert RunPars.output_directory == Path(curpath / "../Data").resolve()
+        assert RunPars.output_estatics_filename == Path(
+            curpath / "../Data/estatics.txt").resolve()
+        assert RunPars.output_hamiltonian_filename == Path(
+            curpath / "../Data/hamiltonian").resolve()
+        assert RunPars.output_dipole_filename == Path(
+            curpath / "../Data/dipoles").resolve()
         assert RunPars.map_directory == [Path(
             curpath / "../../../maps").resolve()]
+        assert RunPars.maps_to_use == ["AmideSC"]
+        assert RunPars.influencers == [":All"]
+
         assert RunPars.verbose == 4
         assert RunPars.verbose_logfile == 1
         assert RunPars.prevent_overwrite is False
+        assert RunPars.output_format == ["bin", "txt"]
+        assert RunPars.output_data == ["ham", "dip"]
+
+        assert RunPars.neutral_charge_threshold == 0.0001
+        assert RunPars.guess_bonds is False
+        assert RunPars.estatic_range == np.float32(20)
+        assert RunPars.estatic_smooth_range == np.float32(5)
+
+        assert RunPars.start_frame == 0
+        assert RunPars.number_frames == 999999999
+        assert RunPars.stop_frame == 999999999
 
         assert RunPars.str_test_free == "freechoice"
         assert RunPars.str_test_choice == "not_this"
