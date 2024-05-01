@@ -4,8 +4,21 @@ the Hamiltonians stored in the selected file.
 
 The functions in this module are not tested with pytest because this
 module is not supposed to interact with the rest of GMAP, nor be
-modified. If this changes in the future this module should be subject to\
+modified. If this changes in the future this module should be subject to
 testing.
+
+This module can be called with:
+
+python HamVis.py fname frames average cut outname
+	fname is the name of the file you want to turn into a figure.
+	frames are the frames you want to investigate, seperated by ','.
+	average should be True or False depending on wether to average
+	the frames.
+	cut is the area you want to plot given as 'x0,x1,y0,y1',
+	or 'False' if you dont want to exclude anything.'
+	outname is the name the output files should have.
+	For examples please see the manual.
+
 """
 
 # standard libary imports
@@ -28,6 +41,10 @@ class HamVisException(Exception):
 def get_data(fname):
 	r"""Gets the data from fname and returns it as a list of lists.
 
+	The data from the file must be in a .txt format and formatted as
+	specified in the documentation. .txt files containing Hamiltonians
+	of frames created by GEM should work.
+
 	Parameters
 	----------
 	fname : str
@@ -40,17 +57,16 @@ def get_data(fname):
 		represents either a frequency or a coupling, for a more detailed
 		overview please read the manual.
 	size : int
-		The size that the hamiltonian will have. As it is a size * size matrix.
+		The size that the hamiltonian will have. As it is a size * size
+		matrix.
 	"""
 	try:
 		with open(fname) as fhand:
-			data = fhand.readlines()
-		data = [frame.split() for frame in data][:25]
+			data = [frame.split() for frame in fhand.readlines()]
 		data = [[float(number) for number in frame][1:] for frame in data]
-
 		# len(data[0]) is a triangular number, size is the integer used
 		# to construct that triangular number.
-		size = int(np.sqrt(2 * len(data[0]) + 0.25) + 0.5) - 1
+		size = round(np.sqrt(2 * len(data[0]) + 0.25) - 0.5)
 	except Exception:
 		raise HamVisException(
 			f"There was an error extracting data from {fname}, please verify "
@@ -75,14 +91,14 @@ def format_ham(data, size):
 
 	Returns
 	-------
-	ham : 'ndarray'
+	ham : np.ndarray
 		This array is the hamiltonian, with frequencies on the diagonal
-		and couplings on the offdiagonal.
+		and couplings on the off-diagonal.
 	"""
 	try:
 		ham = np.zeros((size, size))
 		ham[np.triu_indices(size)] = data
-		ham = np.triu(ham) + np.tril(ham.T, -1)
+		ham += np.triu(ham, 1).T
 	except Exception:
 		raise HamVisException(
 			"There was an error formatting the data into a matrix."
@@ -91,11 +107,11 @@ def format_ham(data, size):
 
 
 def logify_ham(ham, size):
-	"""Rewrites the off-diagonal elements into powers of 2.
+	"""Rewrites the off-diagonal elements into log2.
 
 	Parameters
 	----------
-	ham : 'ndarray'
+	ham : np.ndarray
 		This array is the hamiltonian, with frequencies on the diagonal
 		and couplings on the off-diagonal.
 	size : int
@@ -104,19 +120,32 @@ def logify_ham(ham, size):
 
 	Returns
 	-------
-	logs : 'ndarray'
+	logs : np.ndarray
 		This is the same as ham, but the off-diagonal components are
-		written as powers of 2.
+		written as log2.
 	"""
 	try:
+		# Sets all very small items, smaller than minimum, to minimum.
 		minimum = 0.001
-		ham[abs(ham) < minimum] = 0
+		ham[abs(ham) < minimum] = minimum
+
+		# Save the diagonal elements of the Hamiltonian.
 		diag = np.diag(ham)
+
+		# Takes the absolute value of items in ham and turns them into
+		# log2.
 		logs = np.log2(np.abs(ham))
+
+		# This subtracts the log of minimum from all items. Items that
+		# were minimum or smaller are now thus zero.
 		logs -= np.log2(minimum)
+
+		# Makes items that were negative in ham negative again.
 		logs[ham < 0] *= -1
 
+		# Restores the diagonal items to not be in log2 again.
 		logs[np.diag_indices(size)] = diag
+
 	except Exception:
 		raise HamVisException(
 			"There was an issue rewriting the elements of the Hamiltonian "
@@ -133,7 +162,7 @@ def ham_saver(ham, idx, outname):
 
 	Parameters
 	----------
-	ham : 'ndarray'
+	ham : np.ndarray
 		This array is the hamiltonian, with frequencies on the diagonal
 		and couplings on the off-diagonal.
 	idx : int
@@ -233,7 +262,7 @@ def average_ham(average, ham_list, frames):
 	average : str
 		This should be 'False' or 'True'. If this is 'True' the function
 		average all entries in ham_list and puts frames into a sublist.
-	ham_list : list of 'ndarray' of float
+	ham_list : list of np.ndarray of float
 		This is a list of numpy arrays. The numpy arrays each contain a
 		matrix that represents one Hamiltonian.
 	frames : str
@@ -246,7 +275,7 @@ def average_ham(average, ham_list, frames):
 
 	Returns
 	-------
-	ham_list : list of 'ndarray' of float
+	ham_list : list of np.ndarray of float
 		This is a list of numpy arrays. The numpy arrays each contain a
 		matrix that represents one Hamiltonian.
 	frames : str
@@ -283,13 +312,13 @@ def cut_ham(cut, ham_list):
 		as 'False'. If it is 'False' the Hamiltonians in ham_list are
 		not cut. Otherwise cut should be x1,x2,y1,y2. This slices the
 		elements of ham_list as ham[x1:x2,y1:y2].
-	ham_list : list of 'ndarray' of float
+	ham_list : list of np.ndarray of float
 		This is a list of numpy arrays. The numpy arrays each contain a
 		matrix that represents one Hamiltonian.
 
 	Returns
 	-------
-	ham_list : list of 'ndarray' of float
+	ham_list : list of np.ndarray of float
 		This is a list of numpy arrays. The numpy arrays each contain a
 		matrix that represents one Hamiltonian.
 	"""

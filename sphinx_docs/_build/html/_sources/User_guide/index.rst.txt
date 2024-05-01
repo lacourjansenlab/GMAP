@@ -12,3 +12,4 @@ These pages will contain information relevant for common use of the program.
     parameter_overview
     influencer_specification
     GMAP_Setup
+    helpers

@@ -1289,6 +1289,9 @@ main parameters). When assigning this attribute to the ‘main’ instance,
 <tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RunPars.get_pars" title="GMAP.src.tools.ParameterParser.RunPars.get_pars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pars</span></code></a>(Printer, CmdPars, InPars, DefPars, ...)</p></td>
 <td><p>Sets attribute for each non-path parameter.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.ParameterParser.RunPars.resolve" title="GMAP.src.tools.ParameterParser.RunPars.resolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve</span></code></a>(CmdPars, InPars, DefPars, RefPars)</p></td>
+<td><p>Fix any issues that may arise from the combination of sources.</p></td>
+</tr>
 </tbody>
 </table>
 <dl class="py method">
@@ -1405,6 +1408,40 @@ map-specific)</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.RunPars.resolve">
+<span class="sig-name descname"><span class="pre">resolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">CmdPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">InPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DefPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RefPars</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.RunPars.resolve" title="Link to this definition">#</a></dt>
+<dd><p>Fix any issues that may arise from the combination of sources.</p>
+<p>This either means checking if there are no invalid combinations
+(where a choice for a parameter doesn’t make sense given the one
+for a different one), or it means combining choices from
+different sources when their values are interdependent.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.ParameterParser.add_missing_frame_parameter">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.ParameterParser.</span></span><span class="sig-name descname"><span class="pre">add_missing_frame_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pardict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.ParameterParser.add_missing_frame_parameter" title="Link to this definition">#</a></dt>
+<dd><p>Adds in the missing frame number parameter with a sensible value.</p>
+<p>Expects that the other two are present, and we only need the third.
+All values in the dictionary are expected to be integers (so no
+lists of a single int, like RawPars.choices).</p>
+<p>Returns the same dict, but with the missing item added in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pardict</strong><span class="classifier">dict</span></dt><dd><p>The dictionary containing two of the three frame parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>pardict</strong><span class="classifier">dict</span></dt><dd><p>The input dictionary, with the third item added in.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1775,8 +1812,10 @@ and handle errors.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RunPars.get_files"><code class="docutils literal notranslate"><span class="pre">RunPars.get_files()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RunPars.get_ordered_files"><code class="docutils literal notranslate"><span class="pre">RunPars.get_ordered_files()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RunPars.get_pars"><code class="docutils literal notranslate"><span class="pre">RunPars.get_pars()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.RunPars.resolve"><code class="docutils literal notranslate"><span class="pre">RunPars.resolve()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.add_missing_frame_parameter"><code class="docutils literal notranslate"><span class="pre">add_missing_frame_parameter()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.cleanline"><code class="docutils literal notranslate"><span class="pre">cleanline()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.directory_list_checker"><code class="docutils literal notranslate"><span class="pre">directory_list_checker()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.ParameterParser.find_defparfile_in_cmd"><code class="docutils literal notranslate"><span class="pre">find_defparfile_in_cmd()</span></code></a></li>
