@@ -205,15 +205,15 @@ def format_frame_selection(frames, data):
 	If frames contains integers seperated by commas, the integers will
 	correspond to the frames of the data that will be processed. A list
 	of them is returned. If frames is "all", a list containing all
-	indexes in frames is returned, starting at 1 for the first frame.
+	indices in frames is returned, starting at 1 for the first frame.
 
 	Parameters
 	----------
 	frames : str
 		Contains integers split by commas or is the string "all". If if
 		is integers split by commas, the integers will correspond to the
-		one-based indexes frames of the data that will be processed.
-		"all" will create a list containing all one-based indexes of
+		one-based indices frames of the data that will be processed.
+		"all" will create a list containing all one-based indices of
 		all of the frames contained in data for the first
 		frame.
 	data : list of list of float
@@ -268,8 +268,8 @@ def average_ham(average, ham_list, frames):
 	frames : str
 		Contains integers split by commas or is the string "all". If if
 		is integers split by commas, the integers will correspond to the
-		one-based indexes frames of the data that will be processed.
-		"all" will create a list containing all one-based indexes of
+		one-based indices frames of the data that will be processed.
+		"all" will create a list containing all one-based indices of
 		all of the frames contained in data for the first
 		frame.
 
@@ -281,8 +281,8 @@ def average_ham(average, ham_list, frames):
 	frames : str
 		Contains integers split by commas or is the string "all". If if
 		is integers split by commas, the integers will correspond to the
-		one-based indexes frames of the data that will be processed.
-		"all" will create a list containing all one-based indexes of
+		one-based indices frames of the data that will be processed.
+		"all" will create a list containing all one-based indices of
 		all of the frames contained in data for the first
 		frame.
 	"""
@@ -350,8 +350,8 @@ def HamVis(fname, frames, average, cut, outname):
 	frames : str
 		Contains integers split by commas or is the string "all". If if
 		is integers split by commas, the integers will correspond to the
-		one-based indexes frames of the data that will be processed.
-		"all" will create a list containing all one-based indexes of
+		one-based indices frames of the data that will be processed.
+		"all" will create a list containing all one-based indices of
 		all of the frames contained in data for the first
 		frame.
 	average : str
