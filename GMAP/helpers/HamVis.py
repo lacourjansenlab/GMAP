@@ -28,7 +28,6 @@ import warnings
 # 3rd party library imports
 import matplotlib.pyplot as plt
 import numpy as np
-from numpy.ma import masked_array
 
 
 class HamVisException(Exception):
@@ -38,7 +37,7 @@ class HamVisException(Exception):
 		sys.tracebacklimit = 0
 
 
-def get_data(fname):
+def get_data(fname, frame):
 	r"""Gets the data from fname and returns it as a list of lists.
 
 	The data from the file must be in a .txt format and formatted as
@@ -61,9 +60,7 @@ def get_data(fname):
 		matrix.
 	"""
 	try:
-		with open(fname) as fhand:
-			data = [frame.split() for frame in fhand.readlines()]
-		data = [[float(number) for number in frame][1:] for frame in data]
+		data = np.loadtxt(fname, skiprows=frame, max_rows=1)
 		# len(data[0]) is a triangular number, size is the integer used
 		# to construct that triangular number.
 		size = round(np.sqrt(2 * len(data[0]) + 0.25) - 0.5)
@@ -124,33 +121,28 @@ def logify_ham(ham, size):
 		This is the same as ham, but the off-diagonal components are
 		written as log2.
 	"""
-	try:
-		# Sets all very small items, smaller than minimum, to minimum.
-		minimum = 0.001
-		ham[abs(ham) < minimum] = minimum
 
-		# Save the diagonal elements of the Hamiltonian.
-		diag = np.diag(ham)
+	# Sets all very small items, smaller than minimum, to minimum.
+	minimum = 0.001
+	ham[abs(ham) < minimum] = minimum
 
-		# Takes the absolute value of items in ham and turns them into
-		# log2.
-		logs = np.log2(np.abs(ham))
+	# Save the diagonal elements of the Hamiltonian.
+	diag = np.diag(ham)
 
-		# This subtracts the log of minimum from all items. Items that
-		# were minimum or smaller are now thus zero.
-		logs -= np.log2(minimum)
+	# Takes the absolute value of items in ham and turns them into
+	# log2.
+	logs = np.log2(np.abs(ham))
 
-		# Makes items that were negative in ham negative again.
-		logs[ham < 0] *= -1
+	# This subtracts the log of minimum from all items. Items that
+	# were minimum or smaller are now thus zero.
+	logs -= np.log2(minimum)
 
-		# Restores the diagonal items to not be in log2 again.
-		logs[np.diag_indices(size)] = diag
+	# Makes items that were negative in ham negative again.
+	logs[ham < 0] *= -1
 
-	except Exception:
-		raise HamVisException(
-			"There was an issue rewriting the elements of the Hamiltonian "
-			"into exponentials."
-		) from None
+	# Restores the diagonal items to not be in log2 again.
+	logs[np.diag_indices(size)] = diag
+
 	return logs
 
 
@@ -172,31 +164,29 @@ def ham_saver(ham, idx, outname):
 		A name used to name the file that is created.
 	"""
 
-	try:
-		off_diag = masked_array(ham, ham > 100)
-		on_diag = masked_array(ham, ham <= 100)
+	off_diag = np.copy(ham)
+	np.fill_diagonal(off_diag, np.nan)
 
-		fig, ax = plt.subplots()
-		pa = ax.imshow(
-			on_diag, interpolation='nearest', cmap=plt.cm.get_cmap('coolwarm_r'))
-		cba = plt.colorbar(pa, shrink=0.4, cax=fig.add_axes([0.8, 0.5, 0.03, 0.3]))
+	on_diag_temp = np.diagonal(ham)
+	on_diag = np.full((ham.shape[0], ham.shape[1]), np.nan)
+	np.fill_diagonal(on_diag, on_diag_temp)
 
-		pb = ax.imshow(
-			off_diag, interpolation='nearest', cmap=plt.cm.PRGn
-		)
-		cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes([0.8, 0.1, 0.03, 0.3]))
-		fig.subplots_adjust(right=0.75)
+	fig, ax = plt.subplots()
+	pa = ax.imshow(
+		on_diag, interpolation='nearest', cmap=plt.cm.get_cmap('coolwarm_r'))
+	cba = plt.colorbar(pa, shrink=0.4, cax=fig.add_axes([0.8, 0.5, 0.03, 0.3]))
 
-		cba.set_label('frequency', rotation=0, y=1.12, labelpad=-22)
-		cbb.set_label('coupling', rotation=0, y=1.12, labelpad=-22)
-		ax.set_title(outname)
+	pb = ax.imshow(
+		off_diag, interpolation='nearest', cmap=plt.cm.PRGn
+	)
+	cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes([0.8, 0.1, 0.03, 0.3]))
+	fig.subplots_adjust(right=0.75)
 
-		plt.savefig(f"{outname}_{idx}.pdf")
-	except Exception:
-		raise HamVisException(
-			f"There was an issue saving the Hamiltonian of frame {idx} as an "
-			"image."
-		) from None
+	cba.set_label('frequency', rotation=0, y=1.12, labelpad=-22)
+	cbb.set_label('coupling', rotation=0, y=1.12, labelpad=-22)
+	ax.set_title(outname)
+
+	plt.savefig(f"{outname}_{idx}.pdf")
 
 
 def format_frame_selection(frames, data):
@@ -365,8 +355,25 @@ def HamVis(fname, frames, average, cut, outname):
 	outname : str
 		A name used to name the file that is created.
 	"""
-	ham_list = []
-	data, size = get_data(fname)
+
+	if frames == "all":
+		idx = 0
+		with open(fname) as fhand:
+			for line in fhand:
+				idx += 1
+		frames = range(idx)
+	else:
+		frames = list(frames.split(","))
+		try:
+			frames = [int(frame) for frame in frames]
+		except ValueError:
+			raise HamVisException(
+				"Frames can only be given as integers and seperated by "
+				"nothing but a comma. To select all frames, specify 'all'."
+			) from None
+
+	for frame in frames:
+		data, size = get_data(fname, frame)
 	frames = format_frame_selection(frames, data)
 
 	for frame in frames:
