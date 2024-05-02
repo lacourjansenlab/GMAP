@@ -415,7 +415,7 @@ def check_file_readability(Printer, fname, doquit=True):
     return True
 
 
-def write_output(RunPars, framenum, hamiltonian, dipoles):
+def write_output(RunPars, framenum, outputs):
     """Write the output for a single frame to files.
 
     Writes all outputs - all (requested) datastructures in all
@@ -437,6 +437,7 @@ def write_output(RunPars, framenum, hamiltonian, dipoles):
     framenum_arr = np.array([framenum], dtype='float32')
 
     if "ham" in RunPars.output_data:
+        hamiltonian = outputs["hamiltonian"]
         reshaped = hamiltonian[np.triu_indices_from(hamiltonian)]
         write_single(
             RunPars, framenum, framenum_arr,
@@ -444,6 +445,7 @@ def write_output(RunPars, framenum, hamiltonian, dipoles):
         )
 
     if "dip" in RunPars.output_data:
+        dipoles = outputs["dipoles"]
         reshaped = dipoles.T.flatten()
         write_single(
             RunPars, framenum, framenum_arr,

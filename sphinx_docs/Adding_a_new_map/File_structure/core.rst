@@ -42,7 +42,6 @@ Here, we say that the group consists of a single residue, named ASN. It consists
     functional_group        [GLN]    CD  OE1  CG  NE2  HE21  HE22
 
 
-
 Step 2 - An oscillator on multiple residues
 ===========================================
 
@@ -142,6 +141,7 @@ But this query would not find a match::
     functional_group   [ETE]  C(1,2,3) H(4) H(5) C(1,4,5) H(2) H(3)
 
 The first would work, but not the second, as the first atom, C would be the first atom of name C found in the residue named ETE. This would be the one labelled C1 in the drawing. It is bound to H11 and H12 in the drawing - these will become the first and second occurence of 'H' in functional_group, respectively. Therefore, When saying the first occurrence of C should be bound to the third and fourth occurrence of H (as in the second example), no matches will be found.
+
 
 Bonus - counting atoms
 ======================
@@ -447,6 +447,8 @@ These two are specified using the parameters r_vec (the dipole vector) and r_pos
 
 Just as with xyz_uvec, the calculations performed for r_vec and r_pos do take the periodic boundary conditions into account. :ref:`This page<Theory_page_PBC>` shows you how.
 
+The vector found for r_vec will be normalized - its purpose is solely to indicate a direction.
+
 
 *************
 VEG_reference
@@ -520,7 +522,72 @@ What happens here is a little bit more involved: the index provided is of an ato
 If multiple atoms are given, then for each atom, the residue is found. This allows to add the atoms of multiple residues together (for oscillators that live on multiple residues). If multiple atoms are given that all belong to the same residue, that residue gets more 'weight' - it is _not_ the case that 'extra' atoms of the same residue are ignored.
 
 
+****************
+dipole_gas_phase
+****************
 
+*mandatory parameter*
+
+As illustrated under 'r_pos and r_vec', the dipole moment of oscillators is a key property for the program. While the information in that section is used to give the direction of the dipole moment vector (and its position), it doesn't contain any information on its magnitude. Thats what this parameter, and the parameter 'dipole_data_file' are for. This parameter specifies the (base) magnitude of the dipole moment, in Debye. If the magnitude can vary, see 'dipole_data_file'.
+
+If this parameter is used alone (or in combination with the 'magnitude' mode of 'dipole_data_file'), you can just use a single decimal number to indicate the magnitude in Debye::
+
+    functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+    used_atoms              0 1 3 4   # CG OD1 ND2 HD21
+    electrostatic_atoms     0 2  # C and N
+    electrostatic_choice    E
+    type                    standard
+    x_uvec                  1-0   # O-C
+    y_uvec                  2-0   # the part of N-C orthogonal to O-C
+    r_vec                   1-0   # points along CO bond
+    r_pos                   0     # vector lives on the carbon atom.
+    VEG_reference           position 1  # at the position of the oxygen atom
+    dipole_gas_phase        0.32
+
+If, instead, the parameter 'dipole_data_file' is used in 'xyz' mode, this parameter should be provided with **three** values, the gas-phase value for the x, y and z components. See the parameter 'dipole_data_file' for more information.
+
+
+****************
+dipole_data_file
+****************
+
+*optional parameter*
+
+As illustrated under 'r_pos and r_vec', the dipole moment of oscillators is a key property for the program. While the information in that section is used to give the direction of the dipole moment vector (and its position), it doesn't contain any information on its magnitude. Thats what this parameter, and the parameter 'dipole_gas_phase' are for. If the magnitude of the dipole moment cannot vary, see dipole_gas_phase.
+
+This parameter is used for defining how the dipole moment depends on the electrostatics from the environment. There are two different options; either the dipole has a set direction with the magnitude depending on the elecctrostatics, or each of the x, y and z components of the vector depend on the electrostatics separately. Each of the two options requires a slightly different file format, so this parameter is specified using two parts. First, you either specify ``magnitude`` or ``xyz`` (depending on which format), and then this is followed up by a filename (with extension) present in the same mapping directory. This file will contain the actual dependency.
+
+.. tip::
+    Each of the methods uses x, y and z directions. These are assumed local to the oscillator at the moment its dipole moment is determined (so, within a single frame), unless stated otherwise. The final dipole moment calculated by the program is in the same cartesian coordinates as the provided MD system was.
+
+
+magnitude
+=========
+
+In this case, the dipole moment has a set direction (provided using the parameter 'r_vec'), with a varying magnitude. The program assumes the following formula for calculating the dipole moment magnitude:
+
+.. math::
+    magnitude = \mu_{gas} + \sum_n(V_n*c_{V_n} + \sum_i(\vec{E}_{n,i} * c_{E_{n,i}}) + \sum_i(\vec{G}_{n,i} * c_{G_{n,i}}))
+
+Here, :math:`\mu_{gas}` is the gas phase magnitude - the magnitude in the absence of any electrostatic environment. This value is provided to the program through the parameter 'dipole_gas_phase'. :math:`V_n` is the electrostatic potential felt by atom :math:`n`, where :math:`n` loops over the atoms listed using the parameter 'electrostatic_atoms', while :math:`c_{V_n}` are the potential coefficients provided by the map. Similarly, :math:`\vec{E}_{n,i}` is the electric field felt by atom :math:`n`, in direction :math:`i` (loops over the directions provided under 'xyz_uvec'), while :math:`c_{E_{n,i}}` are the field coefficients provided by the map. In much the same way, :math:`\vec{G}_{n,i}` is the (flattened) elecric field gradient felt by atom :math:`n`, in direction :math:`i` (loops over the following combinations of directions provided under 'xyz_uvec': xx, yy, zz, xy, xz, yz), while :math:`c_{G_{n,i}}` are the gradient coefficients provided by the map.
+
+So, how does the map provide these coefficients? That is what the file specified through this parameter is for. The file contains a grid of coefficients, with a row for each atom listed under 'electrostatic_atoms', and at most 10 columns. The first column contains the potential coefficients, the next three contain the field coefficients (in order x, y, z), and the last six contain the gradient coefficients (in order xx, yy, zz, xy, xz, yz).
+
+If you specified 'G' as the choice for the parameter 'electrostatic_choice', all 10 columns must be present. They may contain zeros, but they must be there. If you specified 'E' as the choice for the parameter 'electrostatic_choice', the first 4 columns are mandatory. Any extras will be ignored. Similarly, if you specified 'V' as the choice for the parameter 'electrostatic_choice', only the first column must be present, and all others (if present) will be ignored.
+
+
+xyz
+====
+
+In this case, the direction of the dipole moment can vary. Therefore, instead of defining a fixed direction with a magnitude depending on the electrostatic environment, this method allows each of the x, y and z components of the dipole moment to depend on the electrostatic environment. These components are in local coordinates (specified using the parameters 'xyz_uvec' - see that section), and at the end of the calculation returned to the same cartesian coordinates as the MD inputs had the positions defined in.
+
+The formula for calculating these components is the same as the one listed above, for the magnitude. The only difference is that the formula will be executed three times, once for each of the vector components. That also means that there are many coefficients needed: the amount of electrostatic_atoms * 10 (potential + 3 electric field + 6 gradient) * 3 (x, y and z).
+
+The file providing these coefficients looks exactly the same as the one explained above, but with one exception: we need triple the information. The coefficients are provided in blocks - so you first get all coefficients for the x-component (a single row for each atom in electrostatic_atoms), then all coefficients for the y component, and finally, all for the z component.
+
+The three blocks can be separated by one or more empty lines, and '#' can be used to make comments. Anything after a '#' will be ignored, so you can make a header line (to detail the columns), or add a note after each row to know what atom they belong to.
+
+Just as with the 'magnitude' choice for this parameter, the amount of columns that are actually required depends on the choice for electrostatic_choice.
 
 
 ****************

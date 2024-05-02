@@ -351,7 +351,7 @@ extern "C" {
                     PBC_diff_cubic(
                         &refpos[oscix * 3], &positions[sysix * 3],
                         halfbox, boxdims, diff);
-                    out[oscix] += weighted_charge / sqrt(veclen2(diff));
+                    out[oscix*10] += weighted_charge / sqrt(veclen2(diff));
                     total_charge[oscix] += weighted_charge;
                 } 
             }

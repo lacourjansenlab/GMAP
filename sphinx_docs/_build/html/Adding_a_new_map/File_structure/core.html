@@ -40,6 +40,7 @@
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Adding_a_new_map/File_structure/core';</script>
     <link rel="icon" href="../../_static/temp_logo.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -740,6 +741,100 @@ functional_group_bonds  1-2 2-3 1-3
 </pre></div>
 </div>
 <p>Just as with xyz_uvec, the calculations performed for r_vec and r_pos do take the periodic boundary conditions into account. <a class="reference internal" href="../../Theory/PBC.html#theory-page-pbc"><span class="std std-ref">This page</span></a> shows you how.</p>
+<p>The vector found for r_vec will be normalized - its purpose is solely to indicate a direction.</p>
+</section>
+<section id="veg-reference">
+<h2>VEG_reference<a class="headerlink" href="#veg-reference" title="Link to this heading">#</a></h2>
+<p><em>mandatory parameter</em></p>
+<p>Most mappings depend on some electrostatic property on some position(s). These properties are calculated by the program. While these electrostatic properties are dependent on all atoms around, the atoms closest by have the largest impact. Therefore, a lot of computational time is saved by only considering the atoms within a certain radius. But, within a certain radius of what? Thats what this parameter encodes. Of course, the center of this sphere of charges is very likely to be somewhere within the molecule considered, but exactly where can differ. This keyword lets you specify the exact point where the sphere should be centered. There are three different ways of doing so:</p>
+<section id="position">
+<h3>position<a class="headerlink" href="#position" title="Link to this heading">#</a></h3>
+<p>Defining the position works much the same as defining r_pos, where you determine this point using some atom positions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">functional_group</span>        <span class="p">[</span><span class="n">ASN</span><span class="p">]</span>    <span class="n">CG</span>  <span class="n">OD1</span>  <span class="n">CB</span>  <span class="n">ND2</span>  <span class="n">HD21</span>  <span class="n">HD22</span>
+<span class="n">used_atoms</span>              <span class="mi">0</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span>   <span class="c1"># CG OD1 ND2 HD21</span>
+<span class="n">electrostatic_atoms</span>     <span class="mi">0</span> <span class="mi">2</span>  <span class="c1"># C and N</span>
+<span class="n">electrostatic_choice</span>    <span class="n">E</span>
+<span class="nb">type</span>                    <span class="n">standard</span>
+<span class="n">x_uvec</span>                  <span class="mi">1</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># O-C</span>
+<span class="n">y_uvec</span>                  <span class="mi">2</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># the part of N-C orthogonal to O-C</span>
+<span class="n">r_vec</span>                   <span class="mi">1</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># points along CO bond</span>
+<span class="n">r_pos</span>                   <span class="mi">0</span>     <span class="c1"># vector lives on the carbon atom.</span>
+<span class="n">VEG_reference</span>           <span class="n">position</span> <span class="mi">1</span>  <span class="c1"># at the position of the oxygen atom</span>
+</pre></div>
+</div>
+<p>Any kind of position determination is possible. Considering the above example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VEG_reference</span>           <span class="n">position</span> <span class="p">(</span><span class="mi">0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+</pre></div>
+</div>
+<p>This way, we define the position to be the average position of atoms 0 and 1, or, in other words, the position is halfway between the carbon and oxygen atoms.</p>
+</section>
+<section id="com">
+<h3>CoM<a class="headerlink" href="#com" title="Link to this heading">#</a></h3>
+<p>Very often, this kind of sphere of charges is centred around a certain center of mass. This parameter simply lists a group of atoms, whose center of mass defines the center of the sphere of charges. The indices are compared to used_atoms:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">functional_group</span>        <span class="p">[</span><span class="n">ASN</span><span class="p">]</span>    <span class="n">CG</span>  <span class="n">OD1</span>  <span class="n">CB</span>  <span class="n">ND2</span>  <span class="n">HD21</span>  <span class="n">HD22</span>
+<span class="n">used_atoms</span>              <span class="mi">0</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span>   <span class="c1"># CG OD1 ND2 HD21</span>
+<span class="n">electrostatic_atoms</span>     <span class="mi">0</span> <span class="mi">2</span>  <span class="c1"># C and N</span>
+<span class="n">electrostatic_choice</span>    <span class="n">E</span>
+<span class="nb">type</span>                    <span class="n">standard</span>
+<span class="n">x_uvec</span>                  <span class="mi">1</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># O-C</span>
+<span class="n">y_uvec</span>                  <span class="mi">2</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># the part of N-C orthogonal to O-C</span>
+<span class="n">r_vec</span>                   <span class="mi">1</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># points along CO bond</span>
+<span class="n">r_pos</span>                   <span class="mi">0</span>     <span class="c1"># vector lives on the carbon atom.</span>
+<span class="n">VEG_reference</span>           <span class="n">CoM</span>  <span class="mi">0</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>In this example, the sphere is centered on the center of mass of the carbon, oxygen, nitrogen and two hydrogen atoms.</p>
+</section>
+<section id="residues">
+<h3>residues<a class="headerlink" href="#residues" title="Link to this heading">#</a></h3>
+<p>Some maps are defined in an even simpler way - the sphere is centered on the center of mass of the entire residue the oscillator is a part of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">functional_group</span>        <span class="p">[</span><span class="n">ASN</span><span class="p">]</span>    <span class="n">CG</span>  <span class="n">OD1</span>  <span class="n">CB</span>  <span class="n">ND2</span>  <span class="n">HD21</span>  <span class="n">HD22</span>
+<span class="n">used_atoms</span>              <span class="mi">0</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span>   <span class="c1"># CG OD1 ND2 HD21</span>
+<span class="n">electrostatic_atoms</span>     <span class="mi">0</span> <span class="mi">2</span>  <span class="c1"># C and N</span>
+<span class="n">electrostatic_choice</span>    <span class="n">E</span>
+<span class="nb">type</span>                    <span class="n">standard</span>
+<span class="n">x_uvec</span>                  <span class="mi">1</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># O-C</span>
+<span class="n">y_uvec</span>                  <span class="mi">2</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># the part of N-C orthogonal to O-C</span>
+<span class="n">r_vec</span>                   <span class="mi">1</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># points along CO bond</span>
+<span class="n">r_pos</span>                   <span class="mi">0</span>     <span class="c1"># vector lives on the carbon atom.</span>
+<span class="n">VEG_reference</span>           <span class="n">residues</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>What happens here is a little bit more involved: the index provided is of an atom, just as with the ‘position’ and ‘CoM’ options. The program then checks which residue this atom belongs to. Then, the center of mass of this residue is found.</p>
+<p>If multiple atoms are given, then for each atom, the residue is found. This allows to add the atoms of multiple residues together (for oscillators that live on multiple residues). If multiple atoms are given that all belong to the same residue, that residue gets more ‘weight’ - it is _not_ the case that ‘extra’ atoms of the same residue are ignored.</p>
+</section>
+</section>
+<section id="dipole-gas-phase">
+<h2>dipole_gas_phase<a class="headerlink" href="#dipole-gas-phase" title="Link to this heading">#</a></h2>
+<p><em>mandatory parameter</em></p>
+<p>As illustrated under ‘r_pos and r_vec’, the dipole moment of oscillators is a key property for the program. While the information in that section is used to give the direction of the dipole moment vector (and its position), it doesn’t contain any information on its magnitude. Thats what this parameter, and the parameter ‘dipole_data_file’ are for. This parameter specifies the (base) magnitude of the dipole moment, in Debye. If the magnitude can vary, see ‘dipole_data_file’.</p>
+<p>If this parameter is used alone (or in combination with the ‘magnitude’ mode of ‘dipole_data_file’), you can just use a single decimal number to indicate the magnitude in Debye:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">functional_group</span>        <span class="p">[</span><span class="n">ASN</span><span class="p">]</span>    <span class="n">CG</span>  <span class="n">OD1</span>  <span class="n">CB</span>  <span class="n">ND2</span>  <span class="n">HD21</span>  <span class="n">HD22</span>
+<span class="n">used_atoms</span>              <span class="mi">0</span> <span class="mi">1</span> <span class="mi">3</span> <span class="mi">4</span>   <span class="c1"># CG OD1 ND2 HD21</span>
+<span class="n">electrostatic_atoms</span>     <span class="mi">0</span> <span class="mi">2</span>  <span class="c1"># C and N</span>
+<span class="n">electrostatic_choice</span>    <span class="n">E</span>
+<span class="nb">type</span>                    <span class="n">standard</span>
+<span class="n">x_uvec</span>                  <span class="mi">1</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># O-C</span>
+<span class="n">y_uvec</span>                  <span class="mi">2</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># the part of N-C orthogonal to O-C</span>
+<span class="n">r_vec</span>                   <span class="mi">1</span><span class="o">-</span><span class="mi">0</span>   <span class="c1"># points along CO bond</span>
+<span class="n">r_pos</span>                   <span class="mi">0</span>     <span class="c1"># vector lives on the carbon atom.</span>
+<span class="n">VEG_reference</span>           <span class="n">position</span> <span class="mi">1</span>  <span class="c1"># at the position of the oxygen atom</span>
+<span class="n">dipole_gas_phase</span>        <span class="mf">0.32</span>
+</pre></div>
+</div>
+<p>If, instead, the parameter ‘dipole_data_file’ is used in ‘xyz’ mode, this parameter should be provided with <strong>three</strong> values, the gas-phase value for the x, y and z components. See the parameter ‘dipole_data_file’ for more information.</p>
+</section>
+<section id="dipole-data-file">
+<h2>dipole_data_file<a class="headerlink" href="#dipole-data-file" title="Link to this heading">#</a></h2>
+<p><em>optional parameter</em></p>
+<p>As illustrated under ‘r_pos and r_vec’, the dipole moment of oscillators is a key property for the program. While the information in that section is used to give the direction of the dipole moment vector (and its position), it doesn’t contain any information on its magnitude. Thats what this parameter, and the parameter ‘dipole_gas_phase’ are for. If the magnitude of the dipole moment cannot vary, see dipole_gas_phase.</p>
+<p>This parameter is used for defining how the dipole moment depends on the electrostatics from the environment. There are two different options; either the dipole has a set direction with the magnitude depending on the elecctrostatics, or each of the x, y and z components of the vector depend on the electrostatics separately. Each of the two options requires a slightly different file format, so this parameter is specified using two parts. First, you either specify <code class="docutils literal notranslate"><span class="pre">magnitude</span></code> or <code class="docutils literal notranslate"><span class="pre">xyz</span></code> (depending on which format), and then this is followed up by a filename (with extension) present in the same mapping directory. This file will contain the actual dependency.</p>
+<section id="magnitude">
+<h3>magnitude<a class="headerlink" href="#magnitude" title="Link to this heading">#</a></h3>
+<p>In this case, the dipole moment has a set direction (provided using the parameter ‘r_vec’), with a varying magnitude. The program assumes the following formula for calculating the dipole moment magnitude:</p>
+<div class="math notranslate nohighlight">
+\[magnitude = \mu_gas + \sum_n(V*c_{V_n} + \sum_i(\vec{E}_i * c_{E_{n,i}}) + \sum_i(\vec{G}_i * c_{G_{n,i}}))\]</div>
+</section>
 </section>
 <section id="influencer-group">
 <h2>influencer_group<a class="headerlink" href="#influencer-group" title="Link to this heading">#</a></h2>
@@ -831,6 +926,17 @@ functional_group_bonds  1-2 2-3 1-3
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#r-pos-and-r-vec">r_pos and r_vec</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#veg-reference">VEG_reference</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#position">position</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#com">CoM</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#residues">residues</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dipole-gas-phase">dipole_gas_phase</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dipole-data-file">dipole_data_file</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#magnitude">magnitude</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#influencer-group">influencer_group</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-corefile">add_corefile</a></li>
 </ul>

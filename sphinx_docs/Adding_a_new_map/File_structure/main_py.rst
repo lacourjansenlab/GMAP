@@ -54,9 +54,6 @@ The function are in the order at which they're called by the program. This means
 
 
 
-
-
-
 GM_adjust_RunPars(Files, Printer, Map)
 ======================================
 Makes the necessary changes to Map.RunPar.
@@ -104,9 +101,6 @@ Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
-
-
-
 
 
 
@@ -162,9 +156,6 @@ Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
-
-
-
 
 
 
@@ -232,9 +223,6 @@ oscillator_list : list of :class:`~GMAP.src.tools.SystemReader.Oscillator`
 
 
 
-
-
-
 GM_post_init(Files, Printer, Map, Syst)
 =======================================
 
@@ -298,9 +286,6 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 
-
-
-
 GM_pre_run(Printer, Map, Syst)
 =======================================
 
@@ -349,9 +334,6 @@ Map : :class:`~GMAP.src.tools.MapReader.Map`
     about this map.
 Syst : :class:`~GMAP.src.tools.SystemReader.System`
     The object that stores everyting the program currently knows about the MD system.
-
-
-
 
 
 
@@ -408,9 +390,6 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 
-
-
-
 GM_post_frame(Printer, Map, Syst)
 =======================================
 
@@ -462,9 +441,6 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 
-
-
-
 GM_post_run(Printer, Map, Syst)
 =======================================
 
@@ -513,9 +489,6 @@ Map : :class:`~GMAP.src.tools.MapReader.Map`
     about this map.
 Syst : :class:`~GMAP.src.tools.SystemReader.System`
     The object that stores everyting the program currently knows about the MD system.
-
-
-
 
 
 
@@ -586,10 +559,7 @@ rotation_matrix : `np.ndarray`
 
 
 
-
-
-
-GM_get_dipole(Printer, Map, Syst, osc)
+GM_get_dipole_dir(Printer, Map, Syst, osc)
 =================================================================
 
 Returns the dipole vector and its position in cartesian coordinates.
@@ -601,8 +571,8 @@ Returns the dipole vector and its position in cartesian coordinates.
 Example uses
 ------------
 
-The default method of providing the dipole vector is not sufficient
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The default method of providing the dipole vector direction is not sufficient
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.
 
 
@@ -639,18 +609,136 @@ Map : :class:`~GMAP.src.tools.MapReader.Map`
 Syst : :class:`~GMAP.src.tools.SystemReader.System`
     The object that stores everyting the program currently knows about the MD system.
 osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
-    The oscillator for which the rotation matrix should be determined.
+    The oscillator for which the dipole moment vectors should be determined.
 
 
 Returns
 -------
 r_vec : `np.ndarray`
-    The vector that represents the dipole of this oscillator.
+    The vector that represents the direction of the dipole moment of this oscillator. It should have the dtype `float32`, and the vector should be normalized.
 r_pos : `np.ndarray`
     The position at which the dipole vector lies.
 
 
 
+GM_get_dipole_mag(Printer, Map, Syst, osc)
+=================================================================
+
+Returns the dipole vector and its position in cartesian coordinates.
+
+.. tip::
+    The magnitude of the dipole vector should be in units of Debye, and will by default be applied to the direction found by GM_get_dipole_dir()
+
+
+Example uses
+------------
+
+The default method of providing the dipole vector direction is not sufficient
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Sometimes, the magnitude has a more complex dependence than the one offered by default. In those cases, it might be more appropriate to write the code here.
+
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+    The oscillator for which the dipole moment magnitude should be determined.
+
+
+Returns
+-------
+magnitude : `np.float32`
+    The length that the dipole moment vector should have.
+
+
+
+GM_get_dipole(Printer, Map, Syst, osc)
+=================================================================
+
+Returns the dipole vector and its position in cartesian coordinates.
+
+.. tip::
+    By default (for single-VEG dependence, or no VEG dependence), this function is the combination of GM_get_dipole_dir and GM_get_dipole_mag. If only the functionality of one of those needs to be changed, doing that instead of imposing different behaviour here is adviced.
+
+
+Example uses
+------------
+
+The default method of providing the dipole vector is not sufficient
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Sometimes, the dipole moment is determined in a more complex method than supported by the program. In those cases, it might be more appropriate to write the code here.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+    The oscillator for which the dipole moment magnitude should be determined.
+
+
+Returns
+-------
+magnitude : `np.float32`
+    The length that the dipole moment vector should have.
 
 
 
@@ -711,7 +799,5 @@ Returns
 -------
 VEG_ref : `np.ndarray`
     The position at which the sphere should be centered.
-
-
 
 

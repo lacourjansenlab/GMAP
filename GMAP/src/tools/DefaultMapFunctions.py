@@ -190,7 +190,7 @@ def VEG_from_position(Printer, map_, details):
     return locals()["GM_get_VEG_ref"]
 
 
-def get_get_dipole(Printer, map_):
+def get_get_dipole_dir(Printer, map_):
     """Default for obtaining the dipole
 
     parameters
@@ -204,26 +204,34 @@ def get_get_dipole(Printer, map_):
     returns
     -------
     GM_get_dipole : function
-        The function that every oscillator will call to get its dipole
+        The function that every oscillator can call to get its dipole
+        moment direction (might not always get used), and the position
+        of that dipole moment.
     """
 
     # based on the r_vec and r_pos lines in the map core, build a function.
-    codestring = "\ndef GM_get_dipole(Printer, Map, Syst, osc):\n"
+
+    # find direction of dipole vector
+    codestring = "\ndef GM_get_dipole_dir(Printer, Map, Syst, osc):\n"
     codestring += "    r_vec = " + envelop_int(
         " ".join(map_.rawcore["r_vec"]),
-        # "GM_MF.PBCvect(Syst.positions[osc.used_atoms[", "]])"
         "osc.positions_box[", "]"
     ) + "\n"
+    # Move vector back into the box, and normalize
+    codestring += "    r_vec = (r_vec - np.floor(r_vec + 0.5))\n"
+    codestring += "    r_vec = r_vec @ Syst.boxvects\n"
+    codestring += "    r_vec /= GM_MF.vec3_len(r_vec)\n\n"
+
+    # find position of the dipole
     codestring += "    r_pos = " + envelop_int(
         " ".join(map_.rawcore["r_pos"]),
-        # "GM_MF.PBCvect(Syst.positions[osc.used_atoms[", "]])"
         "osc.positions_box[", "]"
     ) + "\n"
     codestring += "    r_pos = (r_pos - np.floor(r_pos + 0.5))\n"
-    codestring += "    return r_vec @ Syst.boxvects, r_pos @ Syst.boxvects\n"
+    codestring += "    r_pos = r_pos @ Syst.boxvects\n"
+    codestring += "    return r_vec, r_pos\n"
 
     try:
-        # exec(codestring, globals(), locals())
         exec(codestring)
     except Exception as ex:
         corefile = (map_.directory / 'core.txt').resolve()
@@ -234,8 +242,77 @@ def get_get_dipole(Printer, map_):
         )
         return None
 
-    # return GM_get_dipole
-    return locals()["GM_get_dipole"]
+    return locals()["GM_get_dipole_dir"]
+
+
+def get_get_dipole_mag():
+    """Default for obtaining the dipole magnitude
+
+    returns
+    -------
+    GM_get_dipole_mag : function
+        The function that can be used to get the magnitude of a dipole moment.
+    """
+
+    def GM_get_dipole_mag(Printer, Map, Syst, osc):
+        if Map.Core.dipole_data_array is not None:
+            return uses_maps(
+                Map.Core.dipole_gas_phase,
+                osc.VEGout,
+                Map.Core.dipole_data_array
+            )
+        else:
+            return Map.Core.dipole_gas_phase
+
+    return GM_get_dipole_mag
+
+
+def get_get_dipole(map_):
+    """Default for obtaining the dipole.
+
+    If the size of the dipole does not depend on the electrostatics, or
+    only a single dependence (through magnitude), the returned method
+    just combines GM_get_dipole_dir with GM_get_dipole_mag.
+    If each of the x, y and z components have their own dependency on
+    the electrostatics, the r_vec from GM_get_dipole_dir is ignored.
+
+    parameters
+    ----------
+    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+        The map instance which this function will belong to.
+
+    returns
+    -------
+    GM_get_dipole : function
+        The function that every oscillator will call to get its dipole
+    """
+
+    # the version when we are working with magnitude
+    def GM_get_dipole_vmag(Printer, Map, Syst, osc):
+        r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
+        r_vec *= Map.code.GM_get_dipole_mag(Printer, Map, Syst, osc)
+        return r_vec, r_pos
+
+    # the version when we are working with a separate x, y, z component
+    # (this one ignores the earlier given r_vec)
+    def GM_get_dipole_vxyz(Printer, Map, Syst, osc):
+        _, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
+        xyz = [
+            uses_maps(omega, osc.VEGout, arr) for omega, arr in zip(
+                Map.Core.dipole_gas_phase, Map.Core.dipole_data_array)
+        ]
+        xyz_local = np.array(xyz, dtype="float32")
+        xyz_cartesian = np.dot(xyz_local, osc.rotation_matrix)
+        return xyz_cartesian, r_pos
+
+    if map_.Core.dipole_data_array is None:
+        return GM_get_dipole_vmag
+
+    if len(map_.Core.dipole_data_array.shape) == 2:
+        return GM_get_dipole_vmag
+
+    # now, the array must be of shape 3 (xyz-style file)
+    return GM_get_dipole_vxyz
 
 
 def get_get_rotation_matrix(Printer, map_):
@@ -329,6 +406,9 @@ def does_nothing(*args):
 def returns_last(*args):
     return args[-1]
 
+
+def uses_maps(gas_freq, VEG, mapconsts):
+    return gas_freq + np.sum(np.multiply(VEG, mapconsts))
 
 # ------------------------
 # Useful tools

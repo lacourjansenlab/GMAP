@@ -3,6 +3,9 @@
 import importlib
 import sys
 
+# 3rd party lib imports
+import numpy as np
+
 # local imports
 import GMAP.src.tools.DefaultMapFunctions as GM_DMF
 import GMAP.src.tools.FileHandler as GM_FH
@@ -299,8 +302,11 @@ class Map():
             "Printer": Printer
         },))
 
+        self.complete_code(("get_dipole",), ({"map_": self},))
+
         # Add in the remaining code
         self.complete_code((
+            "get_dipole_mag",
             "post_init",
             "pre_run",
             "pre_frame",
@@ -449,7 +455,7 @@ class Map():
         # build remaining functions (i.e. do something with the contents
         # of core.txt)
         functs_to_build = [
-            "get_dipole"
+            "get_dipole_dir"
         ]
         kwargs_for_build = [{
             "map_": self,
@@ -458,7 +464,7 @@ class Map():
 
         # If the code doesn't contain a function for getting the dipole, make
         # sure the two necessary keywords are there.
-        if not hasattr(self.code, "GM_get_dipole"):
+        if not hasattr(self.code, "get_dipole_dir"):
             if not all(
                 keyword in self.rawcore for keyword in ("r_vec", "r_pos")
             ):
@@ -743,6 +749,11 @@ class Core():
             self.check_VEG_reference(Printer, rawcore, Map.directory)
             if not self.success:
                 return
+
+        self.dipole_gas_phase, self.dipole_data_array = self.parse_dipoles(
+            Printer, rawcore, Map.directory)
+        if not self.success:
+            return
 
     def parse_functional_group(self, Printer, rawcore, mapdir):
         """Parses the input for keywords functional_group(_file) in core.txt
@@ -1494,6 +1505,272 @@ class Core():
             )
             self.success = False
             return
+
+    def parse_dipoles(self, Printer, rawcore, mapdir):
+        """Parse the information for dipole magnitude.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        rawcore : dict of str - list of str pairs
+            The raw contents of the file core.txt
+        mapdir : pathlib.Path
+            The path to the directory in which the map is defined.
+
+        Returns
+        -------
+        dipole_gas_phase : `np.float32`
+            What the base magnitude for the dipole should be. The program
+            can either use this as-is, or in combination with the contents
+            from a given file.
+        fdata : `np.ndarray` or None
+            An array of shape (n_estatic_ats, 10) or (3, n_estatic_ats, 10),
+            with padded zeros for any columns that are not required.
+            The 2D array is returned when the file is for magnitude, the 3D
+            when the file is for xyz separately.
+            If the parameter 'dipole_data_file' does not occur in the file
+            core.txt, None is returned instead.
+        """
+
+        # First, get the (gas phase) magnitude of the dipole, this must
+        # always be given.
+
+        if "dipole_gas_phase" not in rawcore:
+            Printer.warning(
+                "\nCould not find the parameter 'dipole_gas_phase' in the "
+                f"file {mapdir / 'core.txt'}. Without it, the map cannot "
+                "function. Please make sure it is present.",
+                "MI_MC_6"
+            )
+            self.success = False
+            return None, None
+
+        try:
+            dipole_gas_phase = [
+                np.float32(num) for num in rawcore["dipole_gas_phase"]
+            ]
+        except Exception as ex:  # no 0th entry, not floatable
+            Printer.warning(
+                "\nCould not interpret the choice for the parameter "
+                "'dipole_gas_phase'"
+                f" in the file {mapdir / 'core.txt'}. Please make sure "
+                "the choice consists of a single decimal number.",
+                "MI_MC_7", exception=ex
+            )
+            self.success = False
+            return None, None
+
+        # how many we need, depends on the other parameter, dipole_data_file.
+        # it can either give a single VEG matrix (for magnitude), or three,
+        # one for each of the XYZ components.
+        if "dipole_data_file" not in rawcore:
+            # This is actually completely fine. The dipole moment does not
+            # need to depend on the electrostatics, even if the frequency
+            # does. In that case, we only need a single value.
+            return dipole_gas_phase[0], None
+
+        # ---------------------------------------------------------------------
+
+        # Then, look for the optional dependency of the dipole on the
+        # electrostatics from the environment.
+
+        warntext = (
+            f"\nThe file {mapdir / 'core.txt'} contains an invalid choice for "
+            "the parameter 'dipole_data_file'. The expected format requires "
+            "both a specification of type of file (magnitude or xyz), and the "
+            "file name."
+        )
+
+        # now, the parameter  "dipole_data_file" exists.
+        match rawcore["dipole_data_file"][0]:
+            case "[N/A]":
+                return dipole_gas_phase[0], None
+            case "magnitude":
+                dipole_gas_phase = dipole_gas_phase[0]
+                choice = "mag"
+            case "xyz":
+                if len(dipole_gas_phase) != 3:
+                    Printer.warning(
+                        "\nInvalid choice for the parameter 'dipole_gas_phase'"
+                        f" in the file {mapdir / 'core.txt'}. Please make "
+                        "sure the choice consists of three decimal numbers.",
+                        "MI_MC_8"
+                    )
+                    self.success = False
+                    return None, None
+                choice = "xyz"
+            case _:
+                Printer.warning(warntext, "MI_MC_8")
+                self.success = False
+                return None, None
+
+        if len(rawcore["dipole_data_file"]) != 2:
+            Printer.warning(warntext, "MI_MC_8")
+            self.success = False
+            return None, None
+
+        # if the parameter exists, but the specified file does not:
+        fname = (mapdir / rawcore["dipole_data_file"][1]).resolve()
+        if not fname.is_file():
+            Printer.warning(
+                f"\nThe file {mapdir / 'core.txt'} wants to use the file "
+                f"{fname}"
+                " to define the dependency of the dipole moment on the "
+                "electrostatics. "
+                "However, this file does not exist.",
+                "MI_MC_3"
+            )
+            self.success = False
+            return None, None
+
+        try:
+            fdata = np.genfromtxt(
+                fname, "float32", missing_values=0, ndmin=2)
+        except Exception as ex:  # numpy had some issue
+            Printer.warning(
+                "\nNumpy could not interpret the contents of the file "
+                f"{fname}. Please make sure the file contains only decimal "
+                "numbers in a grid.",
+                "MI_MC_7", exception=ex
+            )
+            self.success = False
+            return dipole_gas_phase, None
+
+        # numpy read was succesfull, now to see whether the dimensions of the
+        # array from the file are correct.
+
+        # required (minimum) width of array:
+        deswidth = 1
+        if self.electrostatic_choice == "E":
+            deswidth = 4
+        elif self.electrostatic_choice == "G":
+            deswidth = 10
+
+        if choice == "mag":
+            desheight = len(self.electrostatic_atoms)
+        elif choice == "xyz":
+            desheight = len(self.electrostatic_atoms) * 3
+
+        array = self.confirm_array_size(
+            Printer, fdata, deswidth, desheight, fname)
+        if not self.success:
+            return dipole_gas_phase, None
+
+        if choice == "xyz":
+            array = array.reshape((3, -1, 10))
+
+        return dipole_gas_phase, array
+
+    def confirm_array_size(self, Printer, array, deswidth, desheight, fname):
+        """Makes sure that the array from the file is of the correct shape.
+
+        If not, self.success is set to false and None is immediately
+        returned, kicking of the abortion all the way up the call chain.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        array : `np.ndarray`
+            The array that was read from file, and whose shape/size must
+            be confirmed.
+        deswidth : int
+            The desired amount of columns in the array.
+        desheight : int
+            The desired amount of rows in the array
+        fname : `pathlib.Path`
+            The filename of the file the array is from.
+
+        Returns
+        -------
+        array : `np.ndarray` or None
+            None is returned if the input array was too small along at
+            least one dimension. If the array is larger in any dimension,
+            it is cropped to fit the dimensions exactly.
+            Finally, if the desired width was smaller than 10, the width
+            (after any possible cropping) is extended to 10, by padding
+            extra zeros.
+        """
+
+        # actual dimensions of array
+        foundheight, foundwidth = array.shape
+
+        success, array = self.report_array_size(
+            Printer, foundwidth, deswidth, "columns", fname, array)
+        success2, array = self.report_array_size(
+            Printer, foundheight, desheight, "rows", fname, array)
+        if not success or not success2:
+            self.success = False
+            return None
+
+        if foundwidth != 10:
+            toadd = np.zeros(
+                (array.shape[0], 10-array.shape[1]), dtype="float32")
+            array = np.concatenate((array, toadd), axis=1)
+        return array
+
+    @staticmethod
+    def report_array_size(Printer, foundlen, deslen, dir_, fname, fdata):
+        """Reports on the size of the array, and cuts when necessary.
+
+        This is a helper function for the method :meth:`confirm_array_size`.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        foundlen : int
+            The actual size in a single dimension.
+        deslen : int
+            The desired size in that same dimension.
+        dir_ : str
+            What dimension we are looking at, in a human-readable format.
+            Must be either 'rows' or 'columns'.
+        fname : `pathlib.Path`
+            The filename of the file the array is from.
+        fdata : `np.ndarray`
+            The array that was read from file, and whose shape/size must
+            be confirmed.
+
+        Returns
+        -------
+        success : bool
+            False if foundlen < deslen, True otherwise.
+        fdata : `np.ndarray`
+            The input fdata array, but cropped in case foundlen > deslen.
+        """
+
+        if foundlen < deslen:
+            Printer.warning(
+                f"\nThere was a problem with the contents of the file {fname}"
+                ". Please make sure the file has the correct amount of "
+                f"{dir_}.\n"
+                f"Amount of {dir_} found: {foundlen}\n"
+                f"Amount of {dir_} needed: {deslen}\n",
+                "MI_MC_8"
+            )
+            return False, fdata
+
+        elif foundlen > deslen:
+            Printer.warning(
+                f"Found unexpected contents for the file {fname}. There were "
+                f"{foundlen} {dir_} found, but only {deslen} {dir_} are "
+                f"needed. The first {deslen} {dir_} will be used for the "
+                "calculation. If this is not what you want, please terminate "
+                "the process manually.",
+                "MI_MC_8"
+            )
+            if dir_ == "columns":
+                return True, fdata[:, :deslen]
+            elif dir_ == "rows":
+                return True, fdata[:deslen, :]
+
+        else:
+            return True, fdata
 
 
 class Structure():

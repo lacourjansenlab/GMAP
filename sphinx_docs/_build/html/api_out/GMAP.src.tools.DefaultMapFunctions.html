@@ -581,7 +581,32 @@ this oscillator.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_get_dipole">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole" title="Link to this definition">#</a></dt>
+<dd><p>Default for obtaining the dipole.</p>
+<p>If the size of the dipole does not depend on the electrostatics, or
+only a single dependence (through magnitude), the returned method
+just combines GM_get_dipole_dir with GM_get_dipole_mag.
+If each of the x, y and z components have their own dependency on
+the electrostatics, the r_vec from GM_get_dipole_dir is ignored.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The map instance which this function will belong to.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_get_dipole</strong><span class="classifier">function</span></dt><dd><p>The function that every oscillator will call to get its dipole</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_get_dipole_dir">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole_dir" title="Link to this definition">#</a></dt>
 <dd><p>Default for obtaining the dipole</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -595,7 +620,23 @@ and handle errors.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>GM_get_dipole</strong><span class="classifier">function</span></dt><dd><p>The function that every oscillator will call to get its dipole</p>
+<dt><strong>GM_get_dipole</strong><span class="classifier">function</span></dt><dd><p>The function that every oscillator can call to get its dipole
+moment direction (might not always get used), and the position
+of that dipole moment.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.get_get_dipole_mag">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole_mag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole_mag" title="Link to this definition">#</a></dt>
+<dd><p>Default for obtaining the dipole magnitude</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_get_dipole_mag</strong><span class="classifier">function</span></dt><dd><p>The function that can be used to get the magnitude of a dipole moment.</p>
 </dd>
 </dl>
 </dd>
@@ -660,6 +701,11 @@ and handle errors.</p>
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">unused_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.unused_user" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.DefaultMapFunctions.uses_maps">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.DefaultMapFunctions.</span></span><span class="sig-name descname"><span class="pre">uses_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gas_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VEG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapconsts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.DefaultMapFunctions.uses_maps" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -719,6 +765,8 @@ and handle errors.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_adjust_oscillators"><code class="docutils literal notranslate"><span class="pre">get_adjust_oscillators()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_get_VEG_ref"><code class="docutils literal notranslate"><span class="pre">get_get_VEG_ref()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole"><code class="docutils literal notranslate"><span class="pre">get_get_dipole()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole_dir"><code class="docutils literal notranslate"><span class="pre">get_get_dipole_dir()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_get_dipole_mag"><code class="docutils literal notranslate"><span class="pre">get_get_dipole_mag()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_get_rotation_matrix"><code class="docutils literal notranslate"><span class="pre">get_get_rotation_matrix()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_post_frame"><code class="docutils literal notranslate"><span class="pre">get_post_frame()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_post_init"><code class="docutils literal notranslate"><span class="pre">get_post_init()</span></code></a></li>
@@ -727,6 +775,7 @@ and handle errors.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.get_pre_run"><code class="docutils literal notranslate"><span class="pre">get_pre_run()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.returns_last"><code class="docutils literal notranslate"><span class="pre">returns_last()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.unused_user"><code class="docutils literal notranslate"><span class="pre">unused_user()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.DefaultMapFunctions.uses_maps"><code class="docutils literal notranslate"><span class="pre">uses_maps()</span></code></a></li>
 </ul>
   </nav></div>
 

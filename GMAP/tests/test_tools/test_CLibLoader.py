@@ -4,17 +4,10 @@ src/tools/CLibLoader.py.
 
 Missing tests:
 
-(@ apr 30th '24):
-99-100, 159 (3 missed statements)
+(@ May 2nd '24):
+  (0 missed statements)
 
-- Unknown file (CL_VG_1)  (99, 100)
-
-(CUHTAT - currently unknown how to access this )
-- SU_FP_7 (CUHTAT)   (369-370)
-- RefPars parse choice - unknown dtype (CUHTAT)  (429)
-- RawPars verify choice - unknown dtype (CUHTAT)  (1080)
-- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1543-1544)
-- RunPars framenums - empty source (CUHTAT)   (1810)
+- Nothing is missing!
 """
 
 # 3rd party imports

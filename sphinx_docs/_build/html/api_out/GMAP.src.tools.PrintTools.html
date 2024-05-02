@@ -461,13 +461,10 @@ the desired printing behaviour.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.print_backlog" title="GMAP.src.tools.PrintTools.Printer.print_backlog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_backlog</span></code></a>()</p></td>
 <td><p>Prints the backlog so the program can stop.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.quit_early" title="GMAP.src.tools.PrintTools.Printer.quit_early"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quit_early</span></code></a>()</p></td>
-<td><p>Called when the program is quitted early</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.set_state" title="GMAP.src.tools.PrintTools.Printer.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a>(new_state, verbose, verbose_logfile)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.set_state" title="GMAP.src.tools.PrintTools.Printer.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a>(new_state, verbose, verbose_logfile)</p></td>
 <td><p>Change the current state of Printer</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.warning" title="GMAP.src.tools.PrintTools.Printer.warning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></a>(message, error_code[, exitbool, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.PrintTools.Printer.warning" title="GMAP.src.tools.PrintTools.Printer.warning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></a>(message, error_code[, exitbool, ...])</p></td>
 <td><p>Warning system.</p></td>
 </tr>
 </tbody>
@@ -509,13 +506,6 @@ the message will be printed/logged.</p>
 <dd><p>Prints the backlog so the program can stop.</p>
 <p>When called in startup mode, verbose and verbose_log are set to 3,
 the crash logfile is used, and the entire backlog is worked through.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Printer.quit_early">
-<span class="sig-name descname"><span class="pre">quit_early</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Printer.quit_early" title="Link to this definition">#</a></dt>
-<dd><p>Called when the program is quitted early</p>
-<p>Prints the backlog if there is any.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -582,7 +572,7 @@ that error can be caught and fed into this function.</p>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.PrintTools.Timer.add_time">
-<span class="sig-name descname"><span class="pre">add_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Timer.add_time" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">add_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.PrintTools.Timer.add_time" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -624,7 +614,8 @@ be easily retraced and removed after they’re no longer useful.</p>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>intlist</strong><span class="classifier">list of int</span></dt><dd><p>The list of integers to be packed.</p>
 </dd>
-<dt><strong>n_int</strong><span class="classifier">int</span></dt><dd><p>The amount of integers that can at most be there.</p>
+<dt><strong>n_int</strong><span class="classifier">int</span></dt><dd><p>The amount of integers that can at most be there. (The provided value
+itself will never appear!)</p>
 </dd>
 <dt><strong>make_shadow</strong><span class="classifier">bool, default=True</span></dt><dd><p>Whether the opposite should also be built - a list of all indices
 that weren’t in the intlist</p>
@@ -830,7 +821,6 @@ nanoseconds.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.add_time"><code class="docutils literal notranslate"><span class="pre">Printer.add_time()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.print"><code class="docutils literal notranslate"><span class="pre">Printer.print()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.print_backlog"><code class="docutils literal notranslate"><span class="pre">Printer.print_backlog()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.quit_early"><code class="docutils literal notranslate"><span class="pre">Printer.quit_early()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.set_state"><code class="docutils literal notranslate"><span class="pre">Printer.set_state()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.PrintTools.Printer.warning"><code class="docutils literal notranslate"><span class="pre">Printer.warning()</span></code></a></li>
 </ul>

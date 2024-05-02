@@ -28,7 +28,7 @@ For more information, check the manual on N/A.
 import sys
 
 # 3rd party lib imports
-import numpy as np
+# import numpy as np
 
 # local imports
 import GMAP.src.tools.CLibLoader as GM_CL
@@ -129,8 +129,7 @@ def trj_loop(Printer, RunPars, System):
         # (only if needed) recalc COM
 
         # initialize output structures (like Ham)
-        hamiltonian = np.zeros((System.nosc, System.nosc), dtype="float32")
-        dipoles = np.zeros((System.nosc, 3), dtype="float32")
+        outputs = GM_PF.generate_output_structures(RunPars, System)
 
         Printer.add_time(4, "initialize done. next: map init", "ms")
 
@@ -142,8 +141,8 @@ def trj_loop(Printer, RunPars, System):
         Printer.add_time(4, "map init done. next: calculation", "ms")
 
         # perform the actual calculations
-        hamiltonian, dipoles = GM_PF.calc_frame(
-            Printer, RunPars, System, dipoles, hamiltonian)
+        outputs = GM_PF.calc_frame(
+            Printer, RunPars, System, outputs)
 
         Printer.add_time(4, "calculation done. next: map final", "ms")
 
@@ -155,7 +154,7 @@ def trj_loop(Printer, RunPars, System):
         Printer.add_time(4, "map final done. next: write output", "ms")
 
         # write calculated data to files
-        GM_FH.write_output(RunPars, frame.frame, hamiltonian, dipoles)
+        GM_FH.write_output(RunPars, frame.frame, outputs)
 
     # lastly, do postcalc:
     for mapname in System.oscillators_ordered.keys():

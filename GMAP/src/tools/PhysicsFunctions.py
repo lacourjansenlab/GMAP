@@ -5,7 +5,6 @@ import numpy as np
 
 # local imports
 import GMAP.src.tools.CLibLoader as GM_CL
-from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 def calc_CoM(System, atomlist):
@@ -81,7 +80,7 @@ def system_CoM(
     return CoM_array
 
 
-def calc_frame(Printer, RunPars, System, dipoles, hamiltonian):
+def calc_frame(Printer, RunPars, System, outputs):
     """The heart of the per-frame loop. Does the actual calculations.
 
     Currently, for each oscillator, the potential is calculated (if
@@ -93,37 +92,34 @@ def calc_frame(Printer, RunPars, System, dipoles, hamiltonian):
     VEGlib = GM_CL.VEG_CLib()
 
     for oscix, oscillator in enumerate(System.oscillators):
+        # we also need dipoles for the (full) hamiiltonian.
         if any(data in RunPars.output_data for data in ("ham", "dip")):
             if oscillator.Map.Core.electrostatic_choice in ("V", "E", "G"):
                 # calculate VEG
                 VEGlib.calcPot_perres_mm(System, RunPars, oscillator)
-                V = oscillator.VEGout[:, 0]
-            else:
-                V = None
-            if oscillator.Map.Core.electrostatic_choice in ("E", "G"):
-                E = oscillator.VEGout[:, 1:4]
-            else:
-                E = None
-            if oscillator.Map.Core.electrostatic_choice == "G":
-                G = oscillator.VEGout[:, 4:]
-            else:
-                G = None
 
-            dpr(V, E, G)
+                # ROTATE VEG!
 
-            dipoles[oscix] = calc_dipole()
+            r_vec, r_pos = calc_dipole(Printer, System, oscillator)
+            outputs["dipoles"][oscix] = r_vec
+
+            if any(data in RunPars.output_data for data in ("ham")):
+                outputs["dipole_pos"][oscix] = r_pos
 
         if "ham" in RunPars.output_data:
-            hamiltonian[oscix, oscix] = calc_frequency()
+            outputs["hamiltonian"][oscix, oscix] = calc_frequency()
             prep_coupling()
 
     # for every oscillator pair (that should be covered) - calc_coupling
 
-    return hamiltonian, dipoles
+    return outputs
 
 
-def calc_dipole():
-    return
+def calc_dipole(Printer, System, oscillator):
+    # every map should have a calc dipole function
+    map_ = oscillator.Map
+    r_vec, r_pos = map_.code.GM_get_dipole(Printer, map_, System, oscillator)
+    return r_vec, r_pos
 
 
 def calc_frequency():
@@ -136,3 +132,15 @@ def prep_coupling():
 
 def calc_coupling():
     return
+
+
+def generate_output_structures(RunPars, System):
+    outputs = {}
+    if any(data in RunPars.output_data for data in ("ham")):
+        outputs["hamiltonian"] = np.zeros(
+            (System.nosc, System.nosc), dtype="float32")
+        outputs["dipole_pos"] = np.zeros((System.nosc, 3), dtype="float32")
+    elif any(data in RunPars.output_data for data in ("ham", "dip")):
+        outputs["dipoles"] = np.zeros((System.nosc, 3), dtype="float32")
+
+    return outputs

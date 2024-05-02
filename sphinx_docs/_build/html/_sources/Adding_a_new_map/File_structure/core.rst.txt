@@ -42,7 +42,6 @@ Here, we say that the group consists of a single residue, named ASN. It consists
     functional_group        [GLN]    CD  OE1  CG  NE2  HE21  HE22
 
 
-
 Step 2 - An oscillator on multiple residues
 ===========================================
 
@@ -142,6 +141,7 @@ But this query would not find a match::
     functional_group   [ETE]  C(1,2,3) H(4) H(5) C(1,4,5) H(2) H(3)
 
 The first would work, but not the second, as the first atom, C would be the first atom of name C found in the residue named ETE. This would be the one labelled C1 in the drawing. It is bound to H11 and H12 in the drawing - these will become the first and second occurence of 'H' in functional_group, respectively. Therefore, When saying the first occurrence of C should be bound to the third and fourth occurrence of H (as in the second example), no matches will be found.
+
 
 Bonus - counting atoms
 ======================
@@ -446,6 +446,127 @@ These two are specified using the parameters r_vec (the dipole vector) and r_pos
     r_pos                   0     # vector lives on the carbon atom.
 
 Just as with xyz_uvec, the calculations performed for r_vec and r_pos do take the periodic boundary conditions into account. :ref:`This page<Theory_page_PBC>` shows you how.
+
+The vector found for r_vec will be normalized - its purpose is solely to indicate a direction.
+
+
+*************
+VEG_reference
+*************
+
+*mandatory parameter*
+
+Most mappings depend on some electrostatic property on some position(s). These properties are calculated by the program. While these electrostatic properties are dependent on all atoms around, the atoms closest by have the largest impact. Therefore, a lot of computational time is saved by only considering the atoms within a certain radius. But, within a certain radius of what? Thats what this parameter encodes. Of course, the center of this sphere of charges is very likely to be somewhere within the molecule considered, but exactly where can differ. This keyword lets you specify the exact point where the sphere should be centered. There are three different ways of doing so:
+
+
+position
+========
+
+Defining the position works much the same as defining r_pos, where you determine this point using some atom positions::
+
+    functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+    used_atoms              0 1 3 4   # CG OD1 ND2 HD21
+    electrostatic_atoms     0 2  # C and N
+    electrostatic_choice    E
+    type                    standard
+    x_uvec                  1-0   # O-C
+    y_uvec                  2-0   # the part of N-C orthogonal to O-C
+    r_vec                   1-0   # points along CO bond
+    r_pos                   0     # vector lives on the carbon atom.
+    VEG_reference           position 1  # at the position of the oxygen atom
+
+Any kind of position determination is possible. Considering the above example::
+
+    VEG_reference           position (0 + 1) / 2.0
+
+This way, we define the position to be the average position of atoms 0 and 1, or, in other words, the position is halfway between the carbon and oxygen atoms.
+
+
+CoM
+===
+
+Very often, this kind of sphere of charges is centred around a certain center of mass. This parameter simply lists a group of atoms, whose center of mass defines the center of the sphere of charges. The indices are compared to used_atoms::
+
+    functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+    used_atoms              0 1 3 4   # CG OD1 ND2 HD21
+    electrostatic_atoms     0 2  # C and N
+    electrostatic_choice    E
+    type                    standard
+    x_uvec                  1-0   # O-C
+    y_uvec                  2-0   # the part of N-C orthogonal to O-C
+    r_vec                   1-0   # points along CO bond
+    r_pos                   0     # vector lives on the carbon atom.
+    VEG_reference           CoM  0 1 3 4 5
+
+In this example, the sphere is centered on the center of mass of the carbon, oxygen, nitrogen and two hydrogen atoms.
+
+
+residues
+========
+
+Some maps are defined in an even simpler way - the sphere is centered on the center of mass of the entire residue the oscillator is a part of::
+
+    functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+    used_atoms              0 1 3 4   # CG OD1 ND2 HD21
+    electrostatic_atoms     0 2  # C and N
+    electrostatic_choice    E
+    type                    standard
+    x_uvec                  1-0   # O-C
+    y_uvec                  2-0   # the part of N-C orthogonal to O-C
+    r_vec                   1-0   # points along CO bond
+    r_pos                   0     # vector lives on the carbon atom.
+    VEG_reference           residues 0
+
+What happens here is a little bit more involved: the index provided is of an atom, just as with the 'position' and 'CoM' options. The program then checks which residue this atom belongs to. Then, the center of mass of this residue is found.
+
+If multiple atoms are given, then for each atom, the residue is found. This allows to add the atoms of multiple residues together (for oscillators that live on multiple residues). If multiple atoms are given that all belong to the same residue, that residue gets more 'weight' - it is _not_ the case that 'extra' atoms of the same residue are ignored.
+
+
+****************
+dipole_gas_phase
+****************
+
+*mandatory parameter*
+
+As illustrated under 'r_pos and r_vec', the dipole moment of oscillators is a key property for the program. While the information in that section is used to give the direction of the dipole moment vector (and its position), it doesn't contain any information on its magnitude. Thats what this parameter, and the parameter 'dipole_data_file' are for. This parameter specifies the (base) magnitude of the dipole moment, in Debye. If the magnitude can vary, see 'dipole_data_file'.
+
+If this parameter is used alone (or in combination with the 'magnitude' mode of 'dipole_data_file'), you can just use a single decimal number to indicate the magnitude in Debye::
+
+    functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+    used_atoms              0 1 3 4   # CG OD1 ND2 HD21
+    electrostatic_atoms     0 2  # C and N
+    electrostatic_choice    E
+    type                    standard
+    x_uvec                  1-0   # O-C
+    y_uvec                  2-0   # the part of N-C orthogonal to O-C
+    r_vec                   1-0   # points along CO bond
+    r_pos                   0     # vector lives on the carbon atom.
+    VEG_reference           position 1  # at the position of the oxygen atom
+    dipole_gas_phase        0.32
+
+If, instead, the parameter 'dipole_data_file' is used in 'xyz' mode, this parameter should be provided with **three** values, the gas-phase value for the x, y and z components. See the parameter 'dipole_data_file' for more information.
+
+
+****************
+dipole_data_file
+****************
+
+*optional parameter*
+
+As illustrated under 'r_pos and r_vec', the dipole moment of oscillators is a key property for the program. While the information in that section is used to give the direction of the dipole moment vector (and its position), it doesn't contain any information on its magnitude. Thats what this parameter, and the parameter 'dipole_gas_phase' are for. If the magnitude of the dipole moment cannot vary, see dipole_gas_phase.
+
+This parameter is used for defining how the dipole moment depends on the electrostatics from the environment. There are two different options; either the dipole has a set direction with the magnitude depending on the elecctrostatics, or each of the x, y and z components of the vector depend on the electrostatics separately. Each of the two options requires a slightly different file format, so this parameter is specified using two parts. First, you either specify ``magnitude`` or ``xyz`` (depending on which format), and then this is followed up by a filename (with extension) present in the same mapping directory. This file will contain the actual dependency.
+
+
+magnitude
+=========
+
+In this case, the dipole moment has a set direction (provided using the parameter 'r_vec'), with a varying magnitude. The program assumes the following formula for calculating the dipole moment magnitude:
+
+.. math::
+    magnitude = \mu_gas + \sum_n(V*c_{V_n} + \sum_i(\vec{E}_i * c_{E_{n,i}}) + \sum_i(\vec{G}_i * c_{G_{n,i}}))
+
+
 
 
 ****************

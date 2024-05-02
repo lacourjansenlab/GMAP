@@ -420,6 +420,17 @@ on each of the possible files can be found in the pages linked below.</p>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="core.html#r-pos-and-r-vec">r_pos and r_vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#veg-reference">VEG_reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#position">position</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#com">CoM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="core.html#residues">residues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#dipole-gas-phase">dipole_gas_phase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html#dipole-data-file">dipole_data_file</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core.html#magnitude">magnitude</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="core.html#influencer-group">influencer_group</a></li>
 <li class="toctree-l2"><a class="reference internal" href="core.html#add-corefile">add_corefile</a></li>
 </ul>
@@ -511,7 +522,7 @@ on each of the possible files can be found in the pages linked below.</p>
 <li class="toctree-l4"><a class="reference internal" href="main_py.html#id22">Parameters</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-get-rotation-matrix-files-printer-map-syst-osc">GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-get-rotation-matrix-printer-map-syst-osc">GM_get_rotation_matrix(Printer, Map, Syst, osc)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="main_py.html#id23">Example uses</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="main_py.html#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">The default method of providing the rotation matrix is not sufficient</a></li>
 </ul>
@@ -521,14 +532,44 @@ on each of the possible files can be found in the pages linked below.</p>
 <li class="toctree-l4"><a class="reference internal" href="main_py.html#returns">Returns</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-get-dipole-files-printer-map-syst-osc">GM_get_dipole(Files, Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-get-dipole-dir-printer-map-syst-osc">GM_get_dipole_dir(Printer, Map, Syst, osc)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="main_py.html#id26">Example uses</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="main_py.html#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#the-default-method-of-providing-the-dipole-vector-direction-is-not-sufficient">The default method of providing the dipole vector direction is not sufficient</a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="main_py.html#id27">Available attributes of Map</a></li>
 <li class="toctree-l4"><a class="reference internal" href="main_py.html#id28">Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="main_py.html#id29">Returns</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-get-dipole-mag-printer-map-syst-osc">GM_get_dipole_mag(Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id30">Example uses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#id31">The default method of providing the dipole vector direction is not sufficient</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id32">Available attributes of Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id33">Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id34">Returns</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-get-dipole-printer-map-syst-osc">GM_get_dipole(Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id35">Example uses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id36">Available attributes of Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id37">Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id38">Returns</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="main_py.html#gm-get-veg-ref-printer-map-syst-osc">GM_get_VEG_ref(Printer, Map, Syst, osc)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id39">Example uses</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="main_py.html#the-default-method-of-providing-the-elecctrostatics-sphere-center-is-not-sufficient">The default method of providing the elecctrostatics sphere center is not sufficient</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id40">Available attributes of Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id41">Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main_py.html#id42">Returns</a></li>
 </ul>
 </li>
 </ul>

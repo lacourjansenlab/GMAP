@@ -435,8 +435,29 @@ the local indices.</p>
 <dt><strong>electrostatic_atoms</strong><span class="classifier">list of int</span></dt><dd><p>The system indices of all atoms that the map should calculate
 the electrostatic properties for.</p>
 </dd>
+<dt><strong>local_atoms</strong><span class="classifier">list of int</span></dt><dd><p>The system indices of all atoms that the map should calculate
+the electrostatic properties for.</p>
+</dd>
+<dt><strong>electrostatic_atoms_c</strong><span class="classifier"><cite>ctypes.Array</cite></span></dt><dd><p>The c-friendly variant of self.electrostatic_atoms</p>
+</dd>
+<dt><strong>local_atoms_c</strong><span class="classifier"><cite>ctypes.Array</cite></span></dt><dd><p>The c-friendly variant of self.local_atoms</p>
+</dd>
+<dt><strong>n_estatic_atoms</strong><span class="classifier"><cite>np.int32</cite></span></dt><dd><p>The c-friendly form for the length of self.electrostatic_atoms</p>
+</dd>
+<dt><strong>n_local_atoms</strong><span class="classifier"><cite>np.int32</cite></span></dt><dd><p>The c-friendly form for the length of self.local_atoms</p>
+</dd>
+<dt><strong>VEGout</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The array to which the output of the VEG calculations will be
+written. Is of shape (n_estatic_atoms, 10).</p>
+</dd>
+<dt><strong>VEGout_c</strong><span class="classifier"><cite>ctypes.Array</cite></span></dt><dd><p>The c-friendly variant of self.VEGout</p>
+</dd>
 <dt><strong>positions_box</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The positions of all atoms given in used_atoms, in box
 coordinates.</p>
+</dd>
+<dt><strong>VEG_refpos = `np.ndarray`</strong></dt><dd><p>The position on which the sphere defining the electrostatics
+should be centered.</p>
+</dd>
+<dt><strong>VEG_refpos_c = `ctypes.Array`</strong></dt><dd><p>The c-friendly variant of self.VEG_refpos_c</p>
 </dd>
 </dl>
 </dd>
@@ -444,7 +465,7 @@ coordinates.</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update" title="GMAP.src.tools.SystemReader.Oscillator.frame_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame_update</span></code></a>(Syst)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update" title="GMAP.src.tools.SystemReader.Oscillator.frame_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame_update</span></code></a>(Printer, Syst)</p></td>
 <td><p>Update the frame-specific attributes of the instance.</p></td>
 </tr>
 </tbody>
@@ -454,11 +475,14 @@ coordinates.</p>
 <tr class="row-odd"><td><p><strong>get_VEG_ref</strong></p></td>
 <td></td>
 </tr>
+<tr class="row-even"><td><p><strong>get_rotation_matrix</strong></p></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Oscillator.frame_update">
-<span class="sig-name descname"><span class="pre">frame_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Syst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">frame_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Syst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update" title="Link to this definition">#</a></dt>
 <dd><p>Update the frame-specific attributes of the instance.</p>
 <p>When a new frame starts, the system positions array is updated,
 so the information in this class that depends on that must be
@@ -476,6 +500,11 @@ updated, too.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Oscillator.get_VEG_ref">
 <span class="sig-name descname"><span class="pre">get_VEG_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">System</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Oscillator.get_VEG_ref" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.Oscillator.get_rotation_matrix">
+<span class="sig-name descname"><span class="pre">get_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">System</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.Oscillator.get_rotation_matrix" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -717,12 +746,8 @@ ones calculations will be performed on.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.set_properties" title="GMAP.src.tools.SystemReader.System.set_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_properties</span></code></a>(Printer)</p></td>
 <td><p>Sets the basic properties of the system.</p></td>
 </tr>
-</tbody>
-</table>
-<table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>update_properties</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.SystemReader.System.update_properties" title="GMAP.src.tools.SystemReader.System.update_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_properties</span></code></a>(Printer)</p></td>
+<td><p>Reloads the frame-dependent properties of the system.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1025,8 +1050,20 @@ contains.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.SystemReader.System.update_properties">
-<span class="sig-name descname"><span class="pre">update_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.update_properties" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">update_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.SystemReader.System.update_properties" title="Link to this definition">#</a></dt>
+<dd><p>Reloads the frame-dependent properties of the system.</p>
+<p>This function is supposed to be called at the beginning of every
+frame to ensure that the properties stored inside are up to date.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1156,6 +1193,7 @@ parameters.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator"><code class="docutils literal notranslate"><span class="pre">Oscillator</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator.frame_update"><code class="docutils literal notranslate"><span class="pre">Oscillator.frame_update()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator.get_VEG_ref"><code class="docutils literal notranslate"><span class="pre">Oscillator.get_VEG_ref()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Oscillator.get_rotation_matrix"><code class="docutils literal notranslate"><span class="pre">Oscillator.get_rotation_matrix()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.SystemReader.Residues"><code class="docutils literal notranslate"><span class="pre">Residues</span></code></a><ul class="nav section-nav flex-column">

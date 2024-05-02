@@ -13,3 +13,5 @@ z_uvec                 2-1
 # missing x_uvec or y_uvec
 
 VEG_reference    CoM   2 3
+
+dipole_gas_phase       0.3

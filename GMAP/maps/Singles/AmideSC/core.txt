@@ -79,7 +79,7 @@ frequency_data_file     Skinner.txt
 
 # ------------------------
 
-dipole_gas_phase        0.24
+dipole_gas_phase        0.24  # The (base) magnitude of the dipole vectors
 dipole_data_file        [N/A]   # There is no file - dipole (by default) does not relate to VEG
 
 # -------------------
@@ -96,7 +96,7 @@ dipole_data_file        [N/A]   # There is no file - dipole (by default) does no
 x_uvec    1-0  # this is comment
 y_uvec    3-0
 
-r_vec     1-0
+r_vec     1-0  # only the direction, normalized.
 r_pos     0
 
 # ---------------------

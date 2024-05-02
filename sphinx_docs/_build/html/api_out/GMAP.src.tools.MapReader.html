@@ -464,11 +464,17 @@ positions of the atoms in used_atoms, starting counting at 0.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.check_bonds" title="GMAP.src.tools.MapReader.Core.check_bonds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_bonds</span></code></a>(Printer, corefile)</p></td>
 <td><p>Checks whether the indices supplied for bonds actually exist.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.funcgroup_parse_infile" title="GMAP.src.tools.MapReader.Core.funcgroup_parse_infile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcgroup_parse_infile</span></code></a>(funcgroup)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.confirm_array_size" title="GMAP.src.tools.MapReader.Core.confirm_array_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confirm_array_size</span></code></a>(Printer, array, deswidth, ...)</p></td>
+<td><p>Makes sure that the array from the file is of the correct shape.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.funcgroup_parse_infile" title="GMAP.src.tools.MapReader.Core.funcgroup_parse_infile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcgroup_parse_infile</span></code></a>(funcgroup)</p></td>
 <td><p>Parse the choice made for functional_groups</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile" title="GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcgroupfile_to_infile</span></code></a>(fname)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile" title="GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">funcgroupfile_to_infile</span></code></a>(fname)</p></td>
 <td><p>Parses the functional_group_file from a map into infile format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_dipoles" title="GMAP.src.tools.MapReader.Core.parse_dipoles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_dipoles</span></code></a>(Printer, rawcore, mapdir)</p></td>
+<td><p>Parse the information for dipole magnitude.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_estatic_atoms" title="GMAP.src.tools.MapReader.Core.parse_estatic_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_estatic_atoms</span></code></a>(Printer, rawcore, mapdir)</p></td>
 <td><p>Parse the choice for the parameter electrostatic_atoms</p></td>
@@ -490,6 +496,9 @@ positions of the atoms in used_atoms, starting counting at 0.</p>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.parse_used_atoms" title="GMAP.src.tools.MapReader.Core.parse_used_atoms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_used_atoms</span></code></a>(Printer, rawcore, mapdir)</p></td>
 <td><p>Parse the choice for the parameter used_atoms</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.MapReader.Core.report_array_size" title="GMAP.src.tools.MapReader.Core.report_array_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">report_array_size</span></code></a>(Printer, foundlen, deslen, ...)</p></td>
+<td><p>Reports on the size of the array, and cuts when necessary.</p></td>
 </tr>
 </tbody>
 </table>
@@ -526,6 +535,43 @@ and handle errors.</p>
 and handle errors.</p>
 </dd>
 <dt><strong>corefile</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The name + path of the core.txt file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Core.confirm_array_size">
+<span class="sig-name descname"><span class="pre">confirm_array_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deswidth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desheight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Core.confirm_array_size" title="Link to this definition">#</a></dt>
+<dd><p>Makes sure that the array from the file is of the correct shape.</p>
+<p>If not, self.success is set to false and None is immediately
+returned, kicking of the abortion all the way up the call chain.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>array</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The array that was read from file, and whose shape/size must
+be confirmed.</p>
+</dd>
+<dt><strong>deswidth</strong><span class="classifier">int</span></dt><dd><p>The desired amount of columns in the array.</p>
+</dd>
+<dt><strong>desheight</strong><span class="classifier">int</span></dt><dd><p>The desired amount of rows in the array</p>
+</dd>
+<dt><strong>fname</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The filename of the file the array is from.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>array</strong><span class="classifier"><cite>np.ndarray</cite> or None</span></dt><dd><p>None is returned if the input array was too small along at
+least one dimension. If the array is larger in any dimension,
+it is cropped to fit the dimensions exactly.
+Finally, if the desired width was smaller than 10, the width
+(after any possible cropping) is extended to 10, by padding
+extra zeros.</p>
 </dd>
 </dl>
 </dd>
@@ -610,6 +656,40 @@ for more information - look for code MI_MC_4.</p>
 <dt><strong>file_contents</strong><span class="classifier">list of list of str</span></dt><dd><p>The contents of the file parsed into the same format as would
 have been obtained when the molecule would have been defined in
 the file itself</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Core.parse_dipoles">
+<span class="sig-name descname"><span class="pre">parse_dipoles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rawcore</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapdir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Core.parse_dipoles" title="Link to this definition">#</a></dt>
+<dd><p>Parse the information for dipole magnitude.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>rawcore</strong><span class="classifier">dict of str - list of str pairs</span></dt><dd><p>The raw contents of the file core.txt</p>
+</dd>
+<dt><strong>mapdir</strong><span class="classifier">pathlib.Path</span></dt><dd><p>The path to the directory in which the map is defined.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>dipole_gas_phase</strong><span class="classifier"><cite>np.float32</cite></span></dt><dd><p>What the base magnitude for the dipole should be. The program
+can either use this as-is, or in combination with the contents
+from a given file.</p>
+</dd>
+<dt><strong>fdata</strong><span class="classifier"><cite>np.ndarray</cite> or None</span></dt><dd><p>An array of shape (n_estatic_ats, 10) or (3, n_estatic_ats, 10),
+with padded zeros for any columns that are not required.
+The 2D array is returned when the file is for magnitude, the 3D
+when the file is for xyz separately.
+If the parameter ‘dipole_data_file’ does not occur in the file
+core.txt, None is returned instead.</p>
 </dd>
 </dl>
 </dd>
@@ -796,6 +876,42 @@ and handle errors.</p>
 <dt><strong>used_atoms</strong><span class="classifier">list of int</span></dt><dd><p>The indices of the atoms in functional_group that should actually
 be stored for later use. The indices are the positions of the
 atoms in functional_group, starting counting at 0.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="GMAP.src.tools.MapReader.Core.report_array_size">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">report_array_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">foundlen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deslen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fdata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.Core.report_array_size" title="Link to this definition">#</a></dt>
+<dd><p>Reports on the size of the array, and cuts when necessary.</p>
+<p>This is a helper function for the method <a class="reference internal" href="#GMAP.src.tools.MapReader.Core.confirm_array_size" title="GMAP.src.tools.MapReader.Core.confirm_array_size"><code class="xref py py-meth docutils literal notranslate"><span class="pre">confirm_array_size()</span></code></a>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>foundlen</strong><span class="classifier">int</span></dt><dd><p>The actual size in a single dimension.</p>
+</dd>
+<dt><strong>deslen</strong><span class="classifier">int</span></dt><dd><p>The desired size in that same dimension.</p>
+</dd>
+<dt><strong>dir_</strong><span class="classifier">str</span></dt><dd><p>What dimension we are looking at, in a human-readable format.
+Must be either ‘rows’ or ‘columns’.</p>
+</dd>
+<dt><strong>fname</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The filename of the file the array is from.</p>
+</dd>
+<dt><strong>fdata</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The array that was read from file, and whose shape/size must
+be confirmed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>success</strong><span class="classifier">bool</span></dt><dd><p>False if foundlen &lt; deslen, True otherwise.</p>
+</dd>
+<dt><strong>fdata</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The input fdata array, but cropped in case foundlen &gt; deslen.</p>
 </dd>
 </dl>
 </dd>
@@ -1347,6 +1463,31 @@ residues actually lock together.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.MapReader.manage_maps">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MapReader.</span></span><span class="sig-name descname"><span class="pre">manage_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RunPars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapdict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.manage_maps" title="Link to this definition">#</a></dt>
+<dd><p>Initializes and manages the detected maps.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>Files</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
+Has to be updated after RunPars is finalized.</p>
+</dd>
+<dt><strong>Printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt><strong>RunPars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.ParameterParser.html#GMAP.src.tools.ParameterParser.RunPars" title="GMAP.src.tools.ParameterParser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic run-defining
+parameters.</p>
+</dd>
+<dt><strong>mapdict</strong><span class="classifier">dict of str: <a class="reference internal" href="#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> pairs</span></dt><dd><p>Stores all the <a class="reference internal" href="#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> objects for
+each map supplied. The keys are the Map.name attributes corresponding
+to the maps stored as values.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.MapReader.scan_mapdirs">
 <span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.MapReader.</span></span><span class="sig-name descname"><span class="pre">scan_mapdirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapdirs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#GMAP.src.tools.MapReader.scan_mapdirs" title="Link to this definition">#</a></dt>
 <dd><p>Gives a list of newly-generated Map objects</p>
@@ -1419,8 +1560,10 @@ is created by <a class="reference internal" href="GMAP.src.tools.ParameterParser
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core"><code class="docutils literal notranslate"><span class="pre">Core</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.check_VEG_reference"><code class="docutils literal notranslate"><span class="pre">Core.check_VEG_reference()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.check_bonds"><code class="docutils literal notranslate"><span class="pre">Core.check_bonds()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.confirm_array_size"><code class="docutils literal notranslate"><span class="pre">Core.confirm_array_size()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.funcgroup_parse_infile"><code class="docutils literal notranslate"><span class="pre">Core.funcgroup_parse_infile()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.funcgroupfile_to_infile"><code class="docutils literal notranslate"><span class="pre">Core.funcgroupfile_to_infile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_dipoles"><code class="docutils literal notranslate"><span class="pre">Core.parse_dipoles()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_estatic_atoms"><code class="docutils literal notranslate"><span class="pre">Core.parse_estatic_atoms()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_estatic_choice"><code class="docutils literal notranslate"><span class="pre">Core.parse_estatic_choice()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_fg_bonds"><code class="docutils literal notranslate"><span class="pre">Core.parse_fg_bonds()</span></code></a></li>
@@ -1428,6 +1571,7 @@ is created by <a class="reference internal" href="GMAP.src.tools.ParameterParser
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_local_atoms"><code class="docutils literal notranslate"><span class="pre">Core.parse_local_atoms()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_type"><code class="docutils literal notranslate"><span class="pre">Core.parse_type()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.parse_used_atoms"><code class="docutils literal notranslate"><span class="pre">Core.parse_used_atoms()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Core.report_array_size"><code class="docutils literal notranslate"><span class="pre">Core.report_array_size()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Map"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a><ul class="nav section-nav flex-column">
@@ -1451,6 +1595,7 @@ is created by <a class="reference internal" href="GMAP.src.tools.ParameterParser
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.Structure.check_bonds"><code class="docutils literal notranslate"><span class="pre">Structure.check_bonds()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.manage_maps"><code class="docutils literal notranslate"><span class="pre">manage_maps()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.MapReader.scan_mapdirs"><code class="docutils literal notranslate"><span class="pre">scan_mapdirs()</span></code></a></li>
 </ul>
   </nav></div>

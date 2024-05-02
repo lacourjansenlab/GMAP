@@ -917,7 +917,7 @@ class Oscillator:
         The c-friendly form for the length of self.local_atoms
     VEGout : `np.ndarray`
         The array to which the output of the VEG calculations will be
-        written
+        written. Is of shape (n_estatic_atoms, 10).
     VEGout_c : `ctypes.Array`
         The c-friendly variant of self.VEGout
     positions_box : `np.ndarray`
@@ -949,12 +949,7 @@ class Oscillator:
         ))
         self.n_estatic_atoms = np.int32(len(self.electrostatic_atoms))
         self.n_local_atoms = np.int32(len(self.local_atoms))
-        estat_choice_dir = {None: 0, "V": 1, "E": 4, "G": 10}
-        self.VEGout = np.zeros(
-            (self.n_estatic_atoms, estat_choice_dir[
-                self.Map.Core.electrostatic_choice]),
-            dtype="float32"
-        )
+        self.VEGout = np.zeros((self.n_estatic_atoms, 10), dtype="float32")
         self.VEGout_c = np.ctypeslib.as_ctypes(np.ravel(self.VEGout))
 
     def frame_update(self, Printer, Syst):
@@ -973,11 +968,16 @@ class Oscillator:
             Syst.positions[self.used_atoms] @ Syst.boxvects_inv)
         self.VEG_refpos = self.get_VEG_ref(Printer, Syst)
         self.VEG_refpos_c = np.ctypeslib.as_ctypes(self.VEG_refpos)
+        self.rotation_matrix = self.get_rotation_matrix(Printer, Syst)
 
     def get_VEG_ref(self, Printer, System):
         return self.Map.code.GM_get_VEG_ref(
             Printer, self.Map, System, self
         )
+
+    def get_rotation_matrix(self, Printer, System):
+        return self.Map.code.GM_get_rotation_matrix(
+            Printer, self.Map, System, self)
 
 
 def gen_universe(Printer, RunPars):

@@ -856,8 +856,8 @@ about this map.</p>
 </dl>
 </section>
 </section>
-<section id="gm-get-rotation-matrix-files-printer-map-syst-osc">
-<h3>GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-rotation-matrix-files-printer-map-syst-osc" title="Link to this heading">#</a></h3>
+<section id="gm-get-rotation-matrix-printer-map-syst-osc">
+<h3>GM_get_rotation_matrix(Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-rotation-matrix-printer-map-syst-osc" title="Link to this heading">#</a></h3>
 <p>Returns the rotation matrix for the provided oscillator osc.</p>
 <p>A map usually requires the electrostatic properties to be given in a certain coordinate basis. Usually, this is not the global cartesian coordinates, but rather those rotated in a certain way. The rotation matrix defines the desired basis in global cartesian coordinates.</p>
 <div class="admonition important">
@@ -905,9 +905,6 @@ about this map.</p>
 <section id="id25">
 <h4>Parameters<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
 <dl>
-<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
-Has to be updated after RunPars is finalized.</p>
-</dd>
 <dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
 and handle errors.</p>
 </dd>
@@ -928,8 +925,8 @@ about this map.</p>
 </dl>
 </section>
 </section>
-<section id="gm-get-dipole-files-printer-map-syst-osc">
-<h3>GM_get_dipole(Files, Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-dipole-files-printer-map-syst-osc" title="Link to this heading">#</a></h3>
+<section id="gm-get-dipole-dir-printer-map-syst-osc">
+<h3>GM_get_dipole_dir(Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-dipole-dir-printer-map-syst-osc" title="Link to this heading">#</a></h3>
 <p>Returns the dipole vector and its position in cartesian coordinates.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -937,8 +934,8 @@ about this map.</p>
 </div>
 <section id="id26">
 <h4>Example uses<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
-<section id="the-default-method-of-providing-the-dipole-vector-is-not-sufficient">
-<h5>The default method of providing the dipole vector is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient" title="Link to this heading">#</a></h5>
+<section id="the-default-method-of-providing-the-dipole-vector-direction-is-not-sufficient">
+<h5>The default method of providing the dipole vector direction is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-dipole-vector-direction-is-not-sufficient" title="Link to this heading">#</a></h5>
 <p>Some techniques cannot be used in box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.</p>
 </section>
 </section>
@@ -971,9 +968,197 @@ about this map.</p>
 <section id="id28">
 <h4>Parameters<a class="headerlink" href="#id28" title="Link to this heading">#</a></h4>
 <dl>
-<dt>Files<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.FileHandler.html#GMAP.src.tools.FileHandler.FileLocations" title="GMAP.src.tools.FileHandler.FileLocations"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileLocations</span></code></a></span></dt><dd><p>Contains all currently known paths and other file-related properties.
-Has to be updated after RunPars is finalized.</p>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
 </dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+<dt>osc<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>The oscillator for which the dipole moment vectors should be determined.</p>
+</dd>
+</dl>
+</section>
+<section id="id29">
+<h4>Returns<a class="headerlink" href="#id29" title="Link to this heading">#</a></h4>
+<dl>
+<dt>r_vec<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The vector that represents the direction of the dipole moment of this oscillator. It should have the dtype <cite>float32</cite>, and the vector should be normalized.</p>
+</dd>
+<dt>r_pos<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The position at which the dipole vector lies.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-get-dipole-mag-printer-map-syst-osc">
+<h3>GM_get_dipole_mag(Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-dipole-mag-printer-map-syst-osc" title="Link to this heading">#</a></h3>
+<p>Returns the dipole vector and its position in cartesian coordinates.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The magnitude of the dipole vector should be in units of Debye, and will by default be applied to the direction found by GM_get_dipole_dir()</p>
+</div>
+<section id="id30">
+<h4>Example uses<a class="headerlink" href="#id30" title="Link to this heading">#</a></h4>
+<section id="id31">
+<h5>The default method of providing the dipole vector direction is not sufficient<a class="headerlink" href="#id31" title="Link to this heading">#</a></h5>
+<p>Sometimes, the magnitude has a more complex dependence than the one offered by default. In those cases, it might be more appropriate to write the code here.</p>
+</section>
+</section>
+<section id="id32">
+<h4>Available attributes of Map<a class="headerlink" href="#id32" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id33">
+<h4>Parameters<a class="headerlink" href="#id33" title="Link to this heading">#</a></h4>
+<dl>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+<dt>osc<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>The oscillator for which the dipole moment magnitude should be determined.</p>
+</dd>
+</dl>
+</section>
+<section id="id34">
+<h4>Returns<a class="headerlink" href="#id34" title="Link to this heading">#</a></h4>
+<dl>
+<dt>magnitude<span class="classifier"><cite>np.float32</cite></span></dt><dd><p>The length that the dipole moment vector should have.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-get-dipole-printer-map-syst-osc">
+<h3>GM_get_dipole(Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-dipole-printer-map-syst-osc" title="Link to this heading">#</a></h3>
+<p>Returns the dipole vector and its position in cartesian coordinates.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>By default (for single-VEG dependence, or no VEG dependence), this function is the combination of GM_get_dipole_dir and GM_get_dipole_mag. If only the functionality of one of those needs to be changed, doing that instead of imposing different behaviour here is adviced.</p>
+</div>
+<section id="id35">
+<h4>Example uses<a class="headerlink" href="#id35" title="Link to this heading">#</a></h4>
+<section id="the-default-method-of-providing-the-dipole-vector-is-not-sufficient">
+<h5>The default method of providing the dipole vector is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient" title="Link to this heading">#</a></h5>
+<p>Sometimes, the dipole moment is determined in a more complex method than supported by the program. In those cases, it might be more appropriate to write the code here.</p>
+</section>
+</section>
+<section id="id36">
+<h4>Available attributes of Map<a class="headerlink" href="#id36" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id37">
+<h4>Parameters<a class="headerlink" href="#id37" title="Link to this heading">#</a></h4>
+<dl>
+<dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
+and handle errors.</p>
+</dd>
+<dt>Map<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.MapReader.html#GMAP.src.tools.MapReader.Map" title="GMAP.src.tools.MapReader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about this map.</p>
+</dd>
+<dt>Syst<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.System" title="GMAP.src.tools.SystemReader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everyting the program currently knows about the MD system.</p>
+</dd>
+<dt>osc<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.SystemReader.html#GMAP.src.tools.SystemReader.Oscillator" title="GMAP.src.tools.SystemReader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>The oscillator for which the dipole moment magnitude should be determined.</p>
+</dd>
+</dl>
+</section>
+<section id="id38">
+<h4>Returns<a class="headerlink" href="#id38" title="Link to this heading">#</a></h4>
+<dl>
+<dt>magnitude<span class="classifier"><cite>np.float32</cite></span></dt><dd><p>The length that the dipole moment vector should have.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="gm-get-veg-ref-printer-map-syst-osc">
+<h3>GM_get_VEG_ref(Printer, Map, Syst, osc)<a class="headerlink" href="#gm-get-veg-ref-printer-map-syst-osc" title="Link to this heading">#</a></h3>
+<p>Returns the centerpoint for the sphere of charges contributing to the calculated electrostatics.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found <a class="reference internal" href="../../Theory/PBC.html#theory-page-pbc"><span class="std std-ref">in the theory section</span></a>. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.</p>
+</div>
+<section id="id39">
+<h4>Example uses<a class="headerlink" href="#id39" title="Link to this heading">#</a></h4>
+<section id="the-default-method-of-providing-the-elecctrostatics-sphere-center-is-not-sufficient">
+<h5>The default method of providing the elecctrostatics sphere center is not sufficient<a class="headerlink" href="#the-default-method-of-providing-the-elecctrostatics-sphere-center-is-not-sufficient" title="Link to this heading">#</a></h5>
+<p>Some techniques cannot be used in exclusively box coordinates, and can therefore not be used through core.txt. In those cases, it might be more appropriate to write the code here.</p>
+</section>
+</section>
+<section id="id40">
+<h4>Available attributes of Map<a class="headerlink" href="#id40" title="Link to this heading">#</a></h4>
+<table class="hlist"><tr><td><ul class="simple">
+<li><p>self.directory</p></li>
+<li><p>self.corepath</p></li>
+<li><p>self.name</p></li>
+<li><p>self.type</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.success</p></li>
+<li><p>self.avail_files</p></li>
+<li><p>self.RefPars</p></li>
+<li><p>self.DefPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.InPars</p></li>
+<li><p>self.CmdPars</p></li>
+<li><p>self.RunPars</p></li>
+</ul>
+</td><td><ul class="simple">
+<li><p>self.code</p></li>
+<li><p>self.rawcore</p></li>
+<li><p>self.Core</p></li>
+</ul>
+</td></tr></table>
+</section>
+<section id="id41">
+<h4>Parameters<a class="headerlink" href="#id41" title="Link to this heading">#</a></h4>
+<dl>
 <dt>Printer<span class="classifier"><a class="reference internal" href="../../api_out/GMAP.src.tools.PrintTools.html#GMAP.src.tools.PrintTools.Printer" title="GMAP.src.tools.PrintTools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The object that allows to cleanly log and print during runtime,
 and handle errors.</p>
 </dd>
@@ -986,12 +1171,10 @@ about this map.</p>
 </dd>
 </dl>
 </section>
-<section id="id29">
-<h4>Returns<a class="headerlink" href="#id29" title="Link to this heading">#</a></h4>
+<section id="id42">
+<h4>Returns<a class="headerlink" href="#id42" title="Link to this heading">#</a></h4>
 <dl>
-<dt>r_vec<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The vector that represents the dipole of this oscillator.</p>
-</dd>
-<dt>r_pos<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The position at which the dipole vector lies.</p>
+<dt>VEG_ref<span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The position at which the sphere should be centered.</p>
 </dd>
 </dl>
 </section>
@@ -1127,7 +1310,7 @@ about this map.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Parameters</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-rotation-matrix-files-printer-map-syst-osc">GM_get_rotation_matrix(Files, Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-rotation-matrix-printer-map-syst-osc">GM_get_rotation_matrix(Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Example uses</a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-rotation-matrix-is-not-sufficient">The default method of providing the rotation matrix is not sufficient</a></li>
 </ul>
@@ -1137,14 +1320,44 @@ about this map.</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#returns">Returns</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-dipole-files-printer-map-syst-osc">GM_get_dipole(Files, Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-dipole-dir-printer-map-syst-osc">GM_get_dipole_dir(Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Example uses</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-dipole-vector-direction-is-not-sufficient">The default method of providing the dipole vector direction is not sufficient</a></li>
 </ul>
 </li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">Available attributes of Map</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">Parameters</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">Returns</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-dipole-mag-printer-map-syst-osc">GM_get_dipole_mag(Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">The default method of providing the dipole vector direction is not sufficient</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id33">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id34">Returns</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-dipole-printer-map-syst-osc">GM_get_dipole(Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id35">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-dipole-vector-is-not-sufficient">The default method of providing the dipole vector is not sufficient</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id36">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id37">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id38">Returns</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gm-get-veg-ref-printer-map-syst-osc">GM_get_VEG_ref(Printer, Map, Syst, osc)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id39">Example uses</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#the-default-method-of-providing-the-elecctrostatics-sphere-center-is-not-sufficient">The default method of providing the elecctrostatics sphere center is not sufficient</a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id40">Available attributes of Map</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id41">Parameters</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id42">Returns</a></li>
 </ul>
 </li>
 </ul>
