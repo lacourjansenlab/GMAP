@@ -60,10 +60,11 @@ def get_data(fname, frame):
 		matrix.
 	"""
 	try:
-		data = np.loadtxt(fname, skiprows=frame, max_rows=1)
+		data = np.loadtxt(fname, skiprows=frame, max_rows=1)[1:]
+
 		# len(data[0]) is a triangular number, size is the integer used
 		# to construct that triangular number.
-		size = round(np.sqrt(2 * len(data[0]) + 0.25) - 0.5)
+		size = round(np.sqrt(2 * len(data) + 0.25) - 0.5)
 	except Exception:
 		raise HamVisException(
 			f"There was an error extracting data from {fname}, please verify "
@@ -92,6 +93,7 @@ def format_ham(data, size):
 		This array is the hamiltonian, with frequencies on the diagonal
 		and couplings on the off-diagonal.
 	"""
+
 	try:
 		ham = np.zeros((size, size))
 		ham[np.triu_indices(size)] = data
@@ -146,7 +148,7 @@ def logify_ham(ham, size):
 	return logs
 
 
-def ham_saver(ham, idx, outname):
+def ham_saver(ham, frame, outname):
 	"""Saves one matrix as (outname)_(idx).pdf.
 
 	The matrix can represent the average of a selection of frames or a
@@ -157,19 +159,25 @@ def ham_saver(ham, idx, outname):
 	ham : np.ndarray
 		This array is the hamiltonian, with frequencies on the diagonal
 		and couplings on the off-diagonal.
-	idx : int
+	frame : int or list of int
 		The index of the frame that is being plotted, or a list of
 		frames for an average.
 	outname : str
 		A name used to name the file that is created.
 	"""
 
+	# Setting all diagonal terms to nan.
 	off_diag = np.copy(ham)
 	np.fill_diagonal(off_diag, np.nan)
 
+	# Setting all off-diagonal terms to nan.
 	on_diag_temp = np.diagonal(ham)
-	on_diag = np.full((ham.shape[0], ham.shape[1]), np.nan)
+	on_diag = np.full_like(ham, np.nan)
 	np.fill_diagonal(on_diag, on_diag_temp)
+
+	# # Masking the nan values in the matrices.
+	# on_diag = ma.masked_array(on_diag, np.isnan(on_diag))
+	# off_diag = ma.masked_array(off_diag, np.isnan(off_diag))
 
 	fig, ax = plt.subplots()
 	pa = ax.imshow(
@@ -186,7 +194,7 @@ def ham_saver(ham, idx, outname):
 	cbb.set_label('coupling', rotation=0, y=1.12, labelpad=-22)
 	ax.set_title(outname)
 
-	plt.savefig(f"{outname}_{idx}.pdf")
+	plt.savefig(f"{outname}_{frame}.pdf")
 
 
 def format_frame_selection(frames, data):
@@ -221,7 +229,7 @@ def format_frame_selection(frames, data):
 	if frames == "all":
 		frames_int = range(1, len(data) + 1)
 	else:
-		frames = list(frames.split(","))
+		frames = frames.split(",")
 		try:
 			frames_int = [int(frame) for frame in frames]
 		except ValueError:
@@ -238,7 +246,7 @@ def format_frame_selection(frames, data):
 	return frames_int
 
 
-def average_ham(average, ham_list, frames):
+def average_ham(average, ham, frames):
 	"""Returns an updated ham_list and frames if average is 'True'.
 
 	The function changes frames and ham_list depending on wether on the
@@ -252,9 +260,9 @@ def average_ham(average, ham_list, frames):
 	average : str
 		This should be 'False' or 'True'. If this is 'True' the function
 		average all entries in ham_list and puts frames into a sublist.
-	ham_list : list of np.ndarray of float
-		This is a list of numpy arrays. The numpy arrays each contain a
-		matrix that represents one Hamiltonian.
+	ham : np.ndarray
+		This array is the hamiltonian, with frequencies on the diagonal
+		and couplings on the off-diagonal.
 	frames : str
 		Contains integers split by commas or is the string "all". If if
 		is integers split by commas, the integers will correspond to the
@@ -265,9 +273,9 @@ def average_ham(average, ham_list, frames):
 
 	Returns
 	-------
-	ham_list : list of np.ndarray of float
-		This is a list of numpy arrays. The numpy arrays each contain a
-		matrix that represents one Hamiltonian.
+	ham : np.ndarray
+		This array is the hamiltonian, with frequencies on the diagonal
+		and couplings on the off-diagonal.
 	frames : str
 		Contains integers split by commas or is the string "all". If if
 		is integers split by commas, the integers will correspond to the
@@ -277,17 +285,17 @@ def average_ham(average, ham_list, frames):
 		frame.
 	"""
 	if average == "True":
-		ham_list = [sum(ham_list) / len(ham_list)]
+		ham = [sum(ham) / len(ham)]
 		frames = [frames]
 	else:
 		if average != "False":
 			raise HamVisException(
 				f"average should be True or False, not {average}."
 			)
-	return ham_list, frames
+	return ham, frames
 
 
-def cut_ham(cut, ham_list):
+def cut_ham(cut, ham):
 	"""This function slices the hamiltonian so only a part is shown.
 
 	This is mostly intended to allow the user to zoom in on certain
@@ -302,29 +310,28 @@ def cut_ham(cut, ham_list):
 		as 'False'. If it is 'False' the Hamiltonians in ham_list are
 		not cut. Otherwise cut should be x1,x2,y1,y2. This slices the
 		elements of ham_list as ham[x1:x2,y1:y2].
-	ham_list : list of np.ndarray of float
-		This is a list of numpy arrays. The numpy arrays each contain a
-		matrix that represents one Hamiltonian.
+	ham_list : np.ndarray of float
+		The numpy array contains a matrix that represents one Hamiltonian.
 
 	Returns
 	-------
-	ham_list : list of np.ndarray of float
-		This is a list of numpy arrays. The numpy arrays each contain a
-		matrix that represents one Hamiltonian.
+	ham : np.ndarray
+		This array is the hamiltonian, with frequencies on the diagonal
+		and couplings on the off-diagonal.
 	"""
 	try:
 		if cut != "False":
-			cut = list(cut.split(","))
+			cut = cut.split(",")
 			cut = [int(cutidx) for cutidx in cut]
 			if len(cut) != 4:
 				raise Exception
-			ham_list = [ham[cut[2]:cut[3], cut[0]:cut[1]] for ham in ham_list]
+			ham = ham[cut[2]:cut[3], cut[0]:cut[1]]
 	except Exception:
 		raise HamVisException(
 			"cut was incorrectly specified, please see the manual for more "
 			"details."
 		) from None
-	return ham_list
+	return ham
 
 
 def HamVis(fname, frames, average, cut, outname):
@@ -346,7 +353,8 @@ def HamVis(fname, frames, average, cut, outname):
 		frame.
 	average : str
 		This should be 'False' or 'True'. If this is 'True' the function
-		average all entries in ham_list and puts frames into a sublist.
+		average all frames in fname that are listed in the frames
+		variable.
 	cut : str
 		This is formatted as either four integers seperated by commas or
 		as 'False'. If it is 'False' the Hamiltonians in ham_list are
@@ -359,11 +367,11 @@ def HamVis(fname, frames, average, cut, outname):
 	if frames == "all":
 		idx = 0
 		with open(fname) as fhand:
-			for line in fhand:
+			for _ in fhand:  # This loops over each line in the file
 				idx += 1
 		frames = range(idx)
 	else:
-		frames = list(frames.split(","))
+		frames = frames.split(",")
 		try:
 			frames = [int(frame) for frame in frames]
 		except ValueError:
@@ -372,20 +380,22 @@ def HamVis(fname, frames, average, cut, outname):
 				"nothing but a comma. To select all frames, specify 'all'."
 			) from None
 
+	ham_average = None
 	for frame in frames:
 		data, size = get_data(fname, frame)
-	frames = format_frame_selection(frames, data)
-
-	for frame in frames:
-		ham = format_ham(data[frame - 1], size)
+		ham = format_ham(data, size)
 		ham = logify_ham(ham, size)
-		ham_list.append(ham)
-
-	ham_list = cut_ham(cut, ham_list)
-	ham_list, frames = average_ham(average, ham_list, frames)
-
-	for idx, ham in zip(frames, ham_list):
-		ham_saver(ham, idx, outname)
+		ham = cut_ham(cut, ham)
+		if average == "False":
+			ham_saver(ham, frame, outname)
+		else:
+			if ham_average is None:
+				ham_average = ham
+			else:
+				ham_average += ham
+	if average == "True":
+		ham_average = np.divide(ham_average, len(frames))
+		ham_saver(ham_average, frames, outname)
 
 
 if __name__ == "__main__":
