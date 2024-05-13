@@ -850,7 +850,7 @@ class Core():
             self.success = False
             return
         n_bonds = sum([len(bonds) for bonds in self.bonds])
-        if n_bonds:
+        if n_bonds == 0:
             self.requires_bonds = True
         else:
             self.requires_bonds = False

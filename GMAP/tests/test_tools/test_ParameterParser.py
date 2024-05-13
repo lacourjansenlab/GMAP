@@ -377,7 +377,17 @@ class TestRefPars:
             capsys
         )
 
-# unclear how to reach SU_FP_7
+    def test_SU_FP_7(self, capsys):
+        self.systest(
+            "tests/test_tools/Data/reference_parameters_SU_FP_7_1.ref",
+            "SU_FP_7",
+            capsys
+        )
+        self.systest(
+            "tests/test_tools/Data/reference_parameters_SU_FP_7_2.ref",
+            "SU_FP_7",
+            capsys
+        )
 
     def test_SU_FP_8(self, capsys):
         self.systest(
@@ -638,6 +648,16 @@ class TestRawPars:
     def test_SU_WP_11(self, capsys):
         pardict = {
             "int_test_choice": ["22"]  # 22 is not a listed choice in reffile
+        }
+        self.systest_pardict(pardict, "SU_WP_11", capsys)
+
+        pardict = {
+            "estatic_range": ["-2"]
+        }
+        self.systest_pardict(pardict, "SU_WP_11", capsys)
+
+        pardict = {
+            "estatic_smooth_range": ["-2"]
         }
         self.systest_pardict(pardict, "SU_WP_11", capsys)
 
@@ -1185,6 +1205,15 @@ class TestRunPars:
         # ]
         # self.systest_runpars(cmdline, "SU_NP_3", capsys)
 
+    def test_SU_NP_7(self, capsys):
+        cmdline = [
+            "--int_test_nodef", "22",
+            "--path_test_nodef", "tests/test_tools/test_MathFunctions.py",
+            "--estatic_smooth_range", "40"
+        ]
+        pardict = {"estatic_range": ["10"]}
+        self.systest_runpars(cmdline, "SU_NP_7", capsys, pardict)
+
     @staticmethod
     def setup_for_runpars(pardict, inparspath, cmdline):
         # setup - Create all necessary objects.
@@ -1219,8 +1248,9 @@ class TestRunPars:
         return Files, Printer, RefPars, DefPars, InPars, mapdict, CmdPars
 
     @staticmethod
-    def systest_runpars(cmdline, errcode, capsys):
-        pardict = {}
+    def systest_runpars(cmdline, errcode, capsys, pardict=None):
+        if pardict is None:
+            pardict = {}
         curpath = Path("")
         (
             Files, Printer, RefPars, DefPars, InPars, _, CmdPars

@@ -15,11 +15,11 @@
 
 verbose 4
 verbose_logfile 4
-maps_to_use   AmideBB
+maps_to_use   AmideSC
 output_format txt
 output_data dip ham
 
-number_frames 200
+number_frames 2
 
 estatic_smooth_range 0
 neutral_charge_threshold 0.01

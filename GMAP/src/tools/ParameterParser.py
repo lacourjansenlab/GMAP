@@ -487,6 +487,26 @@ class RefPars:
                 parameter
             ] + [")"]
 
+        # Checking radii for estatic sphere
+        estatic_range = self.choices.get("estatic_range", [1])[0]
+        if estatic_range < 0:
+            Printer.warning(
+                "\nEncountered an issue with the following parameter source: "
+                f"{self.fname}. The parameter estatic_range can only take a "
+                "positive value, but a negative one was detected. Please make "
+                "sure it has a positive value.",
+                "SU_FP_7", True
+            )
+        estatic_smooth_range = self.choices.get("estatic_smooth_range", [1])[0]
+        if estatic_smooth_range < 0:
+            Printer.warning(
+                "\nEncountered an issue with the following parameter source: "
+                f"{self.fname}. The parameter estatic_smooth_range can only "
+                "take a positive value, but a negative one was detected. "
+                "Please make sure it has a positive value.",
+                "SU_FP_7", True
+            )
+
     @staticmethod
     def parse_key(string):
         """Extracts parameter name, shorthand and type from key in file
@@ -1274,6 +1294,26 @@ class RawPars:
                 self.choices["influencers_select_atoms"]
             )
 
+        # Checking radii for estatic sphere
+        estatic_range = self.choices.get("estatic_range", [1])[0]
+        if estatic_range < 0:
+            Printer.warning(
+                "\nEncountered an issue with the following parameter source: "
+                f"{self.fname}. The parameter estatic_range can only take a "
+                "positive value, but a negative one was detected. Please make "
+                "sure it has a positive value.",
+                "SU_WP_11", True
+            )
+        estatic_smooth_range = self.choices.get("estatic_smooth_range", [1])[0]
+        if estatic_smooth_range < 0:
+            Printer.warning(
+                "\nEncountered an issue with the following parameter source: "
+                f"{self.fname}. The parameter estatic_smooth_range can only "
+                "take a positive value, but a negative one was detected. "
+                "Please make sure it has a positive value.",
+                "SU_WP_11", True
+            )
+
         # next - frame numbers!
         start_frame = self.choices.get("start_frame", [None])[0]
         number_frames = self.choices.get("number_frames", [None])[0]
@@ -1429,9 +1469,9 @@ class RunPars:
                 self.log_filename
             )
 
-        # Resolve conflicts due to choices, change any settings that need to
-        # be changed, due to parameters that interlock.
-        self.resolve(CmdPars, InPars, DefPars, RefPars)
+            # Resolve conflicts due to choices, change any settings that need
+            # to be changed, due to parameters that interlock.
+            self.resolve(Printer, CmdPars, InPars, DefPars, RefPars)
 
     def get_pars(self, Printer, CmdPars, InPars, DefPars, RefPars):
         """Sets attribute for each non-path parameter.
@@ -1763,7 +1803,7 @@ class RunPars:
                 else:
                     setattr(self, file_parname, files_found[0])
 
-    def resolve(self, CmdPars, InPars, DefPars, RefPars):
+    def resolve(self, Printer, CmdPars, InPars, DefPars, RefPars):
         """Fix any issues that may arise from the combination of sources.
 
         This either means checking if there are no invalid combinations
@@ -1772,6 +1812,18 @@ class RunPars:
         different sources when their values are interdependent.
         """
 
+        # The smoothing should start sooner than we start calculating the
+        # electrostatics to begin with....
+        if self.estatic_smooth_range > (self.estatic_range * 2):
+            Printer.warning(
+                "\nEncountered an issue with the combined choices of "
+                "parameters. The parameter estatic_smooth_range can not "
+                "take a value larger than twice that of estatic_range. "
+                "Please make sure it does not exceed that.",
+                "SU_NP_7", True
+            )
+
+        # An inconsistency with frame parameters?
         all_parameter_names = ("start_frame", "stop_frame", "number_frames")
         found = {}
         for source in (CmdPars, InPars, DefPars, RefPars):

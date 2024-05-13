@@ -130,6 +130,9 @@ extern "C" {
         /*Get the weighted charge for an atom considering its distance
         and the smoothing rules.
 
+        This function will yield unexpected results if sqrt(dist2) is
+        larger than puredist + r_smooth.
+
         Parameters
         ----------
         dist2 : float

@@ -159,6 +159,10 @@ SU_NP_6
 -------
 The given command for select_atoms triggered some error. See the returned python error for more information. To see the error, set either the parameter 'verbose', or the parameter 'verbose_logfile' to 4.
 
+SU_NP_7
+-------
+The mentioned parameters have choices that are valid on their own, but their combination is not. Please make sure that these conflicts are resolved!
+
 
 SU_PP
 =====
