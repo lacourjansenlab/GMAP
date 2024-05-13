@@ -52,7 +52,9 @@ When you've made some choices to the code, and would like to rebuild the docs, n
 ### linux
 
 - open terminal
-- ```cc -fPIC -shared -o scriptname.so scriptname.cpp```
+- ```g++ -fPIC -shared -o scriptname.so scriptname.cpp```
+
+(if installed, using cc instead of g++ also works)
 
 
 ### mac
