@@ -1886,6 +1886,7 @@ class RunPars:
         are not capable of dealing with the uncertain (system-dependent)
         choice of datatype that python and numpy have.
         """
+
         self.estatic_range = np.float32(self.estatic_range)
         self.estatic_smooth_range = np.float32(self.estatic_smooth_range)
 

@@ -41,7 +41,7 @@ VEG_clib_file
 | (no shorthand available)
 | (used by: GEM, DEPICT)
 
-The filename of the (compiled!) VEG c-library. This will be either a '.dll' file (windows), a '.so' file (linux), or a '.dylib' file (macos). This file contains the code for calculating electrostatic properties of the system. The path stored in this parameter will be assumed to be relative to the directory given in the parameter source_directory when applicable.
+The filename of the (compiled!) VEG c-library. This will be either a '.dll' file (Windows), a '.so' file (Linux), or a '.dylib' file (MacOS). This file contains the code for calculating electrostatic properties of the system. The path stored in this parameter will be assumed to be relative to the directory given in the parameter source_directory when applicable.
 
 
 log_directory
