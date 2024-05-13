@@ -246,7 +246,7 @@ class Map():
         - Run GM_adjust_map_core_raw
         - Parse the final choice of rawcore to Core
         - If not present in self.code, create functions for
-          GM_get_dipole and GM_get_rotation matrix based on core.
+          GM_calculate_dipole and GM_get_rotation matrix based on core.
 
         Parameters
         ----------
@@ -292,7 +292,7 @@ class Map():
             self.success = False
             return
 
-        # adding GM_get_dipole and GM_get_rotation_matrix to self.code.
+        # adding GM_get_dipole_dir and GM_get_rotation_matrix to self.code.
         self.code_add_builds(Printer)
         if not self.success:
             return
@@ -302,7 +302,10 @@ class Map():
             "Printer": Printer
         },))
 
-        self.complete_code(("get_dipole",), ({"map_": self},))
+        self.complete_code(
+            ("calculate_dipole", "calculate_frequency"),
+            ({"map_": self}, {"map_": self})
+        )
 
         # Add in the remaining code
         self.complete_code((
@@ -473,7 +476,7 @@ class Map():
                     "definition of "
                     "r_vec and/or r_pos. These two variables have to be "
                     "present if the map's main.py file does not contain "
-                    "the function 'GM_get_dipole'.",
+                    "the function 'GM_calculate_dipole'.",
                     "MI_MC_6"
                 )
                 self.success = False
@@ -752,6 +755,12 @@ class Core():
 
         self.dipole_gas_phase, self.dipole_data_array = self.parse_dipoles(
             Printer, rawcore, Map.directory)
+        if not self.success:
+            return
+
+        (
+            self.frequency_gas_phase, self.frequency_data_array
+        ) = self.parse_frequency(Printer, rawcore, Map.directory)
         if not self.success:
             return
 
@@ -1663,6 +1672,118 @@ class Core():
 
         return dipole_gas_phase, array
 
+    def parse_frequency(self, Printer, rawcore, mapdir):
+        """Parse the information for frequency determination.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        rawcore : dict of str - list of str pairs
+            The raw contents of the file core.txt
+        mapdir : pathlib.Path
+            The path to the directory in which the map is defined.
+
+        Returns
+        -------
+        frequency_gas_phase : `np.float32`
+            What the base value for the frequency should be. The program
+            can either use this as-is, or in combination with the contents
+            from a given file.
+        fdata : `np.ndarray` or None
+            An array of shape (n_estatic_ats, 10),
+            with padded zeros for any columns that are not required.
+            If the parameter 'frequency_data_file' does not occur in the file
+            core.txt, None is returned instead.
+        """
+
+        if "frequency_gas_phase" not in rawcore:
+            Printer.warning(
+                "\nCould not find the parameter 'frequency_gas_phase' in the "
+                f"file {mapdir / 'core.txt'}. Without it, the map cannot "
+                "function. Please make sure it is present.",
+                "MI_MC_6"
+            )
+            self.success = False
+            return None, None
+
+        try:
+            frequency_gas_phase = np.float32(rawcore["frequency_gas_phase"][0])
+        except Exception as ex:  # no 0th entry, not floatable
+            Printer.warning(
+                "\nCould not interpret the choice for the parameter "
+                "'frequency_gas_phase'"
+                f" in the file {mapdir / 'core.txt'}. Please make sure "
+                "the choice consists of a single decimal number.",
+                "MI_MC_7", exception=ex
+            )
+            self.success = False
+            return None, None
+
+        # dependence on electrostatics is given by the other parameter,
+        # frequency_data_file.
+        # it can give a single VEG matrix (for magnitude).
+        if "frequency_data_file" not in rawcore:
+            # This is actually completely fine. The frequency moment does not
+            # need to depend on the electrostatics. In that case, we only need
+            # a single value.
+            return frequency_gas_phase, None
+
+        # ---------------------------------------------------------------------
+
+        # Then, look for the optional dependency of the frequency on the
+        # electrostatics from the environment.
+
+        # now, the parameter  "frequency_data_file" exists.
+        if rawcore["frequency_data_file"][0] == "[N/A]":
+            return frequency_gas_phase, None
+
+        # if the parameter exists, but the specified file does not:
+        fname = (mapdir / rawcore["frequency_data_file"][0]).resolve()
+        if not fname.is_file():
+            Printer.warning(
+                f"\nThe file {mapdir / 'core.txt'} wants to use the file "
+                f"{fname}"
+                " to define the dependency of the frequency on the "
+                "electrostatics. However, this file does not exist.",
+                "MI_MC_3"
+            )
+            self.success = False
+            return None, None
+
+        try:
+            fdata = np.genfromtxt(
+                fname, "float32", missing_values=0, ndmin=2)
+        except Exception as ex:  # numpy had some issue
+            Printer.warning(
+                "\nNumpy could not interpret the contents of the file "
+                f"{fname}. Please make sure the file contains only decimal "
+                "numbers in a grid.",
+                "MI_MC_7", exception=ex
+            )
+            self.success = False
+            return frequency_gas_phase, None
+
+        # numpy read was succesfull, now to see whether the dimensions of the
+        # array from the file are correct.
+
+        # required (minimum) width of array:
+        deswidth = 1
+        if self.electrostatic_choice == "E":
+            deswidth = 4
+        elif self.electrostatic_choice == "G":
+            deswidth = 10
+
+        desheight = len(self.electrostatic_atoms)
+
+        array = self.confirm_array_size(
+            Printer, fdata, deswidth, desheight, fname)
+        if not self.success:
+            return frequency_gas_phase, None
+
+        return frequency_gas_phase, array
+
     def confirm_array_size(self, Printer, array, deswidth, desheight, fname):
         """Makes sure that the array from the file is of the correct shape.
 
@@ -1757,8 +1878,8 @@ class Core():
 
         elif foundlen > deslen:
             Printer.warning(
-                f"Found unexpected contents for the file {fname}. There were "
-                f"{foundlen} {dir_} found, but only {deslen} {dir_} are "
+                f"\nFound unexpected contents for the file {fname}. There "
+                f"were {foundlen} {dir_} found, but only {deslen} {dir_} are "
                 f"needed. The first {deslen} {dir_} will be used for the "
                 "calculation. If this is not what you want, please terminate "
                 "the process manually.",
@@ -1937,7 +2058,7 @@ def manage_maps(Files, Printer, RunPars, mapdict):
     for map_choice in RunPars.maps_to_use:
         if map_choice not in mapdict:
             Printer.warning(
-                f"The map {map_choice} was requested for use. However, it "
+                f"\nThe map {map_choice} was requested for use. However, it "
                 "either does not exist, or the map was loaded unsuccessfully "
                 "due to issues with its definition.",
                 "MI_GEM_1", True

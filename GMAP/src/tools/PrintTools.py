@@ -122,6 +122,7 @@ class Printer:
             that error can be caught and fed into this function.
         """
 
+        # if error_code[2:6] not in ["_MC_",]:
         self.print(0, message)
 
         # print the traceback in exactly the same way as it would be

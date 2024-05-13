@@ -21,8 +21,8 @@ influencers_blacklist[list_str]                   :None
 influencers_file[path_sep]                        infl_file_base.txt
 influencers_select_atoms[list_str]                segid *
 
-verbose[int]                                      0 1 [2] 3 4
-verbose_logfile[int]                              0 1 [2] 3 4
+verbose(v)[int]                                   0 1 [2] 3 4
+verbose_logfile(vl)[int]                          0 1 [2] 3 4
 prevent_overwrite[bool]                           True
 output_format[list_str]                           [bin] txt
 output_data[list_str]                             [ham] [dip]

@@ -83,7 +83,10 @@ class TestVClib:
             [0, 0],
             [-0.015139585119952648, -0.013882521453]
         ], dtype="float32").sum(0).round(6)
-        assert np.all(oscillator.VEGout.round(6) == ans)
+        assert np.all(oscillator.VEGout[:, 0].round(6) == ans)
+        assert np.all(
+            oscillator.VEGout[:, 1:].round(6) == np.zeros(
+                (2, 9), dtype="float32"))
 
     def test_CL_VG_1(self, capsys):
         cmdline = ["-md", "maps\\;"]
@@ -153,7 +156,7 @@ def get_System_1():
 def get_oscillator_1():
     estat_ats = np.array([0, 1], dtype="int32")
     VEG_refpos = np.array([10, 30, 70], dtype="float32")
-    VEGout = np.zeros((2,), dtype="float32")
+    VEGout = np.zeros((2, 10), dtype="float32")
     return EmptyClass(**{
         "electrostatic_atoms_c": np.ctypeslib.as_ctypes(estat_ats),
         "n_estatic_atoms": np.int32(2),
@@ -161,5 +164,5 @@ def get_oscillator_1():
         "local_atoms_c": np.ctypeslib.as_ctypes(estat_ats),
         "n_local_atoms": np.int32(2),
         "VEGout": VEGout,
-        "VEGout_c": np.ctypeslib.as_ctypes(VEGout),
+        "VEGout_c": np.ctypeslib.as_ctypes(np.ravel(VEGout)),
     })

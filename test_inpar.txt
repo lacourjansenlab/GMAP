@@ -17,7 +17,7 @@ verbose 4
 verbose_logfile 4
 maps_to_use   AmideBB
 output_format txt
-output_data dip
+output_data dip ham
 
 number_frames 200
 

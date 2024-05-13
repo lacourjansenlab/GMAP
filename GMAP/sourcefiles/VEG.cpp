@@ -288,7 +288,8 @@ extern "C" {
         // clear output array
         float *total_charge;
         total_charge = (float *)calloc(n_osc_ats, sizeof(float));
-        for (oscix = 0; oscix < n_osc_ats; oscix++) {
+        // *10, as we want to clear all entries for each oscillator
+        for (oscix = 0; oscix < n_osc_ats * 10; oscix++) {
             out[oscix] = 0;
         }
 

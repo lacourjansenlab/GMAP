@@ -5,6 +5,7 @@ import numpy as np
 # local imports
 import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.PhysicsFunctions as GM_PF
+# from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class NewModule:
@@ -267,54 +268,6 @@ def get_get_dipole_mag():
     return GM_get_dipole_mag
 
 
-def get_get_dipole(map_):
-    """Default for obtaining the dipole.
-
-    If the size of the dipole does not depend on the electrostatics, or
-    only a single dependence (through magnitude), the returned method
-    just combines GM_get_dipole_dir with GM_get_dipole_mag.
-    If each of the x, y and z components have their own dependency on
-    the electrostatics, the r_vec from GM_get_dipole_dir is ignored.
-
-    parameters
-    ----------
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
-        The map instance which this function will belong to.
-
-    returns
-    -------
-    GM_get_dipole : function
-        The function that every oscillator will call to get its dipole
-    """
-
-    # the version when we are working with magnitude
-    def GM_get_dipole_vmag(Printer, Map, Syst, osc):
-        r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
-        r_vec *= Map.code.GM_get_dipole_mag(Printer, Map, Syst, osc)
-        return r_vec, r_pos
-
-    # the version when we are working with a separate x, y, z component
-    # (this one ignores the earlier given r_vec)
-    def GM_get_dipole_vxyz(Printer, Map, Syst, osc):
-        _, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
-        xyz = [
-            uses_maps(omega, osc.VEGout, arr) for omega, arr in zip(
-                Map.Core.dipole_gas_phase, Map.Core.dipole_data_array)
-        ]
-        xyz_local = np.array(xyz, dtype="float32")
-        xyz_cartesian = np.dot(xyz_local, osc.rotation_matrix)
-        return xyz_cartesian, r_pos
-
-    if map_.Core.dipole_data_array is None:
-        return GM_get_dipole_vmag
-
-    if len(map_.Core.dipole_data_array.shape) == 2:
-        return GM_get_dipole_vmag
-
-    # now, the array must be of shape 3 (xyz-style file)
-    return GM_get_dipole_vxyz
-
-
 def get_get_rotation_matrix(Printer, map_):
     """Default for creating a rotation matrix
 
@@ -392,6 +345,90 @@ def get_get_rotation_matrix(Printer, map_):
 
     # return GM_get_dipole
     return locals()["GM_get_rotation_matrix"]
+
+
+def get_calculate_dipole(map_):
+    """Default for obtaining the dipole.
+
+    If the size of the dipole does not depend on the electrostatics, or
+    only a single dependence (through magnitude), the returned method
+    just combines GM_get_dipole_dir with GM_get_dipole_mag.
+    If each of the x, y and z components have their own dependency on
+    the electrostatics, the r_vec from GM_get_dipole_dir is ignored.
+
+    parameters
+    ----------
+    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+        The map instance which this function will belong to.
+
+    returns
+    -------
+    GM_get_dipole : function
+        The function that every oscillator will call to get its dipole
+    """
+
+    # the version when we are working with magnitude
+    def GM_get_dipole_vmag(Printer, Map, Syst, osc):
+        r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
+        r_vec *= Map.code.GM_get_dipole_mag(Printer, Map, Syst, osc)
+        return r_vec, r_pos
+
+    # the version when we are working with a separate x, y, z component
+    # (this one ignores the earlier given r_vec)
+    def GM_get_dipole_vxyz(Printer, Map, Syst, osc):
+        _, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
+        xyz = [
+            uses_maps(omega, osc.VEGout, arr) for omega, arr in zip(
+                Map.Core.dipole_gas_phase, Map.Core.dipole_data_array)
+        ]
+        xyz_local = np.array(xyz, dtype="float32")
+        xyz_cartesian = np.dot(xyz_local, osc.rotation_matrix)
+        return xyz_cartesian, r_pos
+
+    if map_.Core.dipole_data_array is None:
+        return GM_get_dipole_vmag
+
+    if len(map_.Core.dipole_data_array.shape) == 2:
+        return GM_get_dipole_vmag
+
+    # now, the array must be of shape 3 (xyz-style file)
+    return GM_get_dipole_vxyz
+
+
+def get_calculate_frequency(map_):
+    """Default for obtaining the frequency.
+
+    If frequency does not depend on the electrostatics, the returned
+    frequency simply equals the gas phase value. If there is a
+    dependency, the VEGout array will be combined with the mapping
+    coeffients to obtain the frequency.
+
+    parameters
+    ----------
+    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+        The map instance which this function will belong to.
+
+    returns
+    -------
+    GM_calculate_frequency : function
+        The function that every oscillator will call to get its frequency
+    """
+
+    def GM_calculate_freq_VEG(Printer, Map, Syst, osc):
+        freq = uses_maps(
+            Map.Core.frequency_gas_phase, osc.VEGout,
+            Map.Core.frequency_data_array
+        )
+
+        return freq
+
+    def GM_calculate_freq_base(Printer, Map, Syst, osc):
+        return Map.Core.frequency_gas_phase
+
+    if map_.Core.frequency_data_array is None:
+        return GM_calculate_freq_base
+    else:
+        return GM_calculate_freq_VEG
 
 
 # ------------------------

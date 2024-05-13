@@ -107,7 +107,8 @@ def calc_frame(Printer, RunPars, System, outputs):
                 outputs["dipole_pos"][oscix] = r_pos
 
         if "ham" in RunPars.output_data:
-            outputs["hamiltonian"][oscix, oscix] = calc_frequency()
+            outputs["hamiltonian"][oscix, oscix] = calc_frequency(
+                Printer, System, oscillator)
             prep_coupling()
 
     # for every oscillator pair (that should be covered) - calc_coupling
@@ -118,12 +119,14 @@ def calc_frame(Printer, RunPars, System, outputs):
 def calc_dipole(Printer, System, oscillator):
     # every map should have a calc dipole function
     map_ = oscillator.Map
-    r_vec, r_pos = map_.code.GM_get_dipole(Printer, map_, System, oscillator)
+    r_vec, r_pos = map_.code.GM_calculate_dipole(
+        Printer, map_, System, oscillator)
     return r_vec, r_pos
 
 
-def calc_frequency():
-    return
+def calc_frequency(Printer, System, oscillator):
+    map_ = oscillator.Map
+    return map_.code.GM_calculate_frequency(Printer, map_, System, oscillator)
 
 
 def prep_coupling():
@@ -136,11 +139,12 @@ def calc_coupling():
 
 def generate_output_structures(RunPars, System):
     outputs = {}
-    if any(data in RunPars.output_data for data in ("ham")):
+    if any(data in RunPars.output_data for data in ("ham",)):
         outputs["hamiltonian"] = np.zeros(
             (System.nosc, System.nosc), dtype="float32")
         outputs["dipole_pos"] = np.zeros((System.nosc, 3), dtype="float32")
-    elif any(data in RunPars.output_data for data in ("ham", "dip")):
+
+    if any(data in RunPars.output_data for data in ("ham", "dip")):
         outputs["dipoles"] = np.zeros((System.nosc, 3), dtype="float32")
 
     return outputs

@@ -2,5 +2,5 @@
 # Every column to an electrostatic property, in the following order:
 # V, E_x, E_y, E_z, G_xx, G_yy, G_zz, G_xy, G_xz, G_yz
 
-0 2154 0 0 0 0 0 0 0 0
-0 3071 0 0 0 0 0 0 0 0
+0 2154 0 0
+0 3071 0 0

@@ -12,5 +12,8 @@ VEG_reference CoM 2 3
 dipole_gas_phase      0.3
 dipole_data_file      magnitude dipolemap.txt
 
+frequency_gas_phase   1234
+frequency_data_file   freqmap.txt
+
 
 

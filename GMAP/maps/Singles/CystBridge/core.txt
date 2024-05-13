@@ -32,6 +32,9 @@ r_pos     (1+3)/2.0
 
 VEG_reference  CoM  1 3
 
+dipole_gas_phase      0.2
+frequency_gas_phase   1500
+
 
 
 

@@ -11,7 +11,6 @@ electrostatic_atoms    0 3   # Skinner uses only the C and N atoms.
 electrostatic_choice E   # V, E, or G
 
 frequency_gas_phase     1714
-frequency_data_file     Skinner.txt
 
 dipole_gas_phase        0.24
 dipole_data_file        [N/A]   # There is no file - dipole (by default) does not relate to VEG

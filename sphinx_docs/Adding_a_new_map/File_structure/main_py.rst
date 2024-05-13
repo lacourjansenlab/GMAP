@@ -493,7 +493,7 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 GM_get_rotation_matrix(Printer, Map, Syst, osc)
-=================================================================
+===============================================
 
 Returns the rotation matrix for the provided oscillator osc.
 
@@ -560,9 +560,9 @@ rotation_matrix : `np.ndarray`
 
 
 GM_get_dipole_dir(Printer, Map, Syst, osc)
-=================================================================
+==========================================
 
-Returns the dipole vector and its position in cartesian coordinates.
+Returns the direction of the dipole vector and its position in cartesian coordinates.
 
 .. tip::
     In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found :ref:`in the theory section<Theory_page_PBC>`. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.
@@ -622,9 +622,9 @@ r_pos : `np.ndarray`
 
 
 GM_get_dipole_mag(Printer, Map, Syst, osc)
-=================================================================
+==========================================
 
-Returns the dipole vector and its position in cartesian coordinates.
+Returns the magnitude of the dipole vector in Debye.
 
 .. tip::
     The magnitude of the dipole vector should be in units of Debye, and will by default be applied to the direction found by GM_get_dipole_dir()
@@ -682,8 +682,8 @@ magnitude : `np.float32`
 
 
 
-GM_get_dipole(Printer, Map, Syst, osc)
-=================================================================
+GM_calculate_dipole(Printer, Map, Syst, osc)
+============================================
 
 Returns the dipole vector and its position in cartesian coordinates.
 
@@ -737,8 +737,69 @@ osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
 
 Returns
 -------
-magnitude : `np.float32`
-    The length that the dipole moment vector should have.
+r_vec : `np.ndarray`
+    The vector that represents the dipole moment of this oscillator. It should have the dtype `float32`, and the vector should be normalized.
+r_pos : `np.ndarray`
+    The position at which the dipole vector lies.
+
+
+
+GM_calculate_frequency(Printer, Map, Syst, osc)
+===============================================
+
+Returns the frequency at which the oscillator is expected to give a signal (resonate), in units of cm-1.
+
+
+Example uses
+------------
+
+The default method of providing the frequency is not sufficient
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Sometimes, the frequency is determined in a more complex method than supported by the program. In those cases, it might be more appropriate to write the code here.
+
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+    The object that allows to cleanly log and print during runtime,
+    and handle errors.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+    The oscillator for which the dipole moment magnitude should be determined.
+
+
+Returns
+-------
+r_vec : `np.ndarray`
+    The vector that represents the dipole moment of this oscillator. It should have the dtype `float32`, and the vector should be normalized.
+r_pos : `np.ndarray`
+    The position at which the dipole vector lies.
 
 
 

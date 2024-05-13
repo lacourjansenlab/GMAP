@@ -475,12 +475,14 @@ def write_single(RunPars, framenum, framenum_arr, fname, data):
     """
 
     if "bin" in RunPars.output_format:
-        with open(fname.parent / f"{fname.name}.bin", "ab+") as fhand:
+        with open(fname.parent / f"{fname.name}.bin", "ab") as fhand:
             framenum_arr.tofile(fhand)  # write frame number
             data.tofile(fhand)  # write hamiltonian
 
     if "txt" in RunPars.output_format:
-        with open(fname.parent / f"{fname.name}.txt", "a+") as fhand:
+        with open(
+            fname.parent / f"{fname.name}.txt", "a", encoding='utf-8'
+        ) as fhand:
             fhand.write(f"{framenum} ")  # write frame number
             data = np.round(data, decimals=6)
             data.tofile(fhand, sep=" ")  # write hamiltonian

@@ -5,15 +5,15 @@ src/tools/PhysicsFunctions.py.
 Missing tests:
 
 (@ may 2nd '24):
-361-369, 744, 1126 (6 missed statements)
+364-372, 747, 1135 (6 missed statements)
 
 (CUHTAT - currently unknown how to access this )
-- Map.append_core() - there was some issue with the corefile (CUHTAT) (361-369)
+- Map.append_core() - there was some issue with the corefile (CUHTAT) (364-372)
   Any stuff wrong with the corefile will have its own warning call (and not
   use raise) - MI_MC_5
-- Map.parse_type was not successful, so we stop map reading  (744)
+- Map.parse_type was not successful, so we stop map reading  (717)
 - The structure of the map has no bonds (but the parameter giving bonds has
-  been used) (1126)
+  been used) (1135)
 """
 
 
@@ -1197,6 +1197,70 @@ class TestCore:
         assert dip_gas == np.float32(0.3)
         assert np.all(dip_arr == np.arange(10, dtype="float32"))
 
+    def test_parse_frequency(self):
+        cmdline = [
+            "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        ]
+        inpardict = {}
+        mapname = "test_dipoles_datafile_maglong"
+
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+        ) = basic_setup(
+            cmdline, inpardict, finish_before="Core", mapname=mapname
+        )
+        map_ = mapdict[mapname]
+        CoreBase = basic_setup_core(
+            Printer, map_, finish_before="frequency")
+        freq_gas, freq_arr = CoreBase.parse_frequency(
+            Printer, map_.rawcore, map_.directory)
+        assert freq_gas == np.float32(1234)
+        assert np.all(freq_arr == np.array([
+            [0, 1, 2, 3, 0, 0, 0, 0, 0, 0],
+            [5, 6, 7, 8, 0, 0, 0, 0, 0, 0]]))
+
+        # ------------
+
+        cmdline = [
+            "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        ]
+        inpardict = {}
+        mapname = "test_dipoles_datafile_NA"
+
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+        ) = basic_setup(
+            cmdline, inpardict, finish_before="Core", mapname=mapname
+        )
+        map_ = mapdict[mapname]
+        CoreBase = basic_setup_core(
+            Printer, map_, finish_before="frequency")
+        freq_gas, freq_arr = CoreBase.parse_frequency(
+            Printer, map_.rawcore, map_.directory)
+        assert freq_gas == np.float32(1234)
+        assert freq_arr is None
+
+        # ------------
+
+        cmdline = [
+            "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        ]
+        inpardict = {}
+        mapname = "test_dipoles_datafile_magG"
+
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+        ) = basic_setup(
+            cmdline, inpardict, finish_before="Core", mapname=mapname
+        )
+        map_ = mapdict[mapname]
+        CoreBase = basic_setup_core(
+            Printer, map_, finish_before="frequency")
+        freq_gas, freq_arr = CoreBase.parse_frequency(
+            Printer, map_.rawcore, map_.directory)
+        assert freq_gas == np.float32(1234)
+        assert np.all(freq_arr == np.arange(10, dtype="float32"))
+
     def test_MI_MC_1(self, capfd):
         self.basis_test_MI_MC("MI_MC_1", capfd, finish_before="used_atoms")
 
@@ -1207,7 +1271,9 @@ class TestCore:
         self.basis_test_MI_MC(
             "MI_MC_3", capfd, "test_MI_MC_3_1", "used_atoms")
         self.basis_test_MI_MC(
-            "MI_MC_3", capfd, "test_MI_MC_3_2", "end")
+            "MI_MC_3", capfd, "test_MI_MC_3_2", "frequency")
+        self.basis_test_MI_MC(
+            "MI_MC_3", capfd, "test_MI_MC_3_3", "end")
 
     def test_MI_MC_4(self, capfd):
         self.basis_test_MI_MC("MI_MC_4", capfd, "test_MI_MC_4_1", "used_atoms")
@@ -1237,7 +1303,9 @@ class TestCore:
         self.basis_test_MI_MC(
             "MI_MC_6", capfd, "test_MI_MC_6_7", "dipoles")
         self.basis_test_MI_MC(
-            "MI_MC_6", capfd, "test_MI_MC_6_8", "end")
+            "MI_MC_6", capfd, "test_MI_MC_6_8", "frequency")
+        self.basis_test_MI_MC(
+            "MI_MC_6", capfd, "test_MI_MC_6_9", "end")
 
     def test_MI_MC_7(self, capfd):
         self.basis_test_MI_MC(
@@ -1247,9 +1315,13 @@ class TestCore:
         self.basis_test_MI_MC(
             "MI_MC_7", capfd, "test_MI_MC_7_3", "VEG_reference")
         self.basis_test_MI_MC(
-            "MI_MC_7", capfd, "test_MI_MC_7_4", "end")
+            "MI_MC_7", capfd, "test_MI_MC_7_4", "frequency")
         self.basis_test_MI_MC(
-            "MI_MC_7", capfd, "test_MI_MC_7_5", "end")
+            "MI_MC_7", capfd, "test_MI_MC_7_5", "frequency")
+        self.basis_test_MI_MC(
+            "MI_MC_7", capfd, "test_MI_MC_7_6", "end")
+        self.basis_test_MI_MC(
+            "MI_MC_7", capfd, "test_MI_MC_7_7", "end")
 
     def test_MI_MC_8(self, capfd):
         self.basis_test_MI_MC(
@@ -1267,13 +1339,15 @@ class TestCore:
         self.basis_test_MI_MC(
             "MI_MC_8", capfd, "test_MI_MC_8_7", "dipoles")
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_8", "end")
+            "MI_MC_8", capfd, "test_MI_MC_8_8", "frequency")
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_9", "end")
+            "MI_MC_8", capfd, "test_MI_MC_8_9", "frequency")
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_10", "end")
+            "MI_MC_8", capfd, "test_MI_MC_8_10", "frequency")
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_11", "end")
+            "MI_MC_8", capfd, "test_MI_MC_8_11", "frequency")
+        self.basis_test_MI_MC(
+            "MI_MC_8", capfd, "test_MI_MC_8_12", "end")
 
     def test_MI_MC_9(self, capfd):
         self.basis_test_MI_MC("MI_MC_9", capfd, finish_before="used_atoms")
@@ -1528,6 +1602,14 @@ def basic_setup_core(Printer, map_, finish_before=None):
     dipgas, arr = CoreBase.parse_dipoles(Printer, map_.rawcore, map_.directory)
     setattr(CoreBase, "dipole_gas_phase", dipgas)
     setattr(CoreBase, "dipole_data_array", arr)
+
+    if finish_before == "frequency":
+        return CoreBase
+
+    freqgas, arr = CoreBase.parse_frequency(
+        Printer, map_.rawcore, map_.directory)
+    setattr(CoreBase, "frequency_gas_phase", freqgas)
+    setattr(CoreBase, "frequency_data_array", arr)
 
     if finish_before == "end":  # so we can ctrl+F later
         return CoreBase

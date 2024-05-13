@@ -94,7 +94,6 @@ class VEG_CLib(metaclass=Singleton):
     """
 
     def __init__(self, Printer, RunPars):
-        print(str(RunPars.VEG_clib_file))
         try:
             self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
         except Exception as ex:

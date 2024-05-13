@@ -5,14 +5,12 @@ src/tools/PhysicsFunctions.py.
 Missing tests:
 
 (@ apr 29th '24):
-92-115, 120-122, 126, 130, 134, 138-146 (26 missed statements)
+92-116, 133, 137, 141-150 (22 missed statements)
 
-- [WIP] calc_frame not yet tested  (92-115)
-- calc_dipole not yet tested  (120-122)
-- [WIP] calc_frequency not yet populated/used  (130)
-- [WIP] prep_coupling not yet populated/used  (134)
-- [WIP] calc_coupling not yet populated/used  (138)
-- generate_output_structures not yet tested (138-146)
+- [WIP] calc_frame not yet tested  (92-116)
+- [WIP] prep_coupling not yet populated/used  (133)
+- [WIP] calc_coupling not yet populated/used  (137)
+- generate_output_structures not yet tested (141-150)
 """
 
 # 3rd party imports
@@ -97,7 +95,7 @@ def test_system_CoM():
 
 
 def test_calc_dipole_xyz():
-    cmdline = []
+    cmdline = ["--verbose", "4"]
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
         CmdPars, mapdict
@@ -123,7 +121,9 @@ def test_calc_dipole_xyz():
 
     r_vec_ans = np.array([0.82, 0.84, 0.86], dtype="float32")
     r_vec_ans = np.dot(r_vec_ans, oscillator.rotation_matrix).round(6)
-    print(r_pos)
+    Printer.print(0, r_vec_ans)
+    Printer.print(0, r_vec)
+    Printer.print(0, r_pos)
 
     assert np.all(r_vec.round(6) == r_vec_ans)
     assert np.all(r_pos.round(4) == np.array([8, 28, -32], dtype="float32"))
@@ -163,6 +163,36 @@ def test_calc_dipole_magnitude():
 
     assert np.all(r_vec.round(6) == r_vec_ans)
     assert np.all(r_pos.round(4) == np.array([8, 28, -32], dtype="float32"))
+
+
+def test_calc_frequency():
+    cmdline = []
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        CmdPars, mapdict
+    ) = parameter_getter("test_calc_dipoles_magnitude", cmdline)
+
+    System = get_System_1()
+    oscillator = get_oscillator_1()
+    setattr(oscillator, "Map", mapdict["test_calc_dipoles_magnitude"])
+    setattr(
+        oscillator, "positions_box",
+        System.positions[[0, 1]] @ System.boxvects_inv)
+
+    setattr(
+        oscillator, "rotation_matrix",
+        oscillator.Map.code.GM_get_rotation_matrix(
+            Printer, oscillator.Map, System, oscillator))
+
+    freq = GM_PF.calc_frequency(Printer, System, oscillator)
+
+    # freq_gas = 1200
+    # VEGout = 0, 0.01, 0.02 ... 0.09, for each atom
+    # freq += 0*0 + 0.01*1 + 0.02*2 + 0.03*3 + 0*4 + 0.01*5 + 0.02*6 + 0.03*7
+    #       = 1200 + 0 + 0.01 + 0.04 + 0.09 + 0 + 0.05 + 0.12 + 0.21
+    #       = 1200 + 0.14 + 0.38  = 1200.52
+
+    assert freq == np.float32(1200.52)
 
 
 def get_System_1():

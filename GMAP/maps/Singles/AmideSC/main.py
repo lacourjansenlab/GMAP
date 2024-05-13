@@ -340,7 +340,7 @@ def placeholder_GM_get_dipole_mag(Printer, Map, Syst, osc):
 # have this function, just use `def GM_get_dipole` - see the manual for
 # more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
-def placeholder_GM_get_dipole(Printer, Map, Syst, osc):
+def placeholder_GM_calculate_dipole(Printer, Map, Syst, osc):
     """Finds a given dipole moment and its position.
 
     Most spectroscopic techniques require to know the dipole moment of
