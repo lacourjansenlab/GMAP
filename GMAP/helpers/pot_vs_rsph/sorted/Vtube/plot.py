@@ -1,3 +1,8 @@
+"""
+A small fragment of the pot_vs_rsph script - only the part needed for plotting
+the data in this folder. Meant for easy visualization of this data when shared
+with others.
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt

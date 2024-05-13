@@ -794,10 +794,12 @@ class Residues:
     Attributes
     ----------
     first_ix : np.ndarray
-        An array as long as there are residues in the MD system. For each
+        An array as long as there are residues in the MD system, with dtype
+        np.int32. For each
         residue, it stores the index of the first atom.
     last_ix : np.ndarray
-        An array as long as there are residues in the MD system. For each
+        An array as long as there are residues in the MD system, with dtype
+        np.int32. For each
         residue, it stores the index of the last atom.
     resnames : list of str
         A list as long as there are residues in the MD system. For each
@@ -853,8 +855,8 @@ class Residues:
         else:
             self.last_ix.append(atnum)
 
-        self.first_ix = np.array(self.first_ix)
-        self.last_ix = np.array(self.last_ix)
+        self.first_ix = np.array(self.first_ix, dtype="int32")
+        self.last_ix = np.array(self.last_ix, dtype="int32")
         self.first_ix_c = np.ctypeslib.as_ctypes(self.first_ix)
         self.last_ix_c = np.ctypeslib.as_ctypes(self.last_ix)
 

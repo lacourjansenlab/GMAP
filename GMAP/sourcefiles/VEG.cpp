@@ -10,7 +10,10 @@ of points.
 
 extern "C" {
     __declspec(dllexport) void calcPot_perres_mm(
-        int *tocalc, int n_osc_ats, float *spherepos, float *positions, float *charges, float *COMs, int *res_first_ix, int *res_last_ix, int n_res, int *local_atoms, int n_locals, float r_sphere, float r_smooth, float *halfbox, float *boxdims, float *out
+        int *tocalc, int n_osc_ats, float *spherepos, float *positions,
+        float *charges, float *COMs, int *res_first_ix, int *res_last_ix,
+        int n_res, int *local_atoms, int n_locals, float r_sphere,
+        float r_smooth, float *halfbox, float *boxdims, float *out
     );
 }
 
