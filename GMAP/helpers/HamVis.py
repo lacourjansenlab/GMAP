@@ -24,6 +24,7 @@ python HamVis.py fname frames average cut outname
 # standard libary imports
 import sys
 import warnings
+from pathlib import Path
 
 # 3rd party library imports
 import matplotlib.pyplot as plt
@@ -334,7 +335,7 @@ def cut_ham(cut, ham):
 	return ham
 
 
-def HamVis(fname, frames, average, cut, outname):
+def HamVis(fname, frames, average, cut, outname, file_type):
 	"""Saves frames of Hamiltonians and saves them as a pdf image.
 
 	It doesn't do much itself, it merely functions as a body to connect
@@ -364,6 +365,24 @@ def HamVis(fname, frames, average, cut, outname):
 		A name used to name the file that is created.
 	"""
 
+	if file_type == "bin":
+		file_path = Path(fname)
+		file_size = round(file_path.stat().st_size / 4)  # number of floats in file
+		with open(fname) as fhand:
+			line_numbers = np.fromfile(fname, count=1)[0]
+			file_idx = 0
+			while len(line_numbers) == 1:
+				file_idx += 1
+				fhand.seek(1)
+				candidate = np.fromfile(fname, count=1)
+				while candidate.is_integer():
+					fhand.seek(file_idx)
+					candidate = np.fromfile(fname, count=1)
+					
+
+
+
+
 	if frames == "all":
 		idx = 0
 		with open(fname) as fhand:
@@ -379,6 +398,7 @@ def HamVis(fname, frames, average, cut, outname):
 				"Frames can only be given as integers and seperated by "
 				"nothing but a comma. To select all frames, specify 'all'."
 			) from None
+
 
 	ham_average = None
 	for frame in frames:
@@ -401,7 +421,7 @@ def HamVis(fname, frames, average, cut, outname):
 if __name__ == "__main__":
 	warnings.simplefilter("ignore")
 
-	if len(sys.argv) != 6:
+	if len(sys.argv) != 7:
 		print(
 			"You did not give the correct number of terms in your command. "
 			"A correct command looks like:\n"
@@ -412,9 +432,10 @@ if __name__ == "__main__":
 			"the frames.\n"
 			"cut is the area you want to plot given as 'x0,x1,y0,y1', "
 			"or 'False' if you dont want to exclude anything.'\n"
-			"outname is the name the output files should have.\n\n"
+			"outname is the name the output files should have.\n"
+			"file_type should be bin or txt.\n\n"
 			"For examples please see the manual."
 		)
 	else:
-		fname, frames, average, cut, outname = sys.argv[1:]
-		HamVis(fname, frames, average, cut, outname)
+		fname, frames, average, cut, outname, file_type = sys.argv[1:]
+		HamVis(fname, frames, average, cut, outname, file_type)
