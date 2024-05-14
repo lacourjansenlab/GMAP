@@ -742,7 +742,8 @@ class System:
         """Sort all present oscillators by their map."""
 
         self.oscillators_ordered = {}
-        for oscillator in self.oscillators:
+        for oscix, oscillator in enumerate(self.oscillators):
+            setattr(oscillator, "oscix", oscix)
             mapname = oscillator.Map.name
             if mapname not in self.oscillators_ordered:
                 self.oscillators_ordered[mapname] = [oscillator]
@@ -925,11 +926,13 @@ class Oscillator:
     positions_box : `np.ndarray`
         The positions of all atoms given in used_atoms, in box
         coordinates.
-    VEG_refpos = `np.ndarray`
+    VEG_refpos : `np.ndarray`
         The position on which the sphere defining the electrostatics
         should be centered.
-    VEG_refpos_c = `ctypes.Array`
+    VEG_refpos_c : `ctypes.Array`
         The c-friendly variant of self.VEG_refpos_c
+    oscix : int
+        The index of this oscillator in the current MD system
     """
 
     def __init__(self, atoms, map_):

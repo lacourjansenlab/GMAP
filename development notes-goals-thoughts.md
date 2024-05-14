@@ -333,7 +333,10 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
-  - Done!
+  - Add to manual how to choose coupling map
+  - fix all links in documentation (and all text) using Map (that now should be SingleMap)
+  - start working on a first map (dipdip) and develop pairsmap class
+  - figure out how coupling maps can build on singles maps for more info
 - (KvA) TODO:
   - start on mapdev-checklist. What things should a mapmaker double check before starting the map (and, simultaneously, have map-testing feature do these checks where possible - at least, write down what it should test)
   - have c code for potential take the influencers into account (possibly not within c code, but create mirror of system? new position/charges/etc array containing only valid influencers?)

@@ -6,6 +6,12 @@ main.py
 
 This file contains the code for the map. A map does not need to have any code - this file does not have to exist. If it does, there are a few functions the program will look for. If they are missing, that is no issue, but their names should not be used for any other purpose.
 
+The file can contain other functions (or even call functions from other files in the map directory), to allow for writing any kind of code yourself. However, creating your own new function (or class/variable/module) names has a danger - if the program assumes any of them to have a special meaning, the code may function differently than expected. In order to avoid any name clashes, you should avoid any of the following (categories of) names:
+
+- Names starting with "GM\_" - These are reserved for functions expected by GMAP. Even if a name starting with GM\_ isn't used by the program yet, it might be in the future, so its best practice to just avoid them in general.
+- Names starting with "CP\_" - These are reserved for coupling maps. A coupling map might need more information from a single oscillator, which can be retrieved by using these kinds of functions.
+- Any of the names that should be avoided courtesy of general coding good practices.
+
 
 ***************
 Basic structure

@@ -178,14 +178,14 @@ def GEM(callcommand, Files, Printer):
         Files, Printer, callcommand, alljobs, "GMAP GEM", exp_inpfile, True
     )
 
-    RunPars, mapdict, _, _, _, _ = GM_PP.get_parameters(
+    RunPars, singles_mapdict, pairs_mapdict, _, _, _, _ = GM_PP.get_parameters(
         Files, Printer, in_parfile, argslist
     )
     Printer.add_time(3, "Parsed GMAP parameters", "ms")
 
     # end of SU errors
 
-    GM_MR.manage_maps(Files, Printer, RunPars, mapdict)
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
     Printer.add_time(3, "Added all maps", "ms")
 
     # next - MD system!

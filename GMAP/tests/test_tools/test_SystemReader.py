@@ -430,8 +430,8 @@ def parameter_getter(mapname, cmdline=None, inpardict=None):
 
     # generate parameter structures
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        mapdict, pairs_mapdict
     ) = basic_setup(
         cmdline, inpardict, mapname=mapname, finish_before="extract_code")
 

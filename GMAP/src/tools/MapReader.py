@@ -232,6 +232,48 @@ class Map():
         else:
             self.RunPars = None
 
+    def extract_code(self, Printer):
+        """Imports the main.py file and returns its module instance.
+
+        Taking ``import numpy as np`` as example, ``np`` is the module
+        instance.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+
+        Returns
+        -------
+        module : module
+            The contents of the file as a module.
+        """
+        modpath = self.directory / "main.py"
+        if not modpath.is_file():
+            return None
+
+        modname = self.name + "_code"
+
+        try:
+            spec = importlib.util.spec_from_file_location(modname, modpath)
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[modname] = module
+            spec.loader.exec_module(module)
+        except Exception as ex:
+            Printer.warning(
+                "\nA problem occured while reading in the code for the map "
+                f"{self.name}, defined at "
+                f"{str(self.directory.resolve())}. "
+                "Please consult the information of this map, or contact the "
+                "developer of this map.",
+                "MI_MR_1", False, ex
+            )
+            return None
+        return module
+
+
+class SingleMap(Map):
     def initialize(self, Files, Printer):
         """Initializes the map.
 
@@ -375,45 +417,6 @@ class Map():
                 for file in files
             ]
             self.rawcore["add_corefile"] = []
-
-    def extract_code(self, Printer):
-        """Imports the main.py file and returns its module instance.
-
-        Taking ``import numpy as np`` as example, ``np`` is the module
-        instance.
-
-        Parameters
-        ----------
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
-
-        Returns
-        -------
-        module : module
-            The contents of the file as a module.
-        """
-        modpath = self.directory / "main.py"
-        if not modpath.is_file():
-            return None
-
-        modname = self.name + "_code"
-
-        try:
-            spec = importlib.util.spec_from_file_location(modname, modpath)
-            module = importlib.util.module_from_spec(spec)
-            sys.modules[modname] = module
-            spec.loader.exec_module(module)
-        except Exception as ex:
-            Printer.warning(
-                "\nA problem occured while reading in the code for the map "
-                f"{self.name}, defined at "
-                f"{str(self.directory.resolve())}. "
-                "Please consult the information of this map, or contact the "
-                "developer of this map.",
-                "MI_MR_1", False, ex
-            )
-        return module
 
     def complete_code(self, funcnames, kwargslist=None):
         r"""Adds missing functions to the code of this map.
@@ -668,6 +671,13 @@ class Map():
                 "MI_MR_4", False
             )
             return None
+
+
+class PairMap(Map):
+    def initialize(self, Files, Printer):
+        self.code = self.extract_code(Printer)
+        if not self.code:
+            self.code = GM_DMF.NewModule()
 
 
 class Core():
@@ -2030,8 +2040,8 @@ class Residue():
         return f"{self.__class__.__name__}({repr(mylist)})"
 
 
-def manage_maps(Files, Printer, RunPars, mapdict):
-    """Initializes and manages the detected maps.
+def manage_maps_singles(Files, Printer, RunPars, mapdict):
+    """Initializes and manages the detected maps in singles.
 
     Parameters
     ----------
@@ -2044,8 +2054,8 @@ def manage_maps(Files, Printer, RunPars, mapdict):
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
         The 'main' RunPars instance containing all the basic run-defining
         parameters.
-    mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.Map` pairs
-        Stores all the :class:`~GMAP.src.tools.MapReader.Map` objects for
+    mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.SingleMap` pairs
+        Stores all the :class:`~GMAP.src.tools.MapReader.SingleMap` objects for
         each map supplied. The keys are the Map.name attributes corresponding
         to the maps stored as values.
     """
@@ -2075,7 +2085,53 @@ def manage_maps(Files, Printer, RunPars, mapdict):
         RunPars.detected_requires_bonds = False
 
 
-def scan_mapdirs(mapdirs):
+def manage_maps_pairs(Files, Printer, RunPars, mapdict):
+    """Initializes and manages the detected maps in singles.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+        Contains all currently known paths and other file-related properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.PairMap` pairs
+        Stores all the :class:`~GMAP.src.tools.MapReader.PairMap` objects for
+        each map supplied. The keys are the Map.name attributes corresponding
+        to the maps stored as values.
+    """
+
+    for map_ in mapdict.values():
+        map_.initialize(Files, Printer)
+
+    mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
+
+    for map_choice in RunPars.coupling_v_pair_dict.keys():
+        if map_choice not in mapdict:
+            Printer.warning(
+                f"\nThe map {map_choice} was requested for use in couplings. "
+                "However, it "
+                "either does not exist, or the map was loaded unsuccessfully "
+                "due to issues with its definition.",
+                "MI_GEM_1", True
+            )
+
+    # just have to check if all requested coupling maps have indeed been
+    # read/loaded in successfully.
+    # Due to how the coupling-pair dict was built, we only consider maps
+    # that couple oscillators that were requested by maps_to_use.
+    requested_mapdict = {
+        map_.name: map_ for map_ in mapdict.values()
+        if map_.name in RunPars.coupling_v_pair_dict.keys()
+    }
+    RunPars.requested_pairmapdict = requested_mapdict
+
+
+def scan_mapdirs(mapdirs, maptype):
     """Gives a list of newly-generated Map objects
 
     Given a list of paths (each representing a map directory), create a Map
@@ -2089,13 +2145,20 @@ def scan_mapdirs(mapdirs):
 
     Returns
     -------
-    all_maps : list of :class:`Map`
+    all_maps : dict of str: :class:`Map` pairs
     """
+
+    match maptype:
+        case "Singles":
+            useclass = SingleMap
+        case "Pairs":
+            useclass = PairMap
+        case _:
+            return {}
 
     all_maps = {}
     for direc in mapdirs:
         subdirs = [item for item in [*direc.iterdir()] if item.is_dir()]
-        lookfor = ("Singles", "Pairs")
 
         available_files = [
             item for item in [*direc.iterdir()]
@@ -2104,7 +2167,7 @@ def scan_mapdirs(mapdirs):
         ]
 
         for subdir in subdirs:
-            if subdir.name in lookfor:
+            if subdir.name == maptype:
                 available_files_sub = [
                     item for item in [*subdir.iterdir()]
                     if item.is_file()
@@ -2115,7 +2178,8 @@ def scan_mapdirs(mapdirs):
                     if item.is_dir()
                 ]
 
-            for ssdir in ssdirs:
-                map_ = Map(ssdir, available_files_sub + available_files)
-                all_maps[map_.name] = map_
+                for ssdir in ssdirs:
+                    map_ = useclass(
+                        ssdir, available_files_sub + available_files)
+                    all_maps[map_.name] = map_
     return all_maps

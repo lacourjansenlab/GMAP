@@ -163,6 +163,10 @@ SU_NP_7
 -------
 The mentioned parameters have choices that are valid on their own, but their combination is not. Please make sure that these conflicts are resolved!
 
+SU_NP_8
+-------
+The given parameter was provided with an invalid choice. The error gives more information on what parameter, and whats wrong.
+
 
 SU_PP
 =====

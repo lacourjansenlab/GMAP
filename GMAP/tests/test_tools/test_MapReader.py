@@ -40,7 +40,8 @@ class TestCode:
         ]
         inpardict = {}
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
 
         # only test the map made for testing this funtionality
@@ -56,7 +57,8 @@ class TestCode:
         ]
         inpardict = {}
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
 
         # only test the map made for testing this funtionality
@@ -74,7 +76,8 @@ class TestCode:
         mapname = "test_extract_code"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="adjust_RunPars",
             mapname=mapname
@@ -93,7 +96,8 @@ class TestCode:
         mapname = "test_extract_code_nocode"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="adjust_RunPars",
             mapname=mapname
@@ -121,7 +125,8 @@ class TestCode:
         mapname = "test_find_core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="find_core", mapname=mapname
         )
@@ -154,7 +159,7 @@ class TestCode:
             + b'\xFA' + b'\xFB' + b'\xFC' + b'\xFD' + b'\xFE' + b'\xFF')
         fhand.close()
 
-        (_, Printer, _, _, _, _, _, mapdict) = basic_setup(
+        (_, Printer, _, _, _, _, _, mapdict, pairs_mapdict) = basic_setup(
             cmdline, inpardict, finish_before="append_core", mapname=mapname
         )
         map_ = mapdict[mapname]
@@ -172,7 +177,8 @@ class TestCode:
         mapname = "test_appending"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="append_core", mapname=mapname
         )
@@ -194,7 +200,8 @@ class TestCode:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -220,7 +227,7 @@ class TestCode:
             inpardict = {}
             mapname = f"test_MI_MC_6_{i}"
 
-            (_, Printer, _, _, _, _, _, mapdict) = basic_setup(
+            (_, Printer, _, _, _, _, _, mapdict, _) = basic_setup(
                 cmdline, inpardict, finish_before="Core", mapname=mapname
             )
             map_ = mapdict[mapname]
@@ -236,7 +243,7 @@ class TestCode:
         ]
         inpardict = {}
         mapname = "test_MI_MC_2"
-        (_, Printer, _, _, _, _, _, mapdict) = basic_setup(
+        (_, Printer, _, _, _, _, _, mapdict, _) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
@@ -252,7 +259,7 @@ class TestCode:
         ]
         inpardict = {}
         mapname = "test_estatic_None"
-        (_, Printer, _, _, _, _, _, mapdict) = basic_setup(
+        (_, Printer, _, _, _, _, _, mapdict, _) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
@@ -271,7 +278,8 @@ class TestCode:
         mapname = "test_code_build_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
             mapname=mapname
@@ -328,7 +336,8 @@ class TestCode:
         mapname = "test_code_build_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
             mapname=mapname
@@ -392,7 +401,8 @@ class TestCode:
         mapname = "test_code_build_3"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
             mapname=mapname
@@ -456,7 +466,8 @@ class TestCode:
         mapname = "test_code_build_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
@@ -474,7 +485,8 @@ class TestCode:
         mapname = "test_MI_MR_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
@@ -495,7 +507,8 @@ class TestCode:
         mapname = "test_MI_MR_6"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
@@ -516,7 +529,8 @@ class TestCode:
         mapname = "test_MI_MC_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
@@ -537,7 +551,8 @@ class TestCode:
         mapname = "test_MI_MC_10_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
@@ -557,7 +572,8 @@ class TestCode:
         mapname = "test_MI_MC_6_5"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
             mapname=mapname
@@ -577,7 +593,8 @@ class TestCode:
         mapname = "test_MI_MC_9_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
             mapname=mapname
@@ -598,7 +615,8 @@ class TestCode:
         mapname = "test_MI_MC_9_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
             mapname=mapname
@@ -618,7 +636,8 @@ class TestCode:
         mapname = "test_MI_MC_10_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
             mapname=mapname
@@ -639,7 +658,8 @@ class TestCode:
         mapname = "test_MI_MC_10_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
             mapname=mapname
@@ -659,7 +679,8 @@ class TestCode:
         mapname = "test_MI_MR_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
 
         # only test the map made for testing this funtionality
@@ -678,7 +699,8 @@ class TestCode:
         mapname = "test_MI_MR_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="find_core", mapname=mapname
         )
@@ -699,7 +721,8 @@ class TestCode:
         mapname = "test_MI_MR_3_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="find_core", mapname=mapname
         )
@@ -719,7 +742,8 @@ class TestCode:
         mapname = "test_MI_MR_3_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="append_core", mapname=mapname
         )
@@ -740,7 +764,8 @@ class TestCode:
         mapname = "test_MI_MR_4"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="find_core", mapname=mapname
         )
@@ -761,7 +786,8 @@ class TestCode:
         mapname = "test_MI_MR_6"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="append_core", mapname=mapname
         )
@@ -784,7 +810,8 @@ class TestCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -845,7 +872,8 @@ class TestCore:
         mapname = "test_funcgroupfile"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -883,7 +911,8 @@ class TestCore:
         mapname = "test_funcgroup_bonded"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -906,7 +935,8 @@ class TestCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -925,7 +955,8 @@ class TestCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -945,7 +976,8 @@ class TestCore:
         mapname = "test_estatic_None"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -965,7 +997,8 @@ class TestCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -987,7 +1020,8 @@ class TestCore:
         mapname = "test_estatic_None"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1008,7 +1042,8 @@ class TestCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1029,7 +1064,8 @@ class TestCore:
         mapname = "test_estatic_None"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1050,7 +1086,8 @@ class TestCore:
         mapname = "test_estat_choice_V"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1071,7 +1108,8 @@ class TestCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1091,7 +1129,8 @@ class TestCore:
         mapname = "test_local_None"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1111,7 +1150,8 @@ class TestCore:
         mapname = "test_dipoles_datafile_maglong"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1134,7 +1174,8 @@ class TestCore:
         mapname = "test_dipoles_datafile_xyzgood"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1164,7 +1205,8 @@ class TestCore:
         mapname = "test_dipoles_datafile_NA"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1185,7 +1227,8 @@ class TestCore:
         mapname = "test_dipoles_datafile_magG"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1205,7 +1248,8 @@ class TestCore:
         mapname = "test_dipoles_datafile_maglong"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1228,7 +1272,8 @@ class TestCore:
         mapname = "test_dipoles_datafile_NA"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1249,7 +1294,8 @@ class TestCore:
         mapname = "test_dipoles_datafile_magG"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1364,7 +1410,8 @@ class TestCore:
             mapname = "test_" + errcode
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
@@ -1388,7 +1435,7 @@ class Custom():
             setattr(self, arg[0], arg[1])
 
 
-def test_manage_maps():
+def test_manage_maps_singles():
     # basically the same as GM_PP.get_parameters, but can take list and dict
     # instead of commandline and inparfile
     maplist = ["AmideSC", "AmideBB"]
@@ -1396,10 +1443,11 @@ def test_manage_maps():
         "maps_to_use": maplist
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        mapdict, pairs_mapdict
     ) = basic_setup([], inpars, finish_before="extract_code")
 
-    GM_MR.manage_maps(Files, Printer, RunPars, mapdict)
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
 
     assert all(
         key in RunPars.requested_mapdict.keys()
@@ -1414,10 +1462,11 @@ def test_manage_maps():
         "maps_to_use": maplist
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        mapdict, pairs_mapdict
     ) = basic_setup([], inpars, finish_before="extract_code")
 
-    GM_MR.manage_maps(Files, Printer, RunPars, mapdict)
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
 
     assert all(
         key in RunPars.requested_mapdict.keys()
@@ -1432,11 +1481,12 @@ def test_MI_GEM_1(capsys):
         "maps_to_use": maplist
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars, mapdict
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        mapdict, pairs_mapdict
     ) = basic_setup([], inpars, finish_before="extract_code")
 
     with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        GM_MR.manage_maps(Files, Printer, RunPars, mapdict)
+        GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
 
     assert pytest_wrapped_sysexit.type is SystemExit
     captured = capsys.readouterr()
@@ -1475,7 +1525,9 @@ def basic_setup(
     )
 
     mapdirs = GM_PP.find_mapdir(Files, Printer, cmdline, InPars, DefPars)
-    mapdict = GM_MR.scan_mapdirs(mapdirs)
+    singles_mapdict = GM_MR.scan_mapdirs(mapdirs, "Singles")
+    pairs_mapdict = GM_MR.scan_mapdirs(mapdirs, "Pairs")
+    mapdict = singles_mapdict | pairs_mapdict
 
     for map_ in mapdict.values():
         map_.find_refpars(Printer)
@@ -1503,14 +1555,14 @@ def basic_setup(
 
     returntuple = (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, singles_mapdict, pairs_mapdict
     )
 
     if finish_before == "extract_code":
         return returntuple
     # ------------------------------------------------------------------
 
-    map_ = mapdict[mapname]
+    map_ = singles_mapdict[mapname]
     setattr(map_, "code", map_.extract_code(Printer))
     if not map_.code:
         setattr(map_, "code", GM_DMF.NewModule())
