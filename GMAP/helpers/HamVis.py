@@ -335,6 +335,23 @@ def cut_ham(cut, ham):
 	return ham
 
 
+def find_line_length(fhand, file_size):
+	fhand.seek(4)
+	candidate = np.fromfile(fname, count=1, dtype=np.float32)[0]
+	if not candidate.is_integer():
+		return find_line_length(fhand, file_size)
+	else:
+		line_length = fhand.tell()
+		line_amount = file_size / line_length
+		for line in range(line_amount):
+			candidate = np.fromfile(
+				fname, count=1, dtype=np.float32, offset=line_length * line
+			)[0]
+			if not candidate.is_integer():
+				return find_line_length(fhand, file_size)
+		return line_length
+
+
 def HamVis(fname, frames, average, cut, outname, file_type):
 	"""Saves frames of Hamiltonians and saves them as a pdf image.
 
@@ -369,17 +386,8 @@ def HamVis(fname, frames, average, cut, outname, file_type):
 		file_path = Path(fname)
 		file_size = round(file_path.stat().st_size / 4)  # number of floats in file
 		with open(fname) as fhand:
-			line_numbers = np.fromfile(fname, count=1)[0]
-			file_idx = 0
-			while len(line_numbers) == 1:
-				file_idx += 1
-				fhand.seek(1)
-				candidate = np.fromfile(fname, count=1)
-				while candidate.is_integer():
-					fhand.seek(file_idx)
-					candidate = np.fromfile(fname, count=1)
+			line_length = find_line_length(fhand, file_size)
 					
-
 
 
 
