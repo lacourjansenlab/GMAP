@@ -8,6 +8,7 @@ import numpy as np
 # local imports
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.MapReader as GM_MR
+from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class RefPars:
@@ -117,7 +118,7 @@ class RefPars:
         self.nondefcount = 0
 
         if self.is_main:
-            self.compounds = ("coup_to_use")
+            self.compounds = ("coups_to_use",)
         else:
             self.compounds = tuple()
 
@@ -1968,7 +1969,12 @@ class RunPars:
         # Later sources modify the choices from earlier!
         for source in (DefPars, InPars, CmdPars):
             if "coups_to_use" in source.choices:
-                couplist.extend(source.choices["coups_to_use"])
+                if isinstance(source, RefPars):
+                    dpr("def/refpars", source.fname)
+                    couplist.extend([source.choices["coups_to_use"]])
+                else:
+                    dpr("other", source.fname)
+                    couplist.extend(source.choices["coups_to_use"])
 
         # now, find all pairs of couplings, and assign the correct
         # coupling choice to them.
@@ -1982,6 +1988,7 @@ class RunPars:
 
         # coupline corresponds to a single line from RawPars files, and
         # contains information about a single coupling map.
+        dpr(couplist)
         for coupline in couplist:
             if len(coupline) < 2:
                 Printer.warning(
@@ -2074,6 +2081,7 @@ class RunPars:
             return failed_couppairs
 
         pair = pairstr.split(":")
+        dpr(pair)
         if len(pair) != 2:
             Printer.warning(
                 "\nAll arguments for the parameter coups_to_use "
@@ -2228,8 +2236,8 @@ def get_parameters(Files, Printer, in_parfile, argslist):
 
     # step 9 (parse inparfile, not map part)
     if in_parfile:
-        InPars = RawPars.from_dict(
-            Printer, in_parfile, in_pardict, RefPars_, False)
+        InPars = RawPars.from_file(
+            Printer, in_parfile, RefPars_, False)
     else:
         InPars = RawPars.create_empty(Printer)
 
@@ -2638,6 +2646,8 @@ def get_pardict(iterable, compounds=None):
                 outdict[linelist[0]] = [linelist[1:]]
         else:
             outdict[linelist[0]] = linelist[1:]
+    dpr(outdict)
+    dpr(compounds)
     return outdict
 
 

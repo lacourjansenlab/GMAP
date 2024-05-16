@@ -336,9 +336,14 @@ If type is set to be 'standard', two of the three axes need to be defined. The f
 MI_GEM
 ======
 
-MI_GEM_1
+MI_MM_1
 --------
 The user requested the use of a certain map, but the program cannot use/find it. Make sure there is a directory of the requested name in the directory named 'singles' inside your maps directory. If there is, check the earlier errors - there might have been issues loading it in.
+
+MI_MM_2
+-------
+Certain coupling maps require some additional information from oscillators which cannot be provided/determined by GMAP, or the coupling map itself. Therefore, the map for an oscillator must give it specifically for this coupling map (which is completely optional for a map to do). This error was triggered because the mentioned combination of maps is not supported.
+
 
 **********************
 Codes starting with MD

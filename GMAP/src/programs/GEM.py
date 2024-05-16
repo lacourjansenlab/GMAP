@@ -101,9 +101,12 @@ def trj_loop(Printer, RunPars, System):
     if RunPars.stop_frame >= len(System.universe.trajectory):
         RunPars.stop_frame = len(System.universe.trajectory)
 
-    # GEM is now done - let maps initialize as well
-    for mapname in System.oscillators_ordered.keys():
+    # let maps prepare for the calculation
+    for mapname in System.oscillators_ordered.keys():  # singles
         map_ = RunPars.requested_mapdict[mapname]
+        map_.code.GM_pre_run(Printer, map_, System)
+    for mapname in System.oscillators_ordered_coup.keys():  # pairs
+        map_ = RunPars.requested_pairmapdict[mapname]
         map_.code.GM_pre_run(Printer, map_, System)
 
     # And in case maps did anything weird...
@@ -134,8 +137,11 @@ def trj_loop(Printer, RunPars, System):
         Printer.add_time(4, "initialize done. next: map init", "ms")
 
         # call pre-frame funcs of maps
-        for mapname in System.oscillators_ordered.keys():
+        for mapname in System.oscillators_ordered.keys():  # singles
             map_ = RunPars.requested_mapdict[mapname]
+            map_.code.GM_pre_frame(Printer, map_, System)
+        for mapname in System.oscillators_ordered_coup.keys():  # pairs
+            map_ = RunPars.requested_pairmapdict[mapname]
             map_.code.GM_pre_frame(Printer, map_, System)
 
         Printer.add_time(4, "map init done. next: calculation", "ms")
@@ -147,8 +153,11 @@ def trj_loop(Printer, RunPars, System):
         Printer.add_time(4, "calculation done. next: map final", "ms")
 
         # call post-frame functions of maps
-        for mapname in System.oscillators_ordered.keys():
+        for mapname in System.oscillators_ordered.keys():  # singles
             map_ = RunPars.requested_mapdict[mapname]
+            map_.code.GM_post_frame(Printer, map_, System)
+        for mapname in System.oscillators_ordered_coup.keys():  # pairs
+            map_ = RunPars.requested_pairmapdict[mapname]
             map_.code.GM_post_frame(Printer, map_, System)
 
         Printer.add_time(4, "map final done. next: write output", "ms")
@@ -157,8 +166,11 @@ def trj_loop(Printer, RunPars, System):
         GM_FH.write_output(RunPars, frame.frame, outputs)
 
     # lastly, do postcalc:
-    for mapname in System.oscillators_ordered.keys():
+    for mapname in System.oscillators_ordered.keys():  # singles
         map_ = RunPars.requested_mapdict[mapname]
+        map_.code.GM_post_run(Printer, map_, System)
+    for mapname in System.oscillators_ordered_coup.keys():  # pairs
+        map_ = RunPars.requested_pairmapdict[mapname]
         map_.code.GM_post_run(Printer, map_, System)
 
     # print all that the user does not yet know
@@ -186,6 +198,7 @@ def GEM(callcommand, Files, Printer):
     # end of SU errors
 
     GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
+    GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
     Printer.add_time(3, "Added all maps", "ms")
 
     # next - MD system!
@@ -193,8 +206,11 @@ def GEM(callcommand, Files, Printer):
     Printer.add_time(3, "Initialized MD system", "ms")
 
     # GEM is now done - let maps initialize as well
-    for mapname in System.oscillators_ordered.keys():
+    for mapname in System.oscillators_ordered.keys():  # singles
         map_ = RunPars.requested_mapdict[mapname]
+        map_.code.GM_post_init(Files, Printer, map_, System)
+    for mapname in System.oscillators_ordered_coup.keys():  # pairs
+        map_ = RunPars.requested_pairmapdict[mapname]
         map_.code.GM_post_init(Files, Printer, map_, System)
     Printer.add_time(2, "Initialization complete", "ms")
 

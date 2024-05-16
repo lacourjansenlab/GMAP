@@ -333,6 +333,8 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
+  - check if dipole vector magnitude is normalized before multiplying with map-specified magnitude
+  - add note that calcdipole functions may only give float32 np arrays
   - Add to manual how to choose coupling map
   - fix all links in documentation (and all text) using Map (that now should be SingleMap)
   - start working on a first map (dipdip) and develop pairsmap class

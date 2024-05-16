@@ -11,6 +11,8 @@ import GMAP.src.tools.DefaultMapFunctions as GM_DMF
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.ParameterParser as GM_PP
 
+from GMAP.src.tools.PrintTools import devprint as dpr
+
 
 class Map():
     """Contains all information regarding a single map.
@@ -272,6 +274,32 @@ class Map():
             return None
         return module
 
+    def complete_code(self, funcnames, kwargslist=None):
+        r"""Adds missing functions to the code of this map.
+
+        A map can have many different funtions called by the program to
+        allow for fully custom behaviour. To make it easier to call them
+        later, any that do not exist yet, will have a default function
+        added in. For some, that may be a useless shell (just pass),
+        for others, there will be an actual default calculation.
+
+        Parameters
+        ----------
+        funcnames : tuple of str
+            The functions that should be added in (without the GM\_
+            suffix)
+        """
+
+        if not kwargslist:
+            kwargslist = [{}] * len(funcnames)
+
+        for funcname, kwargs in zip(funcnames, kwargslist):
+            if not hasattr(self.code, "GM_" + funcname):
+                setattr(
+                    self.code, "GM_" + funcname,
+                    getattr(GM_DMF, "get_" + funcname)(**kwargs)
+                )
+
 
 class SingleMap(Map):
     def initialize(self, Files, Printer):
@@ -418,32 +446,6 @@ class SingleMap(Map):
             ]
             self.rawcore["add_corefile"] = []
 
-    def complete_code(self, funcnames, kwargslist=None):
-        r"""Adds missing functions to the code of this map.
-
-        A map can have many different funtions called by the program to
-        allow for fully custom behaviour. To make it easier to call them
-        later, any that do not exist yet, will have a default function
-        added in. For some, that may be a useless shell (just pass),
-        for others, there will be an actual default calculation.
-
-        Parameters
-        ----------
-        funcnames : tuple of str
-            The functions that should be added in (without the GM\_
-            suffix)
-        """
-
-        if not kwargslist:
-            kwargslist = [{}] * len(funcnames)
-
-        for funcname, kwargs in zip(funcnames, kwargslist):
-            if not hasattr(self.code, "GM_" + funcname):
-                setattr(
-                    self.code, "GM_" + funcname,
-                    getattr(GM_DMF, "get_" + funcname)(**kwargs)
-                )
-
     def code_add_builds(self, Printer):
         """Add functions that depend on lines in core.txt.
 
@@ -584,9 +586,9 @@ class SingleMap(Map):
 
         with open(filepath) as fhand:
             for line in fhand:
-                line = Map.cleanline(line)
+                line = SingleMap.cleanline(line)
                 if line:
-                    file_contents = Map.parse_core_line(
+                    file_contents = SingleMap.parse_core_line(
                         Printer, line, file_contents, filepath
                     )
                     if not file_contents:
@@ -678,6 +680,29 @@ class PairMap(Map):
         self.code = self.extract_code(Printer)
         if not self.code:
             self.code = GM_DMF.NewModule()
+
+        self.complete_code((
+            "adjust_RunPars",
+        ))
+        self.code.GM_adjust_RunPars(Files, Printer, self)
+
+        self.complete_code(("needs_mapfunc",))
+        self.required_functions = self.code.GM_needs_mapfunc(
+            Files, Printer, self)
+
+        self.complete_code(("needs_keyword",))
+        self.required_keywords = self.code.GM_needs_keyword(
+            Files, Printer, self)
+
+        # Add in the remaining code
+        self.complete_code((
+            "prep_coupling",
+            "post_init",
+            "pre_run",
+            "pre_frame",
+            "post_frame",
+            "post_run"
+        ))
 
 
 class Core():
@@ -2071,7 +2096,7 @@ def manage_maps_singles(Files, Printer, RunPars, mapdict):
                 f"\nThe map {map_choice} was requested for use. However, it "
                 "either does not exist, or the map was loaded unsuccessfully "
                 "due to issues with its definition.",
-                "MI_GEM_1", True
+                "MI_MM_1", True
             )
 
     requested_mapdict = {
@@ -2107,6 +2132,7 @@ def manage_maps_pairs(Files, Printer, RunPars, mapdict):
 
     for map_ in mapdict.values():
         map_.initialize(Files, Printer)
+    dpr(mapdict)
 
     mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
 
@@ -2117,7 +2143,7 @@ def manage_maps_pairs(Files, Printer, RunPars, mapdict):
                 "However, it "
                 "either does not exist, or the map was loaded unsuccessfully "
                 "due to issues with its definition.",
-                "MI_GEM_1", True
+                "MI_MM_1", True
             )
 
     # just have to check if all requested coupling maps have indeed been
@@ -2129,6 +2155,44 @@ def manage_maps_pairs(Files, Printer, RunPars, mapdict):
         if map_.name in RunPars.coupling_v_pair_dict.keys()
     }
     RunPars.requested_pairmapdict = requested_mapdict
+
+    for coupmap in requested_mapdict.values():
+        # get all singlemaps that are coupled by this coupmap
+        singlemaps_used = set()
+        for pair in RunPars.coupling_v_pair_dict[coupmap.name]:
+            for mapname in pair:
+                singlemaps_used.add(RunPars.requested_mapdict[mapname])
+
+        # see if all singlemaps coupled by this group meet the prerequisites
+        for map_ in singlemaps_used:
+            for funcname in coupmap.required_functions:
+                funcname = f"CL_{coupmap.name}_{funcname}"
+                if not hasattr(map_.code, funcname):
+                    Printer.warning(
+                        f"\nThe map {coupmap.name} was requested for use in "
+                        "calculating couplings. It requires singles maps to "
+                        f"contain the function {funcname}, but the map "
+                        f"{map_.name} does not have it specified. Please "
+                        "contact the creators of both maps to fix the issue. "
+                        "In the meantime, please use a different coupling "
+                        f"method for the map {map_.name}.",
+                        "MI_MM_2", True
+                    )
+
+            for keyword in coupmap.required_keywords:
+                keyword = f"{coupmap.name}.{keyword}"
+                if keyword not in map_.rawcore:
+                    Printer.warning(
+                        f"\nThe map {coupmap.name} was requested for use in "
+                        "calculating couplings. It requires singles maps to "
+                        f"contain the keyword {keyword} in their core.txt "
+                        "file, but the map "
+                        f"{map_.name} does not have it specified. Please "
+                        "contact the creators of both maps to fix the issue. "
+                        "In the meantime, please use a different coupling "
+                        f"method for the map {map_.name}.",
+                        "MI_MM_2", True
+                    )
 
 
 def scan_mapdirs(mapdirs, maptype):

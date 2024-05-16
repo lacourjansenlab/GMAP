@@ -109,9 +109,18 @@ def calc_frame(Printer, RunPars, System, outputs):
         if "ham" in RunPars.output_data:
             outputs["hamiltonian"][oscix, oscix] = calc_frequency(
                 Printer, System, oscillator)
-            prep_coupling()
 
-    # for every oscillator pair (that should be covered) - calc_coupling
+    # calculate the couplings for the hamiltonian
+    if "ham" in RunPars.output_data:
+        prep_coupling(Printer, RunPars, System)
+
+        for oscix1, osc1 in enumerate(System.oscillators):
+            for oscix2 in range(oscix1 + 1, System.nosc):
+                osc2 = System.oscillators[oscix2]
+                J = calc_coupling(
+                    Printer, RunPars, System, oscix1, osc1, oscix2, osc2)
+                outputs["hamiltonian"][oscix1, oscix2] = J
+                outputs["hamiltonian"][oscix2, oscix1] = J
 
     return outputs
 
@@ -121,6 +130,8 @@ def calc_dipole(Printer, System, oscillator):
     map_ = oscillator.Map
     r_vec, r_pos = map_.code.GM_calculate_dipole(
         Printer, map_, System, oscillator)
+    setattr(oscillator, "dipole_vec", r_vec)
+    setattr(oscillator, "dipole_pos", r_pos)
     return r_vec, r_pos
 
 
@@ -129,12 +140,23 @@ def calc_frequency(Printer, System, oscillator):
     return map_.code.GM_calculate_frequency(Printer, map_, System, oscillator)
 
 
-def prep_coupling():
+def prep_coupling(Printer, RunPars, System):
+    for coupmapname, osclist in System.oscillators_ordered_coup.items():
+        oscixlist = System.oscillators_ordered_coup_ix[coupmapname]
+        coupmap = RunPars.requested_pairmapdict[coupmapname]
+        coupmap.code.GM_prep_coupling(
+            Printer, coupmap, System, oscixlist, osclist)
     return
 
 
-def calc_coupling():
-    return
+# possible speedup inside? -> retrieving oscmapname, using that as key
+# might be faster to have ix-based lookup table? or is that structure
+# too large?
+def calc_coupling(Printer, RunPars, System, oscix1, osc1, oscix2, osc2):
+    coupmap = RunPars.requested_pairmapdict[RunPars.pair_v_coupling_dict[
+        (osc1.Map.name, osc2.Map.name)]]
+    return coupmap.code.GM_calc_coupling(
+        Printer, coupmap, System, oscix1, osc1, oscix2, osc2)
 
 
 def generate_output_structures(RunPars, System):

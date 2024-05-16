@@ -123,7 +123,7 @@ class System:
         self.find_influencers(Printer, RunPars)
 
         self.find_oscillators(Files, Printer, RunPars)
-        self.order_oscillators()
+        self.order_oscillators(RunPars)
 
     def basic_boxchecks(self, Printer, RunPars):
         """Performs the first basic analyses on the provided universe.
@@ -738,17 +738,63 @@ class System:
                 outlist.append(new_osc)
         return outlist
 
-    def order_oscillators(self):
-        """Sort all present oscillators by their map."""
+    def order_oscillators(self, RunPars):
+        """Sort all present oscillators by their map.
 
+        Parameters
+        ----------
+        RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+            The 'main' RunPars instance containing all the basic run-defining
+            parameters.
+        """
+
+        # for each singles map, determine which oscillators are treated
+        # by that map (no treated oscillators - not in the dict)
         self.oscillators_ordered = {}
+        self.oscillators_ordered_ix = {}
         for oscix, oscillator in enumerate(self.oscillators):
             setattr(oscillator, "oscix", oscix)
             mapname = oscillator.Map.name
             if mapname not in self.oscillators_ordered:
                 self.oscillators_ordered[mapname] = [oscillator]
+                self.oscillators_ordered_ix[mapname] = [oscix]
             else:
                 self.oscillators_ordered[mapname].append(oscillator)
+                self.oscillators_ordered_ix[mapname].append(oscix)
+
+        # build a new coupling_v_pair_dict; this one only contains the
+        # maps we actually need for this system (what if a requested
+        # oscillator is not present in the system? those are left out)
+        self.coupling_v_pair_dict = {}
+        for coupmap, pairs in RunPars.coupling_v_pair_dict.items():
+            for pair in pairs:
+                if all(item in self.oscillators_ordered for item in pair):
+                    if coupmap in self.coupling_v_pair_dict:
+                        self.coupling_v_pair_dict[coupmap].append(pair)
+                    else:
+                        self.coupling_v_pair_dict[coupmap] = [pair]
+
+        # for each coupling map, determine which oscilators are coupled
+        # by that map (no coupled oscillators - not in the dict)
+        self.oscillators_ordered_coup = {}
+        self.oscillators_ordered_coup_ix = {}
+        for oscix, oscillator in enumerate(self.oscillators):
+            oscmap = oscillator.Map.name
+            for coupmap, pairs in self.coupling_v_pair_dict.items():
+                for pair in pairs:
+                    if oscmap in pair:
+                        if coupmap not in self.oscillators_ordered_coup:
+                            self.oscillators_ordered_coup[coupmap] = [
+                                oscillator]
+                            self.oscillators_ordered_coup_ix[coupmap] = [oscix]
+                        else:
+                            self.oscillators_ordered_coup[coupmap].append(
+                                oscillator)
+                            self.oscillators_ordered_coup_ix[coupmap].append(
+                                oscix)
+                        # if this oscillator is part of this map, no need to
+                        # check the other pairs!
+                        break
 
     def update_properties(self, Printer):
         """Reloads the frame-dependent properties of the system.
@@ -898,7 +944,7 @@ class Oscillator:
 
     Attributes
     ----------
-    Map : :class:`~GMAP.src.tools.MapReader.Map`
+    Map : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map that this oscillator belongs to.
     used_atoms : list of int
         Using Map.used_atoms - contains the system indices of the atoms
@@ -930,9 +976,15 @@ class Oscillator:
         The position on which the sphere defining the electrostatics
         should be centered.
     VEG_refpos_c : `ctypes.Array`
-        The c-friendly variant of self.VEG_refpos_c
+        The c-friendly variant of self.VEG_refpos_c.
     oscix : int
-        The index of this oscillator in the current MD system
+        The index of this oscillator in the current MD system.
+    dipole_vec : `np.ndarray`
+        (Only used if dipoles are calculated this run!)
+        The dipole moment calculated for this oscillator.
+    dipole_pos : `np.ndarray`
+        (Only used if dipoles are calculated this run!)
+        The position at which the dipole moment lies.
     """
 
     def __init__(self, atoms, map_):

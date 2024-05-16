@@ -22,6 +22,14 @@ def get_adjust_RunPars():
     return does_nothing
 
 
+def get_needs_mapfunc():
+    return returns_empty_list
+
+
+def get_needs_keyword():
+    return returns_empty_list
+
+
 def get_adjust_map_core_raw():
     return does_nothing
 
@@ -47,6 +55,10 @@ def get_post_frame():
 
 
 def get_post_run():
+    return does_nothing
+
+
+def get_prep_coupling():
     return does_nothing
 
 
@@ -221,7 +233,8 @@ def get_get_dipole_dir(Printer, map_):
     # Move vector back into the box, and normalize
     codestring += "    r_vec = (r_vec - np.floor(r_vec + 0.5))\n"
     codestring += "    r_vec = r_vec @ Syst.boxvects\n"
-    codestring += "    r_vec /= GM_MF.vec3_len(r_vec)\n\n"
+    codestring += "    r_vec /= GM_MF.vec3_len(r_vec)\n"
+    codestring += "    r_vec = r_vec.astype('float32')\n\n"
 
     # find position of the dipole
     codestring += "    r_pos = " + envelop_int(
@@ -230,6 +243,7 @@ def get_get_dipole_dir(Printer, map_):
     ) + "\n"
     codestring += "    r_pos = (r_pos - np.floor(r_pos + 0.5))\n"
     codestring += "    r_pos = r_pos @ Syst.boxvects\n"
+    codestring += "    r_pos = r_pos.astype('float32')\n\n"
     codestring += "    return r_vec, r_pos\n"
 
     try:
@@ -442,6 +456,10 @@ def does_nothing(*args):
 
 def returns_last(*args):
     return args[-1]
+
+
+def returns_empty_list(*args):
+    return []
 
 
 def uses_maps(gas_freq, VEG, mapconsts):
