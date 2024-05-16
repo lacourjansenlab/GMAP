@@ -61,16 +61,19 @@ def get_data(fname, filetype, frame, line_length):
         matrix.
     """
 
-    match file_type:
-        case "txt":
-            data = get_data_txt(fname, frame)
-            return data
     try:
-        data = np.loadtxt(fname, skiprows=frame, max_rows=1)[1:]
+        match filetype:
+            case "txt":
+                data = np.loadtxt(fname, skiprows=frame, max_rows=1)[1:]
 
-        # len(data[0]) is a triangular number, size is the integer used
-        # to construct that triangular number.
+                # len(data[0]) is a triangular number, size is the integer used
+                # to construct that triangular number.
+            case "bin":
+                skipped_bytes = (frame - 1) * line_length
+                data = np.fromfile(fname, count=line_length,
+                                   offset=skipped_bytes)[1:]
         size = round(np.sqrt(2 * len(data) + 0.25) - 0.5)
+
     except Exception:
         raise HamVisException(
             f"There was an error extracting data from {fname}, please verify "
@@ -204,7 +207,7 @@ def ham_saver(ham, frame, outname):
 
 
 def format_frame_selection(frames, data):
-    """Turns the frames from a string into a list of integers.
+    """Turns 'frames' from a string into a list of integers.
 
     If frames contains integers seperated by commas, the integers will
     correspond to the frames of the data that will be processed. A list
@@ -426,7 +429,7 @@ def HamVis(fname, frames, average, cut, outname, file_type):
 
     ham_average = None
     for frame in frames:
-        data, size = get_data(fname, frame)
+        data, size = get_data(fname, frame, line_length)
         ham = format_ham(data, size)
         ham = logify_ham(ham, size)
         ham = cut_ham(cut, ham)
