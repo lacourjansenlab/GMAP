@@ -64,8 +64,8 @@ def get_data(fname, file_type, frame, line_length):
     # try:
     match file_type:
         case "txt":
-            rows_skipped = frame - 1
-            data = np.loadtxt(fname, skiprows=rows_skipped, max_rows=1)[1:]
+            data = np.loadtxt(fname, skiprows=frame, max_rows=1)[1:]
+
             # len(data[0]) is a triangular number, size is the integer used
             # to construct that triangular number.
         case "bin":
@@ -74,7 +74,7 @@ def get_data(fname, file_type, frame, line_length):
                                offset=skipped_bytes
                                )[1:]
     size = round(np.sqrt(2 * len(data) + 0.25) - 0.5)
-    print(data[:15])
+
     # except Exception:
     #     raise HamVisException(
     #         f"There was an error extracting data from {fname}, please verify "
@@ -182,6 +182,9 @@ def ham_saver(ham, frame, outname):
 
     # Setting all off-diagonal terms to nan.
     on_diag_temp = np.diagonal(ham)
+
+    return on_diag_temp
+
     on_diag = np.full_like(ham, np.nan)
     np.fill_diagonal(on_diag, on_diag_temp)
 
@@ -364,21 +367,21 @@ def find_lines_bin(fname, file_size, increment=0):
 
 
 def find_lines(fname, file_type):
-    match file_type:
-        case "bin":
-            file_path = Path(fname)
-            file_size = round(file_path.stat().st_size / 4)  # number of floats in file
-            line_length, line_amount = find_lines_bin(fname, file_size)
-        case "txt":
-            with open(fname) as fhand:
+    with open(fname) as fhand:
+        match file_type:
+            case "bin":
+                file_path = Path(fname)
+                file_size = round(file_path.stat().st_size / 4)  # number of floats in file
+                line_length, line_amount = find_lines_bin(fname, file_size)
+            case "txt":
                 line_length = None
                 line_amount = 0
                 for _ in fhand:
                     line_amount += 1
-        case _:
-            raise HamVisException(f"The specified file_type `{file_type}`"
-                                    "is not known. Please specify either "
-                                    "'txt' or 'bin'")
+            case _:
+                raise HamVisException(f"The specified file_type `{file_type}`"
+                                      "is not known. Please specify either "
+                                      "'txt' or 'bin'")
     return line_length, line_amount
 
 
@@ -437,7 +440,7 @@ def HamVis(fname, frames, average, cut, outname, file_type):
         ham = logify_ham(ham, size)
         ham = cut_ham(cut, ham)
         if average == "False":
-            ham_saver(ham, frame, outname)
+            return ham_saver(ham, frame, outname)
         else:
             if ham_average is None:
                 ham_average = ham
@@ -451,21 +454,30 @@ def HamVis(fname, frames, average, cut, outname, file_type):
 if __name__ == "__main__":
     warnings.simplefilter("ignore")
 
-    if len(sys.argv) != 7:
-        print(
-            "You did not give the correct number of terms in your command. "
-            "A correct command looks like:\n"
-            "python HamVis.py fname frames average cut outname\n"
-            "fname is the name of the file you want to turn into a figure.\n"
-            "frames are the frames you want to investigate, seperated by ','.\n"
-            "average should be True or False depending on wether to average "
-            "the frames.\n"
-            "cut is the area you want to plot given as 'x0,x1,y0,y1', "
-            "or 'False' if you dont want to exclude anything.'\n"
-            "outname is the name the output files should have.\n"
-            "file_type should be bin or txt.\n\n"
-            "For examples please see the manual."
-        )
-    else:
-        fname, frames, average, cut, outname, file_type = sys.argv[1:]
-        HamVis(fname, frames, average, cut, outname, file_type)
+    txt_diag = HamVis("../../../1AKI/2024-05-17_11-16-24_AIM_V1-0-2_Hamiltonian.txt"
+                      , "6", "False", "False", "1AKI", "txt")
+    bin_diag = HamVis("../../../1AKI/2024-05-17_11-16-24_AIM_V1-0-2_Hamiltonian.bin"
+                      , "6", "False", "False", "1AKI_bin", "bin")
+
+    txt_min_bin_diag = txt_diag - bin_diag
+    plt.plot(txt_min_bin_diag)
+    plt.savefig("txt minus bin diagonal6")
+
+    # if len(sys.argv) != 7:
+    #     print(
+    #         "You did not give the correct number of terms in your command. "
+    #         "A correct command looks like:\n"
+    #         "python HamVis.py fname frames average cut outname\n"
+    #         "fname is the name of the file you want to turn into a figure.\n"
+    #         "frames are the frames you want to investigate, seperated by ','.\n"
+    #         "average should be True or False depending on wether to average "
+    #         "the frames.\n"
+    #         "cut is the area you want to plot given as 'x0,x1,y0,y1', "
+    #         "or 'False' if you dont want to exclude anything.'\n"
+    #         "outname is the name the output files should have.\n"
+    #         "file_type should be bin or txt.\n\n"
+    #         "For examples please see the manual."
+    #     )
+    # else:
+    #     fname, frames, average, cut, outname, file_type = sys.argv[1:]
+    #     HamVis(fname, frames, average, cut, outname, file_type)
