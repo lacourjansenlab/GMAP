@@ -941,7 +941,7 @@ class Oscillator:
         ]
         self.local_atoms = [
             self.used_atoms[index] for index in self.Map.Core.local_atoms
-        ]
+        ].sort()
 
         # for c integration - here, or should this part be called later?
         self.electrostatic_atoms_c = np.ctypeslib.as_ctypes(np.array(

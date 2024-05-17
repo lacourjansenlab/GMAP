@@ -1,4 +1,6 @@
 # exact amount of rows and columns (3*2, 4)
+# letters are here to test if the program recognizes and declines faulty
+# datatypes.
 0 1 2 3
 4 5 6 7 8
 
