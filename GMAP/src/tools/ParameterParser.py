@@ -1850,10 +1850,10 @@ class RunPars:
             map-specific)
         """
 
-        self.resolve_framenums(CmdPars, InPars, DefPars, RefPars)
+        self.resolve_framenums(Printer, CmdPars, InPars, DefPars, RefPars)
         self.resolve_couplings(Printer, CmdPars, InPars, DefPars)
 
-    def resolve_framenums(self, CmdPars, InPars, DefPars, RefPars):
+    def resolve_framenums(self, Printer, CmdPars, InPars, DefPars, RefPars):
         """Make sure the combination of frame numbers makes sense.
 
         This means making sure that after all sources are combined,
