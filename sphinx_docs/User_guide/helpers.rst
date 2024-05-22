@@ -5,15 +5,15 @@ Helpers
 =======
 
 Helpers are intended to provide the user with functionality
-that isn't or isn't yet integrated into GMAP. They are not a core part
+that isn't (yet) integrated into GMAP. They are not a core part
 of GMAP: helpers dont rely on GMAP and vice versa. 
 
-If you have created any code that is small in scope, easy to use and 
-that you would like to share thats tangental to GMAP, you can ask the 
-developers to add them as a helper.
+If you have created any code that is small in scope, easy to use, 
+that's tangental to GMAP, and that you would like to share, you can ask the developers to add them as a helper.
 
+******
 HamVis
-------
+******
 
 HamVis is intended to visualize Hamiltonians.
 
@@ -21,7 +21,7 @@ HamVis is intended to visualize Hamiltonians.
 It can be called with:
 `python HamVis.py fname frames average cut outname` whilst your current working
 directory is GMAP/helpers.
-The symbols in the line of code above mean:
+The variables in the line of code above mean:
 
 `fname` is the .txt file containing your Hamiltonians. 
 

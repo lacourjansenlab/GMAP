@@ -49,6 +49,14 @@ def get_data(fname, file_type, frame, line_length):
     ----------
     fname : str
         The name of the file from where data is extracted.
+    file_type : str
+       The filetype of fname. This should be either '.txt' or '.bin'.
+    frame : int
+        The index of the frame from which data is extracted,
+    line_length : int or None
+        This is the length of the Hamiltonians in fname. It is the
+        number of bytes in case file_type is .bin. It is None if
+        file_type is .txt.
 
     Returns
     -------
@@ -57,7 +65,7 @@ def get_data(fname, file_type, frame, line_length):
         represents either a frequency or a coupling, for a more detailed
         overview please read the manual.
     size : int
-        The size that the hamiltonian will have. As it is a size * size
+        The size that the Hamiltonian will have. As it is a size * size
         matrix.
     """
 
@@ -89,7 +97,7 @@ def get_data(fname, file_type, frame, line_length):
 
 
 def format_ham(data, size):
-    """Formats the data into the shape of the hamiltonian.
+    """Formats the data into the shape of the Hamiltonian.
 
     Parameters
     ----------
@@ -98,12 +106,12 @@ def format_ham(data, size):
         represents either a frequency or a coupling, for a more detailed
         overview please read the manual.
     size : int
-        The size that the hamiltonian will have. As it is a size * size matrix.
+        The size that the Hamiltonian will have. As it is a size * size matrix.
 
     Returns
     -------
     ham : np.ndarray
-        This array is the hamiltonian, with frequencies on the diagonal
+        This array is the Hamiltonian, with frequencies on the diagonal
         and couplings on the off-diagonal.
     """
 
@@ -124,10 +132,10 @@ def logify_ham(ham, size):
     Parameters
     ----------
     ham : np.ndarray
-        This array is the hamiltonian, with frequencies on the diagonal
+        This array is the Hamiltonian, with frequencies on the diagonal
         and couplings on the off-diagonal.
     size : int
-        The size that the hamiltonian will have. As it is a size * size
+        The size that the Hamiltonian will have. As it is a size * size
         matrix.
 
     Returns
@@ -170,13 +178,16 @@ def ham_saver(ham, frame, outname, scale):
     Parameters
     ----------
     ham : np.ndarray
-        This array is the hamiltonian, with frequencies on the diagonal
+        This array is the Hamiltonian, with frequencies on the diagonal
         and couplings on the off-diagonal.
     frame : int or list of int
         The index of the frame that is being plotted, or a list of
         frames for an average.
     outname : str
         A name used to name the file that is created.
+    scale : str
+        This string indicates if the couplings should be displayed
+        logarithmically or linearly.
     """
 
     # Setting all diagonal terms to nan.
@@ -230,106 +241,106 @@ def ham_saver(ham, frame, outname, scale):
     plt.savefig(f"{outname}_{frame}.pdf")
 
 
-def format_frame_selection(frames, data):
-    """Turns 'frames' from a string into a list of integers.
+# def format_frame_selection(frames, data):
+#     """Turns 'frames' from a string into a list of integers.
 
-    If frames contains integers seperated by commas, the integers will
-    correspond to the frames of the data that will be processed. A list
-    of them is returned. If frames is "all", a list containing all
-    indices in frames is returned, starting at 1 for the first frame.
+#     If frames contains integers seperated by commas, the integers will
+#     correspond to the frames of the data that will be processed. A list
+#     of them is returned. If frames is "all", a list containing all
+#     indices in frames is returned, starting at 1 for the first frame.
 
-    Parameters
-    ----------
-    frames : str
-        Contains integers split by commas or is the string "all". If if
-        is integers split by commas, the integers will correspond to the
-        one-based indices frames of the data that will be processed.
-        "all" will create a list containing all one-based indices of
-        all of the frames contained in data for the first
-        frame.
-    data : list of list of float
-        Each sublist represents a frame each float within each sublist
-        represents either a frequency or a coupling, for a more detailed
-        overview please read the manual.
+#     Parameters
+#     ----------
+#     frames : str
+#         Contains integers split by commas or is the string "all". If if
+#         is integers split by commas, the integers will correspond to the
+#         one-based indices frames of the data that will be processed.
+#         "all" will create a list containing all one-based indices of
+#         all of the frames contained in data for the first
+#         frame.
+#     data : list of list of float
+#         Each sublist represents a frame each float within each sublist
+#         represents either a frequency or a coupling, for a more detailed
+#         overview please read the manual.
 
-    Returns
-    -------
-    frames_int : list of int
-        Contains a list of integers that correspond to a one-based index
-        frames of the data.
-    """
+#     Returns
+#     -------
+#     frames_int : list of int
+#         Contains a list of integers that correspond to frames of the
+#         data.
+#     """
 
-    if frames == "all":
-        frames_int = range(1, len(data) + 1)
-    else:
-        frames = frames.split(",")
-        try:
-            frames_int = [int(frame) for frame in frames]
-        except ValueError:
-            raise HamVisException(
-                "Frames can only be given as integers and seperated by "
-                "nothing but a comma. To select all frames, specify 'all'."
-            ) from None
-        for frame in frames_int:
-            if frame > len(data):
-                raise HamVisException(
-                    "A frame was selected for rendering that does not exist "
-                    "in the selected sourcefile."
-                )
-    return frames_int
+#     if frames == "all":
+#         frames_int = range(1, len(data) + 1)
+#     else:
+#         frames = frames.split(",")
+#         try:
+#             frames_int = [int(frame) for frame in frames]
+#         except ValueError:
+#             raise HamVisException(
+#                 "Frames can only be given as integers and seperated by "
+#                 "nothing but a comma. To select all frames, specify 'all'."
+#             ) from None
+#         for frame in frames_int:
+#             if frame > len(data):
+#                 raise HamVisException(
+#                     "A frame was selected for rendering that does not exist "
+#                     "in the selected sourcefile."
+#                 )
+#     return frames_int
 
 
-def average_ham(average, ham, frames):
-    """Returns an updated ham_list and frames if average is 'True'.
+# def average_ham(average, ham, frames):
+#     """Returns an updated ham_list and frames if average is 'True'.
 
-    The function changes frames and ham_list depending on wether on the
-    value of average. If True, frames will be a list that contains the
-    input list as its only entry and ham_list will only have one entry,
-    which will be the average of the input. ham_list and frames remain
-    the same if average is 'False'
+#     The function changes frames and ham_list depending on wether on the
+#     value of average. If True, frames will be a list that contains the
+#     input list as its only entry and ham_list will only have one entry,
+#     which will be the average of the input. ham_list and frames remain
+#     the same if average is 'False'
 
-    Parameters
-    ----------
-    average : str
-        This should be 'False' or 'True'. If this is 'True' the function
-        average all entries in ham_list and puts frames into a sublist.
-    ham : np.ndarray
-        This array is the hamiltonian, with frequencies on the diagonal
-        and couplings on the off-diagonal.
-    frames : str
-        Contains integers split by commas or is the string "all". If if
-        is integers split by commas, the integers will correspond to the
-        one-based indices frames of the data that will be processed.
-        "all" will create a list containing all one-based indices of
-        all of the frames contained in data for the first
-        frame.
+#     Parameters
+#     ----------
+#     average : str
+#         This should be 'False' or 'True'. If this is 'True' the function
+#         average all entries in ham_list and puts frames into a sublist.
+#     ham : np.ndarray
+#         This array is the Hamiltonian, with frequencies on the diagonal
+#         and couplings on the off-diagonal.
+#     frames : str
+#         Contains integers split by commas or is the string "all". If if
+#         is integers split by commas, the integers will correspond to the
+#         one-based indices frames of the data that will be processed.
+#         "all" will create a list containing all one-based indices of
+#         all of the frames contained in data for the first
+#         frame.
 
-    Returns
-    -------
-    ham : np.ndarray
-        This array is the hamiltonian, with frequencies on the diagonal
-        and couplings on the off-diagonal.
-    frames : str
-        Contains integers split by commas or is the string "all". If if
-        is integers split by commas, the integers will correspond to the
-        one-based indices frames of the data that will be processed.
-        "all" will create a list containing all one-based indices of
-        all of the frames contained in data for the first
-        frame.
-    """
-    if average == "True":
-        ham = [sum(ham) / len(ham)]
-        frames = [frames]
-    else:
-        if average != "False":
-            raise HamVisException(
-                f"average should be True or False, not {average}."
-            )
-    return ham, frames
+#     Returns
+#     -------
+#     ham : np.ndarray
+#         This array is the Hamiltonian, with frequencies on the diagonal
+#         and couplings on the off-diagonal.
+#     frames : str
+#         Contains integers split by commas or is the string "all". If if
+#         is integers split by commas, the integers will correspond to the
+#         one-based indices frames of the data that will be processed.
+#         "all" will create a list containing all one-based indices of
+#         all of the frames contained in data for the first
+#         frame.
+#     """
+#     if average == "True":
+#         ham = [sum(ham) / len(ham)]
+#         frames = [frames]
+#     else:
+#         if average != "False":
+#             raise HamVisException(
+#                 f"average should be True or False, not {average}."
+#             )
+#     return ham, frames
 
 
 def cut_ham(cut, size, ham):
-    """This function slices the hamiltonian so only a part is shown.
+    """This function slices the Hamiltonian so only a part is shown.
 
     This is mostly intended to allow the user to zoom in on certain
     sections of a Hamiltonian. It slices all of the Hamiltonians of
@@ -343,13 +354,16 @@ def cut_ham(cut, size, ham):
         as 'False'. If it is 'False' the Hamiltonians in ham_list are
         not cut. Otherwise cut should be x1,x2,y1,y2. This slices the
         elements of ham_list as ham[x1:x2,y1:y2].
+    size : int
+        The size that the Hamiltonian will have. As it is a size * size
+        matrix.
     ham_list : np.ndarray of float
         The numpy array contains a matrix that represents one Hamiltonian.
 
     Returns
     -------
     ham : np.ndarray
-        This array is the hamiltonian, with frequencies on the diagonal
+        This array is the Hamiltonian, with frequencies on the diagonal
         and couplings on the off-diagonal.
     """
     if cut != "False":
@@ -376,6 +390,26 @@ def cut_ham(cut, size, ham):
 
 
 def find_lines_bin(fname, file_size):
+    """A subroutine for find_lines specifically for binary files.
+
+    Parameters
+    ----------
+    fname : str
+        The name of the file from where data is extracted.
+    file_size :int
+        This is the number of bytes that make up fname.
+
+    Returns
+    -------
+    line_length : int or None
+        This is the length of the Hamiltonians in fname. It is the
+        number of bytes in case file_type is .bin. It is None if
+        file_type is .txt.
+    line_amount : int
+        This is the number of lines in fname with content in a .txt
+        file. It is always the number of Hamiltonians contained in
+        fname.
+    """
 
     numbers = range(round(file_size / 4 / 2 + 1))
     for number in numbers[1:]:
@@ -396,6 +430,24 @@ def find_lines_bin(fname, file_size):
 
 
 def find_lines(fname, file_type):
+    """Discovers the length and amount of lines in fname
+
+    Parameters
+    ----------
+    fname : str
+        The name of the file from where data is extracted.
+    file_type : str
+        The filetype of fname. This should be either '.txt' or '.bin'.
+
+    Returns
+    -------
+    line_length : int or None
+        This is the length of the Hamiltonians in fname. It is the
+        number of bytes in case file_type is .bin. It is None if
+        file_type is .txt.
+    file_type : str
+        The filetype of fname. This should be either '.txt' or '.bin'.
+    """
     match file_type:
         case ".bin":
             file_path = Path(fname)
@@ -412,6 +464,27 @@ def find_lines(fname, file_type):
 
 
 def find_frames(frames, line_amount):
+    """This finds all frames that the user wants to be processed
+
+    Parameters
+    ----------
+    frames : str
+        Contains integers split by commas or is the string "all". If if
+        is integers split by commas, the integers will correspond to the
+        one-based indices frames of the data that will be processed.
+        "all" will create a list containing all one-based indices of
+        all of the frames contained in data for the first
+        frame.
+    line_amount : int
+        This is the number of lines in fname with content in a .txt
+        file. It is always the number of Hamiltonians contained in
+        fname.
+
+    Returns
+    -------
+    frames : list of int
+        This list contains all indices of the 
+    """
     if frames == "all":
         frames = range(line_amount)
     else:
@@ -427,6 +500,24 @@ def find_frames(frames, line_amount):
 
 
 def verify_frames(fname, frames, line_amount):
+    """This verifies that the given frames do exist in the given file.
+
+    Parameters
+    ----------
+    fname : str
+        The name of the file from where data is extracted.
+    frames : str
+        Contains integers split by commas or is the string "all". If if
+        is integers split by commas, the integers will correspond to the
+        one-based indices frames of the data that will be processed.
+        "all" will create a list containing all one-based indices of
+        all of the frames contained in data for the first
+        frame.
+    line_amount : int
+        This is the number of lines in fname with content in a .txt
+        file. It is always the number of Hamiltonians contained in
+        fname.
+    """
     all_frames = range(line_amount)
 
     if not set(frames).issubset(set(all_frames)):
@@ -439,6 +530,22 @@ def verify_frames(fname, frames, line_amount):
 
 
 def verify_file_is_correct(fname):
+    """Verifies that the filename exists and is .bin or .txt.
+
+    The filetype is discovered based on the extension. The filetype that
+    is found is also returned.
+
+    Parameters
+    ----------
+    fname : str
+        The name of the file from where data is extracted.
+
+    Returns
+    -------
+    file_type : str
+        The filetype of fname. This should be either '.txt' or '.bin'.
+    """
+
     file_path = Path(fname)
     if not file_path.is_file():
         raise HamVisException(f"{fname} does not exist or is not a file."
@@ -453,6 +560,14 @@ def verify_file_is_correct(fname):
 
 
 def verify_scale(scale):
+    """Verifies that the scale given by the user is supported.
+
+    Parameters
+    ----------
+    scale : str
+        This string indicates if the couplings should be displayed
+        logarithmically or linearly.
+    """
     if scale not in ["lin", "log2"]:
         raise HamVisException("The supported scales are linear (lin) and "
                               f"logarithmic (log2). {scale} is neither of "
@@ -487,6 +602,9 @@ def HamVis(fname, frames, average, cut, outname, scale):
         elements of ham_list as ham[x1:x2,y1:y2].
     outname : str
         A name used to name the file that is created.
+    scale : str
+        This string indicates if the couplings should be displayed
+        logarithmically or linearly.
     """
 
     file_type = verify_file_is_correct(fname)
@@ -531,6 +649,10 @@ if __name__ == "__main__":
             "cut is the area you want to plot given as 'x0,x1,y0,y1', "
             "or 'False' if you dont want to exclude anything.'\n"
             "outname is the name the output files should have.\n"
+            "scale determines how the display of the couplings is scaled, this"
+            "should either be 'lin' or log2 to have the intensities of the "
+            "couplings be displayed linearly or as logarithmically in powers "
+            "2.\n"
             "For examples please see the manual."
         )
     else:
