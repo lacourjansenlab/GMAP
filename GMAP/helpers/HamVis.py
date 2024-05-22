@@ -63,24 +63,27 @@ def get_data(fname, file_type, frame, line_length):
 
     # try:
     match file_type:
-        case "txt":
-            rows_skipped = frame - 1
-            data = np.loadtxt(fname, skiprows=rows_skipped, max_rows=1)[1:]
-            # len(data[0]) is a triangular number, size is the integer used
-            # to construct that triangular number.
-        case "bin":
-            skipped_bytes = round((frame - 1) * line_length * 4)
-            data = np.fromfile(fname, dtype=np.float32, count=line_length,
-                               offset=skipped_bytes
-                               )[1:]
+        case ".txt":
+            try:
+                data = np.loadtxt(fname, skiprows=frame, max_rows=1)[1:]
+            except Exception:
+                raise HamVisException("There was an issue extracting data "
+                                      f"{fname}. Please verify its integrity "
+                                      "and that it is in the correct format.")
+        case ".bin":
+            try:
+                skipped_bytes = round((frame) * line_length * 4)
+                data = np.fromfile(fname, dtype=np.float32, count=line_length,
+                                   offset=skipped_bytes
+                                   )[1:]
+            except Exception:
+                raise HamVisException("There was an issue extracting data "
+                                      f"{fname}. Please verify its integrity "
+                                      "and that it is in the correct format.")
+
+    # len(data[0]) is a triangular number, size is the integer used
+    # to construct that triangular number.
     size = round(np.sqrt(2 * len(data) + 0.25) - 0.5)
-    print(data[:15])
-    # except Exception:
-    #     raise HamVisException(
-    #         f"There was an error extracting data from {fname}, please verify "
-    #         "that it is a Hamiltonian in .txt format as described in the "
-    #         "manual."
-    #     ) from None
 
     return data, size
 
@@ -158,7 +161,7 @@ def logify_ham(ham, size):
     return logs
 
 
-def ham_saver(ham, frame, outname):
+def ham_saver(ham, frame, outname, scale):
     """Saves one matrix as (outname)_(idx).pdf.
 
     The matrix can represent the average of a selection of frames or a
@@ -190,14 +193,34 @@ def ham_saver(ham, frame, outname):
     # off_diag = ma.masked_array(off_diag, np.isnan(off_diag))
 
     fig, ax = plt.subplots()
-    pa = ax.imshow(
-        on_diag, interpolation='nearest', cmap=plt.cm.get_cmap('coolwarm_r'))
-    cba = plt.colorbar(pa, shrink=0.4, cax=fig.add_axes([0.8, 0.5, 0.03, 0.3]))
 
-    pb = ax.imshow(
-        off_diag, interpolation='nearest', cmap=plt.cm.PRGn
-    )
+    match scale:
+        case "lin":
+            # It is necessary that the most negative and positive numbers
+            # extend equally far from zero so that middle value corresponds to
+            # white in the plot. This is technically not a completely physical
+            # but there is no perfect solution.
+
+            end_of_range = min(np.nanmax(off_diag), abs(np.nanmin(off_diag)))
+            neg_range = -1 * end_of_range
+            pa = ax.imshow(
+                on_diag, interpolation='nearest',
+                cmap=plt.cm.get_cmap('coolwarm_r'))
+            pb = ax.imshow(
+                off_diag, interpolation='nearest', cmap=plt.cm.PRGn,
+                vmax=end_of_range, vmin=neg_range)
+
+        case "log2":
+            pa = ax.imshow(
+                on_diag, interpolation='nearest',
+                cmap=plt.cm.get_cmap('coolwarm_r'))
+            pb = ax.imshow(
+                off_diag, interpolation='nearest', cmap=plt.cm.PRGn
+            )
+
+    cba = plt.colorbar(pa, shrink=0.4, cax=fig.add_axes([0.8, 0.5, 0.03, 0.3]))
     cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes([0.8, 0.1, 0.03, 0.3]))
+
     fig.subplots_adjust(right=0.75)
 
     cba.set_label('frequency', rotation=0, y=1.12, labelpad=-22)
@@ -305,7 +328,7 @@ def average_ham(average, ham, frames):
     return ham, frames
 
 
-def cut_ham(cut, ham):
+def cut_ham(cut, size, ham):
     """This function slices the hamiltonian so only a part is shown.
 
     This is mostly intended to allow the user to zoom in on certain
@@ -329,29 +352,38 @@ def cut_ham(cut, ham):
         This array is the hamiltonian, with frequencies on the diagonal
         and couplings on the off-diagonal.
     """
-    try:
-        if cut != "False":
-            cut = cut.split(",")
-            cut = [int(cutidx) for cutidx in cut]
-            if len(cut) != 4:
-                raise Exception
-            ham = ham[cut[2]:cut[3], cut[0]:cut[1]]
-    except Exception:
-        raise HamVisException(
-            "cut was incorrectly specified, please see the manual for more "
-            "details."
-        ) from None
+    if cut != "False":
+        cut_list = cut.split(",")
+        cut_list = [int(cutidx) for cutidx in cut_list]
+        if (cut_list[0] >= cut_list[1] or cut_list[2] >= cut_list[3]):
+            raise HamVisException("The start of the cut is larger than or "
+                                  "equal to end of the cut in the x or y "
+                                  f"direction. You specified: {cut}")
+        if (cut_list[1] > size or cut_list[3] > size):
+            raise HamVisException(f"The indice you specified in cut : {cut} "
+                                  "is larger than the length of the "
+                                  f"Hamiltonian : {size}. Please select "
+                                  "indices that don't exceed the size of the "
+                                  "Hamiltonian.")
+        if len(cut_list) != 4:
+            raise HamVisException(
+                "cut was incorrectly specified. It should either be 'False' "
+                "or be 4 positive integers seperated only by commas. The cut "
+                f"you provided was {cut} ."
+            )
+        ham = ham[cut_list[2]:cut_list[3], cut_list[0]:cut_list[1]]
     return ham
 
 
-def find_lines_bin(fname, file_size, increment=0):
+def find_lines_bin(fname, file_size):
 
     numbers = range(round(file_size / 4 / 2 + 1))
     for number in numbers[1:]:
-        candidate = np.fromfile(fname, count=1, dtype=np.float32, offset=number * 4)[0]
+        candidate = np.fromfile(fname, count=1, dtype=np.float32,
+                                offset=number * 4)[0]
         if candidate.is_integer():
             line_length = number
-            line_amount = round(file_size / 4 / line_length)
+            line_amount = round(file_size / line_length)
             candidates = [np.fromfile(fname, count=1, dtype=np.float32,
                                       offset=line * line_length * 4)[0] for
                           line in range(line_amount)]
@@ -365,20 +397,17 @@ def find_lines_bin(fname, file_size, increment=0):
 
 def find_lines(fname, file_type):
     match file_type:
-        case "bin":
+        case ".bin":
             file_path = Path(fname)
-            file_size = round(file_path.stat().st_size / 4)  # number of floats in file
+            # number of floats in file
+            file_size = round(file_path.stat().st_size / 4)
             line_length, line_amount = find_lines_bin(fname, file_size)
-        case "txt":
+        case ".txt":
             with open(fname) as fhand:
                 line_length = None
                 line_amount = 0
                 for _ in fhand:
                     line_amount += 1
-        case _:
-            raise HamVisException(f"The specified file_type `{file_type}`"
-                                    "is not known. Please specify either "
-                                    "'txt' or 'bin'")
     return line_length, line_amount
 
 
@@ -397,7 +426,40 @@ def find_frames(frames, line_amount):
     return frames
 
 
-def HamVis(fname, frames, average, cut, outname, file_type):
+def verify_frames(fname, frames, line_amount):
+    all_frames = range(line_amount)
+
+    if not set(frames).issubset(set(all_frames)):
+        raise HamVisException(f"The frames present in {fname} are "
+                              f"{all_frames}. The frames specified to be "
+                              f"graphed are {frames}. Frames that are not "
+                              "present in the data cannot be graphed. "
+                              "Please specify only frames present in "
+                              f"{fname}.")
+
+
+def verify_file_is_correct(fname):
+    file_path = Path(fname)
+    if not file_path.is_file():
+        raise HamVisException(f"{fname} does not exist or is not a file."
+                              "Please specify an actual file.")
+    file_type = fname[-4:]
+    if file_type not in [".txt", ".bin"]:
+        raise HamVisException(f"The file extension of {file_type} should be "
+                              "either .txt or .bin depending on the "
+                              "filetype.")
+
+    return file_type
+
+
+def verify_scale(scale):
+    if scale not in ["lin", "log2"]:
+        raise HamVisException("The supported scales are linear (lin) and "
+                              f"logarithmic (log2). {scale} is neither of "
+                              "those.")
+
+
+def HamVis(fname, frames, average, cut, outname, scale):
     """Saves frames of Hamiltonians and saves them as a pdf image.
 
     It doesn't do much itself, it merely functions as a body to connect
@@ -427,17 +489,23 @@ def HamVis(fname, frames, average, cut, outname, file_type):
         A name used to name the file that is created.
     """
 
+    file_type = verify_file_is_correct(fname)
+    verify_scale(scale)
+
     line_length, line_amount = find_lines(fname, file_type)
     frames = find_frames(frames, line_amount)
+
+    verify_frames(fname, frames, line_amount)
 
     ham_average = None
     for frame in frames:
         data, size = get_data(fname, file_type, frame, line_length)
         ham = format_ham(data, size)
-        ham = logify_ham(ham, size)
-        ham = cut_ham(cut, ham)
+        if scale == "log2":
+            ham = logify_ham(ham, size)
+        ham = cut_ham(cut, size, ham)
         if average == "False":
-            ham_saver(ham, frame, outname)
+            ham_saver(ham, frame, outname, scale)
         else:
             if ham_average is None:
                 ham_average = ham
@@ -445,7 +513,7 @@ def HamVis(fname, frames, average, cut, outname, file_type):
                 ham_average += ham
     if average == "True":
         ham_average = np.divide(ham_average, len(frames))
-        ham_saver(ham_average, frames, outname)
+        ham_saver(ham_average, frames, outname, scale)
 
 
 if __name__ == "__main__":
@@ -457,15 +525,14 @@ if __name__ == "__main__":
             "A correct command looks like:\n"
             "python HamVis.py fname frames average cut outname\n"
             "fname is the name of the file you want to turn into a figure.\n"
-            "frames are the frames you want to investigate, seperated by ','.\n"
+            "frames are the frames you want to investigate, seperated by ,.\n"
             "average should be True or False depending on wether to average "
             "the frames.\n"
             "cut is the area you want to plot given as 'x0,x1,y0,y1', "
             "or 'False' if you dont want to exclude anything.'\n"
             "outname is the name the output files should have.\n"
-            "file_type should be bin or txt.\n\n"
             "For examples please see the manual."
         )
     else:
-        fname, frames, average, cut, outname, file_type = sys.argv[1:]
-        HamVis(fname, frames, average, cut, outname, file_type)
+        fname, frames, average, cut, outname, scale = sys.argv[1:]
+        HamVis(fname, frames, average, cut, outname, scale)

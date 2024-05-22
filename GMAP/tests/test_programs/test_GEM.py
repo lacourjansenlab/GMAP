@@ -10,7 +10,6 @@ import GMAP
 from GMAP.src.programs import GEM as GM_GEM
 from GMAP.src.tools import FileHandler as GM_FH
 from GMAP.src.tools import PrintTools as GM_PT
-from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 # Now, we also test whether the program can actually run.
@@ -33,7 +32,6 @@ def test_get_parameters():
 
     # A huuuuge amount of tests would be needed here, but all of GM_PP
     # has already been tested separately.
-    dpr(mapdict)
     assert InPars.fname.name == "test_inpar.txt"
     assert DefPars == RefPars
     assert len(mapdict) == 6
