@@ -1,4 +1,4 @@
-r"""This module works independantly from all other GMAP code.
+r"""This module works independently from all other GMAP code.
 Invoking this module with the correct arguments will create images of
 the Hamiltonians stored in the selected file.
 
@@ -115,14 +115,9 @@ def format_ham(data, size):
         and couplings on the off-diagonal.
     """
 
-    try:
-        ham = np.zeros((size, size))
-        ham[np.triu_indices(size)] = data
-        ham += np.triu(ham, 1).T
-    except Exception:
-        raise HamVisException(
-            "There was an error formatting the data into a matrix."
-        ) from None
+    ham = np.zeros((size, size))
+    ham[np.triu_indices(size)] = data
+    ham += np.triu(ham, 1).T
     return ham
 
 
@@ -200,10 +195,6 @@ def ham_saver(ham, frame, outname, scale):
     on_diag = np.full_like(ham, np.nan)
     np.fill_diagonal(on_diag, on_diag_temp)
 
-    # # Masking the nan values in the matrices.
-    # on_diag = ma.masked_array(on_diag, np.isnan(on_diag))
-    # off_diag = ma.masked_array(off_diag, np.isnan(off_diag))
-
     fig, ax = plt.subplots()
 
     match scale:
@@ -258,104 +249,6 @@ def ham_saver(ham, frame, outname, scale):
     plt.savefig(f"{outname}_{frame}.pdf")
 
 
-# def format_frame_selection(frames, data):
-#     """Turns 'frames' from a string into a list of integers.
-
-#     If frames contains integers seperated by commas, the integers will
-#     correspond to the frames of the data that will be processed. A list
-#     of them is returned. If frames is "all", a list containing all
-#     indices in frames is returned, starting at 1 for the first frame.
-
-#     Parameters
-#     ----------
-#     frames : str
-#         Contains integers split by commas or is the string "all". If if
-#         is integers split by commas, the integers will correspond to the
-#         one-based indices frames of the data that will be processed.
-#         "all" will create a list containing all one-based indices of
-#         all of the frames contained in data for the first
-#         frame.
-#     data : list of list of float
-#         Each sublist represents a frame each float within each sublist
-#         represents either a frequency or a coupling, for a more detailed
-#         overview please read the manual.
-
-#     Returns
-#     -------
-#     frames_int : list of int
-#         Contains a list of integers that correspond to frames of the
-#         data.
-#     """
-
-#     if frames == "all":
-#         frames_int = range(1, len(data) + 1)
-#     else:
-#         frames = frames.split(",")
-#         try:
-#             frames_int = [int(frame) for frame in frames]
-#         except ValueError:
-#             raise HamVisException(
-#                 "Frames can only be given as integers and seperated by "
-#                 "nothing but a comma. To select all frames, specify 'all'."
-#             ) from None
-#         for frame in frames_int:
-#             if frame > len(data):
-#                 raise HamVisException(
-#                     "A frame was selected for rendering that does not exist "
-#                     "in the selected sourcefile."
-#                 )
-#     return frames_int
-
-
-# def average_ham(average, ham, frames):
-#     """Returns an updated ham_list and frames if average is 'True'.
-
-#     The function changes frames and ham_list depending on wether on the
-#     value of average. If True, frames will be a list that contains the
-#     input list as its only entry and ham_list will only have one entry,
-#     which will be the average of the input. ham_list and frames remain
-#     the same if average is 'False'
-
-#     Parameters
-#     ----------
-#     average : str
-#         This should be 'False' or 'True'. If this is 'True' the function
-#         average all entries in ham_list and puts frames into a sublist.
-#     ham : np.ndarray
-#         This array is the Hamiltonian, with frequencies on the diagonal
-#         and couplings on the off-diagonal.
-#     frames : str
-#         Contains integers split by commas or is the string "all". If if
-#         is integers split by commas, the integers will correspond to the
-#         one-based indices frames of the data that will be processed.
-#         "all" will create a list containing all one-based indices of
-#         all of the frames contained in data for the first
-#         frame.
-
-#     Returns
-#     -------
-#     ham : np.ndarray
-#         This array is the Hamiltonian, with frequencies on the diagonal
-#         and couplings on the off-diagonal.
-#     frames : str
-#         Contains integers split by commas or is the string "all". If if
-#         is integers split by commas, the integers will correspond to the
-#         one-based indices frames of the data that will be processed.
-#         "all" will create a list containing all one-based indices of
-#         all of the frames contained in data for the first
-#         frame.
-#     """
-#     if average == "True":
-#         ham = [sum(ham) / len(ham)]
-#         frames = [frames]
-#     else:
-#         if average != "False":
-#             raise HamVisException(
-#                 f"average should be True or False, not {average}."
-#             )
-#     return ham, frames
-
-
 def cut_ham(cut, size, ham):
     """This function slices the Hamiltonian so only a part is shown.
 
@@ -387,15 +280,16 @@ def cut_ham(cut, size, ham):
         cut_list = cut.split(",")
         cut_list = [int(cutidx) for cutidx in cut_list]
         if (cut_list[0] >= cut_list[1] or cut_list[2] >= cut_list[3]):
-            raise HamVisException("The start of the cut is larger than or "
-                                  "equal to end of the cut in the x or y "
-                                  f"direction. You specified: {cut}")
+            raise HamVisException(
+                "The start of the cut is larger than or equal to end of the "
+                f"cut in the x or y direction. You specified: {cut}"
+            )
         if (cut_list[1] > size or cut_list[3] > size):
-            raise HamVisException(f"The indice you specified in cut : {cut} "
-                                  "is larger than the length of the "
-                                  f"Hamiltonian : {size}. Please select "
-                                  "indices that don't exceed the size of the "
-                                  "Hamiltonian.")
+            raise HamVisException(
+                f"The indice you specified in cut : {cut} is larger than the "
+                f"length of the Hamiltonian : {size}. Please select indices "
+                "that don't exceed the size of the Hamiltonian."
+            )
         if len(cut_list) != 4:
             raise HamVisException(
                 "cut was incorrectly specified. It should either be 'False' "
@@ -538,12 +432,12 @@ def verify_frames(fname, frames, line_amount):
     all_frames = range(line_amount)
 
     if not set(frames).issubset(set(all_frames)):
-        raise HamVisException(f"The frames present in {fname} are "
-                              f"{all_frames}. The frames specified to be "
-                              f"graphed are {frames}. Frames that are not "
-                              "present in the data cannot be graphed. "
-                              "Please specify only frames present in "
-                              f"{fname}.")
+        raise HamVisException(
+            f"The frames present in {fname} are {all_frames}. The frames "
+            f"specified to be graphed are {frames}. Frames that are not "
+            "present in the data cannot be graphed. Please specify only frames"
+            f"present in {fname}."
+        )
 
 
 def verify_file_is_correct(fname):
@@ -565,35 +459,76 @@ def verify_file_is_correct(fname):
 
     file_path = Path(fname)
     if not file_path.is_file():
-        raise HamVisException(f"{fname} does not exist or is not a file."
-                              "Please specify an actual file.")
+        raise HamVisException(
+            f"{fname} does not exist or is not a file. Please specify an "
+            "actual file."
+        )
     file_type = fname[-4:]
     if file_type not in [".txt", ".bin"]:
-        raise HamVisException(f"The file extension of {file_type} should be "
-                              "either .txt or .bin depending on the "
-                              "filetype.")
+        raise HamVisException(
+            f"The file extension of {file_type} should be either .txt or .bin "
+            "depending on the filetype."
+        )
 
     return file_type
 
 
-def verify_scale(scale):
-    """Verifies that the scale given by the user is supported.
+def verify_input(average, scale):
+    """Verifies that the some user input is correct.
+
+    Not everything is tested here as some input will lead to exceptions
+    naturally.
 
     Parameters
     ----------
+    average : str
+        This should be 'False' or 'True'. If this is 'True' the function
+        average all frames in fname that are listed in the frames
+        variable.
     scale : str
         This string indicates if the couplings should be displayed
-        logarithmically or linearly. If linear it also determines wether
-        to lose data or range.
+        logarithmically or linearly. If linear it also determines 
+        whether to lose data or range.
     """
+
+    if len(input) != 6:
+        print(
+            "You did not give the correct number of terms in your command. "
+            "A correct command looks like:\n"
+            "python HamVis.py fname frames average cut outname\n"
+            "fname is the name of the file you want to turn into a figure.\n"
+            "frames are the frames you want to investigate, seperated by ,.\n"
+            "average should be True or False depending on wether to average "
+            "the frames.\n"
+            "cut is the area you want to plot given as 'x0,x1,y0,y1', "
+            "or 'False' if you dont want to exclude anything. x0 and y0 are "
+            "inclusive and x1 and y1 are exclusive, so 0,1,0,1 will only give "
+            "entry 0-0 of the Hamiltonian. \n"
+            "outname is the name the output files should have.\n"
+            "scale determines how the display of the couplings is scaled, this"
+            "should either be 'lin_lr', 'lin_ld' or 'log2' to have the "
+            "intensities of the couplings be displayed linearly with less "
+            "range or data or be displayed with less range logarithmically in "
+            "powers 2. \n"
+            "For examples please see the manual."
+        )
+
+    fname, frames, average, cut, outname, scale = input
+
+    if average not in ["False", "True"]:
+        raise HamVisException(
+            f"The choice of average should be 'False' or 'True', not {average}"
+        )
     if scale not in ["lin_lr", "lin_ld", "log2"]:
-        raise HamVisException("The supported scales are linear "
-                              "(lin_ld or lin_lr)"
-                              f"logarithmic (log2). {scale} is neither of "
-                              "those.")
+        raise HamVisException(
+            "The supported scales are linear (lin_ld or lin_lr) or "
+            f"logarithmic (log2). {scale} is neither of those."
+        )
+    
+    return fname, frames, average, cut, outname, scale
 
 
-def HamVis(fname, frames, average, cut, outname, scale):
+def HamVis(*input):
     """Saves frames of Hamiltonians and saves them as a pdf image.
 
     It doesn't do much itself, it merely functions as a body to connect
@@ -627,8 +562,9 @@ def HamVis(fname, frames, average, cut, outname, scale):
         to lose data or range.
     """
 
+    fname, frames, average, cut, outname, scale = verify_input(input)
+
     file_type = verify_file_is_correct(fname)
-    verify_scale(scale)
 
     line_length, line_amount = find_lines(fname, file_type)
     frames = find_frames(frames, line_amount)
@@ -657,25 +593,5 @@ def HamVis(fname, frames, average, cut, outname, scale):
 if __name__ == "__main__":
     warnings.simplefilter("ignore")
 
-    if len(sys.argv) != 7:
-        print(
-            "You did not give the correct number of terms in your command. "
-            "A correct command looks like:\n"
-            "python HamVis.py fname frames average cut outname\n"
-            "fname is the name of the file you want to turn into a figure.\n"
-            "frames are the frames you want to investigate, seperated by ,.\n"
-            "average should be True or False depending on wether to average "
-            "the frames.\n"
-            "cut is the area you want to plot given as 'x0,x1,y0,y1', "
-            "or 'False' if you dont want to exclude anything.'\n"
-            "outname is the name the output files should have.\n"
-            "scale determines how the display of the couplings is scaled, this"
-            "should either be 'lin_lr', 'lin_ld' or 'log2' to have the "
-            "intensities of the couplings be displayed linearly with less "
-            "range or data or be displayed with less range logarithmically in "
-            "powers 2. \n"
-            "For examples please see the manual."
-        )
-    else:
-        fname, frames, average, cut, outname, scale = sys.argv[1:]
-        HamVis(fname, frames, average, cut, outname, scale)
+    fname, frames, average, cut, outname, scale = sys.argv[1:]
+    HamVis(fname, frames, average, cut, outname, scale)
