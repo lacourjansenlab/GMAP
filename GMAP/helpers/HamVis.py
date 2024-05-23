@@ -187,7 +187,8 @@ def ham_saver(ham, frame, outname, scale):
         A name used to name the file that is created.
     scale : str
         This string indicates if the couplings should be displayed
-        logarithmically or linearly.
+        logarithmically or linearly. If linear it also determines wether
+        to lose data or range.
     """
 
     # Setting all diagonal terms to nan.
@@ -206,7 +207,7 @@ def ham_saver(ham, frame, outname, scale):
     fig, ax = plt.subplots()
 
     match scale:
-        case "lin":
+        case "lin_ld":
             # It is necessary that the most negative and positive numbers
             # extend equally far from zero so that middle value corresponds to
             # white in the plot. This is technically not a completely physical
@@ -221,13 +222,29 @@ def ham_saver(ham, frame, outname, scale):
                 off_diag, interpolation='nearest', cmap=plt.cm.PRGn,
                 vmax=end_of_range, vmin=neg_range)
 
-        case "log2":
+        case "lin_lr":
+            # This solution extends the positive and negative range out
+            # to be equal to +-abs(x) where x is the value furthest from
+            # 0 to ensure that 0 is white in the plot.
+
+            end_of_range = max(np.nanmax(off_diag), abs(np.nanmin(off_diag)))
+            neg_range = -1 * end_of_range
             pa = ax.imshow(
                 on_diag, interpolation='nearest',
                 cmap=plt.cm.get_cmap('coolwarm_r'))
             pb = ax.imshow(
-                off_diag, interpolation='nearest', cmap=plt.cm.PRGn
-            )
+                off_diag, interpolation='nearest', cmap=plt.cm.PRGn,
+                vmax=end_of_range, vmin=neg_range)
+
+        case "log2":
+            end_of_range = max(np.nanmax(off_diag), abs(np.nanmin(off_diag)))
+            neg_range = -1 * end_of_range
+            pa = ax.imshow(
+                on_diag, interpolation='nearest',
+                cmap=plt.cm.get_cmap('coolwarm_r'))
+            pb = ax.imshow(
+                off_diag, interpolation='nearest', cmap=plt.cm.PRGn,
+                vmax=end_of_range, vmin=neg_range)
 
     cba = plt.colorbar(pa, shrink=0.4, cax=fig.add_axes([0.8, 0.5, 0.03, 0.3]))
     cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes([0.8, 0.1, 0.03, 0.3]))
@@ -566,10 +583,12 @@ def verify_scale(scale):
     ----------
     scale : str
         This string indicates if the couplings should be displayed
-        logarithmically or linearly.
+        logarithmically or linearly. If linear it also determines wether
+        to lose data or range.
     """
-    if scale not in ["lin", "log2"]:
-        raise HamVisException("The supported scales are linear (lin) and "
+    if scale not in ["lin_lr", "lin_ld", "log2"]:
+        raise HamVisException("The supported scales are linear "
+                              "(lin_ld or lin_lr)"
                               f"logarithmic (log2). {scale} is neither of "
                               "those.")
 
@@ -604,7 +623,8 @@ def HamVis(fname, frames, average, cut, outname, scale):
         A name used to name the file that is created.
     scale : str
         This string indicates if the couplings should be displayed
-        logarithmically or linearly.
+        logarithmically or linearly. If linear it also determines wether
+        to lose data or range.
     """
 
     file_type = verify_file_is_correct(fname)
@@ -650,9 +670,10 @@ if __name__ == "__main__":
             "or 'False' if you dont want to exclude anything.'\n"
             "outname is the name the output files should have.\n"
             "scale determines how the display of the couplings is scaled, this"
-            "should either be 'lin' or log2 to have the intensities of the "
-            "couplings be displayed linearly or as logarithmically in powers "
-            "2.\n"
+            "should either be 'lin_lr', 'lin_ld' or 'log2' to have the "
+            "intensities of the couplings be displayed linearly with less "
+            "range or data or be displayed with less range logarithmically in "
+            "powers 2. \n"
             "For examples please see the manual."
         )
     else:
