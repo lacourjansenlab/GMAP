@@ -20,7 +20,7 @@ influencers_whitelist[list_str]                   :All
 influencers_blacklist[list_str]                   :None
 influencers_file[path_sep]                        infl_file_base.txt
 influencers_select_atoms[list_str]                segid *
-coups_to_use[list_str]                            DipDip :All
+couplings_to_use[list_str]                        DipDip :All
 
 verbose(v)[int]                                   0 1 [2] 3 4
 verbose_logfile(vl)[int]                          0 1 [2] 3 4

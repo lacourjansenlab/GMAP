@@ -16,6 +16,7 @@ output_dipole_filename(odf)[path_rel_op_c]        dipoles
 
 map_directory(md)[list_path_sep]               ../../../maps
 maps_to_use(um)[list_str]                         AmideSC
+couplings_to_use[list_str]                        DipDip :All
 influencers_whitelist[list_str]                   :All
 influencers_blacklist[list_str]                   :None
 influencers_file[path_sep]                        ../../../sourcefiles/infl_file_base.txt

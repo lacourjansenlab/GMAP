@@ -72,7 +72,7 @@ def get_get_VEG_ref(Printer, map_):
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     Returns
@@ -166,7 +166,7 @@ def VEG_from_position(Printer, map_, details):
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
     details : list of str
         The string(s) explaining what to do. Ints will be converted to
@@ -211,7 +211,7 @@ def get_get_dipole_dir(Printer, map_):
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     returns
@@ -290,7 +290,7 @@ def get_get_rotation_matrix(Printer, map_):
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     returns
@@ -372,7 +372,7 @@ def get_calculate_dipole(map_):
 
     parameters
     ----------
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     returns
@@ -385,6 +385,7 @@ def get_calculate_dipole(map_):
     def GM_get_dipole_vmag(Printer, Map, Syst, osc):
         r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
         r_vec *= Map.code.GM_get_dipole_mag(Printer, Map, Syst, osc)
+        r_vec = r_vec.astype("float32")
         return r_vec, r_pos
 
     # the version when we are working with a separate x, y, z component
@@ -419,7 +420,7 @@ def get_calculate_frequency(map_):
 
     parameters
     ----------
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     returns

@@ -5,15 +5,18 @@ src/tools/PhysicsFunctions.py.
 Missing tests:
 
 (@ may 2nd '24):
-364-372, 747, 1135 (6 missed statements)
+434-442, 682, 782, 1170, 2110 (8 missed statements)
 
 (CUHTAT - currently unknown how to access this )
-- Map.append_core() - there was some issue with the corefile (CUHTAT) (364-372)
+- Map.append_core() - there was some issue with the corefile (CUHTAT) (434-442)
   Any stuff wrong with the corefile will have its own warning call (and not
   use raise) - MI_MC_5
-- Map.parse_type was not successful, so we stop map reading  (717)
+- No pairmaps without code have been created (is that even possible??!) (682)
+- Map.parse_type was not successful, so we stop map reading  (782)
 - The structure of the map has no bonds (but the parameter giving bonds has
-  been used) (1135)
+  been used) (1170)
+- manage_maps_singles isn't called with requested maps of which none require
+  bond information (2110)
 """
 
 
@@ -308,6 +311,7 @@ class TestCode:
         )
         r_vec_dir = np.array([-1.5, 1, 0])  # not normalized
         r_vec_dir /= np.linalg.norm(r_vec_dir)
+        r_vec_dir = r_vec_dir.astype("float32")
         assert (np.round(r_vec, 4) == np.round(r_vec_dir, 4)).all()
 
         assert (
@@ -369,6 +373,7 @@ class TestCode:
         )
         r_vec_dir = np.array([1.125, 1.25, 0])  # not normalized
         r_vec_dir /= np.linalg.norm(r_vec_dir)
+        r_vec_dir = r_vec_dir.astype("float32")
         assert (np.round(r_vec, 4) == np.round(r_vec_dir, 4)).all()
 
         # answer should be (2.5, 2.3333, 0), but because yvec is quite short
@@ -376,7 +381,8 @@ class TestCode:
         # a box), so 1 yvec is subtracted. (2.5, 2.3333, 0) - (4, 3, 0) =
         # (-2.5, -0.6666, 0)
         assert (
-            np.round(r_pos, 4) == np.round(np.array([-2.5, -0.666666, 0]), 4)
+            np.round(r_pos, 4) == np.round(np.array(
+                [-2.5, -0.666666, 0], dtype="float32"), 4)
         ).all()
 
         rotation_matrix = np.round(map_.code.GM_get_rotation_matrix(
@@ -1435,6 +1441,25 @@ class Custom():
             setattr(self, arg[0], arg[1])
 
 
+def test_coup_map_dependence(capfd):
+    cmdline = []
+    inpardict = {
+        "map_directory": [Path("Data/maps_for_test_pair-single_dependence")],
+        "maps_to_use": ["Sing-hasall"],
+        "couplings_to_use": [["NeedsBoth", ":All"]]
+    }
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        CmdPars, singles_mapdict, pairs_mapdict
+    ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
+
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
+    GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
+
+    assert len(RunPars.requested_mapdict) == 1
+    assert len(RunPars.requested_pairmapdict) == 1
+
+
 def test_manage_maps_singles():
     # basically the same as GM_PP.get_parameters, but can take list and dict
     # instead of commandline and inparfile
@@ -1475,7 +1500,29 @@ def test_manage_maps_singles():
     assert len(RunPars.requested_mapdict.keys()) == len(maplist)
 
 
-def test_MI_GEM_1(capsys):
+def test_manage_maps_pairs():
+    maplist = ["AmideSC", "AmideBB"]
+    inpars = {
+        "maps_to_use": maplist,
+        "couplings_to_use": [["None", "AmideSC:AmideBB"], ["DipDip", ":same"]]
+    }
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        mapdict, pairs_mapdict
+    ) = basic_setup([], inpars, finish_before="extract_code")
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
+    GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
+
+
+def test_scan_mapdirs():
+    curpath = Path(__file__).resolve()
+    mapdir = curpath.parent / "Data/maps_for_test_pair-single_dependence"
+    mapdirs = [mapdir]
+    found_maps = GM_MR.scan_mapdirs(mapdirs, "doesntexist")
+    assert len(found_maps) == 0
+
+
+def test_MI_MM_1(capsys):
     maplist = ["AmideSC", "doesntexist"]
     inpars = {
         "maps_to_use": maplist
@@ -1490,7 +1537,69 @@ def test_MI_GEM_1(capsys):
 
     assert pytest_wrapped_sysexit.type is SystemExit
     captured = capsys.readouterr()
-    assert captured.out.endswith("MI_GEM_1\n")
+    assert captured.out.endswith("MI_MM_1\n")
+
+    # ------------------------------------------------------------------
+
+    maplist = ["AmideSC", "AmideBB"]
+    inpars = {
+        "maps_to_use": maplist,
+        "couplings_to_use": [["doesntexist", ":All"]]
+    }
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        mapdict, pairs_mapdict
+    ) = basic_setup([], inpars, finish_before="extract_code")
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
+
+    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
+    assert pytest_wrapped_sysexit.type is SystemExit
+    captured = capsys.readouterr()
+    assert captured.out.endswith("MI_MM_1\n")
+
+
+def test_MI_MM_2(capsys):
+
+    # missing a required/requested keyword
+    cmdline = []
+    inpardict = {
+        "map_directory": [Path("Data/maps_for_test_pair-single_dependence")],
+        "maps_to_use": ["Sing-hasfunc"],
+        "couplings_to_use": [["NeedsBoth", ":All"]]
+    }
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        CmdPars, singles_mapdict, pairs_mapdict
+    ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
+
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
+    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
+    assert pytest_wrapped_sysexit.type is SystemExit
+    captured = capsys.readouterr()
+    assert captured.out.endswith("MI_MM_2\n")
+
+    # ------------------------------------------------------------------
+
+    # missing a required/requested function
+    cmdline = []
+    inpardict = {
+        "map_directory": [Path("Data/maps_for_test_pair-single_dependence")],
+        "maps_to_use": ["Sing-haskey"],
+        "couplings_to_use": [["NeedsBoth", ":All"]]
+    }
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        CmdPars, singles_mapdict, pairs_mapdict
+    ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
+
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
+    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
+    assert pytest_wrapped_sysexit.type is SystemExit
+    captured = capsys.readouterr()
+    assert captured.out.endswith("MI_MM_2\n")
 
 
 def basic_setup(

@@ -363,9 +363,11 @@ def placeholder_GM_calculate_dipole(Printer, Map, Syst, osc):
     -------
     r_vec : `np.ndarray`
         A length-3 vector containing the direction of the dipole moment.
+        Datatype of this array must be float32!
     r_pos : `np.ndarray`
         A length-3 vector containing the position of the dipole moment.
         The vector must lie within the simulation box.
+        Datatype of this array must be float32!
     """
 
     r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)

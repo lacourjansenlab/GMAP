@@ -118,7 +118,7 @@ class RefPars:
         self.nondefcount = 0
 
         if self.is_main:
-            self.compounds = ("coups_to_use",)
+            self.compounds = ("couplings_to_use",)
         else:
             self.compounds = tuple()
 
@@ -1462,7 +1462,8 @@ class RunPars:
         'self' will be used.
     detected_requires_bonds : bool
         Whether (one of) the maps requested for use require(s) bonds
-    requested_mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.Map`
+    requested_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.SingleMap`
         The maps that should be applied during the calculation.
     pair_v_coupling_dict : dict of (tuple of str): str pairs
         For each possible pair of oscillator(types), get the coupling map name
@@ -1968,13 +1969,13 @@ class RunPars:
 
         # Later sources modify the choices from earlier!
         for source in (DefPars, InPars, CmdPars):
-            if "coups_to_use" in source.choices:
+            if "couplings_to_use" in source.choices:
                 if isinstance(source, RefPars):
                     dpr("def/refpars", source.fname)
-                    couplist.extend([source.choices["coups_to_use"]])
+                    couplist.extend([source.choices["couplings_to_use"]])
                 else:
                     dpr("other", source.fname)
-                    couplist.extend(source.choices["coups_to_use"])
+                    couplist.extend(source.choices["couplings_to_use"])
 
         # now, find all pairs of couplings, and assign the correct
         # coupling choice to them.
@@ -1992,7 +1993,8 @@ class RunPars:
         for coupline in couplist:
             if len(coupline) < 2:
                 Printer.warning(
-                    "\nThe parameter coups_to_use must always take 2 or more "
+                    "\nThe parameter couplings_to_use must always take 2 or "
+                    "more "
                     "arguments, but only one was provided. Please make sure "
                     "you specify this parameter correctly.",
                     "SU_NP_8", True
@@ -2001,7 +2003,6 @@ class RunPars:
                 coupmap = None
             else:
                 coupmap = coupline[0]
-
             # each coupline can contain multiple pairs of oscillators. Loop
             # over each mentioned pair, and process it.
             for pairstr in coupline[1:]:
@@ -2011,7 +2012,7 @@ class RunPars:
         if failed_couppairs:
             joined = '\n'.join(failed_couppairs)
             Printer.warning(
-                "\nAll arguments for the parameter coups_to_use "
+                "\nAll arguments for the parameter couplings_to_use "
                 "(EXCEPT the first one) represent a pair of groups to "
                 "couple. The following groups received coupling instructions, "
                 "but weren't requested for use by 'maps_to_use':\n"
@@ -2084,14 +2085,14 @@ class RunPars:
         dpr(pair)
         if len(pair) != 2:
             Printer.warning(
-                "\nAll arguments for the parameter coups_to_use "
+                "\nAll arguments for the parameter couplings_to_use "
                 "(EXCEPT the first one) must contain one ':'. This "
                 "is not the case. Please make sure to have exactly "
                 "one.", "SU_NP_8", True
             )
         if len(pair[0]) == 0:
             Printer.warning(
-                "\nAll arguments for the parameter coups_to_use "
+                "\nAll arguments for the parameter couplings_to_use "
                 "(EXCEPT the first one) represent a pair of groups to "
                 "couple. While the second group is optional, the "
                 "first one is not. Make sure to give at least the "
@@ -2114,7 +2115,7 @@ class RunPars:
             return failed_couppairs
 
         for key in coupdict.keys():
-            if pair[0] in key and pair[1] in key:
+            if key in ((pair[0], pair[1]), (pair[1], pair[0])):
                 coupdict[key] = coupmap
         return failed_couppairs
 
@@ -2161,8 +2162,14 @@ def get_parameters(Files, Printer, in_parfile, argslist):
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
         The 'main' RunPars instance containing all the basic run-defining
         parameters.
-    mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.Map` pairs
-        Stores all the :class:`~GMAP.src.tools.MapReader.Map` objects for
+    Singles_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.SingleMap` pairs
+        Stores all the :class:`~GMAP.src.tools.MapReader.SingleMap` objects for
+        each map supplied. The keys are the Map.name attributes corresponding
+        to the maps stored as values.
+    Pairs_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.PairMap` pairs
+        Stores all the :class:`~GMAP.src.tools.MapReader.PairMap` objects for
         each map supplied. The keys are the Map.name attributes corresponding
         to the maps stored as values.
     CmdPars : :class:`RawPars`

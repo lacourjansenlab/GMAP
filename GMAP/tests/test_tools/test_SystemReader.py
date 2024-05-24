@@ -34,7 +34,7 @@ class TestSystem:
         mapname = "test_code_build_1"
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -103,7 +103,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -125,7 +125,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -148,7 +148,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -171,7 +171,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System(Files, Printer, RunPars)
@@ -188,7 +188,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System(Files, Printer, RunPars)
@@ -200,7 +200,7 @@ class TestSystem:
         mapname = "AmideSC"
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname)
 
         System = GM_SR.System(Files, Printer, RunPars)
@@ -212,7 +212,7 @@ class TestSystem:
         mapname = "test_multiple_res_osc"
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname)
 
         System = GM_SR.System(Files, Printer, RunPars)
@@ -247,7 +247,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -270,7 +270,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -294,7 +294,7 @@ def test_gen_universe():
     }
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
     universe = GM_SR.gen_universe(Printer, RunPars)
@@ -318,7 +318,7 @@ def test_check_box_charge():
 
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
     charges = np.array([
@@ -343,7 +343,7 @@ def test_MD_SU_1(capsys):
 
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, cmdline, inpardict)
 
     with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
@@ -363,7 +363,7 @@ def test_MD_SU_1(capsys):
 
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
     with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
@@ -381,7 +381,7 @@ def test_MD_SU_3(capsys):
 
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
     # First, the total charge is larger than threshold
@@ -455,5 +455,5 @@ def parameter_getter(mapname, cmdline=None, inpardict=None):
 
     return (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     )

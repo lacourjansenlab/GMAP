@@ -333,16 +333,12 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
-  - check if dipole vector magnitude is normalized before multiplying with map-specified magnitude
-  - add note that calcdipole functions may only give float32 np arrays
-  - Add to manual how to choose coupling map
   - fix all links in documentation (and all text) using Map (that now should be SingleMap)
-  - start working on a first map (dipdip) and develop pairsmap class
-  - figure out how coupling maps can build on singles maps for more info
 - (KvA) TODO:
   - start on mapdev-checklist. What things should a mapmaker double check before starting the map (and, simultaneously, have map-testing feature do these checks where possible - at least, write down what it should test)
   - have c code for potential take the influencers into account (possibly not within c code, but create mirror of system? new position/charges/etc array containing only valid influencers?)
   - Links to relevant packages etc in explanation in main documentation page.
+  - Rework documentation on maps (reflect new coupling maps, for example)
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
 - (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
@@ -366,6 +362,7 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) In order to run the unittests, move in command prompt to the GMAP directory. In there, run ```pytest tests``` to run all tests. adding the flag ```-s``` allows (some?) python prints to pass through, the flag ```--cov=src``` gives the coverage of the current unit tests. In case of issues, ```--full-trace``` gives a lot more tracebacks and other information. Finally, to see what parts of the code are not covered by the tests, run ```pytest --cov-report term-missing --cov=src tests```. The Fanciest of all? ```pytest --cov-report term-missing:skip-covered --cov=src tests```. Overview:
 
   - ```-s```  lets (some?) python prints through
+  - ```-v```  Makes pytest more verbose (every test name is listed, errors aren't abbreviated)
   - ```-x```  makes pytest quit after it encountered its first error
   - ```-full-trace```  gives the full traceback
   - ```-k```  selects tests of the correct name: ```pytest -k "MyClass and not method"``` ```pytest -k my_function```

@@ -713,7 +713,7 @@ class Core():
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    Map : :class:`~GMAP.src.tools.MapReader.Map`
+    Map : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The object that stores the map which this core.txt file belongs to.
 
     Attributes
@@ -2137,7 +2137,7 @@ def manage_maps_pairs(Files, Printer, RunPars, mapdict):
     mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
 
     for map_choice in RunPars.coupling_v_pair_dict.keys():
-        if map_choice not in mapdict:
+        if map_choice not in mapdict and map_choice is not None:
             Printer.warning(
                 f"\nThe map {map_choice} was requested for use in couplings. "
                 "However, it "
@@ -2166,7 +2166,7 @@ def manage_maps_pairs(Files, Printer, RunPars, mapdict):
         # see if all singlemaps coupled by this group meet the prerequisites
         for map_ in singlemaps_used:
             for funcname in coupmap.required_functions:
-                funcname = f"CL_{coupmap.name}_{funcname}"
+                funcname = f"CP_{coupmap.name}_{funcname}"
                 if not hasattr(map_.code, funcname):
                     Printer.warning(
                         f"\nThe map {coupmap.name} was requested for use in "
@@ -2206,10 +2206,15 @@ def scan_mapdirs(mapdirs, maptype):
     mapdirs : list of pathlib.Path
         A list of directories which should be scanned for maps. This object
         is created by :func:`~GMAP.src.tools.ParameterParser.find_mapdir`.
+    maptype : str
+        Either 'Singles' for getting singles maps, or 'Pairs' for getting
+        pairs maps.
 
     Returns
     -------
     all_maps : dict of str: :class:`Map` pairs
+        Depending on the choice for the parameter maptype, these are
+        either of type :class:`SingleMap` or :class:`PairMap`
     """
 
     match maptype:

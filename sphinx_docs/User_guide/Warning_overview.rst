@@ -333,7 +333,7 @@ If type is set to be 'linear', only one axis needs to be defined. Any of x, y an
 If type is set to be 'standard', two of the three axes need to be defined. The first (any of x, y, and z) will take the direction as is, the second (any of the remainder of x, y and z) will have the component along the first removed. This means that for the second, only the perpendicular component will be used for the direction of the vector. The third is assumed by the program to be the cross product of the first vector with the second (first x second).
 
 
-MI_GEM
+MI_MM
 ======
 
 MI_MM_1

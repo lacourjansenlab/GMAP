@@ -570,6 +570,9 @@ GM_get_dipole_dir(Printer, Map, Syst, osc)
 
 Returns the direction of the dipole vector and its position in cartesian coordinates.
 
+.. caution::
+    This function is expected to return a normalized vector for the dipole moment - it's length should be 1!
+
 .. tip::
     In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found :ref:`in the theory section<Theory_page_PBC>`. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.
 

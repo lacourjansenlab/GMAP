@@ -5,14 +5,16 @@ src/tools/ParameterParser.py.
 Missing tests:
 
 (@ apr 29th '24):
-367-368, 427, 1078, 1541-1542, 1808 (7 missed statements)
+373-374, 433, 1104, 1208, 1605-1606, 1923 (8 missed statements)
 
 (CUHTAT - currently unknown how to access this )
-- SU_FP_7 (CUHTAT)   (367-368)
-- RefPars parse choice - unknown dtype (CUHTAT)  (427)
-- RawPars verify choice - unknown dtype (CUHTAT)  (1078)
-- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1541-1542)
-- RunPars framenums - empty source (CUHTAT)   (1808)
+- SU_FP_7 (CUHTAT)   (373-374)
+- RefPars parse choice - unknown dtype (CUHTAT)  (433)
+- RawPars verify choice - unknown dtype (CUHTAT)  (1104)
+- RawPars checkparexist - variable may occur multiple times, but is also
+  not expected in deffiles (N/A in refpars)  (1208)
+- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1605-1606)
+- RunPars framenums - empty source (CUHTAT)   (1923)
 """
 
 # standard library imports
@@ -73,6 +75,7 @@ class TestRefPars:
             "output_dipole_filename": [Path("dipoles")],
             "map_directory": [Path("../../../maps")],
             "maps_to_use": ["AmideSC"],
+            "couplings_to_use": ["DipDip", ":All"],
             "influencers_whitelist": [":All"],
             "influencers_blacklist": [":None"],
             "influencers_file": [Path(
@@ -246,6 +249,7 @@ class TestRefPars:
         ]
         assert RefPars.strpars == [
             "maps_to_use",
+            "couplings_to_use",
             "influencers_whitelist",
             "influencers_blacklist",
             "influencers_select_atoms",
@@ -267,6 +271,7 @@ class TestRefPars:
         assert RefPars.maybe_list == [
             "map_directory",
             "maps_to_use",
+            "couplings_to_use",
             "influencers_whitelist",
             "influencers_blacklist",
             "influencers_select_atoms",
@@ -445,6 +450,7 @@ class TestRawPars:
             "output_dipole_filename": [Path("dipoles")],
             "map_directory": [Path("../../../maps")],
             "maps_to_use": ["AmideSC"],
+            "couplings_to_use": [["DipDip", ":All"]],
             "influencers_whitelist": [":All"],
             "influencers_blacklist": [":None"],
             "influencers_file": [sd/"infl_file_base.txt"],
@@ -732,7 +738,7 @@ class TestRawPars:
         InPars = GM_PP.RawPars.create_empty(Printer)
 
         mapdirs = GM_PP.find_mapdir(Files, Printer, cmdline, InPars, RefPars)
-        mapdict = GM_MR.scan_mapdirs(mapdirs)
+        mapdict = GM_MR.scan_mapdirs(mapdirs, "Singles")
         for map_ in mapdict.values():
             map_.find_refpars(Printer)
 
@@ -961,7 +967,7 @@ class TestRunPars:
 
         mapdirs = GM_PP.find_mapdir(
             Files, Printer, cmdlines[0], allInPars[0], DefPars)
-        mapdict = GM_MR.scan_mapdirs(mapdirs)
+        mapdict = GM_MR.scan_mapdirs(mapdirs, "Singles")
         for map_ in mapdict.values():
             map_.find_refpars(Printer)
 
@@ -1162,6 +1168,61 @@ class TestRunPars:
         assert RunPars.number_frames == 8
         assert RunPars.stop_frame == 8
 
+    def test_coupchoices(self):
+        pardict = {
+            "maps_to_use": ["AmideSC", "AmideBB", "CystBridge"],
+            "couplings_to_use": [
+                ["None", ":diff"],
+                ["DipDip", ":same"],
+                ["None", "CystBridge:"],
+                ["DipDip", "CystBridge:CystBridge", "AmideSC:AmideBB"]
+            ],
+            "int_test_nodef": ["33"],
+            "path_test_nodef": [Path("test_MathFunctions.py")]
+        }
+
+        curpath = Path(__file__).resolve()
+        cmdline = []
+
+        (
+            Files, Printer, RefPars, DefPars, InPars, _, CmdPars
+        ) = self.setup_for_runpars(pardict, curpath, cmdline)
+
+        RunPars = GM_PP.RunPars(
+            Files, Printer, CmdPars, InPars, DefPars, RefPars, True
+        )
+        assert RunPars.pair_v_coupling_dict == {
+            ("AmideSC", "AmideSC"): "DipDip",
+            ("AmideSC", "AmideBB"): "DipDip",
+            ("AmideSC", "CystBridge"): None,
+            ("AmideBB", "AmideSC"): "DipDip",
+            ("AmideBB", "AmideBB"): "DipDip",
+            ("AmideBB", "CystBridge"): None,
+            ("CystBridge", "AmideSC"): None,
+            ("CystBridge", "AmideBB"): None,
+            ("CystBridge", "CystBridge"): "DipDip"
+        }
+        assert RunPars.coupling_v_pair_dict == {
+            "DipDip": [
+                ("AmideSC", "AmideSC"),
+                ("AmideSC", "AmideBB"),
+                ("AmideBB", "AmideSC"),
+                ("AmideBB", "AmideBB"),
+                ("CystBridge", "CystBridge")
+            ],
+            None: [
+                ("AmideSC", "CystBridge"),
+                ("AmideBB", "CystBridge"),
+                ("CystBridge", "AmideSC"),
+                ("CystBridge", "AmideBB")
+            ]
+        }
+
+        _ = GM_PP.RawPars.from_file(
+            Printer, curpath.parent/"Data"/"rawpars_coupling.txt", RefPars,
+            False
+        )
+
     def test_SU_NP_1(self, capsys):
         cmdline = [
             "--path_test_nodef", "tests/test_tools/test_MathFunctions.py"
@@ -1213,6 +1274,65 @@ class TestRunPars:
         ]
         pardict = {"estatic_range": ["10"]}
         self.systest_runpars(cmdline, "SU_NP_7", capsys, pardict)
+
+    def test_SU_NP_8(self, capsys):
+        # invalid length (no couppairs given)
+        cmdline = [
+            "--int_test_nodef", "22",
+            "--path_test_nodef", "tests/test_tools/test_MathFunctions.py"
+        ]
+        pardict = {
+            "maps_to_use": ["AmideSC", "AmideBB", "CystBridge"],
+            "couplings_to_use": [
+                ["None"],
+            ]
+        }
+        self.systest_runpars(cmdline, "SU_NP_8", capsys, pardict)
+
+        # --------------------------------------------------------------
+
+        # invalid couppair choice (group not chosen/available)
+        cmdline = [
+            "--int_test_nodef", "22",
+            "--path_test_nodef", "tests/test_tools/test_MathFunctions.py"
+        ]
+        pardict = {
+            "maps_to_use": ["AmideSC", "AmideBB", "CystBridge"],
+            "couplings_to_use": [
+                ["None", "doesnexist:AmideBB"],
+            ]
+        }
+        self.systest_runpars(cmdline, "SU_NP_8", capsys, pardict)
+
+        # --------------------------------------------------------------
+
+        # invalid amount of items in 'pair' (not 1 colon)
+        cmdline = [
+            "--int_test_nodef", "22",
+            "--path_test_nodef", "tests/test_tools/test_MathFunctions.py"
+        ]
+        pardict = {
+            "maps_to_use": ["AmideSC", "AmideBB", "CystBridge"],
+            "couplings_to_use": [
+                ["None", "AmideSC:AmideBB:CystBridge"],
+            ]
+        }
+        self.systest_runpars(cmdline, "SU_NP_8", capsys, pardict)
+
+        # --------------------------------------------------------------
+
+        # first item in pair is 'nothing'
+        cmdline = [
+            "--int_test_nodef", "22",
+            "--path_test_nodef", "tests/test_tools/test_MathFunctions.py"
+        ]
+        pardict = {
+            "maps_to_use": ["AmideSC", "AmideBB", "CystBridge"],
+            "couplings_to_use": [
+                ["None", ":CystBridge"],
+            ]
+        }
+        self.systest_runpars(cmdline, "SU_NP_8", capsys, pardict)
 
     @staticmethod
     def setup_for_runpars(pardict, inparspath, cmdline):

@@ -84,9 +84,30 @@ def calc_frame(Printer, RunPars, System, outputs):
     """The heart of the per-frame loop. Does the actual calculations.
 
     Currently, for each oscillator, the potential is calculated (if
-    requested). In the future, frequency, dipole, etc will also be
-    calculated here.
-    Next, in a separate loop, the couplings will be computed.
+    requested), along with frequency and dipole
+    Next, in a separate loop, the couplings are computed.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    outputs : dict of str: `np.ndarray` pairs
+        The outputs the program is requested to generate. Currently
+        contains hamiltonian and dipole arrays.
+
+    Returns
+    -------
+    outputs : dict of str: `np.ndarray` pairs
+        The outputs the program is requested to generate. Currently
+        contains hamiltonian and dipole arrays.
     """
 
     VEGlib = GM_CL.VEG_CLib()
@@ -126,6 +147,35 @@ def calc_frame(Printer, RunPars, System, outputs):
 
 
 def calc_dipole(Printer, System, oscillator):
+    """Calculate the dipole moment for a given oscillator
+
+    The oscillator 'knows' how this should be done - invoke that method.
+    The results are returned, but also saved as attributes to the
+    oscillator.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    oscillator : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The specific oscillator for which the calculation is requested.
+
+    Returns
+    -------
+    r_vec : `np.ndarray`
+        A length-3 vector containing the direction of the dipole moment.
+        Datatype of this array must be float32!
+    r_pos : `np.ndarray`
+        A length-3 vector containing the position of the dipole moment.
+        The vector must lie within the simulation box.
+        Datatype of this array must be float32!
+    """
+
     # every map should have a calc dipole function
     map_ = oscillator.Map
     r_vec, r_pos = map_.code.GM_calculate_dipole(
@@ -136,12 +186,59 @@ def calc_dipole(Printer, System, oscillator):
 
 
 def calc_frequency(Printer, System, oscillator):
+    """Calculate the frequency for a given oscillator
+
+    The oscillator 'knows' how this should be done - invoke that method.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    oscillator : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The specific oscillator for which the calculation is requested.
+
+    Returns
+    -------
+    frequency : float
+        The frequency found for this oscillator
+    """
+
     map_ = oscillator.Map
     return map_.code.GM_calculate_frequency(Printer, map_, System, oscillator)
 
 
 def prep_coupling(Printer, RunPars, System):
+    """Calculate some oscillator-dependent properties for couplings
+
+    Although the actual coupling value depends on the precise
+    combination of two oscillators, the calculations often require some
+    information about each that doesn't depend on it's partner. These
+    calculations can become relatively extensive, so by doing them once
+    for each oscillator (instead of per pair), we can save a lot of
+    time!
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    """
+
     for coupmapname, osclist in System.oscillators_ordered_coup.items():
+        if coupmapname is None:
+            continue
         oscixlist = System.oscillators_ordered_coup_ix[coupmapname]
         coupmap = RunPars.requested_pairmapdict[coupmapname]
         coupmap.code.GM_prep_coupling(
@@ -152,14 +249,74 @@ def prep_coupling(Printer, RunPars, System):
 # possible speedup inside? -> retrieving oscmapname, using that as key
 # might be faster to have ix-based lookup table? or is that structure
 # too large?
+# even faster: sparse format - couptype vs sparse coord dict of all pairs
+# even C could make use of that - the map has its own c function that visits
+# all values that should be treated by that map!
 def calc_coupling(Printer, RunPars, System, oscix1, osc1, oscix2, osc2):
+    """Calculate the coupling between the provided pair.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    oscix1 : int
+        The oscillator index (position in hamiltonian and such) of the
+        first oscillator to be coupled.
+    osc1 : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The first oscillator to be coupled.
+    oscix2 : int
+        The oscillator index (position in hamiltonian and such) of the
+        second oscillator to be coupled.
+    osc2 : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The second oscillator to be coupled.
+
+    Returns
+    -------
+    J : float
+        The actual coupling value between the two given oscillators.
+    """
+
     coupmap = RunPars.requested_pairmapdict[RunPars.pair_v_coupling_dict[
         (osc1.Map.name, osc2.Map.name)]]
-    return coupmap.code.GM_calc_coupling(
-        Printer, coupmap, System, oscix1, osc1, oscix2, osc2)
+    if coupmap is None:
+        return 0
+    else:
+        return coupmap.code.GM_calc_coupling(
+            Printer, coupmap, System, oscix1, osc1, oscix2, osc2)
 
 
 def generate_output_structures(RunPars, System):
+    """The heart of the per-frame loop. Does the actual calculations.
+
+    Currently, for each oscillator, the potential is calculated (if
+    requested), along with frequency and dipole
+    Next, in a separate loop, the couplings are computed.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+
+    Returns
+    -------
+    outputs : dict of str: `np.ndarray` pairs
+        The outputs the program is requested to generate. Currently
+        contains hamiltonian and dipole arrays.
+    """
+
     outputs = {}
     if any(data in RunPars.output_data for data in ("ham",)):
         outputs["hamiltonian"] = np.zeros(

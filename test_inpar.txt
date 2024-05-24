@@ -16,7 +16,7 @@
 verbose 4
 verbose_logfile 4
 maps_to_use   AmideSC
-coups_to_use  DipDip   :All
+couplings_to_use  DipDip   :All
 
 output_format txt
 output_data dip ham

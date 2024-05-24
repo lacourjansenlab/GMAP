@@ -14,6 +14,16 @@ import pytest
 from GMAP.src.tools import MathFunctions as GM_MF
 
 
+def test_PBC_back2box():
+    boxvects = np.array([[10, 0, 0], [0, 10, 0], [0, 0, 10]], dtype="float32")
+    movevect = np.array([0.8, 0.4, 0.26], dtype="float32")
+    ans = np.array([-2, 4, 2.6], dtype="float32")
+
+    assert np.all(GM_MF.PBC_back2box(movevect, boxvects).round(6) == ans)
+    assert np.all(
+        GM_MF.PBC_back2box.py_func(movevect, boxvects).round(6) == ans)
+
+
 @pytest.mark.parametrize(("vect", "expt", "boxvects"), [
     ([3, 7, 2], [3, -3, 2], [[10, 0, 0], [0, 10, 0], [0, 0, 10]]),
     ([33, 77, 22], [3, -3, 2], [[10, 0, 0], [0, 10, 0], [0, 0, 10]]),

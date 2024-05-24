@@ -435,7 +435,7 @@ class System:
         ----------
         struct : :class:`~GMAP.src.tools.MapReader.Structure`
             The structure template that will be matched.
-        map_ : :class:`~GMAP.src.tools.MapReader.Map`
+        map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
             The map instance the structure belongs to.
 
         Returns
@@ -939,7 +939,7 @@ class Oscillator:
     atoms : list of int
         The indices of the atoms that make up this oscillator. All atoms
         specified in functional_group are in here.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map that this oscillator belongs to.
 
     Attributes

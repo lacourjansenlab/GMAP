@@ -5,12 +5,12 @@ src/tools/FileHandler.py.
 Missing tests:
 
 (@ apr 30th '24):
-106, 110-122, 353 (8 missed statements)
+105, 19-121, 344 (8 missed statements)
 
 (CUHTAT - currently unknown how to access this)
-- Program is run using any OS other than windows 64 bit (106, 110-122)
+- Program is run using any OS other than windows 64 bit (105, 119-121)
   (CUHTAT; at least within one single run, probably impossible)
-- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (353)
+- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (344)
 """
 
 
