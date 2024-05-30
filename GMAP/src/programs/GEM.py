@@ -112,6 +112,7 @@ def trj_loop(Printer, RunPars, System):
     Printer.add_time(3, "Starting on frames", "ms")
 
     trj = System.universe.trajectory
+    GM_FH.clear_output(RunPars)
     for frame in trj[RunPars.start_frame:]:
         Printer.add_time(4, "Starting on frame - starting updates", "ms")
         # manage frame number (if not in range, skip, prints, ETA, etc)
