@@ -444,6 +444,13 @@ def write_output(RunPars, framenum, outputs):
             RunPars.output_hamiltonian_filename, reshaped
         )
 
+    if "ene" in RunPars.output_data:
+        energies = outputs["energies"]
+        write_single(
+            RunPars, framenum, framenum_arr, RunPars.output_energies_filename,
+            energies
+        )
+
     if "dip" in RunPars.output_data:
         dipoles = outputs["dipoles"]
         reshaped = dipoles.T.flatten()
@@ -505,6 +512,8 @@ def clear_output(RunPars):
         clear_single(RunPars, RunPars.output_hamiltonian_filename)
     if "dip" in RunPars.output_data:
         clear_single(RunPars, RunPars.output_dipole_filename)
+    if "ene" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_energies_filename)
 
 
 def clear_single(RunPars, fname):

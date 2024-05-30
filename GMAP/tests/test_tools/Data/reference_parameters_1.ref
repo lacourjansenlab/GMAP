@@ -10,9 +10,10 @@ log_directory[path_dir_lg]                        [N/A]
 log_filename[path_rel_lg_c]                       log.log
 
 output_directory[path_dir_op]                     [N/A]
-output_estatics_filename(oef)[path_rel_op_c]      estatics.txt
+output_estatics_filename[path_rel_op_c]           estatics.txt
 output_hamiltonian_filename(ohf)[path_rel_op_c]   hamiltonian
 output_dipole_filename(odf)[path_rel_op_c]        dipoles
+output_energies_filename(oef)[path_rel_op_c]      energies
 
 map_directory(md)[list_path_sep]               ../../../maps
 maps_to_use(um)[list_str]                         AmideSC
@@ -25,7 +26,7 @@ verbose[int]                                      0 1 [2] 3 4
 verbose_logfile[int]                              0 1 [2] 3 4
 prevent_overwrite[bool]                           False
 output_format[list_str]                           [bin] txt
-output_data[list_str]                             [ham] [dip]
+output_data[list_str]                             [ham] [dip] ene
 
 neutral_charge_threshold[float]                   0.0001
 guess_bonds[bool]                                 False
