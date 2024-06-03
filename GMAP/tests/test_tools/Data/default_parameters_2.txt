@@ -10,6 +10,7 @@ log_filename                    log.log
 output_estatics_filename        estatics.txt
 output_hamiltonian_filename     hamiltonian
 output_dipole_filename          dipoles
+output_energies_filename        energies
 
 map_directory                   ../../../maps
 maps_to_use                     AmideSC

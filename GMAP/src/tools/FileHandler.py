@@ -444,6 +444,13 @@ def write_output(RunPars, framenum, outputs):
             RunPars.output_hamiltonian_filename, reshaped
         )
 
+    if "ene" in RunPars.output_data:
+        energies = outputs["energies"]
+        write_single(
+            RunPars, framenum, framenum_arr, RunPars.output_energies_filename,
+            energies
+        )
+
     if "dip" in RunPars.output_data:
         dipoles = outputs["dipoles"]
         reshaped = dipoles.T.flatten()
@@ -487,3 +494,46 @@ def write_single(RunPars, framenum, framenum_arr, fname, data):
             data = np.round(data, decimals=6)
             data.tofile(fhand, sep=" ")  # write hamiltonian
             fhand.write("\n")
+
+
+def clear_output(RunPars):
+    """Prepare an empty file for each output
+
+    If files already exist, clears them. If not, creates them.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    """
+
+    if "ham" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_hamiltonian_filename)
+    if "dip" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_dipole_filename)
+    if "ene" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_energies_filename)
+
+
+def clear_single(RunPars, fname):
+    """Clears any file if it exists prior to writing
+
+    A file shouldn't contain anything when first appended to.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    fname : `pathlib.Path`
+        The name + location of the file to which to write. This filename
+        should not include the extension!
+    """
+
+    if "bin" in RunPars.output_format:
+        with open(fname.parent / f"{fname.name}.bin", "wb") as _:
+            pass
+    if "txt" in RunPars.output_format:
+        with open(fname.parent / f"{fname.name}.txt", "w") as _:
+            pass

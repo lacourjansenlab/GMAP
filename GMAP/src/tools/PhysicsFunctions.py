@@ -113,19 +113,26 @@ def calc_frame(Printer, RunPars, System, outputs):
     VEGlib = GM_CL.VEG_CLib()
 
     for oscix, oscillator in enumerate(System.oscillators):
-        # we also need dipoles for the (full) hamiiltonian.
-        if any(data in RunPars.output_data for data in ("ham", "dip")):
+        # Do we need the estatics?
+        if any(data in RunPars.output_data for data in ("ham", "dip", "ene")):
             if oscillator.Map.Core.electrostatic_choice in ("V", "E", "G"):
                 # calculate VEG
                 VEGlib.calcPot_perres_mm(System, RunPars, oscillator)
 
                 # ROTATE VEG!
 
+        # do we need dipoles?
+        # we also need dipoles for the (full) hamiiltonian.
+        if any(data in RunPars.output_data for data in ("ham", "dip")):
             r_vec, r_pos = calc_dipole(Printer, System, oscillator)
             outputs["dipoles"][oscix] = r_vec
 
             if any(data in RunPars.output_data for data in ("ham")):
                 outputs["dipole_pos"][oscix] = r_pos
+
+        if "ene" in RunPars.output_data:
+            outputs["energies"][oscix] = calc_frequency(
+                Printer, System, oscillator)
 
         if "ham" in RunPars.output_data:
             outputs["hamiltonian"][oscix, oscix] = calc_frequency(
@@ -322,6 +329,9 @@ def generate_output_structures(RunPars, System):
         outputs["hamiltonian"] = np.zeros(
             (System.nosc, System.nosc), dtype="float32")
         outputs["dipole_pos"] = np.zeros((System.nosc, 3), dtype="float32")
+
+    if any(data in RunPars.output_data for data in ("ene",)):
+        outputs["energies"] = np.zeros((System.nosc,), dtype="float32")
 
     if any(data in RunPars.output_data for data in ("ham", "dip")):
         outputs["dipoles"] = np.zeros((System.nosc, 3), dtype="float32")

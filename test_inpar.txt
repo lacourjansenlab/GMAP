@@ -20,6 +20,7 @@ couplings_to_use  DipDip   :All
 
 output_format txt
 output_data dip ham
+prevent_overwrite False
 
 number_frames 2
 

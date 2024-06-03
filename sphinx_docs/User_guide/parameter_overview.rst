@@ -76,6 +76,16 @@ output_hamiltonian_filename
 The filename of the Hamiltonian output file, _without_ extension! Depending on the output format of choice, this file may either be in binary, or in txt format. The path stored here will be assumed to be relative to the directory given in the parameter output_directory when applicable.
 
 
+output_energies_filename
+===========================
+| (shorthand: -oef)
+| (used by: GEM)
+
+The filename of the energies output file, _without_ extension! Depending on the output format of choice, this file may either be in binary, or in txt format. The path stored here will be assumed to be relative to the directory given in the parameter output_directory when applicable.
+
+The energies file contains just the diagonal of the Hamiltonian.
+
+
 output_dipole_filename
 ======================
 | (shorthand: -odf)
@@ -86,7 +96,6 @@ The filename of the dipole output file, _without_ extension! Depending on the ou
 
 output_estatics_filename
 ========================
-| (shorthand: -oef)
 | (used by: DEPICT)
 
 The filename of the electrostatics output file, _with_ extension! This file contains electrostatic properties. The path stored here will be assumed to be relative to the directory given in the parameter output_directory when applicable.
@@ -160,10 +169,10 @@ In what format the output files should be created. Bin for binary format, txt fo
 output_data
 ===========
 | (no shorthand available)
-| (options: ham, dip)
+| (options: ham, dip, ene)
 | (used by: GEM)
 
-What kind of data the program should generate. Multiple choices can be provided. Ham lets the program output Hamiltonian for each frame, dip for dipoles. 
+What kind of data the program should generate. Multiple choices can be provided. 'ham' lets the program output a Hamiltonian for each frame, 'dip' makes it output dipoles. 'ene' is used to output the energies file.
 
 
 **********************************************

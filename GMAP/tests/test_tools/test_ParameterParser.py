@@ -47,7 +47,7 @@ class TestRefPars:
             "verbose": [0, 1, 2, 3, 4],
             "verbose_logfile": [0, 1, 2, 3, 4],
             "output_format": ["bin", "txt"],
-            "output_data": ["ham", "dip"],
+            "output_data": ["ham", "dip", "ene"],
             "str_test_choice": ["pick_this", "not_this", "or_this"],
             "str_test_choice_list": [
                 "pick_this", "and_this", "not_this", "or_this"
@@ -73,6 +73,7 @@ class TestRefPars:
             "output_estatics_filename": [Path("estatics.txt")],
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],
+            "output_energies_filename": [Path("energies")],
             "map_directory": [Path("../../../maps")],
             "maps_to_use": ["AmideSC"],
             "couplings_to_use": ["DipDip", ":All"],
@@ -131,7 +132,7 @@ class TestRefPars:
             "trj": "trajectory_file",
             "sd": "source_directory",
             "dpf": "default_parameter_filename",
-            "oef": "output_estatics_filename",
+            "oef": "output_energies_filename",
             "ohf": "output_hamiltonian_filename",
             "odf": "output_dipole_filename",
             "md": "map_directory",
@@ -169,8 +170,8 @@ class TestRefPars:
                 "VEG_clib_file"],
             "log_directory": ["log_filename"],
             "output_directory": [
-                "output_estatics_filename",
-                "output_hamiltonian_filename", "output_dipole_filename"],
+                "output_estatics_filename", "output_hamiltonian_filename",
+                "output_dipole_filename", "output_energies_filename"],
             "path_test_dir1": ["path_test_rel11"],
             "path_test_dir2": [
                 "path_test_rel21_new", "path_test_rel22_new_list"
@@ -195,6 +196,7 @@ class TestRefPars:
             "output_estatics_filename",
             "output_hamiltonian_filename",
             "output_dipole_filename",
+            "output_energies_filename",
             "map_directory",
             "influencers_file",
             "path_test_free",
@@ -212,6 +214,7 @@ class TestRefPars:
             "output_estatics_filename",
             "output_hamiltonian_filename",
             "output_dipole_filename",
+            "output_energies_filename",
             "path_test_free_new",
             "path_test_free_new_list",
             "path_test_rel21_new",
@@ -448,6 +451,7 @@ class TestRawPars:
             "output_estatics_filename": [Path("estatics.txt")],
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],
+            "output_energies_filename": [Path("energies")],
             "map_directory": [Path("../../../maps")],
             "maps_to_use": ["AmideSC"],
             "couplings_to_use": [["DipDip", ":All"]],
@@ -841,6 +845,8 @@ class TestRunPars:
             curpath / "../Data/hamiltonian").resolve()
         assert RunPars.output_dipole_filename == Path(
             curpath / "../Data/dipoles").resolve()
+        assert RunPars.output_energies_filename == Path(
+            curpath / "../Data/energies").resolve()
         assert RunPars.map_directory == [Path(
             curpath / "../../../maps").resolve()]
         assert RunPars.maps_to_use == ["AmideSC"]

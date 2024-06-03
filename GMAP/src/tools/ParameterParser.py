@@ -1712,23 +1712,30 @@ class RunPars:
 
         dirlist = [InPars.choices]
         fnamelist = [InPars.fname]
+
+        # Dedicated defparfile
         if not DefPars.fname == RefPars.fname:
             dirlist.append(DefPars.choices)
             fnamelist.append(DefPars.fname)
 
+        # all ordered file parameters are sorted by the directory the files
+        # should be based in
         for dir_parname, file_parnames in RefPars.organized_filepars.items():
             try:
                 dir_hc = RefPars.choices[dir_parname][0]
             except Exception:
                 dir_hc = Files.cwd
 
+            # What directory are we based on?
             dir_hc = GM_FH.get_bare_file(
                 Files, dir_parname, [dir_hc], RefPars.fname.parent,
                 CmdPars.choices, dirlist, fnamelist
             )
-            name = dir_hc[0]
+            name = dir_hc[0].resolve()
+
+            # check if directory exists
             if name.is_dir():
-                setattr(self, dir_parname, name.resolve())
+                setattr(self, dir_parname, name)
             else:
                 if self.is_main:
                     Printer.warning(
@@ -1752,6 +1759,7 @@ class RunPars:
                         "SU_NP_3", True
                     )
 
+            # now, consider each file that should live in this directory
             for file_parname in file_parnames:
                 if (
                     self.is_main
@@ -1782,15 +1790,17 @@ class RunPars:
                     file_found = (None not in files_found)
                 else:
                     # If a new file is made, we only have to see if the parent
-                    # directory exists.
+                    # directory exists. (yes, we still have to do this, as the
+                    # file name a user provides could contain further folders)
                     files_found = [file.resolve() for file in files_found]
                     names = files_found
-                    file_found = files_found[0]
+                    file_found = files_found[0]  # start at value of first
                     for file in files_found:
                         par_dir = file.parent
                         if not par_dir.is_dir():
-                            file_found = None
+                            file_found = None  # mark that some is missing!
 
+                # if any of the files for this parameter are missing
                 if not file_found:
                     names = [str(file) for file in names]
                     Printer.warning(
@@ -1802,31 +1812,77 @@ class RunPars:
                         f"the choice for {dir_parname}.\n", "SU_NP_2", True
                     )
 
-                if (
-                    file_parname in RefPars.filepars_create
-                    and self.MainRunPars.prevent_overwrite
-                    and file_found.is_file()
-                ):
-                    # A new file should be made, but if a file of the same
-                    # name already exists, it shouldn't be replaced.
-                    # We already know that the parent directory of the
-                    # requested path exists.
-                    for file in files_found:
-                        rawname = file.name
-                        backup_path = file.resolve()
+                # If the filename already exists, and we don't want to
+                # overwrite, rename existing files!
+                self.rename_outfiles(RefPars, file_parname, files_found, True)
 
-                        addnum = 0
-                        while backup_path.is_file():
-                            addnum += 1
-                            backup_path = file.parent.resolve()
-                            backup_path /= f"#{rawname}.{addnum}#"
+                # Some output parameters add file extensions later!
 
-                        file.rename(backup_path)
+                # if not all files provided have suffixed:
+                if not all(file.suffix for file in files_found):
+                    if 'txt' in self.output_format:
+                        files_tocheck = [
+                            file.with_suffix('.txt') for file in files_found]
+                        self.rename_outfiles(
+                            RefPars, file_parname, files_tocheck)
+                    if 'bin' in self.output_format:
+                        files_tocheck = [
+                            file.with_suffix('.bin') for file in files_found]
+                        self.rename_outfiles(
+                            RefPars, file_parname, files_tocheck)
 
-                if file_parname in RefPars.maybe_list:
-                    setattr(self, file_parname, files_found)
-                else:
-                    setattr(self, file_parname, files_found[0])
+    def rename_outfiles(
+        self, RefPars, file_parname, files_found, do_setattr=False
+    ):
+        """Renames files that would otherwise be overwritten
+
+        The program will create all kinds of files during runtime. But
+        if a file of that name already exists, it will be overwritten.
+        To prevent this, we seek out if such an overwrite will take
+        place, and rename the targeted file.
+
+        Parameters
+        ----------
+        RefPars : :class:`RefPars`
+            Contains all available parameters from GMAP itself (not
+            map-specific)
+        file_parname : str
+            The name of the parameter which' files we're taking care of
+        files_found : list of `pathlib.Path`
+            The requested file locations. If the user provided multiple
+            filenames in the input file, this list will have more than
+            one item.
+        do_setattr : bool
+            Whether the provided filepaths should also be saved as the
+            choice for this parameter.
+        """
+
+        for file in files_found:
+            if (
+                file_parname in RefPars.filepars_create
+                and self.MainRunPars.prevent_overwrite
+                and file.is_file()
+            ):
+                # A new file should be made, but if a file of the same
+                # name already exists, it shouldn't be replaced.
+                # We already know that the parent directory of the
+                # requested path exists.
+                rawname = file.name
+                backup_path = file.resolve()
+
+                addnum = 0
+                while backup_path.is_file():
+                    addnum += 1
+                    backup_path = file.parent.resolve()
+                    backup_path /= f"#{rawname}.{addnum}#"
+
+                file.rename(backup_path)
+
+        if do_setattr:
+            if file_parname in RefPars.maybe_list:
+                setattr(self, file_parname, files_found)
+            else:
+                setattr(self, file_parname, files_found[0])
 
     def resolve(self, Printer, CmdPars, InPars, DefPars, RefPars):
         """Fix any issues that may arise from the combination of sources.
