@@ -649,6 +649,11 @@ def HamVis(input):
         will be assigned its own variable.
     """
 
+    loadtime = 0
+    convert_time = 0
+    format_time = 0
+    start_time = time.time()
+
     fname, frames, average, cut, outname, scale, file_type = verify_input(
         input
     )
@@ -659,13 +664,22 @@ def HamVis(input):
 
     size = get_size(fname, file_type, line_length)
     cut = verify_cut(cut, size)
+    verify_time = time.time() - start_time
 
     ham_average = None
     for frame in frames:
+
+        start_loadtime = time.time()
         data = get_data(fname, file_type, frame, line_length)
+        loadtime += time.time() - start_loadtime
+
+        start_format_time = time.time()
         ham = format_ham(data, size)
+        format_time += time.time() - start_format_time
         if scale == "log2":
+            start_convert_time = time.time()
             ham = logify_ham(ham, size)
+            convert_time += time.time() - start_convert_time
         if average == "False":
             ham_saver(ham, frame, outname, scale, cut)
         else:
@@ -676,6 +690,9 @@ def HamVis(input):
     if average == "True":
         ham_average = np.divide(ham_average, len(frames))
         ham_saver(ham_average, frames, outname, scale, cut)
+
+    totaltime = (time.time() - start_time)
+    print(f"totaltime : {totaltime} \n convert_time : {convert_time} \n loadtime : {loadtime} \n verify_time : {verify_time} \n format_time : {format_time}")
 
 
 if __name__ == "__main__":
