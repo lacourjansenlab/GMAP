@@ -43,7 +43,6 @@ This module can be called with:
 # standard libary imports
 import sys
 import warnings
-import time
 from pathlib import Path
 
 # 3rd party library imports
@@ -243,7 +242,9 @@ def ham_saver(ham, frame, outname, scale, cut):
             cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes(
                 [0.8, 0.1, 0.03, 0.3]
                 ))
-            cbb.set_label('coupling', rotation=0, y=1.12, labelpad=-22)
+            cbb.set_label(
+                'coupling (cm$^{-1}$)', rotation=0, y=1.12, labelpad=-22
+                )
 
         case "lin_lr":
             # This solution extends the positive and negative range out
@@ -262,7 +263,9 @@ def ham_saver(ham, frame, outname, scale, cut):
             cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes(
                 [0.8, 0.1, 0.03, 0.3]
                 ))
-            cbb.set_label('coupling', rotation=0, y=1.12, labelpad=-22)
+            cbb.set_label(
+                'coupling (cm$^{-1}$)', rotation=0, y=1.12, labelpad=-22
+                )
 
         case "log2":
             # This solution extends the positive and negative range out
@@ -280,13 +283,16 @@ def ham_saver(ham, frame, outname, scale, cut):
             cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes(
                 [0.8, 0.1, 0.03, 0.3]
                 ))
-            cbb.set_label('coupling', rotation=0, y=1.12, labelpad=-22)
+            cbb.set_label(
+                'coupling (log$_{2}$ cm$^{-1}$)',
+                rotation=0, y=1.12, labelpad=-22
+                )
 
     cba = plt.colorbar(pa, shrink=0.4, cax=fig.add_axes([0.8, 0.5, 0.03, 0.3]))
 
     fig.subplots_adjust(right=0.75)
 
-    cba.set_label('frequency [cm$^-1$]', rotation=0, y=1.12, labelpad=-22)
+    cba.set_label('frequency (cm$^{-1}$)', rotation=0, y=1.12, labelpad=-22)
     ax.set_title(outname)
 
     plt.savefig(f"{outname}_{frame}.pdf")
