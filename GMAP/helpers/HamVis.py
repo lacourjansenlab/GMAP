@@ -44,10 +44,12 @@ This module can be called with:
 import sys
 import warnings
 from pathlib import Path
+import time
 
 # 3rd party library imports
 import matplotlib.pyplot as plt
 import numpy as np
+# from numba import njit
 
 
 class HamVisException(Exception):
@@ -97,9 +99,10 @@ def get_data(fname, file_type, frame, line_length):
         case ".bin":
             try:
                 skipped_bytes = round((frame) * line_length * 4)
-                data = np.fromfile(fname, dtype=np.float32, count=line_length,
-                                   offset=skipped_bytes
-                                   )[1:]
+                data = np.fromfile(
+                    fname, dtype=np.float32, count=line_length,
+                    offset=skipped_bytes
+                )[1:]
             except Exception:
                 raise HamVisException("There was an issue extracting data "
                                       f"{fname}. Please verify its integrity "
@@ -241,10 +244,10 @@ def ham_saver(ham, frame, outname, scale, cut):
 
             cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes(
                 [0.8, 0.1, 0.03, 0.3]
-                ))
+            ))
             cbb.set_label(
                 'coupling (cm$^{-1}$)', rotation=0, y=1.12, labelpad=-22
-                )
+            )
 
         case "lin_lr":
             # This solution extends the positive and negative range out
@@ -262,10 +265,10 @@ def ham_saver(ham, frame, outname, scale, cut):
 
             cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes(
                 [0.8, 0.1, 0.03, 0.3]
-                ))
+            ))
             cbb.set_label(
                 'coupling (cm$^{-1}$)', rotation=0, y=1.12, labelpad=-22
-                )
+            )
 
         case "log2":
             # This solution extends the positive and negative range out
@@ -282,11 +285,11 @@ def ham_saver(ham, frame, outname, scale, cut):
 
             cbb = plt.colorbar(pb, shrink=0.4, cax=fig.add_axes(
                 [0.8, 0.1, 0.03, 0.3]
-                ))
+            ))
             cbb.set_label(
                 'coupling (log$_{2}$ cm$^{-1}$)',
                 rotation=0, y=1.12, labelpad=-22
-                )
+            )
 
     cba = plt.colorbar(pa, shrink=0.4, cax=fig.add_axes([0.8, 0.5, 0.03, 0.3]))
 
@@ -323,9 +326,10 @@ def verify_cut(cut, size):
         This is formatted as either four integers seperated by commas or
         as 'False'. If it is 'False' the Hamiltonians in ham_list are
         not cut. Otherwise cut should be x1,x2,y1,y2. This slices the
-        elements of ham_list as ham[x1:x2,y1:y2].
+        elements of ham_list as ham[x1:x2,y1:y2]
     """
-    if cut != "False":
+
+    if cut.lower() != "false":
         cut = cut.split(",")
         cut = [int(cutidx) for cutidx in cut]
         if len(cut) != 4:
@@ -590,11 +594,11 @@ def verify_input(input):
 
     fname, frames, average, cut, outname, scale = input
 
-    if average not in ["False", "True"]:
+    if average.lower() not in ["false", "true"]:
         raise HamVisException(
             f"The choice of average should be 'False' or 'True', not {average}"
         )
-    if scale not in ["lin_lr", "lin_ld", "log2"]:
+    if scale.lower() not in ["lin_lr", "lin_ld", "log2"]:
         raise HamVisException(
             "The supported scales are linear (lin_ld or lin_lr) or "
             f"logarithmic (log2). {scale} is neither of those."
@@ -655,6 +659,8 @@ def HamVis(input):
         will be assigned its own variable.
     """
 
+    start_time = time.time()
+
     fname, frames, average, cut, outname, scale, file_type = verify_input(
         input
     )
@@ -666,22 +672,37 @@ def HamVis(input):
     size = get_size(fname, file_type, line_length)
     cut = verify_cut(cut, size)
 
-    ham_average = None
+    verify_time = time.time() - start_time
+
+    loadtime = 0
+
+    data_average = None
     for frame in frames:
+        loadtime -= time.time()
         data = get_data(fname, file_type, frame, line_length)
-        ham = format_ham(data, size)
-        if scale == "log2":
-            ham = logify_ham(ham, size)
-        if average == "False":
+        loadtime += time.time()
+        if average.lower() == "false":
+            ham = format_ham(data, size)
+            if scale.lower() == "log2":
+                ham = logify_ham(ham, size)
             ham_saver(ham, frame, outname, scale, cut)
         else:
-            if ham_average is None:
-                ham_average = ham
+            if data_average is None:
+                data_average = data
             else:
-                ham_average += ham
-    if average == "True":
-        ham_average = np.divide(ham_average, len(frames))
+                data_average += data
+    if average.lower() == "true":
+        data_averaged = np.divide(data_average, len(frames))
+        ham_average = format_ham(data_averaged, size)
+        if scale.lower() == "log2":
+            ham_average = logify_ham(ham_average, size)
         ham_saver(ham_average, frames, outname, scale, cut)
+
+    total_time = time.time() - start_time
+
+    print(f"verify_time : {verify_time}")
+    print(f"total_time : {total_time}")
+    print(f"load time : {loadtime}")
 
 
 if __name__ == "__main__":
