@@ -142,13 +142,7 @@ def calc_frame(Printer, RunPars, System, outputs):
     if "ham" in RunPars.output_data:
         prep_coupling(Printer, RunPars, System)
 
-        for oscix1, osc1 in enumerate(System.oscillators):
-            for oscix2 in range(oscix1 + 1, System.nosc):
-                osc2 = System.oscillators[oscix2]
-                J = calc_coupling(
-                    Printer, RunPars, System, oscix1, osc1, oscix2, osc2)
-                outputs["hamiltonian"][oscix1, oscix2] = J
-                outputs["hamiltonian"][oscix2, oscix1] = J
+        calc_coupling(Printer, RunPars, System, outputs)
 
     return outputs
 
@@ -253,14 +247,11 @@ def prep_coupling(Printer, RunPars, System):
     return
 
 
-# possible speedup inside? -> retrieving oscmapname, using that as key
-# might be faster to have ix-based lookup table? or is that structure
-# too large?
-# even faster: sparse format - couptype vs sparse coord dict of all pairs
-# even C could make use of that - the map has its own c function that visits
-# all values that should be treated by that map!
-def calc_coupling(Printer, RunPars, System, oscix1, osc1, oscix2, osc2):
-    """Calculate the coupling between the provided pair.
+def calc_coupling(Printer, RunPars, System, outputs):
+    """Calculate the couplings of the system.
+
+    This function loops through the requested maps, and lets each
+    calculate the couplings for its assigned pairs.
 
     Parameters
     ----------
@@ -274,30 +265,18 @@ def calc_coupling(Printer, RunPars, System, oscix1, osc1, oscix2, osc2):
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
         charges of all atoms, for example)
-    oscix1 : int
-        The oscillator index (position in hamiltonian and such) of the
-        first oscillator to be coupled.
-    osc1 : :class:`~GMAP.src.tools.SystemReader.Oscillator`
-        The first oscillator to be coupled.
-    oscix2 : int
-        The oscillator index (position in hamiltonian and such) of the
-        second oscillator to be coupled.
-    osc2 : :class:`~GMAP.src.tools.SystemReader.Oscillator`
-        The second oscillator to be coupled.
-
-    Returns
-    -------
-    J : float
-        The actual coupling value between the two given oscillators.
+    outputs : dict of str: `np.ndarray` pairs
+        The outputs the program is requested to generate. Currently
+        contains hamiltonian and dipole arrays.
     """
 
-    coupmap = RunPars.requested_pairmapdict[RunPars.pair_v_coupling_dict[
-        (osc1.Map.name, osc2.Map.name)]]
-    if coupmap is None:
-        return 0
-    else:
-        return coupmap.code.GM_calc_coupling(
-            Printer, coupmap, System, oscix1, osc1, oscix2, osc2)
+    for coupmapname, oscarr in System.coup_v_allpair.items():
+        oscarr_c = System.coup_v_allpair_c[coupmapname]
+        if coupmapname is None:
+            continue
+        coupmap = RunPars.requested_pairmapdict[coupmapname]
+        coupmap.code.GM_calc_coupling(
+            Printer, coupmap, System, outputs["hamiltonian"], oscarr, oscarr_c)
 
 
 def generate_output_structures(RunPars, System):

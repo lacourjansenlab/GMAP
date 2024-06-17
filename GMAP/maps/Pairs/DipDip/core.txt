@@ -1,0 +1,52 @@
+
+# what other singles maps must be successfully loaded in for this map to
+# function (because it uses some information or whatever)
+# maps requested here can not always be found in RunPars.requested_mapdict,
+# but they will be present in RunPars.available_maps_singles
+
+require_singles            None
+
+
+
+# what other pairs maps must be successfully loaded in for this map to
+# function (because it uses some information or whatever)
+# (or - to use one of these to fall back to if this map appears unsuitable)
+
+require_pairs         None
+
+
+
+# what keywords (in core.txt) a singles map must contain
+# (name should not include the coupmapname. part)
+
+require_keywords    None
+
+
+
+# what functions (in main.py) a singles map must contain
+# (name should not include CP_coupmapname_ part)
+
+require_mapfuncs      None
+
+
+
+# what kind of singles this map is allowed to treat
+
+# singles_whitelist   :All
+# singles_blacklist   :None
+
+
+
+# what combinations of singles are valid
+# each line can have as many definitions as desired (space-separated)
+
+# valid_combinations    :all          # any combination
+# valid_combinations    :same         # any of two identical
+# valid_combinations    :diff         # any of two different
+# valid_combinations    AmideSC:      # any pair containing at least one of ...
+
+# very specific:
+# valid_combinations     A,B:B,C  A,C:D     # equals   A:B A:C B:B B:C A:D C:D
+
+
+

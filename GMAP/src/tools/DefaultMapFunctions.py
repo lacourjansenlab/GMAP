@@ -58,6 +58,11 @@ def get_post_run():
     return does_nothing
 
 
+def get_change_coup_type(name):
+    # yes, here we have call - there's a def inside returns_input.
+    return returns_input(name)
+
+
 def get_prep_coupling():
     return does_nothing
 
@@ -461,6 +466,12 @@ def returns_last(*args):
 
 def returns_empty_list(*args):
     return []
+
+
+def returns_input(input_):
+    def returner(*args):
+        return input_
+    return returner
 
 
 def uses_maps(gas_freq, VEG, mapconsts):

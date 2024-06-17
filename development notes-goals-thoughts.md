@@ -333,7 +333,10 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
-  - fix all links in documentation (and all text) using Map (that now should be SingleMap)
+  - put a max no. of iterations on the while loop managing coupmap assignment of pairs.
+  - add documentation for coupling maps (core.txt and main.py)
+  - add info on special functions that can be requested by pairmaps.
+  - tests :)
 - (KvA) TODO:
   - map main.py documentation - calc_frequency still has dipole outputs?!
   - potential maps don't need rotation matrix, but program still looks for the get_func (which doesn't exist) - why? Are we still using xyz_uvec from core.txt?

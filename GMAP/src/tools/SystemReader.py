@@ -762,27 +762,48 @@ class System:
                 self.oscillators_ordered[mapname].append(oscillator)
                 self.oscillators_ordered_ix[mapname].append(oscix)
 
-        # build a new coupling_v_pair_dict; this one only contains the
-        # maps we actually need for this system (what if a requested
-        # oscillator is not present in the system? those are left out)
-        self.coupling_v_pair_dict = {}
-        for coupmap, pairs in RunPars.coupling_v_pair_dict.items():
-            for pair in pairs:
-                if all(item in self.oscillators_ordered for item in pair):
-                    if coupmap in self.coupling_v_pair_dict:
-                        self.coupling_v_pair_dict[coupmap].append(pair)
-                    else:
-                        self.coupling_v_pair_dict[coupmap] = [pair]
+        # # build a new coupling_v_pair_dict; this one only contains the
+        # # maps we actually need for this system (what if a requested
+        # # oscillator is not present in the system? those are left out)
+        # self.coupling_v_pair_dict = {}
+        # for coupmap, pairs in RunPars.coupling_v_pair_dict.items():
+        #     for pair in pairs:
+        #         if all(item in self.oscillators_ordered for item in pair):
+        #             if coupmap in self.coupling_v_pair_dict:
+        #                 self.coupling_v_pair_dict[coupmap].append(pair)
+        #             else:
+        #                 self.coupling_v_pair_dict[coupmap] = [pair]
 
-        # for each coupling map, determine which oscilators are coupled
-        # by that map (no coupled oscillators - not in the dict)
+        coup_v_allpair = {}
+        for oscix1, osc1 in enumerate(self.oscillators):
+            for oscix2 in range(oscix1 + 1, self.nosc):
+                osc2 = self.oscillators[oscix2]
+                base_coupmap = None
+                req_coupmap = RunPars.pair_v_coupling_dict[
+                    (osc1.Map.name, osc2.Map.name)]
+                while base_coupmap != req_coupmap:
+                    base_coupmap = req_coupmap
+                    # ask the current map which map should actually be used
+                    coupmap = RunPars.requested_pairmapdict[base_coupmap]
+                    req_coupmap = coupmap.code.GM_change_coup_type(
+                        coupmap, self, oscix1, osc1, oscix2, osc2)
+                if req_coupmap in coup_v_allpair:
+                    coup_v_allpair[req_coupmap].append((oscix1, oscix2))
+                else:
+                    coup_v_allpair[req_coupmap] = [(oscix1, oscix2)]
+
+        for coupmapname, pairlist in coup_v_allpair.items():
+            coupmap = RunPars.requested_pairmapdict[coupmapname]
+            coupmap.allpairs = pairlist
+
+        # # for each coupling map, determine which oscilators are coupled
+        # # by that map (no coupled oscillators - not in the dict)
         self.oscillators_ordered_coup = {}
         self.oscillators_ordered_coup_ix = {}
         for oscix, oscillator in enumerate(self.oscillators):
-            oscmap = oscillator.Map.name
-            for coupmap, pairs in self.coupling_v_pair_dict.items():
+            for coupmap, pairs in self.coup_v_allpair.items():
                 for pair in pairs:
-                    if oscmap in pair:
+                    if oscix in pair:
                         if coupmap not in self.oscillators_ordered_coup:
                             self.oscillators_ordered_coup[coupmap] = [
                                 oscillator]

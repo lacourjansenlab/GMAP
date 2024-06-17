@@ -38,16 +38,53 @@ def GM_adjust_RunPars(Files, Printer, Map):
     pass
 
 
-# what functions (names) a singles-map must contain for this map to work
-# (name should not include CP_coupmapname part)
-def GM_needs_mapfunc(Files, Printer, Map):
-    return []
+# A function to adjust the choices made in core.txt. Perhaps, based on
+# a detected parameter, a different choice is preferred. This function
+# allows to make a different choice, **in the same format as the file**.
+# if more complex behaviour is desired, a separate function is needed.
+def GM_adjust_map_core_raw(Files, Printer, Map):
+    """Makes the necessary changes to the 'raw' input read from core.txt.
+
+    Is expected to not return anything - return value is not caught.
+
+    The core.txt file is stored in Map.rawcore. It has not yet been
+    parsed, just loaded into a dictionary. In this dictionary, each
+    keyword is its own dictionary key. Most keywords can only occur once
+    in the file - those have a list of the 'words' on the line as
+    their value. The parameters that are allowed to occur more than once
+    have a list as value, in which other lists appear - one for each
+    line.
+
+    The purpose of this function is to change this dictionary. Perhaps,
+    a rule in core.txt is dependent on a parameter of the map. This
+    function can make a decision based on those parameters (stored in
+    Map.RunPars).
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+        Contains all currently known paths and other file-related
+        properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    Map : :class:`~GMAP.src.tools.MapReader.Map`
+        The object that stores everything the program currently knows
+        about this map.
+    """
+
+    pass
 
 
-# what keywords a singles-map's corefile must contain for this map to work
-# (name should not include the coupmapname part)
-def GM_needs_keyword(Files, Printer, Map):
-    return []
+# A function to change the coupling type of an oscillator pair. GMAP can
+# only sort oscpairs into the correct couplingmaps based on the name of
+# the map of each osc in a pair. However, some maps require different
+# coupling maps for different circumstances. This function should return
+# the name of the map that should be coupling this pair (instead of itself).
+# IF this function does not exist, the map itself is returned by default.
+def GM_change_coup_type(Map, Syst, oscix1, osc1, oscix2, osc2):
+    return "DipDip"
 
 
 # A place to actually do any prepwork. Any preparations should be done here
@@ -69,8 +106,19 @@ def GM_prep_coupling(Printer, Map, Syst, oscixlist, osclist):
         Map.dipole_pos_arr[oscix] = dip_pos @ Syst.boxvects_inv
 
 
+def GM_calc_coupling(Printer, Map, Syst, hamiltonian):
+    for pair in Map.allpairs:
+        oscix1, oscix2 = pair
+        J = calc_coupling(
+            oscix1, oscix2, Map.dipole_pos_arr, Map.dipole_vec_arr,
+            Syst.boxvects
+        )
+        hamiltonian[oscix1, oscix2] = J
+        hamiltonian[oscix2, oscix1] = J
+
+
 # wrapper as not all these types are njit-friendly.
-def GM_calc_coupling(Printer, Map, Syst, oscix1, osc1, oscix2, osc2):
+def GM_calc_coupling_old(Printer, Map, Syst, oscix1, osc1, oscix2, osc2):
     return calc_coupling(
         oscix1, oscix2, Map.dipole_pos_arr, Map.dipole_vec_arr, Syst.boxvects)
 
@@ -120,6 +168,11 @@ def GM_post_init(Files, Printer, Map, Syst):
 def GM_pre_run(Printer, Map, Syst):
     setattr(Map, "dipole_vec_arr", np.zeros((Syst.nosc, 3), dtype="float32"))
     setattr(Map, "dipole_pos_arr", np.zeros((Syst.nosc, 3), dtype="float32"))
+
+    # change dtype of allpair list to suit this map's needs.
+    # setattr(Map, "allpairs", np.array(Map.allpairs, dtype='int32'))
+    # setattr(Map, "allpairs_c", np.ctypeslib.as_ctypes(
+    #     np.ravel(Map.allpairs)))
 
 
 # A place to do things before the properties for this frame are being

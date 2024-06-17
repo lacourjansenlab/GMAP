@@ -15,7 +15,7 @@ from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class Map():
-    """Contains all information regarding a single map.
+    """Contains all information regarding a single map. Base to build upon.
 
     In this context, a map is as defined in the computational spectroscopy
     community - a way of estimating the properties of a functional group. It
@@ -288,6 +288,11 @@ class Map():
         funcnames : tuple of str
             The functions that should be added in (without the GM\_
             suffix)
+        kwargslist : tuple of dicts or NoneType, default=None
+            If any of the requested functions (in funcnames) require
+            arguments, they should be supplied as kwargs in a dict.
+            If any function needs them, the kwargs for all must be
+            provided, this tuple must have the same length as funcnames.
         """
 
         if not kwargslist:
@@ -299,93 +304,6 @@ class Map():
                     self.code, "GM_" + funcname,
                     getattr(GM_DMF, "get_" + funcname)(**kwargs)
                 )
-
-
-class SingleMap(Map):
-    def initialize(self, Files, Printer):
-        """Initializes the map.
-
-        Initializing is a multi-step process:
-
-        - If there is a main.py file, read/extract it.
-        - If any of GM_adjust_[RunPars/map_core_raw/oscillators] are
-          missing, add the default for them.
-        - Run GM_adjust_RunPars
-        - Find the core.txt file, parse to rawcore. Supplement any
-          files, if requested.
-        - Run GM_adjust_map_core_raw
-        - Parse the final choice of rawcore to Core
-        - If not present in self.code, create functions for
-          GM_calculate_dipole and GM_get_rotation matrix based on core.
-
-        Parameters
-        ----------
-        Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
-            Contains all currently known paths and other file-related
-            properties.
-            Has to be updated after RunPars is finalized.
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
-        """
-
-        self.code = self.extract_code(Printer)
-        if not self.code:
-            self.code = GM_DMF.NewModule()
-
-        # not all code can be added in yet - we need to make sure that
-        # we have adjust_RunPars and adjust_map_core_raw, as they might
-        # influence core.txt in ways that influence the functions
-        # defined later.
-        self.complete_code((
-            "adjust_RunPars",
-            "adjust_map_core_raw",
-            "adjust_oscillators"
-        ))
-        self.code.GM_adjust_RunPars(Files, Printer, self)
-
-        # simple parse of core.txt
-        self.rawcore = self.find_core(Printer)
-        if not self.success:
-            return
-
-        # add extra corefiles to the main core
-        self.append_core(Printer)
-        if not self.success:
-            return
-
-        # allow the contents of core.txt to be changed
-        self.code.GM_adjust_map_core_raw(Files, Printer, self)
-
-        self.Core = Core(Printer, self)
-        if not self.Core.success:
-            self.success = False
-            return
-
-        # adding GM_get_dipole_dir and GM_get_rotation_matrix to self.code.
-        self.code_add_builds(Printer)
-        if not self.success:
-            return
-
-        self.complete_code(("get_VEG_ref",), ({
-            "map_": self,
-            "Printer": Printer
-        },))
-
-        self.complete_code(
-            ("calculate_dipole", "calculate_frequency"),
-            ({"map_": self}, {"map_": self})
-        )
-
-        # Add in the remaining code
-        self.complete_code((
-            "get_dipole_mag",
-            "post_init",
-            "pre_run",
-            "pre_frame",
-            "post_frame",
-            "post_run"
-        ))
 
     def append_core(self, Printer):
         """Interprets the choice in core.txt for add_corefile.
@@ -446,74 +364,6 @@ class SingleMap(Map):
             ]
             self.rawcore["add_corefile"] = []
 
-    def code_add_builds(self, Printer):
-        """Add functions that depend on lines in core.txt.
-
-        These functions require that core.txt is checked for certain
-        keywords. If they are not present, self.success is set to false,
-        and this function is left prematurely.
-
-        Parameters
-        ----------
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
-        """
-
-        # build remaining functions (i.e. do something with the contents
-        # of core.txt)
-        functs_to_build = [
-            "get_dipole_dir"
-        ]
-        kwargs_for_build = [{
-            "map_": self,
-            "Printer": Printer
-        }]
-
-        # If the code doesn't contain a function for getting the dipole, make
-        # sure the two necessary keywords are there.
-        if not hasattr(self.code, "get_dipole_dir"):
-            if not all(
-                keyword in self.rawcore for keyword in ("r_vec", "r_pos")
-            ):
-                Printer.warning(
-                    f"\nThe file {self.corepath} does not contain a "
-                    "definition of "
-                    "r_vec and/or r_pos. These two variables have to be "
-                    "present if the map's main.py file does not contain "
-                    "the function 'GM_calculate_dipole'.",
-                    "MI_MC_6"
-                )
-                self.success = False
-                return
-
-        # check for existence of xyz_uvec
-
-        # they're not expected if 'type' isn't expected, either (they go
-        # together)
-        # (type is set to None if not in file)
-        if self.Core.type:
-            msg = (
-                f"\nThe file {self.corepath} does not contain the right "
-                "amount of "
-                "definitions for x_uvec, y_uvec, and z_uvec. Depending on "
-                "the choice for type, only one or two of these is allowed "
-                "to be specified."
-            )
-            nvars = sum([vec + "_uvec" in self.rawcore for vec in "xyz"])
-            if self.Core.type == 'standard' and nvars != 2:
-                Printer.warning(msg, "MI_MC_10")
-                self.success = False
-                return
-            elif self.Core.type == 'linear' and nvars != 1:
-                Printer.warning(msg, "MI_MC_10")
-                self.success = False
-                return
-            functs_to_build.append("get_rotation_matrix")
-            kwargs_for_build.append({"map_": self, "Printer": Printer})
-
-        self.complete_code(functs_to_build, kwargs_for_build)
-
     def find_core(self, Printer):
         """Sees if the map core exists, and extracts all its information.
 
@@ -540,15 +390,21 @@ class SingleMap(Map):
 
         filepath = (self.directory / "core.txt").resolve()
         if not filepath.is_file():
-            Printer.warning(
-                f"\nCould not find the file {filepath}. This file is "
-                "required for the map to function. Please consult the "
-                "information of this map, or contact the developer of "
-                "this map.",
-                "MI_MR_2", False
-            )
-            self.success = False
-            return None
+            # This file is mandatory for singles maps
+            if isinstance(self, SingleMap):
+                Printer.warning(
+                    f"\nCould not find the file {filepath}. This file is "
+                    "required for the map to function. Please consult the "
+                    "information of this map, or contact the developer of "
+                    "this map.",
+                    "MI_MR_2", False
+                )
+                self.success = False
+                return None
+
+            # This file is optional for pairs maps
+            elif isinstance(self, PairMap):
+                return {}
 
         if not GM_FH.check_file_readability(Printer, filepath, doquit=False):
             self.success = False
@@ -574,6 +430,10 @@ class SingleMap(Map):
             and handle errors.
         filepath : pathlib.Path
             The location at which the file is stored.
+        file_contents : dict or NoneType, default=None
+            Any contents belonging to core.txt that have already been
+            found. This is applicable when using the 'append_core'
+            keyword, which in spirit concatenates file contents.
 
         Returns
         -------
@@ -655,7 +515,10 @@ class SingleMap(Map):
                 "MI_MR_3", False
             )
             return None
-        if keyword in ("functional_group", "add_corefile", "influencer_group"):
+        if keyword in (
+            "functional_group", "add_corefile", "influencer_group",
+            "valid_combinations"
+        ):
             if keyword in file_contents:
                 file_contents[keyword].append(choice)
             else:
@@ -675,28 +538,85 @@ class SingleMap(Map):
             return None
 
 
-class PairMap(Map):
+class SingleMap(Map):
     def initialize(self, Files, Printer):
+        """Initializes the map.
+
+        Initializing is a multi-step process:
+
+        - If there is a main.py file, read/extract it.
+        - If any of GM_adjust_[RunPars/map_core_raw/oscillators] are
+          missing, add the default for them.
+        - Run GM_adjust_RunPars
+        - Find the core.txt file, parse to rawcore. Supplement any
+          files, if requested.
+        - Run GM_adjust_map_core_raw
+        - Parse the final choice of rawcore to Core
+        - If not present in self.code, create functions for
+          GM_calculate_dipole and GM_get_rotation matrix based on core.
+
+        Parameters
+        ----------
+        Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+            Contains all currently known paths and other file-related
+            properties.
+            Has to be updated after RunPars is finalized.
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
+
         self.code = self.extract_code(Printer)
         if not self.code:
             self.code = GM_DMF.NewModule()
 
+        # not all code can be added in yet - we need to make sure that
+        # we have adjust_RunPars and adjust_map_core_raw, as they might
+        # influence core.txt in ways that influence the functions
+        # defined later.
         self.complete_code((
             "adjust_RunPars",
+            "adjust_map_core_raw",
+            "adjust_oscillators"
         ))
         self.code.GM_adjust_RunPars(Files, Printer, self)
 
-        self.complete_code(("needs_mapfunc",))
-        self.required_functions = self.code.GM_needs_mapfunc(
-            Files, Printer, self)
+        # simple parse of core.txt
+        self.rawcore = self.find_core(Printer)
+        if not self.success:
+            return
 
-        self.complete_code(("needs_keyword",))
-        self.required_keywords = self.code.GM_needs_keyword(
-            Files, Printer, self)
+        # add extra corefiles to the main core
+        self.append_core(Printer)
+        if not self.success:
+            return
+
+        # allow the contents of core.txt to be changed
+        self.code.GM_adjust_map_core_raw(Files, Printer, self)
+
+        self.Core = SingleCore(Printer, self)
+        if not self.Core.success:
+            self.success = False
+            return
+
+        # adding GM_get_dipole_dir and GM_get_rotation_matrix to self.code.
+        self.code_add_builds(Printer)
+        if not self.success:
+            return
+
+        self.complete_code(("get_VEG_ref",), ({
+            "map_": self,
+            "Printer": Printer
+        },))
+
+        self.complete_code(
+            ("calculate_dipole", "calculate_frequency"),
+            ({"map_": self}, {"map_": self})
+        )
 
         # Add in the remaining code
         self.complete_code((
-            "prep_coupling",
+            "get_dipole_mag",
             "post_init",
             "pre_run",
             "pre_frame",
@@ -704,8 +624,312 @@ class PairMap(Map):
             "post_run"
         ))
 
+    def code_add_builds(self, Printer):
+        """Add functions that depend on lines in core.txt.
 
-class Core():
+        These functions require that core.txt is checked for certain
+        keywords. If they are not present, self.success is set to false,
+        and this function is left prematurely.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
+
+        # build remaining functions (i.e. do something with the contents
+        # of core.txt)
+        functs_to_build = [
+            "get_dipole_dir"
+        ]
+        kwargs_for_build = [{
+            "map_": self,
+            "Printer": Printer
+        }]
+
+        # If the code doesn't contain a function for getting the dipole, make
+        # sure the two necessary keywords are there.
+        if not hasattr(self.code, "get_dipole_dir"):
+            if not all(
+                keyword in self.rawcore for keyword in ("r_vec", "r_pos")
+            ):
+                Printer.warning(
+                    f"\nThe file {self.corepath} does not contain a "
+                    "definition of "
+                    "r_vec and/or r_pos. These two variables have to be "
+                    "present if the map's main.py file does not contain "
+                    "the function 'GM_calculate_dipole'.",
+                    "MI_MC_6"
+                )
+                self.success = False
+                return
+
+        # check for existence of xyz_uvec
+
+        # they're not expected if 'type' isn't expected, either (they go
+        # together)
+        # (type is set to None if not in file)
+        if self.Core.type:
+            msg = (
+                f"\nThe file {self.corepath} does not contain the right "
+                "amount of "
+                "definitions for x_uvec, y_uvec, and z_uvec. Depending on "
+                "the choice for type, only one or two of these is allowed "
+                "to be specified."
+            )
+            nvars = sum([vec + "_uvec" in self.rawcore for vec in "xyz"])
+            if self.Core.type == 'standard' and nvars != 2:
+                Printer.warning(msg, "MI_MC_10")
+                self.success = False
+                return
+            elif self.Core.type == 'linear' and nvars != 1:
+                Printer.warning(msg, "MI_MC_10")
+                self.success = False
+                return
+            functs_to_build.append("get_rotation_matrix")
+            kwargs_for_build.append({"map_": self, "Printer": Printer})
+
+        self.complete_code(functs_to_build, kwargs_for_build)
+
+
+class PairMap(Map):
+    def initialize(self, Files, Printer):
+        """Initializes the map.
+
+        Initializing is a multi-step process:
+
+        - If there is a main.py file, read/extract it.
+        - If any of GM_adjust_[RunPars/map_core_raw] are
+          missing, add the default for them.
+        - Run GM_adjust_RunPars
+        - Find the core.txt file, parse to rawcore. Supplement any
+          files, if requested.
+        - Run GM_adjust_map_core_raw
+        - Parse the final choice of rawcore to Core
+        - If not present in self.code, create functions for all missing
+          behaviour
+
+        Parameters
+        ----------
+        Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+            Contains all currently known paths and other file-related
+            properties.
+            Has to be updated after RunPars is finalized.
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
+
+        self.code = self.extract_code(Printer)
+        if not self.code:
+            self.code = GM_DMF.NewModule()
+
+        self.complete_code((
+            "adjust_RunPars",
+            "adjust_map_core_raw"
+        ))
+        self.code.GM_adjust_RunPars(Files, Printer, self)
+
+        # simple parse of core.txt
+        self.rawcore = self.find_core(Printer)
+        if not self.success:
+            return
+
+        # add extra corefiles to the main core
+        self.append_core(Printer)
+        if not self.success:
+            return
+
+        # allow the contents of core.txt to be changed
+        self.code.GM_adjust_map_core_raw(Files, Printer, self)
+
+        self.Core = PairCore(Printer, self)
+        if not self.Core.success:
+            self.success = False
+            return
+
+        # self.complete_code(("needs_mapfunc",))
+        # self.required_functions = self.code.GM_needs_mapfunc(
+        #     Files, Printer, self)
+
+        # self.complete_code(("needs_keyword",))
+        # self.required_keywords = self.code.GM_needs_keyword(
+        #     Files, Printer, self)
+
+        # Add in the remaining code
+        self.complete_code((
+            "change_coup_type",
+            "prep_coupling",
+            "post_init",
+            "pre_run",
+            "pre_frame",
+            "post_frame",
+            "post_run"
+        ), [{"name": self.name}] + [{}] * 6)
+
+    def check_singles(self, main_runpars, Printer, requester=None):
+        """Sees if all indicated requirements of the map are met.
+
+        Some pair-wise maps require other content to be present. For
+        example, a specialized coupling could need additional
+        information about an oscillator, such as TRESP needing the delQ.
+        Such mappings can list certain keywords or functions that they
+        can interpret which singles must have before they can be
+        coupled.
+        This function makes sure that any oscillator coupled by this map
+        meets these requirements, or else quit the program.
+
+        Parameters
+        ----------
+        main_runpars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+            The 'main' RunPars instance containing all the basic run-defining
+            parameters.
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        requester : str or NoneType, default=None
+            The map requesting the map we're checking. This is needed
+            to avoid the confusion of a map not directly requested by the
+            user throwing errors.
+        """
+
+        # this map might have some requirements, see if they are present
+        if requester:
+            basestr = (
+                f"\nThe map {self.name} (requested by the map {requester}) ")
+        else:
+            basestr = f"\nThe map {self.name} "
+
+        # if any required single is not present
+        missing_maps = [
+            map_ for map_ in self.Core.require_singles
+            if map_ not in main_runpars.available_maps_singles
+        ]
+        if missing_maps:
+            Printer.warning(
+                basestr + "requires the map(s) "
+                f"{', '.join(missing_maps)}, but these are not available to "
+                "the program. Either they are not present, or an error was "
+                "encountered when loading them in. This map will not be "
+                "available for use until this is fixed. ", "MI_MC_2", True
+            )
+            self.success = False
+            return
+
+        requested_singles = set()
+        for pair in main_runpars.coupling_v_pair_dict[self.name]:
+            requested_singles.add(pair[0])
+            requested_singles.add(pair[1])
+
+        # if any required single does not have keyword
+        missing_maps = [
+            (map_, f"{self.name}.{keyword}")
+            for map_ in requested_singles
+            for keyword in self.require_keywords
+            if f"{self.name}.{keyword}" not in map_.rawcore
+        ]
+        if missing_maps:
+            basestrings = [
+                f"the map {pair[0]} is missing the keyword {pair[1]}"
+                for pair in missing_maps
+            ]
+            basestrings = '\n'.join(basestrings)
+            Printer.warning(
+                basestr + "was requested for use in calculating "
+                "couplings. It requires any singles maps it couples to contain"
+                " (a) certain keyword(s), but the following maps are missing "
+                f"the following keywords:\n{basestrings}\n"
+                "Please contact the creators of both maps to fix the issue. "
+                "In the meantime, please use a different coupling method for "
+                "these maps.", "MI_MM_2", True
+            )
+            self.success = False
+            return
+
+        # if any required single does not have map function
+        missing_maps = [
+            (map_, f"CP_{self.name}_{func}")
+            for map_ in requested_singles
+            for func in self.require_mapfuncs
+            if not hasattr(map_.code, f"CP_{self.name}_{func}")
+        ]
+        if missing_maps:
+            basestrings = [
+                f"the map {pair[0]} is missing the function {pair[1]}"
+                for pair in missing_maps
+            ]
+            basestrings = '\n'.join(basestrings)
+            Printer.warning(
+                basestr + "was requested for use in calculating "
+                "couplings. It requires any singles maps it couples to contain"
+                " (a) certain function(s) in the main.py file, but the "
+                "following maps are missing "
+                f"the following functions:\n{basestrings}\n"
+                "Please contact the creators of both maps to fix the issue. "
+                "In the meantime, please use a different coupling method for "
+                "these maps.", "MI_MM_2", True
+            )
+            self.success = False
+            return
+
+    def check_pairs(self, main_runpars, Printer):
+        """Sees if all pair-map requirements of the map are met.
+
+        Some pair-wise maps require other content to be present. For
+        example, a specialized coupling could need to be able to fall
+        back to a more generic coupling map, like the dipole-dipole
+        (DipDip) coupling map. These fallbacks should be prepared as
+        well, so we must check if they are known (or not present),
+        complete, and valid.
+        This function makes sure that any oscillator coupled by this map
+        meets these requirements, or else quit the program.
+
+        Parameters
+        ----------
+        main_runpars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+            The 'main' RunPars instance containing all the basic run-defining
+            parameters.
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        """
+
+        # we need these maps, but they weren't directly requested by the user
+        maybe_missing_maps = [
+            map_ for map_ in self.Core.require_pairs
+            if map_ not in main_runpars.requested_pairmapdict
+        ]
+
+        if maybe_missing_maps:
+            # we need these maps, but they are not available at all.
+            missing_maps = [
+                map_ for map_ in self.Core.require_pairs
+                if map_ not in main_runpars.available_maps_pairs
+            ]
+            if missing_maps:
+                Printer.warning(
+                    f"\nThe map {self.name} requires the map(s) "
+                    f"{', '.join(missing_maps)}, but these are not available "
+                    "to the program. Either they are not present, or an error "
+                    "was encountered when loading them in. This map will not "
+                    "be available for use until this is fixed. ",
+                    "MI_MC_2", True
+                )
+                self.success = False
+                return
+
+            # The maps are available, but not requested - before we know
+            # whether we can use them, we first have to check them, too.
+            for mapname in maybe_missing_maps:
+                map_ = main_runpars.available_maps_pairs[mapname]
+                # if this check fails, the program is quit automatically.
+                map_.check_singles(main_runpars, Printer, requester=mapname)
+            # add them to the requested - they have to be screened, too.
+            main_runpars.requested_pairmapdict[mapname] = map_
+
+
+class SingleCore():
     """Contains all information regarding a single core.txt file.
 
     Parameters
@@ -1929,6 +2153,134 @@ class Core():
             return True, fdata
 
 
+class PairCore():
+    def __init__(self, Printer, Map):
+        rawcore = Map.rawcore
+        self.success = True
+
+        # These can't fail
+        for keyword in (
+            "require_singles",
+            "require_pairs",
+            "require_keywords",
+            "require_mapfuncs"
+        ):
+            setattr(self, keyword, self.parse_optional_string_list(
+                rawcore, keyword))
+
+        self.allowed_singles = self.parse_singles_BWlist(
+            Map.RunPars.MainRunPars, rawcore)
+
+        self.valid_combinations = self.parse_valid_combinations(
+            Printer, rawcore, Map.directory)
+
+        if not self.success:
+            return
+
+    def parse_optional_string_list(self, rawcore, string):
+
+        # this keyword is not required
+        # if it is present, and all(choice) == None, ignore that choice.
+        choice = rawcore.get(string, [])
+        if all(item.lower() == "none" for item in choice):
+            choice = []
+        return choice
+
+    def parse_singles_BWlist(self, main_runpars, rawcore):
+
+        whitelist = self.parse_optional_string_list(
+            rawcore, "singles_whitelist")
+        blacklist = self.parse_optional_string_list(
+            rawcore, "singles_whitelist")
+
+        # All groups the map could couple if it'd like. (present groups)
+        chosen_groups = main_runpars.requested_mapdict.keys()
+
+        # --------------------------------------------------------------
+        # deal with whitelist:
+
+        # no special whitelist
+        if len(whitelist) == 0:
+            pass
+        # everything in whitelist
+        elif ":all" in [item.lower() for item in whitelist]:
+            pass
+        else:  # only those that are both in whitelist and chosen_groups
+            chosen_groups = [
+                item for item in chosen_groups if item in whitelist]
+
+        # --------------------------------------------------------------
+        # deal with blacklist:
+
+        # no special blacklist
+        if len(blacklist) == 0:
+            pass
+        # nothing in blacklist
+        elif all(item.lower() in (":none", "none") for item in whitelist):
+            pass
+        else:
+            chosen_groups = [
+                item for item in chosen_groups if item not in blacklist]
+
+        return chosen_groups
+
+    def parse_valid_combinations(self, Printer, rawcore, mapdir):
+
+        possible_combinations = []
+        for osc1 in self.allowed_singles:
+            for osc2 in self.allowed_singles:
+                possible_combinations.append((osc1, osc2))
+
+        chosen_combinations = set()
+        if "valid_combinations" not in rawcore:
+            return possible_combinations
+
+        for line in rawcore["valid_combinations"]:
+            for word in line:
+                if word.lower() == ":all":
+                    for pair in possible_combinations:
+                        chosen_combinations.add(pair)
+                elif word.lower() == ":same":
+                    for pair in possible_combinations:
+                        if pair[0] == pair[1]:
+                            chosen_combinations.add(pair)
+                elif word.lower() == ":diff":
+                    for pair in possible_combinations:
+                        if pair[0] != pair[1]:
+                            chosen_combinations.add(pair)
+
+                splitted = word.split(":")
+                if len(splitted) != 2:
+                    Printer.warning(
+                        "\nAll arguments for the keyword 'valid_combinations' "
+                        f"for the pairs map {mapdir.name} must contain "
+                        "exactly one ':'. This is, however, not the case. "
+                        "Please make sure to have exactly one.",
+                        "MI_MC_11", True
+                    )
+                if len(splitted[0]) == 0:
+                    Printer.warning(
+                        "\nEach argument for the keyword 'valid_combinations' "
+                        f"for the pairs map {mapdir.name} represents a pair "
+                        "of groups to couple. While the second group is "
+                        "optional, the first one is not. Please make sure to "
+                        "give at least the first one.",
+                        "MI_MC_11", True
+                    )
+
+                if splitted[1] == "":
+                    for pair in possible_combinations:
+                        if splitted[0] in pair:
+                            chosen_combinations.add(pair)
+                for pair in (
+                    (splitted[0], splitted[1]), (splitted[1], splitted[0])
+                ):
+                    if pair in possible_combinations:
+                        chosen_combinations.add(pair)
+
+        return list(chosen_combinations)
+
+
 class Structure():
     """What an oscillator looks like
 
@@ -2089,6 +2441,7 @@ def manage_maps_singles(Files, Printer, RunPars, mapdict):
         map_.initialize(Files, Printer)
 
     mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
+    RunPars.available_maps_singles = mapdict
 
     for map_choice in RunPars.maps_to_use:
         if map_choice not in mapdict:
@@ -2135,6 +2488,7 @@ def manage_maps_pairs(Files, Printer, RunPars, mapdict):
     dpr(mapdict)
 
     mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
+    RunPars.available_maps_pairs = mapdict
 
     for map_choice in RunPars.coupling_v_pair_dict.keys():
         if map_choice not in mapdict and map_choice is not None:
@@ -2156,43 +2510,40 @@ def manage_maps_pairs(Files, Printer, RunPars, mapdict):
     }
     RunPars.requested_pairmapdict = requested_mapdict
 
+    # first check if all requested maps are valid till here
     for coupmap in requested_mapdict.values():
-        # get all singlemaps that are coupled by this coupmap
-        singlemaps_used = set()
-        for pair in RunPars.coupling_v_pair_dict[coupmap.name]:
-            for mapname in pair:
-                singlemaps_used.add(RunPars.requested_mapdict[mapname])
+        coupmap.check_singles(RunPars, Printer)
 
-        # see if all singlemaps coupled by this group meet the prerequisites
-        for map_ in singlemaps_used:
-            for funcname in coupmap.required_functions:
-                funcname = f"CP_{coupmap.name}_{funcname}"
-                if not hasattr(map_.code, funcname):
-                    Printer.warning(
-                        f"\nThe map {coupmap.name} was requested for use in "
-                        "calculating couplings. It requires singles maps to "
-                        f"contain the function {funcname}, but the map "
-                        f"{map_.name} does not have it specified. Please "
-                        "contact the creators of both maps to fix the issue. "
-                        "In the meantime, please use a different coupling "
-                        f"method for the map {map_.name}.",
-                        "MI_MM_2", True
-                    )
+    # then, check if all requested maps are also still valid after paircheck.
+    # new checks need to be done as long as new maps are found as dependencies.
+    # any found dependencies are added to the dict.
+    requested_maps = set()
+    new_requested_maps = set(requested_mapdict.keys())
+    while requested_maps != new_requested_maps:
+        requested_maps = new_requested_maps  # save old one
+        for coupmap in requested_mapdict.values():
+            coupmap.check_pairs(RunPars, Printer)
+        new_requested_maps = set(requested_mapdict.keys())
 
-            for keyword in coupmap.required_keywords:
-                keyword = f"{coupmap.name}.{keyword}"
-                if keyword not in map_.rawcore:
-                    Printer.warning(
-                        f"\nThe map {coupmap.name} was requested for use in "
-                        "calculating couplings. It requires singles maps to "
-                        f"contain the keyword {keyword} in their core.txt "
-                        "file, but the map "
-                        f"{map_.name} does not have it specified. Please "
-                        "contact the creators of both maps to fix the issue. "
-                        "In the meantime, please use a different coupling "
-                        f"method for the map {map_.name}.",
-                        "MI_MM_2", True
-                    )
+    # loop is quit after no new maps were found. This means the last mapcheck
+    # did not find any new ones - all present ones were checked for pair-map
+    # dependencies -> if any were missing anything, the program would have
+    # quit by now -> all desired maps are there!
+
+    # --------------------------------------------------------------
+
+    # next: check if all required pairs exist
+    # If a map requires a pair, that pair should also be able to treat
+    # all oscillators that the initial coupmap was supposed to treat
+
+    # is it? Maybe not - maybe a map knows only a certain subset will be
+    # passed on to certain maps - alternative is to just allow a map if
+    # it passed before without issue. Then, when all oscillators have been
+    # found, feed all maps their oscillator pairs, have them shove some
+    # onto others, and after that shoving passed, see if the new matches are
+    # valid. If they are, let all maps see their oscillator pairs again, and
+    # allow them to shove again. Repeat until shoving does not result in
+    # changes anymore -> thats the configuration we'll use.
 
 
 def scan_mapdirs(mapdirs, maptype):
