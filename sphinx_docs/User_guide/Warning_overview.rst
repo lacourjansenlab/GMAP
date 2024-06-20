@@ -386,6 +386,11 @@ There is no bond information in the supplied MD system, but this information is 
   - Charmm: .psf
   - NAMD: .psf
 
+MD_SU_6
+-------
+Some circular reference was found when determining what coupling map should be used to couple a certain pair of oscillators. The first one in the list is the one directly requested by the user, and that map determined that the second map in the list would be a better fit. Each map points to the next in the list, until one is encountered that has been requested before, starting this circular nature. This means the program will never find a suitable map, and thus quits.
+The issue could lie with the initial (or any other) map not being a good fit, and therefore sorting out the pair wrongly. Alternatively, there's a mistake in the map's code directing it to a different map. 
+
 *************************
 Codes starting with Setup
 *************************

@@ -67,6 +67,12 @@ def get_prep_coupling():
     return does_nothing
 
 
+def get_str_osc():
+    def base_str_getter(Syst, Map, osc):
+        return f"living on residue number {Syst.resnums[osc.used_atoms[0]]}"
+    return base_str_getter
+
+
 def get_get_VEG_ref(Printer, map_):
     """Creates the function GM_get_VEG_ref.
 

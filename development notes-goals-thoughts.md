@@ -333,7 +333,6 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
-  - put a max no. of iterations on the while loop managing coupmap assignment of pairs.
   - add documentation for coupling maps (core.txt and main.py)
   - add info on special functions that can be requested by pairmaps.
   - tests :)
@@ -341,6 +340,7 @@ If you need a place to quickly write something down, do it here! It can be tidie
   - map main.py documentation - calc_frequency still has dipole outputs?!
   - potential maps don't need rotation matrix, but program still looks for the get_func (which doesn't exist) - why? Are we still using xyz_uvec from core.txt?
   - start on mapdev-checklist. What things should a mapmaker double check before starting the map (and, simultaneously, have map-testing feature do these checks where possible - at least, write down what it should test)
+    - Indicate whether a VEG dependence file for calcfreq has been supplied or not (and similarly for dipoles etc)
   - have c code for potential take the influencers into account (possibly not within c code, but create mirror of system? new position/charges/etc array containing only valid influencers?)
   - Links to relevant packages etc in explanation in main documentation page.
   - Rework documentation on maps (reflect new coupling maps, for example)

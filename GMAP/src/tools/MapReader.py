@@ -617,6 +617,7 @@ class SingleMap(Map):
         # Add in the remaining code
         self.complete_code((
             "get_dipole_mag",
+            "str_osc",
             "post_init",
             "pre_run",
             "pre_frame",
@@ -694,6 +695,28 @@ class SingleMap(Map):
 
 
 class PairMap(Map):
+    """The Pair-specialized version of Map.
+
+    Any attributes listed for Map are not separately listed here.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+        Contains all currently known paths and other file-related properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+
+    Attributes
+    ----------
+    allpairs : list of tuple of 2 ints
+        A list of all pairs that should be coupled by this map. A pair
+        is indicated by the oscix of each oscillator involved. Maps can
+        (and probably should) change the data type of this attribute -
+        this can severely impact calculation times.
+    """
+
     def initialize(self, Files, Printer):
         """Initializes the map.
 

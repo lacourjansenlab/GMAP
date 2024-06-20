@@ -1462,9 +1462,23 @@ class RunPars:
         'self' will be used.
     detected_requires_bonds : bool
         Whether (one of) the maps requested for use require(s) bonds
+    available_maps_singles : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.SingleMap` pairs
+        The maps that are available during the calculation. These are
+        available for any other maps that might want to know something
+        from these.
     requested_mapdict : dict of str: \
-        :class:`~GMAP.src.tools.MapReader.SingleMap`
-        The maps that should be applied during the calculation.
+        :class:`~GMAP.src.tools.MapReader.SingleMap` pairs
+        The maps that should be applied during the calculation. This
+        must be a subset of available_maps_singles
+    available_maps_pairs : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.PairMap` pairs
+        The pairmaps that are available during the calculation. If any
+        pairmap requires another, it must be present in at least this list.
+    requested_pairmapdict : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.PairMap` pairs
+        The pair maps that should be applied during the calculation. This
+        must be a subset of available_maps_pairs.
     pair_v_coupling_dict : dict of (tuple of str): str pairs
         For each possible pair of oscillator(types), get the coupling map name
     coupling_v_pair_dict : dict of str: tuple of str pairs
