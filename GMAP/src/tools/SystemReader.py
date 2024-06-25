@@ -110,7 +110,7 @@ class System:
         The indices of all atoms that should be considered influencers.
     nosc : int
         The amount of oscillators present in the system.
-    ordered_oscillators : dict of str: \
+    ordered_oscillators : dict of str: list of \
         :class:`~GMAP.src.tools.SystemReader.Oscillator` pairs
         All oscillators, but grouped by the map they belong to.
     """
@@ -232,13 +232,13 @@ class System:
 
         prevresnum = -1
         writeresnum = -1
-        for atomnum, ix in enumerate(self.atnums):
+        for ix, atomnum in enumerate(self.atnums):
             if atomnum != ix:
                 # yes, we could just force atomnum to match ix. But if this
                 # MD software does this differently, it might very well do
                 # other things differently as well, so please, check that!
                 Printer.warning(
-                    f"\nThe atom number of the atom at position {atomnum} "
+                    f"\nThe atom number of the atom at position {ix} "
                     "does "
                     "not match its position in the list.",
                     "MD_SU_4", True
@@ -815,6 +815,13 @@ class System:
                 else:
                     coup_v_allpair[req_coupmap] = [(oscix1, oscix2)]
 
+        # if any pairs shouln't be coupled, remove the 'none' choice from the
+        # dict.
+        try:
+            del coup_v_allpair[None]
+        except Exception:
+            pass
+
         # save each list of pairs to the map that should be coupling it.
         for coupmapname, pairlist in coup_v_allpair.items():
             coupmap = RunPars.requested_pairmapdict[coupmapname]
@@ -840,6 +847,9 @@ class System:
                         # if this oscillator is part of this map, no need to
                         # check the other pairs!
                         break
+        for coupmapname, oscillators in self.oscillators_ordered_coup.items():
+            coupmap = RunPars.requested_pairmapdict[coupmapname]
+            coupmap.check_singles_2(Printer, RunPars, oscillators)
 
     def update_properties(self, Printer):
         """Reloads the frame-dependent properties of the system.

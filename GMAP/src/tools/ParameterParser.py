@@ -8,7 +8,6 @@ import numpy as np
 # local imports
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.MapReader as GM_MR
-from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class RefPars:
@@ -757,7 +756,7 @@ class RawPars:
         # - extract actual arguments
 
         temp_instance = cls(Printer, Path("command line"), False, {}, {})
-        pardict = {}
+        parfile_mock = []
 
         while len(cmdargs) > 0:
             # Step 1: Figure out what the parameter name is, and where its from
@@ -792,7 +791,8 @@ class RawPars:
                 Printer, cmdargs, curpar, curpar_tocheck, refpars_to_use
             )
 
-            pardict[curpar] = choice
+            parfile_mock.append(curpar + " " + " ".join(choice))
+        pardict = get_pardict(parfile_mock, RefPars.compounds)
 
         instance = cls.from_dict(
             Printer, Path("command line"), pardict, RefPars, is_default
@@ -2041,10 +2041,8 @@ class RunPars:
         for source in (DefPars, InPars, CmdPars):
             if "couplings_to_use" in source.choices:
                 if isinstance(source, RefPars):
-                    dpr("def/refpars", source.fname)
                     couplist.extend([source.choices["couplings_to_use"]])
                 else:
-                    dpr("other", source.fname)
                     couplist.extend(source.choices["couplings_to_use"])
 
         # now, find all pairs of couplings, and assign the correct
@@ -2059,7 +2057,6 @@ class RunPars:
 
         # coupline corresponds to a single line from RawPars files, and
         # contains information about a single coupling map.
-        dpr(couplist)
         for coupline in couplist:
             if len(coupline) < 2:
                 Printer.warning(
@@ -2152,7 +2149,6 @@ class RunPars:
             return failed_couppairs
 
         pair = pairstr.split(":")
-        dpr(pair)
         if len(pair) != 2:
             Printer.warning(
                 "\nAll arguments for the parameter couplings_to_use "
@@ -2696,6 +2692,8 @@ def get_pardict(iterable, compounds=None):
     ----------
     iterable : any iterable
         Contains the information to be converted to a dict.
+    compounds : tuple of str
+        These keys are allowed to occur more than once.
 
     Returns
     -------
@@ -2714,17 +2712,14 @@ def get_pardict(iterable, compounds=None):
         if len(line) == 0:
             continue
         linelist = [term.strip() for term in line.split()]
-        linelist = [term for term in linelist if term]
 
         if linelist[0] in compounds:
             if linelist[0] in outdict:
-                outdict[linelist[0]].append(linelist[1])
+                outdict[linelist[0]].append(linelist[1:])
             else:
                 outdict[linelist[0]] = [linelist[1:]]
         else:
             outdict[linelist[0]] = linelist[1:]
-    dpr(outdict)
-    dpr(compounds)
     return outdict
 
 

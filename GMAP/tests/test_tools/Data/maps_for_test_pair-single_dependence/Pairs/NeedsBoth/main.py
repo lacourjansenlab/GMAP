@@ -35,16 +35,16 @@ def GM_adjust_RunPars(Files, Printer, Map):
     pass
 
 
-# what functions (names) a singles-map must contain for this map to work
-# (name should not include CP_coupmapname part)
-def GM_needs_mapfunc(Files, Printer, Map):
-    return ["get_scalar2"]
+# # what functions (names) a singles-map must contain for this map to work
+# # (name should not include CP_coupmapname part)
+# def GM_needs_mapfunc(Files, Printer, Map):
+#     return ["get_scalar2"]
 
 
-# what keywords a singles-map's corefile must contain for this map to work
-# (name should not include the coupmapname part)
-def GM_needs_keyword(Files, Printer, Map):
-    return ["scalar1"]
+# # what keywords a singles-map's corefile must contain for this map to work
+# # (name should not include the coupmapname part)
+# def GM_needs_keyword(Files, Printer, Map):
+#     return ["scalar1"]
 
 
 # A place to actually do any prepwork. Any preparations should be done here

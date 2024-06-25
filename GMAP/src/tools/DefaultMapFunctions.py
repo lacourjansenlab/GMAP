@@ -22,14 +22,6 @@ def get_adjust_RunPars():
     return does_nothing
 
 
-def get_needs_mapfunc():
-    return returns_empty_list
-
-
-def get_needs_keyword():
-    return returns_empty_list
-
-
 def get_adjust_map_core_raw():
     return does_nothing
 
@@ -470,10 +462,6 @@ def returns_last(*args):
     return args[-1]
 
 
-def returns_empty_list(*args):
-    return []
-
-
 def returns_input(input_):
     def returner(*args):
         return input_
@@ -563,4 +551,4 @@ def envelop_int(string, pre, post):
 # never called, just to remove the unused warnings for imports
 def unused_user():
     _ = np.array([1, 2])
-    _ = GM_MF.dotprod([1, 2, 3], [1, 2, 3])
+    _ = GM_MF.dotprod(np.array([1, 2, 3]), np.array([1, 2, 3]))

@@ -348,6 +348,14 @@ MI_MM_2
 -------
 Certain coupling maps require some additional information from oscillators which cannot be provided/determined by GMAP, or the coupling map itself. Therefore, the map for an oscillator must give it specifically for this coupling map (which is completely optional for a map to do). This error was triggered because the mentioned combination of maps is not supported.
 
+MI_MM_3
+-------
+Certain couplings maps might indicate they cannot be used for certain types of oscillators. Make sure you only use a map for its intended purpose!
+
+MI_MM_4
+-------
+Certain couplings maps might indicate they cannot be used for certain types of couplings. Make sure you only use a map for its intended purpose!
+
 
 **********************
 Codes starting with MD

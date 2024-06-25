@@ -238,13 +238,10 @@ def prep_coupling(Printer, RunPars, System):
     """
 
     for coupmapname, osclist in System.oscillators_ordered_coup.items():
-        if coupmapname is None:
-            continue
         oscixlist = System.oscillators_ordered_coup_ix[coupmapname]
         coupmap = RunPars.requested_pairmapdict[coupmapname]
         coupmap.code.GM_prep_coupling(
             Printer, coupmap, System, oscixlist, osclist)
-    return
 
 
 def calc_coupling(Printer, RunPars, System, outputs):
@@ -270,13 +267,10 @@ def calc_coupling(Printer, RunPars, System, outputs):
         contains hamiltonian and dipole arrays.
     """
 
-    for coupmapname, oscarr in System.coup_v_allpair.items():
-        oscarr_c = System.coup_v_allpair_c[coupmapname]
-        if coupmapname is None:
-            continue
+    for coupmapname in System.oscillators_ordered_coup.keys():
         coupmap = RunPars.requested_pairmapdict[coupmapname]
         coupmap.code.GM_calc_coupling(
-            Printer, coupmap, System, outputs["hamiltonian"], oscarr, oscarr_c)
+            Printer, coupmap, System, outputs["hamiltonian"])
 
 
 def generate_output_structures(RunPars, System):

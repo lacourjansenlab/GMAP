@@ -4,13 +4,11 @@ src/tools/PhysicsFunctions.py.
 
 Missing tests:
 
-(@ apr 29th '24):
-92-125, 144-149, 156-158, 163-172 (34 missed statements)
+(@ June 25th '24):
+113-147, 300-312  (27 missed statements)
 
-- [WIP] calc_frame not yet tested  (92-125)
-- [WIP] prep_coupling not yet populated/used  (144-149)
-- [WIP] calc_coupling not yet populated/used  (156-158)
-- generate_output_structures not yet tested (163-172)
+- [WIP] calc_frame not yet tested  (113-147)
+- generate_output_structures not yet tested (300-312)
 """
 
 # standard lib imports
@@ -223,12 +221,12 @@ def test_calc_coupling():
     Printer, RunPars, System, coupmap = prep_coupling_tests()
     GM_PF.prep_coupling(Printer, RunPars, System)
 
-    osclist = System.oscillators_ordered_coup["DipDip"]
+    # osclist = System.oscillators_ordered_coup["DipDip"]
     oscixlist = System.oscillators_ordered_coup_ix["DipDip"]
-    J = GM_PF.calc_coupling(
-        Printer, RunPars, System, oscixlist[0], osclist[0],
-        oscixlist[1], osclist[1]
-    )
+    coupmap.allpairs = [(oscixlist[0], oscixlist[1])]
+    outputs = {"hamiltonian": np.zeros((2, 2), dtype="float32")}
+    GM_PF.calc_coupling(Printer, RunPars, System, outputs)
+    J = outputs["hamiltonian"][1, 0]
 
     # d = r(1) - r(2) = (8,28,68) - (28,68,8) = (-20, -40, -40) (PBC!)
     # ir = 1/dot(d,d) = sqrt(1/3600) = 60
@@ -239,7 +237,8 @@ def test_calc_coupling():
     # J = 4PiEpsinv * -5.534156378600825e-6
     # J = 5034.11656 * -0.000005534156378600825
     # J = -0.0278595882711440427
-    assert round(J, 6) == round(-0.0278595882711440427, 6)
+    assert round(J, 6) == round(outputs["hamiltonian"][0, 1], 6)
+    assert round(J, 6) == round(np.float32(-0.0278595882711440427), 6)
 
 
 def get_System_1():

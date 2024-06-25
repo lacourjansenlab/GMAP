@@ -170,9 +170,9 @@ def GM_pre_run(Printer, Map, Syst):
     setattr(Map, "dipole_pos_arr", np.zeros((Syst.nosc, 3), dtype="float32"))
 
     # change dtype of allpair list to suit this map's needs.
-    setattr(Map, "allpairs", np.array(Map.allpairs, dtype='int32').T)
-    setattr(Map, "allpairs_c", np.ctypeslib.as_ctypes(
-        np.ravel(Map.allpairs)))
+    # setattr(Map, "allpairs", np.array(Map.allpairs, dtype='int32').T)
+    # setattr(Map, "allpairs_c", np.ctypeslib.as_ctypes(
+    #     np.ravel(Map.allpairs)))
 
 
 # A place to do things before the properties for this frame are being
