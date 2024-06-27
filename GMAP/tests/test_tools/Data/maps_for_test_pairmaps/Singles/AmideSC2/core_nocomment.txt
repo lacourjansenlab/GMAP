@@ -1,0 +1,32 @@
+
+
+functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+functional_group        [GLN]    CD  OE1  CG  NE2  HE21  HE22
+# functional_group_file   relats.txt
+
+# amideBB:
+# functional_group [all_prot_res] C O CA [all_prot_res] N H CA
+# functional_group_bonds  0-3   # what atom pairs should have bonds
+# requires_bonds  True # whether this map requires bond information. Setting this to false does nothing. Set it to True if bonds are needed, but not explicitly mentioned above. Can be omitted - if so, choice (true or false) will be implied from whether there are bonds specified for fgroups.
+
+
+used_atoms    0 1 2 3 4 5    # all atoms are relevant, the order is already fine.
+
+electrostatic_atoms    0 3   # Skinner uses only the C and N atoms.
+
+electrostatic_choice E       # V, E, or G
+
+frequency_gas_phase     1714
+frequency_data_file     Skinner.txt
+
+dipole_gas_phase        0.24
+dipole_data_file        [N/A]
+
+x_uvec    1-0
+y_uvec    3-0
+
+r_vec     1-0
+
+type   standard             # standard, linear
+
+

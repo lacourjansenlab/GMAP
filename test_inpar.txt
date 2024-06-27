@@ -12,10 +12,16 @@
 # topology_file  D:\Data\PhD\Tutorials\2N0A\md_0_1.tpr
 # trajectory_file  D:\Data\PhD\Tutorials\2N0A\md_0_1.xtc
 
+# topology_file D:\Data\PhD\Tutorials\C8S3\md_300_1ns_xtc4fs.tpr
+# trajectory_file D:\Data\PhD\Tutorials\C8S3\md_300_1ns_xtc4fs.gro
+
 
 verbose 4
 verbose_logfile 4
 maps_to_use   AmideSC
+couplings_to_use  None   :All
+couplings_to_use  DipDip  AmideSC:AmideSC
+
 output_format txt
 output_data dip ham
 prevent_overwrite False

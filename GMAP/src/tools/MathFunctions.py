@@ -38,6 +38,12 @@ def PBC_triclinic(vect, boxvects, boxvects_inv):
     return (unit_vec - np.floor(unit_vec + 0.5)) @ boxvects
 
 
+@njit
+def PBC_back2box(vect, boxvects):
+    half = np.float32(0.5)
+    return (vect - np.floor(vect + half)) @ boxvects
+
+
 # # currently unused - missing docstring
 # def PBC_diff_triclinic(vect1, vect2, boxvects, boxvects_inv):
 #     diff = vect1 - vect2

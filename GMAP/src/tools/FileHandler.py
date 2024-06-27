@@ -428,10 +428,9 @@ def write_output(RunPars, framenum, outputs):
         parameters.
     framenum : int
         The number of the frame currently being written
-    hamiltonian : `np.ndarray`
-        The computed hamiltonian for this frame.
-    dipoles : `np.ndarray`
-        The computed dipoles for this frame.
+    outputs : dict of str: `np.ndarray` pairs
+        The outputs the program is requested to generate. Currently
+        contains hamiltonian and dipole arrays.
     """
 
     framenum_arr = np.array([framenum], dtype='float32')
@@ -484,15 +483,19 @@ def write_single(RunPars, framenum, framenum_arr, fname, data):
     if "bin" in RunPars.output_format:
         with open(fname.parent / f"{fname.name}.bin", "ab") as fhand:
             framenum_arr.tofile(fhand)  # write frame number
-            data.tofile(fhand)  # write hamiltonian
+            data.tofile(fhand)  # write data itself (Ham or Dip or ...)
 
     if "txt" in RunPars.output_format:
         with open(
             fname.parent / f"{fname.name}.txt", "a", encoding='utf-8'
         ) as fhand:
             fhand.write(f"{framenum} ")  # write frame number
-            data = np.round(data, decimals=6)
-            data.tofile(fhand, sep=" ")  # write hamiltonian
+            # data = np.round(data, decimals=6)
+            decs = 6
+            data = np.rint(data*10**decs)/(10**decs)
+            # write data itself (Ham or Dip or ...)
+            # data.tofile(fhand, sep=" ", format="%#.6g")
+            data.tofile(fhand, sep=" ")
             fhand.write("\n")
 
 

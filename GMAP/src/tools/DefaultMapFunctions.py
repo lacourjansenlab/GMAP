@@ -50,6 +50,21 @@ def get_post_run():
     return does_nothing
 
 
+def get_change_coup_type(name):
+    # yes, here we have call - there's a def inside returns_input.
+    return returns_input(name)
+
+
+def get_prep_coupling():
+    return does_nothing
+
+
+def get_str_osc():
+    def base_str_getter(Syst, Map, osc):
+        return f"living on residue number {Syst.resnums[osc.used_atoms[0]]}"
+    return base_str_getter
+
+
 def get_get_VEG_ref(Printer, map_):
     """Creates the function GM_get_VEG_ref.
 
@@ -60,7 +75,7 @@ def get_get_VEG_ref(Printer, map_):
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     Returns
@@ -154,7 +169,7 @@ def VEG_from_position(Printer, map_, details):
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
     details : list of str
         The string(s) explaining what to do. Ints will be converted to
@@ -199,7 +214,7 @@ def get_get_dipole_dir(Printer, map_):
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     returns
@@ -221,7 +236,8 @@ def get_get_dipole_dir(Printer, map_):
     # Move vector back into the box, and normalize
     codestring += "    r_vec = (r_vec - np.floor(r_vec + 0.5))\n"
     codestring += "    r_vec = r_vec @ Syst.boxvects\n"
-    codestring += "    r_vec /= GM_MF.vec3_len(r_vec)\n\n"
+    codestring += "    r_vec /= GM_MF.vec3_len(r_vec)\n"
+    codestring += "    r_vec = r_vec.astype('float32')\n\n"
 
     # find position of the dipole
     codestring += "    r_pos = " + envelop_int(
@@ -230,6 +246,7 @@ def get_get_dipole_dir(Printer, map_):
     ) + "\n"
     codestring += "    r_pos = (r_pos - np.floor(r_pos + 0.5))\n"
     codestring += "    r_pos = r_pos @ Syst.boxvects\n"
+    codestring += "    r_pos = r_pos.astype('float32')\n\n"
     codestring += "    return r_vec, r_pos\n"
 
     try:
@@ -276,7 +293,7 @@ def get_get_rotation_matrix(Printer, map_):
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     returns
@@ -358,7 +375,7 @@ def get_calculate_dipole(map_):
 
     parameters
     ----------
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     returns
@@ -371,6 +388,7 @@ def get_calculate_dipole(map_):
     def GM_get_dipole_vmag(Printer, Map, Syst, osc):
         r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
         r_vec *= Map.code.GM_get_dipole_mag(Printer, Map, Syst, osc)
+        r_vec = r_vec.astype("float32")
         return r_vec, r_pos
 
     # the version when we are working with a separate x, y, z component
@@ -405,7 +423,7 @@ def get_calculate_frequency(map_):
 
     parameters
     ----------
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
     returns
@@ -442,6 +460,12 @@ def does_nothing(*args):
 
 def returns_last(*args):
     return args[-1]
+
+
+def returns_input(input_):
+    def returner(*args):
+        return input_
+    return returner
 
 
 def uses_maps(gas_freq, VEG, mapconsts):
@@ -527,4 +551,4 @@ def envelop_int(string, pre, post):
 # never called, just to remove the unused warnings for imports
 def unused_user():
     _ = np.array([1, 2])
-    _ = GM_MF.dotprod([1, 2, 3], [1, 2, 3])
+    _ = GM_MF.dotprod(np.array([1, 2, 3]), np.array([1, 2, 3]))

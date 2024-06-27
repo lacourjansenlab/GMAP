@@ -97,6 +97,9 @@ class Printer:
             self.verbose = 3
             self.verbose_logfile = 4
             self.program_state = "running"
+
+        # create the file (clear it if it exists). File equivalent of
+        # creating an empty list.
         with open(self.logfile, "w") as _:
             pass
 

@@ -32,7 +32,7 @@ class TestVClib:
         cmdline = ["-md", "maps\\;"]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter("AmideSC", cmdline)
 
         VEGlib = GM_CL.VEG_CLib(Printer, RunPars)
@@ -92,7 +92,7 @@ class TestVClib:
         cmdline = ["-md", "maps\\;"]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter("AmideSC", cmdline)
         RunPars.VEG_clib_file = (
             RunPars.VEG_clib_file.parent / "doesntexist.txt")
