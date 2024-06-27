@@ -276,8 +276,8 @@ def get_get_dipole_mag():
         if Map.Core.dipole_data_array is not None:
             return uses_maps(
                 Map.Core.dipole_gas_phase,
-                osc.VEGout,
-                Map.Core.dipole_data_array
+                [osc.VEGout],
+                [Map.Core.dipole_data_array]
             )
         else:
             return Map.Core.dipole_gas_phase
@@ -396,7 +396,7 @@ def get_calculate_dipole(map_):
     def GM_get_dipole_vxyz(Printer, Map, Syst, osc):
         _, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
         xyz = [
-            uses_maps(omega, osc.VEGout, arr) for omega, arr in zip(
+            uses_maps(omega, [osc.VEGout], [arr]) for omega, arr in zip(
                 Map.Core.dipole_gas_phase, Map.Core.dipole_data_array)
         ]
         xyz_local = np.array(xyz, dtype="float32")
@@ -432,21 +432,42 @@ def get_calculate_frequency(map_):
         The function that every oscillator will call to get its frequency
     """
 
-    def GM_calculate_freq_VEG(Printer, Map, Syst, osc):
-        freq = uses_maps(
-            Map.Core.frequency_gas_phase, osc.VEGout,
-            Map.Core.frequency_data_array
-        )
-
-        return freq
-
     def GM_calculate_freq_base(Printer, Map, Syst, osc):
         return Map.Core.frequency_gas_phase
 
-    if map_.Core.frequency_data_array is None:
-        return GM_calculate_freq_base
+    def GM_calculate_freq_VEG_lin(Printer, Map, Syst, osc):
+        freq = uses_maps(
+            Map.Core.frequency_gas_phase, [osc.VEGout],
+            [Map.Core.frequency_data_array_linear]
+        )
+        return freq
+
+    def GM_calculate_freq_VEG_quad(Printer, Map, Syst, osc):
+        freq = uses_maps(
+            Map.Core.frequency_gas_phase, [osc.VEGout],
+            [Map.Core.frequency_data_array_quadratic]
+        )
+        return freq
+
+    def GM_calculate_freq_VEG_both(Printer, Map, Syst, osc):
+        freq = uses_maps(
+            Map.Core.frequency_gas_phase,
+            [osc.VEGout, osc.VEGout**2],
+            [
+                Map.Core.frequency_data_array_linear,
+                Map.Core.frequency_data_array_quadratic]
+        )
+        return freq
+
+    if map_.Core.frequency_data_array_linear is None:
+        if map_.Core.frequency_data_array_quadratic is None:
+            return GM_calculate_freq_base
+        else:
+            return GM_calculate_freq_VEG_quad
+    elif map_.Core.frequency_data_array_quadratic is None:
+        return GM_calculate_freq_VEG_lin
     else:
-        return GM_calculate_freq_VEG
+        return GM_calculate_freq_VEG_both
 
 
 # ------------------------
@@ -468,8 +489,11 @@ def returns_input(input_):
     return returner
 
 
-def uses_maps(gas_freq, VEG, mapconsts):
-    return gas_freq + np.sum(np.multiply(VEG, mapconsts))
+def uses_maps(gas_freq, VEGs, mapconsts_list):
+    freq = gas_freq
+    for VEG, mapconsts in zip(VEGs, mapconsts_list):
+        freq += np.sum(np.multiply(VEG, mapconsts))
+    return freq
 
 # ------------------------
 # Useful tools

@@ -31,4 +31,4 @@ type standard
 dipole_gas_phase       11.4
 
 frequency_gas_phase    19420
-# frequency_data_file    
+# frequency_data_file_linear    

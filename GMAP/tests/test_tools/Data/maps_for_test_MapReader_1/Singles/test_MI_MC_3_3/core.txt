@@ -12,7 +12,7 @@ VEG_reference CoM 2 3
 dipole_gas_phase      0.3
 
 frequency_gas_phase   1234
-frequency_data_file   doesntexist.txt
+frequency_data_file_linear   doesntexist.txt
 
 
 

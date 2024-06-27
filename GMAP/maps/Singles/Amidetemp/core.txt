@@ -80,7 +80,7 @@ local_atoms  0 1 2 3 4
 # ------------------------
 
 frequency_gas_phase     1714
-frequency_data_file     Skinner.txt
+frequency_data_file_linear     Skinner.txt
 
 # ------------------------
 

@@ -1137,7 +1137,8 @@ class SingleCore():
             return
 
         (
-            self.frequency_gas_phase, self.frequency_data_array
+            self.frequency_gas_phase, self.frequency_data_array_linear,
+            self.frequency_data_array_quadratic,
         ) = self.parse_frequency(Printer, rawcore, Map.directory)
         if not self.success:
             return
@@ -2069,11 +2070,52 @@ class SingleCore():
             What the base value for the frequency should be. The program
             can either use this as-is, or in combination with the contents
             from a given file.
-        fdata : `np.ndarray` or None
+        linear_array : `np.ndarray` or None
             An array of shape (n_estatic_ats, 10),
             with padded zeros for any columns that are not required.
-            If the parameter 'frequency_data_file' does not occur in the file
-            core.txt, None is returned instead.
+            If the parameter 'frequency_data_file_linear' does not occur
+            in the file core.txt, None is returned instead.
+        quadratic_array : `np.ndarray` or None
+            An array of shape (n_estatic_ats, 10),
+            with padded zeros for any columns that are not required.
+            If the parameter 'frequency_data_file_quadratic' does not occur
+            in the file core.txt, None is returned instead.
+        """
+
+        frequency_gas_phase = self.parse_frequency_gas_phase(
+            Printer, rawcore, mapdir)
+        if not self.success:
+            return frequency_gas_phase, None, None
+
+        linear_array = self.parse_frequency_data_file(
+            Printer, rawcore, mapdir, "frequency_data_file_linear")
+        if not self.success:
+            return frequency_gas_phase, linear_array, None
+
+        quadratic_array = self.parse_frequency_data_file(
+            Printer, rawcore, mapdir, "frequency_data_file_quadratic")
+
+        return frequency_gas_phase, linear_array, quadratic_array
+
+    def parse_frequency_gas_phase(self, Printer, rawcore, mapdir):
+        """Parse the choice for the gas phase frequency
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        rawcore : dict of str - list of str pairs
+            The raw contents of the file core.txt
+        mapdir : pathlib.Path
+            The path to the directory in which the map is defined.
+
+        Returns
+        -------
+        frequency_gas_phase : `np.float32`
+            What the base value for the frequency should be. The program
+            can either use this as-is, or in combination with the contents
+            from a given file.
         """
 
         if "frequency_gas_phase" not in rawcore:
@@ -2084,7 +2126,7 @@ class SingleCore():
                 "MI_MC_6"
             )
             self.success = False
-            return None, None
+            return None
 
         try:
             frequency_gas_phase = np.float32(rawcore["frequency_gas_phase"][0])
@@ -2097,16 +2139,42 @@ class SingleCore():
                 "MI_MC_7", exception=ex
             )
             self.success = False
-            return None, None
+            return None
+        return frequency_gas_phase
+
+    def parse_frequency_data_file(self, Printer, rawcore, mapdir, parname):
+        """Parse the choice for the gas phase frequency
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        rawcore : dict of str - list of str pairs
+            The raw contents of the file core.txt
+        mapdir : pathlib.Path
+            The path to the directory in which the map is defined.
+        parname : str
+            The name of the parameter used for referring to the file
+            with constants.
+
+        Returns
+        -------
+        array : `np.ndarray` or None
+            An array of shape (n_estatic_ats, 10),
+            with padded zeros for any columns that are not required.
+            If the parameter `parname` does not occur
+            in the file core.txt, None is returned instead.
+        """
 
         # dependence on electrostatics is given by the other parameter,
         # frequency_data_file.
         # it can give a single VEG matrix (for magnitude).
-        if "frequency_data_file" not in rawcore:
-            # This is actually completely fine. The frequency moment does not
+        if parname not in rawcore:
+            # This is actually completely fine. The frequency does not
             # need to depend on the electrostatics. In that case, we only need
             # a single value.
-            return frequency_gas_phase, None
+            return None
 
         # ---------------------------------------------------------------------
 
@@ -2114,11 +2182,11 @@ class SingleCore():
         # electrostatics from the environment.
 
         # now, the parameter  "frequency_data_file" exists.
-        if rawcore["frequency_data_file"][0] == "[N/A]":
-            return frequency_gas_phase, None
+        if rawcore[parname][0] == "[N/A]":
+            return None
 
         # if the parameter exists, but the specified file does not:
-        fname = (mapdir / rawcore["frequency_data_file"][0]).resolve()
+        fname = (mapdir / rawcore[parname][0]).resolve()
         if not fname.is_file():
             Printer.warning(
                 f"\nThe file {mapdir / 'core.txt'} wants to use the file "
@@ -2128,7 +2196,7 @@ class SingleCore():
                 "MI_MC_3"
             )
             self.success = False
-            return None, None
+            return None
 
         try:
             fdata = np.genfromtxt(
@@ -2141,7 +2209,7 @@ class SingleCore():
                 "MI_MC_7", exception=ex
             )
             self.success = False
-            return frequency_gas_phase, None
+            return None
 
         # numpy read was succesfull, now to see whether the dimensions of the
         # array from the file are correct.
@@ -2158,9 +2226,9 @@ class SingleCore():
         array = self.confirm_array_size(
             Printer, fdata, deswidth, desheight, fname)
         if not self.success:
-            return frequency_gas_phase, None
+            return None
 
-        return frequency_gas_phase, array
+        return array
 
     def confirm_array_size(self, Printer, array, deswidth, desheight, fname):
         """Makes sure that the array from the file is of the correct shape.

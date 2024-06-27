@@ -605,7 +605,7 @@ frequency_gas_phase
 
 Similar to dipoles, the oscillation frequency of oscillators is a key property for the program. This parameter specifies the (base) oscillation frequency, typically the one measured when the oscillator in question is in the gas phase. The units used are wavenumbers, and it is provided using a single decimal number, much like the dipole_gas_phase.
 
-If the frequency can vary, you should also make use of the parameter frequency_data_file.
+If the frequency can vary, you should also make use of the parameter frequency_data_file_linear (for a linear dependence) or frequency_data_file_quadratic (for a dependence on the square of the potential/field/gradient).
 
 A basic example with just the gas phase::
 
@@ -623,9 +623,9 @@ A basic example with just the gas phase::
     frequency_gas_phase     1400
 
 
-*******************
-frequency_data_file
-*******************
+**************************
+frequency_data_file_linear
+**************************
 
 *optional parameter*
 
@@ -642,6 +642,29 @@ The formula/method used for calculating the dependence of frequency on the elecc
 Here, :math:`\omega_{gas}` is the gas phase frequency - the frequency in the absence of any electrostatic environment. This value is provided to the program through the parameter 'frequency_gas_phase'. :math:`V_n` is the electrostatic potential felt by atom :math:`n`, where :math:`n` loops over the atoms listed using the parameter 'electrostatic_atoms', while :math:`c_{V_n}` are the potential coefficients provided by the map. Similarly, :math:`\vec{E}_{n,i}` is the electric field felt by atom :math:`n`, in direction :math:`i` (loops over the directions provided under 'xyz_uvec'), while :math:`c_{E_{n,i}}` are the field coefficients provided by the map. In much the same way, :math:`\vec{G}_{n,i}` is the (flattened) elecric field gradient felt by atom :math:`n`, in direction :math:`i` (loops over the following combinations of directions provided under 'xyz_uvec': xx, yy, zz, xy, xz, yz), while :math:`c_{G_{n,i}}` are the gradient coefficients provided by the map.
 
 So, how does the map provide these coefficients? That is what the file specified through this parameter is for. The file contains a grid of coefficients, with a row for each atom listed under 'electrostatic_atoms', and at most 10 columns. The first column contains the potential coefficients, the next three contain the field coefficients (in order x, y, z), and the last six contain the gradient coefficients (in order xx, yy, zz, xy, xz, yz).
+
+If you specified 'G' as the choice for the parameter 'electrostatic_choice', all 10 columns must be present. They may contain zeros, but they must be there. If you specified 'E' as the choice for the parameter 'electrostatic_choice', the first 4 columns are mandatory. Any extras will be ignored. Similarly, if you specified 'V' as the choice for the parameter 'electrostatic_choice', only the first column must be present, and all others (if present) will be ignored.
+
+
+*****************************
+frequency_data_file_quadratic
+*****************************
+
+*optional parameter*
+
+This parameter can be used in conjunction with the parameter frequency_gas_phase, and is intended for when the frequency depends on the square of the electrostatic environment. This dependence is not used nearly as often as the normal linear one.
+
+.. tip::
+    This parameter uses x, y and z directions. These are assumed local to the oscillator at the moment its frequency is determined (so, within a single frame), unless stated otherwise.
+
+The formula/method used for calculating the dependence of frequency on the elecctrostatic environment can be expanded with the quadratic terms:
+
+.. math::
+    frequency = \omega_{gas} + \sum_n(V_n*c_{V_n} + \sum_i(\vec{E}_{n,i} * c_{E_{n,i}}) + \sum_i(\vec{G}_{n,i} * c_{G_{n,i}})) + \sum_n({{V_n}^2}*c_{V_n} + \sum_i(\vec{{{E}_{n,i}}^2} * c_{E_{n,i}}) + \sum_i(\vec{{{G}_{n,i}}^2} * c_{G_{n,i}}))
+
+The symbols here still mean the same: :math:`\omega_{gas}` is the gas phase frequency - the frequency in the absence of any electrostatic environment. This value is provided to the program through the parameter 'frequency_gas_phase'. :math:`V_n` is the electrostatic potential felt by atom :math:`n`, where :math:`n` loops over the atoms listed using the parameter 'electrostatic_atoms', while :math:`c_{V_n}` are the potential coefficients provided by the map. Similarly, :math:`\vec{E}_{n,i}` is the electric field felt by atom :math:`n`, in direction :math:`i` (loops over the directions provided under 'xyz_uvec'), while :math:`c_{E_{n,i}}` are the field coefficients provided by the map. In much the same way, :math:`\vec{G}_{n,i}` is the (flattened) elecric field gradient felt by atom :math:`n`, in direction :math:`i` (loops over the following combinations of directions provided under 'xyz_uvec': xx, yy, zz, xy, xz, yz), while :math:`c_{G_{n,i}}` are the gradient coefficients provided by the map.
+
+The map provides these coefficients just like the linear ones, in a separate file, specified using this parameter. The file contains a grid of coefficients, with a row for each atom listed under 'electrostatic_atoms', and at most 10 columns. The first column contains the potential coefficients, the next three contain the field coefficients (in order x, y, z), and the last six contain the gradient coefficients (in order xx, yy, zz, xy, xz, yz).
 
 If you specified 'G' as the choice for the parameter 'electrostatic_choice', all 10 columns must be present. They may contain zeros, but they must be there. If you specified 'E' as the choice for the parameter 'electrostatic_choice', the first 4 columns are mandatory. Any extras will be ignored. Similarly, if you specified 'V' as the choice for the parameter 'electrostatic_choice', only the first column must be present, and all others (if present) will be ignored.
 
