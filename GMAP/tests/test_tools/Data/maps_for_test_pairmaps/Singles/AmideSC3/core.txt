@@ -67,7 +67,7 @@ electrostatic_choice E   # V, E, or G
 # ------------------------
 
 frequency_gas_phase     1714
-frequency_data_file     Skinner.txt
+frequency_data_file_linear     Skinner.txt
 
 # ------------------------
 

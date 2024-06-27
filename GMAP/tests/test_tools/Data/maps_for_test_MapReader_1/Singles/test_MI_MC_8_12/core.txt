@@ -13,7 +13,7 @@ dipole_gas_phase      0.3 0.2 0.1
 dipole_data_file      magnitude dipolemap.txt
 
 frequency_gas_phase   1234
-frequency_data_file   freqmap.txt
+frequency_data_file_linear   freqmap.txt
 
 
 

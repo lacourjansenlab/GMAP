@@ -384,7 +384,7 @@ def placeholder_GM_calculate_dipole(Printer, Map, Syst, osc):
 
 def placeholder_GM_calculate_frequency(Printer, Map, Syst, osc):
     return Map.Core.frequency_gas_phase + np.sum(np.multiply(
-        osc.VEGout, Map.Core.frequency_data_array))
+        osc.VEGout, Map.Core.frequency_data_array_linear))
 
 
 # !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!

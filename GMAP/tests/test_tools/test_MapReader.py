@@ -1471,12 +1471,15 @@ class TestSingleCore:
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
             Printer, map_, finish_before="frequency")
-        freq_gas, freq_arr = CoreBase.parse_frequency(
+        freq_gas, freq_arr_lin, freq_arr_quad = CoreBase.parse_frequency(
             Printer, map_.rawcore, map_.directory)
         assert freq_gas == np.float32(1234)
-        assert np.all(freq_arr == np.array([
+        assert np.all(freq_arr_lin == np.array([
             [0, 1, 2, 3, 0, 0, 0, 0, 0, 0],
             [5, 6, 7, 8, 0, 0, 0, 0, 0, 0]]))
+        assert np.all(freq_arr_quad == np.array([
+            [1, 2, 3, 4, 0, 0, 0, 0, 0, 0],
+            [6, 7, 8, 9, 0, 0, 0, 0, 0, 0]]))
 
         # ------------
 
@@ -1495,10 +1498,10 @@ class TestSingleCore:
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
             Printer, map_, finish_before="frequency")
-        freq_gas, freq_arr = CoreBase.parse_frequency(
+        freq_gas, freq_arr_lin, freq_arr_quad = CoreBase.parse_frequency(
             Printer, map_.rawcore, map_.directory)
         assert freq_gas == np.float32(1234)
-        assert freq_arr is None
+        assert freq_arr_lin is None
 
         # ------------
 
@@ -1517,10 +1520,10 @@ class TestSingleCore:
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
             Printer, map_, finish_before="frequency")
-        freq_gas, freq_arr = CoreBase.parse_frequency(
+        freq_gas, freq_arr_lin, freq_arr_quad = CoreBase.parse_frequency(
             Printer, map_.rawcore, map_.directory)
         assert freq_gas == np.float32(1234)
-        assert np.all(freq_arr == np.arange(10, dtype="float32"))
+        assert np.all(freq_arr_lin == np.arange(10, dtype="float32"))
 
     def test_MI_MC_1(self, capfd):
         self.basis_test_MI_MC("MI_MC_1", capfd, finish_before="used_atoms")
@@ -1999,10 +2002,11 @@ def basic_setup_core(Printer, map_, finish_before=None):
     if finish_before == "frequency":
         return CoreBase
 
-    freqgas, arr = CoreBase.parse_frequency(
+    freqgas, arr_lin, arr_quad = CoreBase.parse_frequency(
         Printer, map_.rawcore, map_.directory)
     setattr(CoreBase, "frequency_gas_phase", freqgas)
-    setattr(CoreBase, "frequency_data_array", arr)
+    setattr(CoreBase, "frequency_data_array_linear", arr_lin)
+    setattr(CoreBase, "frequency_data_array_quadratic", arr_quad)
 
     if finish_before == "end":  # so we can ctrl+F later
         return CoreBase
