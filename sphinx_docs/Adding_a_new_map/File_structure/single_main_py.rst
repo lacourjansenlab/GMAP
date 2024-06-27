@@ -1,10 +1,18 @@
-
+.. _AddMap_FileStruct_SingMainPy:
 
 #######
 main.py
 #######
 
+(this applies to singles maps. If you are looking for pairs maps instead, go to :ref:`the pairs version of this page.<AddMap_FileStruct_PairMainPy>)
+
 This file contains the code for the map. A map does not need to have any code - this file does not have to exist. If it does, there are a few functions the program will look for. If they are missing, that is no issue, but their names should not be used for any other purpose.
+
+The file can contain other functions (or even call functions from other files in the map directory), to allow for writing any kind of code yourself. However, creating your own new function (or class/variable/module) names has a danger - if the program assumes any of them to have a special meaning, the code may function differently than expected. In order to avoid any name clashes, you should avoid any of the following (categories of) names:
+
+- Names starting with "GM\_" - These are reserved for functions expected by GMAP. Even if a name starting with GM\_ isn't used by the program yet, it might be in the future, so its best practice to just avoid them in general.
+- Names starting with "CP\_" - These are reserved for coupling maps. A coupling map might need more information from a single oscillator, which can be retrieved by using these kinds of functions.
+- Any of the names that should be avoided courtesy of general coding good practices.
 
 
 ***************
@@ -15,7 +23,7 @@ There are a few objects that occur quite often as an argument for these function
 
 Map
 =====
-An instance of :class:`~GMAP.src.tools.MapReader.Map`. Stores all information of this class. This is the most important object, as it stores everything related to this class. As functions of the map can change how the map is registered, this object will look different during the different functions. Here is an overview of all attributes the class can have, at each function it will be explained/highlighted what attributes are available at that point.
+An instance of :class:`~GMAP.src.tools.MapReader.SingleMap`. Stores all information of this class. This is the most important object, as it stores everything related to this class. As functions of the map can change how the map is registered, this object will look different during the different functions. Here is an overview of all attributes the class can have, at each function it will be explained/highlighted what attributes are available at that point.
 
 It is probable that the map wants to save information between functions, too, just like the main program. These data structures must be saved as an attribute to the instance of the class, as per good coding practices. This overview of attributes should help indicate what names are and aren't available.
 
@@ -34,16 +42,22 @@ It is probable that the map wants to save information between functions, too, ju
   .. tip:: self.RunPars also has a reference to the main-program RunPars - it is stored as self.RunPars.MainRunPars.
 - self.code (type module) contains all functions defined in main.py. Any functions that the program needs, but are not specified in main.py are automatically filled in. Any object that the program does not require, but is still there, is also available.
 - self.rawcore (type dict of str-list pairs) contains the information from core.txt, before parsing. The function GM_adjust_map_core_raw can change this simple structure before it is being parsed into more complex structures and functions later.
-- self.Core (type :class:`~GMAP.src.tools.MapReader.Core`) contains the information from core.txt, after parsing.
+- self.Core (type :class:`~GMAP.src.tools.MapReader.SingleCore`) contains the information from core.txt, after parsing.
 
 
 Files
 ======
 An instance of :class:`~GMAP.src.tools.FileHandler.FileLocations`. Stores filepaths and such.
 
+
 Printer
 =======
 An instance of :class:`~GMAP.src.tools.PrintTools.Printer`. Manages prints. If the function needs to throw an error or print something else, this is the class to use.
+
+
+Syst
+====
+An instance of :class:`~GMAP.src.tools.SystemReader.System`. Stores all available information about the MD system used. Think atom-based information on it's name, element, type, the name and number of its residue, molecule, segment. Also charges, positions, masses and such are in here. 
 
 
 *************************
@@ -181,6 +195,10 @@ Please do note that when using different 'kinds' of oscillator, this method is n
 A functional group is fully symmetrical
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The CystBridge map is an example of this. It is a map spanning two residues, but the two residues are functionally identical - the selection language does not allow to distinguish them. This means that every oscillator is found twice - once listing first A, then B, and once listing first B, then A. Here, A denotes the residue with the smallest atomic indices, B the one with the largest. This function can, in that case, be used to remove the BA instances, and only keep the AB ones.
+
+A single functional group actually contains two oscillators
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The water map is a good example of this. The map is designed such that two oscillators should be put in the hamiltonian for each water molecule. This function allows the map to return both, back to back.
 
 
 Available attributes of Map
@@ -492,6 +510,57 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 
+GM_str_osc(Syst, Map, osc)
+==========================
+
+Returns the (human-readable) string representation of an oscillator of this type.
+
+This function is used whenever the program needs to report some information about an oscillator to the user. This could either be as part of an error warning, or as general reporting (legend of the output files, what each oscillator actually looks like).
+By default (if this function is not present) this representation is the following: ``Oscillator of type [mapname] living on residue number [resnum]``. Here, ``[mapname]`` will be replaced by the program with the actual name of the map the oscillator belongs to, and ``[resnum]`` will be replaced with the residue number of the first atom (in ``used_atoms``) of the oscillator.
+
+
+Example uses
+------------
+
+Clearly indicating an oscillator
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The default is very generic, and should give some information to identify an oscillator. However, for some kinds of oscillator, this information might not be sufficient, or hard to interpret. For example, any protein-related maps will most likely want to print the residue name along with its number, as that is how literature usually refers to them. 
+ 
+
+Available attributes of Map
+---------------------------
+
+.. hlist::
+    :columns: 4
+
+    * self.directory
+    * self.corepath
+    * self.name
+    * self.type
+    * self.success
+    * self.avail_files
+    * self.RefPars
+    * self.DefPars
+    * self.InPars
+    * self.CmdPars
+    * self.RunPars
+    * self.code
+    * self.rawcore
+    * self.Core
+
+
+Parameters
+----------
+Syst : :class:`~GMAP.src.tools.SystemReader.System`
+    The object that stores everyting the program currently knows about the MD system.
+Map : :class:`~GMAP.src.tools.MapReader.Map`
+    The object that stores everything the program currently knows
+    about this map.
+osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+    The oscillator for which the rotation matrix should be determined.
+
+
+
 GM_get_rotation_matrix(Printer, Map, Syst, osc)
 ===============================================
 
@@ -564,6 +633,9 @@ GM_get_dipole_dir(Printer, Map, Syst, osc)
 
 Returns the direction of the dipole vector and its position in cartesian coordinates.
 
+.. caution::
+    This function is expected to return a normalized vector for the dipole moment - it's length should be 1!
+
 .. tip::
     In order to arrive at the correct result, this function should take into account the PBC. More information on PBC can be found :ref:`in the theory section<Theory_page_PBC>`. To help, the oscillator object provided has the attribute osc.positions_box - this array contains the positions of all atoms in used_atoms, transposed to box coordinates. To convert the final answer back to cartesian coordinates, multiply it with System.boxvects.
 
@@ -615,9 +687,9 @@ osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
 Returns
 -------
 r_vec : `np.ndarray`
-    The vector that represents the direction of the dipole moment of this oscillator. It should have the dtype `float32`, and the vector should be normalized.
+    The (length-3) vector that represents the direction of the dipole moment of this oscillator. It should have the dtype `float32`, and the vector must be normalized.
 r_pos : `np.ndarray`
-    The position at which the dipole vector lies.
+    The (length-3) position vector at which the dipole vector lies. The vector must lie within the simulation box.
 
 
 
@@ -796,10 +868,8 @@ osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
 
 Returns
 -------
-r_vec : `np.ndarray`
-    The vector that represents the dipole moment of this oscillator. It should have the dtype `float32`, and the vector should be normalized.
-r_pos : `np.ndarray`
-    The position at which the dipole vector lies.
+freq : float
+    The frequency at which this oscillator is expected to absorb.
 
 
 

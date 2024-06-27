@@ -1,0 +1,6 @@
+
+
+require_keywords    scalar1
+
+
+require_mapfuncs      get_scalar2

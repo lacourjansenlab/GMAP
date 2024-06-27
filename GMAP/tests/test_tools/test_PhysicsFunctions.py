@@ -4,21 +4,24 @@ src/tools/PhysicsFunctions.py.
 
 Missing tests:
 
-(@ apr 29th '24):
-92-116, 133, 137, 141-150 (22 missed statements)
+(@ June 25th '24):
+113-147, 300-312  (27 missed statements)
 
-- [WIP] calc_frame not yet tested  (92-116)
-- [WIP] prep_coupling not yet populated/used  (133)
-- [WIP] calc_coupling not yet populated/used  (137)
-- generate_output_structures not yet tested (141-150)
+- [WIP] calc_frame not yet tested  (113-147)
+- generate_output_structures not yet tested (300-312)
 """
+
+# standard lib imports
+from pathlib import Path
 
 # 3rd party imports
 import numpy as np
 
 # local imports
 from .test_SystemReader import parameter_getter
+from . import test_MapReader as tMR
 # import GMAP.src.tools.CLibLoader as GM_CL
+from GMAP.src.tools import MapReader as GM_MR
 from GMAP.src.tools import PhysicsFunctions as GM_PF
 
 
@@ -98,7 +101,7 @@ def test_calc_dipole_xyz():
     cmdline = ["--verbose", "4"]
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter("test_calc_dipoles_xyz", cmdline)
 
     System = get_System_1()
@@ -133,7 +136,7 @@ def test_calc_dipole_magnitude():
     cmdline = []
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter("test_calc_dipoles_magnitude", cmdline)
 
     System = get_System_1()
@@ -169,7 +172,7 @@ def test_calc_frequency():
     cmdline = []
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter("test_calc_dipoles_magnitude", cmdline)
 
     System = get_System_1()
@@ -193,6 +196,49 @@ def test_calc_frequency():
     #       = 1200 + 0.14 + 0.38  = 1200.52
 
     assert freq == np.float32(1200.52)
+
+
+def test_prep_coupling():
+    Printer, RunPars, System, coupmap = prep_coupling_tests()
+    GM_PF.prep_coupling(Printer, RunPars, System)
+
+    # the prepared r_vec should be the same as the one calculated by
+    # (test)_calc_dipole(_magnitude)
+    r_vec_ans = np.array(
+        [0.473427220735493126, 0.473427220735493126, 0.473427220735493126],
+        dtype="float32").round(6)
+    assert np.all(coupmap.dipole_vec_arr[0].round(6) == r_vec_ans)
+    assert np.all(coupmap.dipole_vec_arr[1].round(6) == r_vec_ans)
+
+    # The position should be the same, too, but now in box coords
+    assert np.all(coupmap.dipole_pos_arr[0].round(4) == np.array(
+        [0.08, 0.28, -0.32], dtype="float32"))
+    assert np.all(coupmap.dipole_pos_arr[1].round(4) == np.array(
+        [0.28, -0.32, 0.08], dtype="float32"))
+
+
+def test_calc_coupling():
+    Printer, RunPars, System, coupmap = prep_coupling_tests()
+    GM_PF.prep_coupling(Printer, RunPars, System)
+
+    # osclist = System.oscillators_ordered_coup["DipDip"]
+    oscixlist = System.oscillators_ordered_coup_ix["DipDip"]
+    coupmap.allpairs = [(oscixlist[0], oscixlist[1])]
+    outputs = {"hamiltonian": np.zeros((2, 2), dtype="float32")}
+    GM_PF.calc_coupling(Printer, RunPars, System, outputs)
+    J = outputs["hamiltonian"][1, 0]
+
+    # d = r(1) - r(2) = (8,28,68) - (28,68,8) = (-20, -40, -40) (PBC!)
+    # ir = 1/dot(d,d) = sqrt(1/3600) = 60
+    # fourPiEps_inv = 5034.11656
+    # J = 4PiEpsinv * dot(v1, v2)*ir3 - 3*dot(v1,d))*dot(v2,d)*ir5
+    # J = 4PiEpsinv * 3*0.4734...^2/60^3 - 3*100*0.4734...*100*0.4734.../60^5
+    # J = 4PiEpsinv * 3.1129629629629629511601e-6 - 8.6471193415637859754448e-6
+    # J = 4PiEpsinv * -5.534156378600825e-6
+    # J = 5034.11656 * -0.000005534156378600825
+    # J = -0.0278595882711440427
+    assert round(J, 6) == round(outputs["hamiltonian"][0, 1], 6)
+    assert round(J, 6) == round(np.float32(-0.0278595882711440427), 6)
 
 
 def get_System_1():
@@ -246,6 +292,7 @@ def get_oscillator_1():
     VEGout = np.array([[*range(10)]] * 2, dtype="float32")
     VEGout /= 100
     return EmptyClass(**{
+        "electrostatic_atoms": estat_ats,
         "electrostatic_atoms_c": np.ctypeslib.as_ctypes(estat_ats),
         "n_estatic_atoms": np.int32(2),
         "VEG_refpos_c": np.ctypeslib.as_ctypes(VEG_refpos),
@@ -254,3 +301,73 @@ def get_oscillator_1():
         "VEGout": VEGout,
         "VEGout_c": np.ctypeslib.as_ctypes(VEGout),
     })
+
+
+def get_oscillator_2():
+    estat_ats = np.array([2, 3], dtype="int32")
+    VEG_refpos = np.array([30, 70, 10], dtype="float32")
+    VEGout = np.array([[*range(10)]] * 2, dtype="float32")
+    VEGout /= 100
+    return EmptyClass(**{
+        "electrostatic_atoms": estat_ats,
+        "electrostatic_atoms_c": np.ctypeslib.as_ctypes(estat_ats),
+        "n_estatic_atoms": np.int32(2),
+        "VEG_refpos_c": np.ctypeslib.as_ctypes(VEG_refpos),
+        "local_atoms_c": np.ctypeslib.as_ctypes(estat_ats),
+        "n_local_atoms": np.int32(2),
+        "VEGout": VEGout,
+        "VEGout_c": np.ctypeslib.as_ctypes(VEGout),
+    })
+
+
+def prep_coupling_tests():
+    cmdline = []
+    inpardict = {
+        "map_directory": [
+            Path("../../maps"),
+            Path("Data/maps_for_test_MapReader_1")
+        ],
+        "maps_to_use": ["test_calc_dipoles_magnitude"],  # in data/testMR maps
+        "couplings_to_use": [["DipDip", ":All"]]  # in 'main' maps
+    }
+    (
+        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        CmdPars, singles_mapdict, pairs_mapdict
+    ) = tMR.basic_setup(cmdline, inpardict, finish_before="extract_code")
+
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
+    oscillators = [get_oscillator_1(), get_oscillator_2()]
+    for oscillator in oscillators:
+        # assign map to the oscillators
+        setattr(
+            oscillator, "Map", singles_mapdict["test_calc_dipoles_magnitude"])
+
+    GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
+
+    System = get_System_1()
+
+    for oscillator in oscillators:
+        # assign the positions to the oscillator
+        setattr(
+            oscillator, "positions_box",
+            System.positions[
+                oscillator.electrostatic_atoms] @ System.boxvects_inv)
+
+        # assign the correct rotation matrix to the oscillator
+        setattr(
+            oscillator, "rotation_matrix",
+            oscillator.Map.code.GM_get_rotation_matrix(
+                Printer, oscillator.Map, System, oscillator))
+
+        GM_PF.calc_dipole(Printer, System, oscillator)
+
+    setattr(System, "oscillators_ordered_coup", {
+        "DipDip": oscillators})
+    setattr(System, "oscillators_ordered_coup_ix", {
+        "DipDip": [0, 1]})
+    setattr(System, "nosc", len(oscillators))
+
+    coupmap = RunPars.requested_pairmapdict["DipDip"]
+    coupmap.code.GM_pre_run(Printer, coupmap, System)
+
+    return Printer, RunPars, System, coupmap

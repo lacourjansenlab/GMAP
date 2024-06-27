@@ -1,0 +1,3 @@
+# append_core doesn't exist
+
+add_corefile   this_file_doesnt_exist

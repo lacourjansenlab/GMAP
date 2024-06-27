@@ -110,7 +110,7 @@ class System:
         The indices of all atoms that should be considered influencers.
     nosc : int
         The amount of oscillators present in the system.
-    ordered_oscillators : dict of str: \
+    ordered_oscillators : dict of str: list of \
         :class:`~GMAP.src.tools.SystemReader.Oscillator` pairs
         All oscillators, but grouped by the map they belong to.
     """
@@ -123,7 +123,7 @@ class System:
         self.find_influencers(Printer, RunPars)
 
         self.find_oscillators(Files, Printer, RunPars)
-        self.order_oscillators()
+        self.order_oscillators(Printer, RunPars)
 
     def basic_boxchecks(self, Printer, RunPars):
         """Performs the first basic analyses on the provided universe.
@@ -232,13 +232,13 @@ class System:
 
         prevresnum = -1
         writeresnum = -1
-        for atomnum, ix in enumerate(self.atnums):
+        for ix, atomnum in enumerate(self.atnums):
             if atomnum != ix:
                 # yes, we could just force atomnum to match ix. But if this
                 # MD software does this differently, it might very well do
                 # other things differently as well, so please, check that!
                 Printer.warning(
-                    f"\nThe atom number of the atom at position {atomnum} "
+                    f"\nThe atom number of the atom at position {ix} "
                     "does "
                     "not match its position in the list.",
                     "MD_SU_4", True
@@ -435,7 +435,7 @@ class System:
         ----------
         struct : :class:`~GMAP.src.tools.MapReader.Structure`
             The structure template that will be matched.
-        map_ : :class:`~GMAP.src.tools.MapReader.Map`
+        map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
             The map instance the structure belongs to.
 
         Returns
@@ -466,7 +466,8 @@ class System:
             # stick the different residues together, using the bonds.
             all_oscillators = self.match_residues(all_oscillators, struct)
 
-        all_oscillators = [Oscillator(osc, map_) for osc in all_oscillators]
+        all_oscillators = [
+            Oscillator(self, osc, map_) for osc in all_oscillators]
         return all_oscillators
 
     def find_oscillators_residue(self, residue):
@@ -738,16 +739,117 @@ class System:
                 outlist.append(new_osc)
         return outlist
 
-    def order_oscillators(self):
-        """Sort all present oscillators by their map."""
+    def order_oscillators(self, Printer, RunPars):
+        """Sort all present oscillators by their map.
 
+        Parameters
+        ----------
+        RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+            The 'main' RunPars instance containing all the basic run-defining
+            parameters.
+        """
+
+        # for each singles map, determine which oscillators are treated
+        # by that map (no treated oscillators - not in the dict)
         self.oscillators_ordered = {}
-        for oscillator in self.oscillators:
+        self.oscillators_ordered_ix = {}
+        for oscix, oscillator in enumerate(self.oscillators):
+            setattr(oscillator, "oscix", oscix)
             mapname = oscillator.Map.name
             if mapname not in self.oscillators_ordered:
                 self.oscillators_ordered[mapname] = [oscillator]
+                self.oscillators_ordered_ix[mapname] = [oscix]
             else:
                 self.oscillators_ordered[mapname].append(oscillator)
+                self.oscillators_ordered_ix[mapname].append(oscix)
+
+        # # build a new coupling_v_pair_dict; this one only contains the
+        # # maps we actually need for this system (what if a requested
+        # # oscillator is not present in the system? those are left out)
+        # self.coupling_v_pair_dict = {}
+        # for coupmap, pairs in RunPars.coupling_v_pair_dict.items():
+        #     for pair in pairs:
+        #         if all(item in self.oscillators_ordered for item in pair):
+        #             if coupmap in self.coupling_v_pair_dict:
+        #                 self.coupling_v_pair_dict[coupmap].append(pair)
+        #             else:
+        #                 self.coupling_v_pair_dict[coupmap] = [pair]
+
+        # for each oscillator pair, determine which coupling map should
+        # treat it. That coupling map has the chance to change it.
+        coup_v_allpair = {}
+        for oscix1, osc1 in enumerate(self.oscillators):
+            for oscix2 in range(oscix1 + 1, self.nosc):
+                osc2 = self.oscillators[oscix2]
+                base_coupmap = None
+                req_coupmap = RunPars.pair_v_coupling_dict[
+                    (osc1.Map.name, osc2.Map.name)]
+                all_req_maps = [req_coupmap]
+                while base_coupmap != req_coupmap:
+                    base_coupmap = req_coupmap
+                    # ask the current map which map should actually be used
+                    coupmap = RunPars.requested_pairmapdict[base_coupmap]
+                    req_coupmap = coupmap.code.GM_change_coup_type(
+                        coupmap, self, oscix1, osc1, oscix2, osc2)
+                    if (
+                        req_coupmap in all_req_maps
+                        and req_coupmap != all_req_maps[-1]
+                    ):
+                        all_req_maps.append(req_coupmap)
+                        mapseq = ", ".join(all_req_maps)
+                        Printer.warning(
+                            "\nAn issue occurred when determining which "
+                            "coupling method should be used to couple the "
+                            "following two oscillators:\n"
+                            f"{osc1}\n{osc2}\nThe user requested to use "
+                            f"{all_req_maps[0]}, which started the following "
+                            f"circular chain: {mapseq}.\nThis might mean the "
+                            "choice of coupling was unsuitable, or there is "
+                            "a misstake in one of these maps.",
+                            "MD_SU_6", True
+                        )
+                    else:
+                        all_req_maps.append(req_coupmap)
+                if req_coupmap in coup_v_allpair:
+                    coup_v_allpair[req_coupmap].append((oscix1, oscix2))
+                else:
+                    coup_v_allpair[req_coupmap] = [(oscix1, oscix2)]
+
+        # if any pairs shouln't be coupled, remove the 'none' choice from the
+        # dict.
+        try:
+            del coup_v_allpair[None]
+        except Exception:
+            pass
+
+        # save each list of pairs to the map that should be coupling it.
+        for coupmapname, pairlist in coup_v_allpair.items():
+            coupmap = RunPars.requested_pairmapdict[coupmapname]
+            coupmap.allpairs = pairlist
+
+        # # for each coupling map, determine which oscillators are coupled
+        # # by that map (no coupled oscillators - not in the dict)
+        self.oscillators_ordered_coup = {}
+        self.oscillators_ordered_coup_ix = {}
+        for oscix, oscillator in enumerate(self.oscillators):
+            for coupmap, pairs in coup_v_allpair.items():
+                for pair in pairs:
+                    if oscix in pair:
+                        if coupmap not in self.oscillators_ordered_coup:
+                            self.oscillators_ordered_coup[coupmap] = [
+                                oscillator]
+                            self.oscillators_ordered_coup_ix[coupmap] = [oscix]
+                        else:
+                            self.oscillators_ordered_coup[coupmap].append(
+                                oscillator)
+                            self.oscillators_ordered_coup_ix[coupmap].append(
+                                oscix)
+                        # if this oscillator is part of this map, no need to
+                        # check the other pairs!
+                        break
+        for coupmapname, oscillators in self.oscillators_ordered_coup.items():
+            coupmap = RunPars.requested_pairmapdict[coupmapname]
+            coupmap.check_singles_2(Printer, RunPars, oscillators)
 
     def update_properties(self, Printer):
         """Reloads the frame-dependent properties of the system.
@@ -892,12 +994,12 @@ class Oscillator:
     atoms : list of int
         The indices of the atoms that make up this oscillator. All atoms
         specified in functional_group are in here.
-    map_ : :class:`~GMAP.src.tools.MapReader.Map`
+    map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map that this oscillator belongs to.
 
     Attributes
     ----------
-    Map : :class:`~GMAP.src.tools.MapReader.Map`
+    Map : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map that this oscillator belongs to.
     used_atoms : list of int
         Using Map.used_atoms - contains the system indices of the atoms
@@ -925,14 +1027,23 @@ class Oscillator:
     positions_box : `np.ndarray`
         The positions of all atoms given in used_atoms, in box
         coordinates.
-    VEG_refpos = `np.ndarray`
+    VEG_refpos : `np.ndarray`
         The position on which the sphere defining the electrostatics
         should be centered.
-    VEG_refpos_c = `ctypes.Array`
-        The c-friendly variant of self.VEG_refpos_c
+    VEG_refpos_c : `ctypes.Array`
+        The c-friendly variant of self.VEG_refpos_c.
+    oscix : int
+        The index of this oscillator in the current MD system.
+    dipole_vec : `np.ndarray`
+        (Only used if dipoles are calculated this run!)
+        The dipole moment calculated for this oscillator.
+    dipole_pos : `np.ndarray`
+        (Only used if dipoles are calculated this run!)
+        The position at which the dipole moment lies.
     """
 
-    def __init__(self, atoms, map_):
+    def __init__(self, System, atoms, map_):
+        self.system = System
         self.Map = map_
         self.used_atoms = [atoms[index] for index in self.Map.Core.used_atoms]
         self.electrostatic_atoms = [
@@ -958,6 +1069,12 @@ class Oscillator:
         # So we have some default RM to avoid stupid bugs and checks later
         self.rotation_matrix = np.array(
             [1, 0, 0], [0, 1, 0], [0, 0, 1], dtype="float32")
+
+    def __str__(self):
+        return (
+            f"{self.__class__.__name__} of type {self.Map.name} "
+            f"{self.Map.code.GM_str_osc(self.system, self.Map, self)}"
+        )
 
     def frame_update(self, Printer, Syst):
         """Update the frame-specific attributes of the instance.

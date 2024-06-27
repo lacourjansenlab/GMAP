@@ -4,13 +4,15 @@ src/tools/FileHandler.py.
 
 Missing tests:
 
-(@ apr 30th '24):
-106, 110-122, 353 (8 missed statements)
+(@ June 24th '24):
+105, 109-121, 344, 515-520, 538-543 (22 missed statements)
 
 (CUHTAT - currently unknown how to access this)
-- Program is run using any OS other than windows 64 bit (106, 110-122)
+- Program is run using any OS other than windows 64 bit (105, 119-121)
   (CUHTAT; at least within one single run, probably impossible)
-- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (353)
+- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (344)
+- output files are not cleared yet.  (515-543)  (this happens in GEM, just
+  before the per-frame loop)
 """
 
 
@@ -43,7 +45,8 @@ def test_write_output():
     RunPars = EmptyClass(**{
         "output_hamiltonian_filename": cwd / "hamiltonian",
         "output_dipole_filename": cwd / "dipoles",
-        "output_data": ["ham", "dip"],
+        "output_energies_filename": cwd / "energies",
+        "output_data": ["ham", "dip", "ene"],
         "output_format": ["bin", "txt"]
     })
 
@@ -61,17 +64,23 @@ def test_write_output():
         [7, 8, 9],
         [3, 4, 5]
     ], dtype="float32")
+    outputs["energies"] = np.array([
+        [100, 101, 102, 103]
+    ], dtype="float32")
     hamfname = RunPars.output_hamiltonian_filename
     dipfname = RunPars.output_dipole_filename
+    enefname = RunPars.output_energies_filename
 
     # clear files
-    for fname in (hamfname, dipfname):
+    for fname in (hamfname, dipfname, enefname):
         with open(fname.parent / f"{fname.name}.bin", "wb"):
             pass
         with open(fname.parent / f"{fname.name}.txt", "w"):
             pass
 
     GM_FH.write_output(RunPars, framenum, outputs)
+
+    # -----  test contents hamiltonian  -----
 
     with open(str(hamfname) + ".bin", "rb") as fhand:
         # skip first, that is frame ix
@@ -90,6 +99,8 @@ def test_write_output():
     squareham = squareham + squareham.T - np.diag(np.diag(squareham))
     assert np.all(squareham == outputs["hamiltonian"])
 
+    # -----  test contents dipoles  -----
+
     with open(str(dipfname) + ".bin", "rb") as fhand:
         # skip first, that is frame ix
         bindip = np.fromfile(fhand, dtype="float32")[1:]
@@ -102,6 +113,21 @@ def test_write_output():
     )[1:]  # skip first, that is frame ix
     txtdip = txtdip.reshape((3, 4)).T
     assert np.all(txtdip == outputs["dipoles"])
+
+    # -----  test contents energies  -----
+
+    with open(str(enefname) + ".bin", "rb") as fhand:
+        # skip first, that is frame ix
+        bindip = np.fromfile(fhand, dtype="float32")[1:]
+    # bindip = bindip.reshape((3, 4)).T
+    assert np.all(bindip == outputs["energies"])
+
+    txtdip = np.loadtxt(
+        str(RunPars.output_energies_filename) + ".txt",
+        dtype="float32"
+    )[1:]  # skip first, that is frame ix
+    # txtdip = txtdip.reshape((3, 4)).T
+    assert np.all(txtdip == outputs["energies"])
 
 
 def test_SU_FH_1(capsys):

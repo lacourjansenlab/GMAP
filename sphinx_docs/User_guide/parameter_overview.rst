@@ -188,6 +188,39 @@ maps_to_use
 Which maps should be considered in the calculation. Or, in other words, which kinds of oscillators should be found, and calculated properties for. There are limited choices - namely, the names of the maps supplied through the parameter map_directory.
 
 
+couplings_to_use
+================
+| (no shorthand available)
+| (used by: GEM)
+
+.. note::
+    This parameter differs from the others in that it may be used multiple times within a single file.
+
+.. important::
+    This parameter pulls information from lower priority sources, even if specified in a higher priority one:
+
+    If the default file says 'all couplings should be dipole-dipole', and you specify in the input file that the coupling between groups of type 'A' should be 'X', then couplings between groups of type 'B' will remain dipole-dipole, as you didn't specify anything else for them.
+
+    In other words, for every type of coupling, the program separately walks through all parameter files.
+
+    If a certain type of pair is covered by multiple lines in the same parameter file, the one lowest down will take precedence.
+
+Which couplings should be used in the calculation, and for what purpose. A MD system contains a certain number of oscillators (selected by 'maps_to_use'), that have their oscillating frequencies coupled inside the hamiltonian.
+
+By default, all oscillators are coupled using the dipole-dipole coupling method (denoted using ``couplings_to_use   DipDip :All``), but a different choice can be made. If you want to choose a different coupling method for a certain oscillator, you can!
+
+The general format is as follows: ``couplings_to_use  [coupling map name] [group selection]``
+
+The options available for the coupling map name depend on the maps you've loaded in - all options are the names of folders inside the 'Pairs' folder, which is inside the maps folder (the one(s) provided using 'map_directory'). One extra option is always available: 'None', for if you don't want the program to calculate any coupling. This will lead to a value of 0 for those couplings. You can only specify one coupling map per line!
+
+Then, group selection is where you explain what type of oscillators are to be coupled using the specific map. There are a few options here. You can use multiple ones on a single line. They should be separated by (any amount of) whitespaces.
+- ':All' indicates all possible pairs of oscillators
+- ':same' indicates all couplings between two oscillators of the same type (for example, coupling two (protein backbone) amide groups, or two (bact-c) chlorophyll molecules)
+- ':diff' indicates all couplings between two oscillators of a different type (for example, coupling an amide group with a chlorophyll molecule)
+- 'X:Y' indicates couplings between one oscillator of type 'X', and one of type 'Y'. The available oscillator types are the same as the available choices for the parameter 'maps_to_use'. There should be no spaces between group names and the colon!
+- 'X:' indicates any couplings involving an oscillator of type 'X' - the type of the other oscillator does not matter. The available oscillator types are the same as the available choices for the parameter 'maps_to_use'. There should be no spaces between group names and the colon!
+
+
 influencers_whitelist
 =====================
 | (no shorthand available)
