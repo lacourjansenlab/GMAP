@@ -955,6 +955,10 @@ class Oscillator:
         self.VEGout = np.zeros((self.n_estatic_atoms, 10), dtype="float32")
         self.VEGout_c = np.ctypeslib.as_ctypes(np.ravel(self.VEGout))
 
+        # So we have some default RM to avoid stupid bugs and checks later
+        self.rotation_matrix = np.array(
+            [1, 0, 0], [0, 1, 0], [0, 0, 1], dtype="float32")
+
     def frame_update(self, Printer, Syst):
         """Update the frame-specific attributes of the instance.
 
@@ -971,7 +975,8 @@ class Oscillator:
             Syst.positions[self.used_atoms] @ Syst.boxvects_inv)
         self.VEG_refpos = self.get_VEG_ref(Printer, Syst)
         self.VEG_refpos_c = np.ctypeslib.as_ctypes(self.VEG_refpos)
-        self.rotation_matrix = self.get_rotation_matrix(Printer, Syst)
+        if self.Map.Core.electrostatic_choice in ("E", "G"):
+            self.rotation_matrix = self.get_rotation_matrix(Printer, Syst)
 
     def get_VEG_ref(self, Printer, System):
         return self.Map.code.GM_get_VEG_ref(
