@@ -17,6 +17,7 @@ output_energies_filename(oef)[path_rel_op_c]      energies
 
 map_directory(md)[list_path_sep]               ../../../maps
 maps_to_use(um)[list_str]                         AmideSC
+couplings_to_use[list_str]                        DipDip :All
 influencers_blacklist[list_str]                   :None
 influencers_whitelist[list_str]                   :All
 influencers_file[path_sep]                        ../../../sourcefiles/infl_file_base.txt

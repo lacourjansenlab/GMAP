@@ -1,0 +1,1 @@
+valid_combinations :same  AmideSC1:  AmideSC2:AmideSC4

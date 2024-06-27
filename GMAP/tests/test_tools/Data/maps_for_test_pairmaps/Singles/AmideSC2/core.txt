@@ -1,0 +1,109 @@
+# In case any of the choices here should be variable based on a parameter
+# choice in map-specific parameters, this file should include the default.
+# The python script can later change those defaults if desired.
+
+
+# -----------------------
+
+# Sometimes, you want multiple maps to have access to the same kind of
+# information, without having to specify it more than once. For example, what
+# defines a protein? which residues should make it up? You want all maps that
+# deal with proteins to work from the same master list, so you only have to
+# change that list, once. This allows multiple maps to share the same
+# information - the given file is treated as a corefile, and its contents are
+# 'appended' to this file. No relative paths, a file of this name must be
+# present, either in 'singles' (if the map itself is in 'singles'), or in the
+# map directory itself (former takes precedence)
+
+# add_corefile       proteincore.txt
+
+
+
+# -----------------------
+
+# the functional group - how to recognize this group. All these must be present
+# before it is recognized. These must include at least all atoms required later,
+# but there can be more than that.
+
+functional_group        [ASN]    CG(1)  OD1(1)  CB  ND2(2)  HD21(2)  HD22
+functional_group        [GLN]    CD(1)  OE1(1)  CG  NE2(2)  HE21(2)  HE22
+# functional_group_file   funcgroup.txt
+
+# --------------------------
+
+# The actual atoms that the program stores. All these are necessary in some
+# way. Maybe for calculatiing dipoles, having a potential, or just calculating
+# a distance/angle.
+# The first atom in the resulting array stored in the program is defined by the
+# first number in the list here, etc. The number represents the index at which
+# that atom is present in the functional_group list.
+
+used_atoms    0 1 2 3 4 5   # all atoms are relevant, the order is already fine.
+
+# -----------------------------
+
+# the atoms for which the electrostatic properties should be calculated.
+# The number represents the index at which that atom is present in the
+# used_atoms list.
+# if no estatic properties are needed, the choice 'None' should be given.
+
+electrostatic_atoms    0 3   # Skinner uses only the C and N atoms.
+
+# ----------------------
+
+# The highest order gradient of electrostatic properties needed. If only the
+# potential is needed, the choice should be V. When calculating the field, also
+# calculating the potential is very cheap, so done automatically. If the
+# field is needed (but not the field gradient), and maybe the potential, the
+# choice should be E.
+# Similarly, when calculating the field gradient, the field and potential are
+# very cheap, and done simultaneously, so if the gradient is needed, the
+# choice here should be G, regardless of whether the potential or the field are
+# needed.
+
+# if 'None' as choice for estat ats, this parameter is not required.
+electrostatic_choice E   # V, E, or G
+
+# ------------------------
+
+frequency_gas_phase     1714
+frequency_data_file     Skinner.txt
+
+# ------------------------
+
+dipole_gas_phase        0.24
+dipole_data_file        [N/A]   # There is no file - dipole (by default) does not relate to VEG
+
+# -------------------
+
+# how to calculate the different directions. Currently only supports subtraction.
+# Atoms are indicated by their indices in used_atoms. Here, the x vector is
+# defined by subtracting the position of the zeroeth atom from that of the oneth.
+# the missing ones are found through geometry (cross product)
+
+
+# if no estat ats, these may be missing.
+# if estat ats, but estat choice V, these may be missing.
+# if type is linear, only 1 vector is needed. otherwise, two.
+x_uvec    1-0  # this is comment
+y_uvec    3-0
+
+r_vec     1-0
+r_pos     0
+
+# ---------------------
+
+
+# current implementation only uses this for xyz vec, so:
+# if no estat ats, this parameter may be missing.
+# if estat ats, but estat choice V, this parameter may be missing.
+type   standard     # standard, linear
+
+
+
+# -----------------
+local_atoms   0 1 3 4 5
+
+VEG_reference    CoM 0 1 3 4 5
+
+

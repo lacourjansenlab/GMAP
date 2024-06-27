@@ -163,6 +163,10 @@ SU_NP_7
 -------
 The mentioned parameters have choices that are valid on their own, but their combination is not. Please make sure that these conflicts are resolved!
 
+SU_NP_8
+-------
+The given parameter was provided with an invalid choice. The error gives more information on what parameter, and whats wrong.
+
 
 SU_PP
 =====
@@ -328,13 +332,30 @@ MI_MC_10
 If type is set to be 'linear', only one axis needs to be defined. Any of x, y and z can be used, depending on the map constants used. The other two will be taken perpendicular to eachother, and the one defined.
 If type is set to be 'standard', two of the three axes need to be defined. The first (any of x, y, and z) will take the direction as is, the second (any of the remainder of x, y and z) will have the component along the first removed. This means that for the second, only the perpendicular component will be used for the direction of the vector. The third is assumed by the program to be the cross product of the first vector with the second (first x second).
 
+MI_MC_11
+--------
+There was an issue with the specification for the keyword 'valid_combinations' for one of the maps. [Cite relevant manual page!!]
 
-MI_GEM
+
+MI_MM
 ======
 
-MI_GEM_1
+MI_MM_1
 --------
 The user requested the use of a certain map, but the program cannot use/find it. Make sure there is a directory of the requested name in the directory named 'singles' inside your maps directory. If there is, check the earlier errors - there might have been issues loading it in.
+
+MI_MM_2
+-------
+Certain coupling maps require some additional information from oscillators which cannot be provided/determined by GMAP, or the coupling map itself. Therefore, the map for an oscillator must give it specifically for this coupling map (which is completely optional for a map to do). This error was triggered because the mentioned combination of maps is not supported.
+
+MI_MM_3
+-------
+Certain couplings maps might indicate they cannot be used for certain types of oscillators. Make sure you only use a map for its intended purpose!
+
+MI_MM_4
+-------
+Certain couplings maps might indicate they cannot be used for certain types of couplings. Make sure you only use a map for its intended purpose!
+
 
 **********************
 Codes starting with MD
@@ -372,6 +393,11 @@ There is no bond information in the supplied MD system, but this information is 
   - Amber: top, prmtop or parm7
   - Charmm: .psf
   - NAMD: .psf
+
+MD_SU_6
+-------
+Some circular reference was found when determining what coupling map should be used to couple a certain pair of oscillators. The first one in the list is the one directly requested by the user, and that map determined that the second map in the list would be a better fit. Each map points to the next in the list, until one is encountered that has been requested before, starting this circular nature. This means the program will never find a suitable map, and thus quits.
+The issue could lie with the initial (or any other) map not being a good fit, and therefore sorting out the pair wrongly. Alternatively, there's a mistake in the map's code directing it to a different map. 
 
 *************************
 Codes starting with Setup

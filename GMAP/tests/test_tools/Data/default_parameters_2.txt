@@ -14,6 +14,7 @@ output_energies_filename        energies
 
 map_directory                   ../../../maps
 maps_to_use                     AmideSC
+couplings_to_use                DipDip :All
 influencers_whitelist           :All
 influencers_blacklist           :None
 influencers_file                ../../../sourcefiles/infl_file_base.txt

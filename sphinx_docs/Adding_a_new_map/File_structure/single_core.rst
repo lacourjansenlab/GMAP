@@ -1,9 +1,12 @@
+.. _AddMap_FileStruct_SingCore:
 
 #############
 Core.txt file
 #############
 
-This file forms the basis for any map. It must be present in all cases. It explains what the oscillator looks like, and what parts to treat, and the corresponding map coefficients. It works somewhat similar to how one creates input parameter files. All available parameters will be listed here, with an explanation.
+(this applies to singles maps. If you are looking for pairs maps instead, go to :ref:`the pairs version of this page.<AddMap_FileStruct_PairCore>)
+
+This file forms the basis for any map. It must be present in all cases. It explains what the oscillator looks like, and what parts to treat, and the corresponding map coefficients. It works somewhat similar to how one creates input parameter files. All available keywords will be listed here, with an explanation.
 
 Any keyword not given here can still be used, but all information given for that keyword is not being used by the program. It is, however, still saved, and can be accessed by the map's code in main.py.
 
@@ -12,6 +15,9 @@ Any keyword not given here can still be used, but all information given for that
 
 .. note::
     The variety of map structures in the spectroscopic community is too large to catch all of it in a single format like core.txt. That is what the main.py file is for: you can create additional behaviour. Maybe you want the choice for a parameter in core.txt to depend on a parameter in the parameters.ref file, or maybe you need other more complicated behaviour. In those cases, it might feel pointless to give a definition here for mandatory parameters. However, it can be invaluable to pick illustrative examples in this file, even if they're overwritten later by main.py. 
+
+.. note::
+    Because of this variety, it is possible that a pair map needs to know additional things about an oscillator (encoded by a single map). If they request so, this file might need one or more additional keywords to function appropriately.
 
 
 

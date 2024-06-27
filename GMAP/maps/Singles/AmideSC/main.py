@@ -165,6 +165,13 @@ def GM_post_run(Printer, Map, Syst):
     pass
 
 
+# This is what GMAP assumes this function to contain if it is not specified.
+# If oscillators belonging to this map should be reported any differently, that
+# method should be specified here.
+def placeholder_GM_str_osc(Syst, Map, osc):
+    return f"living on residue number {Syst.resnums[osc.used_atoms[0]]}"
+
+
 # !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
 # GMAP will not actually 'see' this function and use it. If you want to
 # have this function, just use `def GM_get_rotation_matrix` - see the manual
@@ -363,14 +370,21 @@ def placeholder_GM_calculate_dipole(Printer, Map, Syst, osc):
     -------
     r_vec : `np.ndarray`
         A length-3 vector containing the direction of the dipole moment.
+        Datatype of this array must be float32!
     r_pos : `np.ndarray`
         A length-3 vector containing the position of the dipole moment.
         The vector must lie within the simulation box.
+        Datatype of this array must be float32!
     """
 
     r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
     r_vec *= Map.code.GM_get_dipole_mag(Printer, Map, Syst, osc)
     return r_vec, r_pos
+
+
+def placeholder_GM_calculate_frequency(Printer, Map, Syst, osc):
+    return Map.Core.frequency_gas_phase + np.sum(np.multiply(
+        osc.VEGout, Map.Core.frequency_data_array))
 
 
 # !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
