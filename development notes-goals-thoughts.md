@@ -333,7 +333,7 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
-  - Done!
+  - rotation!!!
 - (KvA) TODO:
   - map main.py documentation - calc_frequency still has dipole outputs?!
   - potential maps don't need rotation matrix, but program still looks for the get_func (which doesn't exist) - why? Are we still using xyz_uvec from core.txt?

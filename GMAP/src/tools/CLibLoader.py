@@ -103,10 +103,11 @@ class VEG_CLib(metaclass=Singleton):
                 "CL_VG_1", True, exception=ex
             )
 
-        self.clib.calcPot_perres_mm.argtypes = [
+        self.clib.calcVEG_perres_mm.argtypes = [
             ct.POINTER(ct.c_int),  # tocalc
             ct.c_int,  # n_osc_ats
             ct.POINTER(ct.c_float),  # spherepos
+            ct.c_int,  # calc_choice
             ct.POINTER(ct.c_float),  # positioins
             ct.POINTER(ct.c_float),  # charges
             ct.POINTER(ct.c_float),  # COMs
@@ -121,9 +122,9 @@ class VEG_CLib(metaclass=Singleton):
             ct.POINTER(ct.c_float),  # boxdims
             ct.POINTER(ct.c_float)  # out
         ]
-        self.clib.calcPot_perres_mm.restype = None
+        self.clib.calcVEG_perres_mm.restype = None
 
-    def calcPot_perres_mm(self, System, RunPars, oscillator):
+    def calcVEG_perres_mm(self, System, RunPars, oscillator):
         """Calculate the potential on each of the requested points.
 
         This is basically a wrapper for the c function of the same
@@ -147,10 +148,11 @@ class VEG_CLib(metaclass=Singleton):
         """
 
         # each input has as a comment the name of that variable in c.
-        self.clib.calcPot_perres_mm(
+        self.clib.calcVEG_perres_mm(
             oscillator.electrostatic_atoms_c,  # tocalc
             oscillator.n_estatic_atoms,  # n_osc_ats
             oscillator.VEG_refpos_c,  # spherepos
+            oscillator.Map.electrostatic_choice_c,  # calc_choice
             System.positions_c,  # positions
             System.charges_c,  # charges
             System.residues.CoM_c,  # COMs

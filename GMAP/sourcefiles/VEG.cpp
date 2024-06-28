@@ -8,14 +8,18 @@ calculating the electric potential, field and gradient on any given list
 of points.
 */
 
-extern "C" {
-    __declspec(dllexport) void calcPot_perres_mm(
-        int *tocalc, int n_osc_ats, float *spherepos, float *positions,
-        float *charges, float *COMs, int *res_first_ix, int *res_last_ix,
-        int n_res, int *local_atoms, int n_locals, float r_sphere,
-        float r_smooth, float *halfbox, float *boxdims, float *out
-    );
+#ifdef _WIN32
+    extern "C" {
+        __declspec(dllexport) void calcVEG_perres_mm(
+            int *tocalc, int n_osc_ats, float *spherepos, int calc_choice,
+            float *positions,
+            float *charges, float *COMs, int *res_first_ix, int *res_last_ix,
+            int n_res, int *local_atoms, int n_locals, float r_sphere,
+            float r_smooth, float *halfbox, float *boxdims, float *out
+        );
 }
+#endif
+
 
 
 extern "C" {
@@ -67,7 +71,6 @@ extern "C" {
 
         return (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
     }
-
 
     int in_ordered_array_int(
         int *ordered_array, int to_find, int start, int arr_length, int *endpos
@@ -184,6 +187,69 @@ extern "C" {
         return charges[sysix];
     }
 
+    void calcNone(
+        float *diff,  // The difference vector between the two atoms
+        float weighted_charge,  // The charge of the atom, weighted by distance
+        int oscix,  // The index of the atom we're treating
+        float *out  // output is stored here
+    ) {}
+
+    void calcPot(
+        float *diff,  // The difference vector between the two atoms
+        float weighted_charge,  // The charge of the atom, weighted by distance
+        int oscix,  // The index of the atom we're treating
+        float *out  // output is stored here
+    ) {
+        out[oscix*10] += weighted_charge / sqrt(veclen2(diff));
+    }
+
+    void calcField(
+        float *diff,  // The difference vector between the two atoms
+        float weighted_charge,  // The charge of the atom, weighted by distance
+        int oscix,  // The index of the atom we're treating
+        float *out  // output is stored here
+    ) {
+        float idist2 = 1 / veclen2(diff);
+        float idist = sqrt(idist2);
+        float prefac = weighted_charge * idist2 * idist;
+
+        out[oscix*10] += weighted_charge * idist;
+
+        out[oscix*10 + 1] += diff[0] * prefac;
+        out[oscix*10 + 2] += diff[1] * prefac;
+        out[oscix*10 + 3] += diff[2] * prefac;
+    }
+
+    void calcGrad(
+        float *diff,  // The difference vector between the two atoms
+        float weighted_charge,  // The charge of the atom, weighted by distance
+        int oscix,  // The index of the atom we're treating
+        float *out  // output is stored here
+    ) {
+        float idist2 = 1 / veclen2(diff);
+        float idist = sqrt(idist2);
+        float prefac = weighted_charge * idist2 * idist;
+        float prefac2 = 3.0 * prefac * idist2;
+
+        float diffX = diff[0];
+        float diffY = diff[1];
+        float diffZ = diff[2];
+
+        out[oscix*10] += weighted_charge * idist;
+
+        out[oscix*10 + 1] += diffX * prefac;
+        out[oscix*10 + 2] += diffY * prefac;
+        out[oscix*10 + 3] += diffZ * prefac;
+
+        out[oscix*10 + 4] += prefac - (diffX * diffX * prefac2);
+        out[oscix*10 + 5] += prefac - (diffY * diffY * prefac2);
+        out[oscix*10 + 6] += prefac - (diffZ * diffZ * prefac2);
+        out[oscix*10 + 7] -= diffX * diffY * prefac2;
+        out[oscix*10 + 8] -= diffX * diffZ * prefac2;
+        out[oscix*10 + 9] -= diffY * diffZ * prefac2;
+    }
+}
+
     /*
     Calculate the potential for an oscillator. The sphere determining whether
     an influencer counts is centered on spherepos. After an atom is deemed in
@@ -192,11 +258,12 @@ extern "C" {
 
     !! local_atoms MUST be sorted for this function to work (fast)!
     */
-    void calcPot_perres_mm(
+    void calcVEG_perres_mm(
         // single-osc parameters
         int *tocalc,  // the sys-ix of the atoms whose properties are requested
         int n_osc_ats,  // amount of atoms in the oscillator
         float *spherepos,  // center of influencersphere
+        int calc_choice,  // V, E, or G?
 
         // system parameters
         float *positions, // positions of all atoms in the MD system
@@ -235,6 +302,12 @@ extern "C" {
         spherepos : float[3]
             The center of the group of charges that may influence the
             potential on each of the atoms in tocalc
+        calc_choice : int
+            What electrostatic properties should be calculated:
+            0 for nothing (this function should never be called with 0)
+            1 for potential only
+            2 for potential and field
+            3 for potential, field and gradient
         positions : float[3 * unknown]
             The positions of all atoms in the MD system. Any provided
             indices into this function are guaranteed to exist in this
@@ -279,6 +352,11 @@ extern "C" {
         if (r_smooth > 0) {
             get_weighted_charge = getweight_linear_smoothing;
         }
+        using VEGfunc = void(*)(float *, float, int, float *);
+        VEGfunc calc_VEG = calcNone;
+        if (calc_choice == 1) {calc_VEG = calcPot;}
+        else if (calc_choice == 2) {calc_VEG = calcField;}
+        else if (calc_choice == 3) {calc_VEG = calcGrad;}
 
         // build refpos array (positions of osc ats)
         float *refpos;
@@ -292,8 +370,6 @@ extern "C" {
         }
 
         // clear output array
-        float *total_charge;
-        total_charge = (float *)calloc(n_osc_ats, sizeof(float));
         // *10, as we want to clear all entries for each oscillator
         for (oscix = 0; oscix < n_osc_ats * 10; oscix++) {
             out[oscix] = 0;
@@ -358,8 +434,7 @@ extern "C" {
                     PBC_diff_cubic(
                         &refpos[oscix * 3], &positions[sysix * 3],
                         halfbox, boxdims, diff);
-                    out[oscix*10] += weighted_charge / sqrt(veclen2(diff));
-                    total_charge[oscix] += weighted_charge;
+                    calc_VEG(diff, weighted_charge, oscix, out);
                 } 
             }
         }  // per-residue loop
@@ -370,6 +445,5 @@ extern "C" {
         //     out[oscix] -= total_charge[oscix] / maxdist;
         // }
 
-        free(refpos), free(total_charge);  // free(diff)
+        free(refpos);  // free(diff)
     }
-}

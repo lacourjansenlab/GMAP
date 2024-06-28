@@ -1068,7 +1068,7 @@ class Oscillator:
 
         # So we have some default RM to avoid stupid bugs and checks later
         self.rotation_matrix = np.array(
-            [1, 0, 0], [0, 1, 0], [0, 0, 1], dtype="float32")
+            [[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype="float32")
 
     def __str__(self):
         return (

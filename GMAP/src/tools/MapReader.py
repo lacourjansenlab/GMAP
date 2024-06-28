@@ -1112,6 +1112,9 @@ class SingleCore():
                 Printer, rawcore, Map.directory)
         else:
             self.electrostatic_choice = None
+        choice_in_C_dict = {None: 0, "V": 1, "E": 2, "G": 3}
+        self.electrostatic_choice_c = choice_in_C_dict[
+            self.electrostatic_choice]
         if not self.success:
             return
 
