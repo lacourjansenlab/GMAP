@@ -1068,13 +1068,55 @@ class Oscillator:
 
         # So we have some default RM to avoid stupid bugs and checks later
         self.rotation_matrix = np.array(
-            [1, 0, 0], [0, 1, 0], [0, 0, 1], dtype="float32")
+            [[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype="float32")
 
     def __str__(self):
         return (
             f"{self.__class__.__name__} of type {self.Map.name} "
             f"{self.Map.code.GM_str_osc(self.system, self.Map, self)}"
         )
+
+    def rotate_VEG(self):
+        """Rotate the stored VEG from cartesian to local basis.
+
+        The local basis is defined in self.rotation_matrix. The
+        potential is not rotated, only the field and gradient are.
+        """
+
+        # G as a matrix should look like this:
+        # row \\ column   0   1   2
+        #   0           (Gxx Gxy Gxz)
+        #   1           (Gyx Gyy Gyz)
+        #   2           (Gzx Gzy Gzz)
+
+        # Here, VEGout has the following structure:
+
+        # index   0  1   2   3   4   5   6   7   8   9
+        #       ( V  Ex  Ey  Ez Gxx Gyy Gzz Gxy Gxz Gyz )
+
+        # So, to build the square matrix, we need the following indices:
+        # (4 7 8)
+        # (7 5 9)
+        # (8 9 6)
+
+        # and to go back:  (coords in row, col)
+        # VEGout[4:] = ((0, 0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2))
+
+        # --------------------------------------------------------------
+        # rotate E
+        self.VEGout[:, 1:4] = self.VEGout[:, 1:4] @ self.rotation_matrix.T
+
+        # --------------------------------------------------------------
+        # rotate G
+
+        # build square representation
+        Gsq = self.VEGout[:, [4, 7, 8, 7, 5, 9, 8, 9, 6]].reshape((-1, 3, 3))
+
+        # Do the rotation
+        temp = self.rotation_matrix @ Gsq @ self.rotation_matrix.T
+
+        # and back to other representation
+        self.VEGout[:, 4:] = temp[:, [0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]]
 
     def frame_update(self, Printer, Syst):
         """Update the frame-specific attributes of the instance.
