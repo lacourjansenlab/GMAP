@@ -17,7 +17,7 @@ of points.
             int n_res, int *local_atoms, int n_locals, float r_sphere,
             float r_smooth, float *halfbox, float *boxdims, float *out
         );
-}
+    }
 #endif
 
 

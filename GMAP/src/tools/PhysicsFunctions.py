@@ -119,7 +119,9 @@ def calc_frame(Printer, RunPars, System, outputs):
                 # calculate VEG
                 VEGlib.calcVEG_perres_mm(System, RunPars, oscillator)
 
-                # ROTATE VEG!
+            # ROTATE VEG
+            if oscillator.Map.Core.electrostatic_choice in ("E", "G"):
+                oscillator.rotate_VEG()
 
         # do we need dipoles?
         # we also need dipoles for the (full) hamiiltonian.
