@@ -40,6 +40,14 @@ start_frame[int]                                  0
 number_frames[int]                                999999999
 stop_frame[int]                                   999999999
 
+# output units
+hamiltonian_units[str]                             [cm-1] eV
+hamiltonian_multiplier[float]                     1
+energies_units[str]                                [cm-1] eV
+energies_multiplier[float]                        1
+dipoles_units[str]                                 [Debye] eBohr
+dipoles_multiplier[float]                         1
+
 
 # test strings
 str_test_free(ts1)[str]                      freechoice

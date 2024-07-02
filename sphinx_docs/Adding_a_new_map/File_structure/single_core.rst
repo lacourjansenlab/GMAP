@@ -4,7 +4,7 @@
 Core.txt file
 #############
 
-(this applies to singles maps. If you are looking for pairs maps instead, go to :ref:`the pairs version of this page.<AddMap_FileStruct_PairCore>)
+(this applies to singles maps. If you are looking for pairs maps instead, go to :ref:`the pairs version of this page.<AddMap_FileStruct_PairCore>`)
 
 This file forms the basis for any map. It must be present in all cases. It explains what the oscillator looks like, and what parts to treat, and the corresponding map coefficients. It works somewhat similar to how one creates input parameter files. All available keywords will be listed here, with an explanation.
 
@@ -526,6 +526,18 @@ Some maps are defined in an even simpler way - the sphere is centered on the cen
 What happens here is a little bit more involved: the index provided is of an atom, just as with the 'position' and 'CoM' options. The program then checks which residue this atom belongs to. Then, the center of mass of this residue is found.
 
 If multiple atoms are given, then for each atom, the residue is found. This allows to add the atoms of multiple residues together (for oscillators that live on multiple residues). If multiple atoms are given that all belong to the same residue, that residue gets more 'weight' - it is _not_ the case that 'extra' atoms of the same residue are ignored.
+
+
+*******************
+assume_length_units
+*******************
+
+| *optional parameter*
+| *(options: angstrom, bohr. Default: angstrom)*
+
+The program assumes (by default) that maps assume length to be specified in angstrom, and define their constants accordingly. However, this might not be true for all maps. If your map uses bohrs instead, use this keyword to indicate this.
+
+If you use different units, you can do the unit conversion yourself using the function 'post_init()' in the map main.py file.
 
 
 ****************

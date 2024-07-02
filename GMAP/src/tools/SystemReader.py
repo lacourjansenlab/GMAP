@@ -1032,6 +1032,10 @@ class Oscillator:
         should be centered.
     VEG_refpos_c : `ctypes.Array`
         The c-friendly variant of self.VEG_refpos_c.
+    rotation_matrix : `np.ndarray`
+        The definition of the local vectors. This 3*3 numpy array can be
+        considered 3 vectors, the x, y, and z unit vector in
+        MD-coordinates.
     oscix : int
         The index of this oscillator in the current MD system.
     dipole_vec : `np.ndarray`
@@ -1068,7 +1072,7 @@ class Oscillator:
 
         # So we have some default RM to avoid stupid bugs and checks later
         self.rotation_matrix = np.array(
-            [1, 0, 0], [0, 1, 0], [0, 0, 1], dtype="float32")
+            [[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype="float32")
 
     def __str__(self):
         return (

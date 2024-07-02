@@ -1525,6 +1525,94 @@ class TestSingleCore:
         assert freq_gas == np.float32(1234)
         assert np.all(freq_arr_lin == np.arange(10, dtype="float32"))
 
+    def test_bohr_consts(self):
+        cmdline = [
+            "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        ]
+        inpardict = {}
+        mapname = "test_bohr_const"
+
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
+        ) = basic_setup(
+            cmdline, inpardict, finish_before="Core", mapname=mapname
+        )
+        map_ = mapdict[mapname]
+        CoreBase = basic_setup_core(
+            Printer, map_, finish_before="end")
+
+        assert np.all(CoreBase.dipole_data_array.round(2) == np.array([
+            # wrong way?
+            # [
+            #     [0, 3.571065, 7.14213, 10.713195, 0, 0, 0, 0, 0, 0],
+            #     [7.5589046, 17.855324, 21.42639, 24.997456, 0, 0, 0,
+            #      0, 0, 0],
+            # ], [
+            #     [1.8897262, 7.14213, 10.713195, 14.28426, 0, 0, 0, 0, 0, 0],
+            #     [9.448631, 21.42639, 24.997456, 28.56852, 0, 0, 0, 0, 0, 0],
+            # ], [
+            #     [3.7794523, 10.713195, 14.28426, 17.855324, 0, 0, 0,
+            #      0, 0, 0],
+            #     [11.338357, 24.997456, 28.56852, 32.139584, 0, 0, 0,
+            #      0, 0, 0],
+            # ]
+            [
+                [0, 0.280, 0.560, 0.840, 0, 0, 0, 0, 0, 0],
+                [2.1167, 1.400, 1.680, 1.960, 0, 0, 0, 0, 0, 0],
+            ], [
+                [0.529, 0.560, 0.840, 1.120, 0, 0, 0, 0, 0, 0],
+                [2.645886, 1.680, 1.960, 2.240, 0, 0, 0, 0, 0, 0],
+            ], [
+                [1.058, 0.840, 1.120, 1.400, 0, 0, 0, 0, 0, 0],
+                [3.175, 1.960, 2.240, 2.520, 0, 0, 0, 0, 0, 0],
+            ]
+        ], dtype="float32").round(2))
+
+        assert np.all(
+            CoreBase.frequency_data_array_linear.round(2) == np.array([
+                # [0, 3.571065, 7.14213, 10.713195, 0, 0, 0, 0, 0, 0],
+                # [7.5589046, 17.855324, 21.42639, 24.997456, 0, 0, 0,
+                #  0, 0, 0],
+                [0, 0.280, 0.560, 0.840, 0, 0, 0, 0, 0, 0],
+                [2.1167, 1.400, 1.680, 1.960, 0, 0, 0, 0, 0, 0]
+            ], dtype="float32").round(2))
+        assert CoreBase.frequency_data_array_quadratic is None
+
+        # --------------------------------------------------------------
+
+        cmdline = [
+            "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        ]
+        inpardict = {}
+        mapname = "test_bohr_const2"
+
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
+        ) = basic_setup(
+            cmdline, inpardict, finish_before="Core", mapname=mapname
+        )
+        map_ = mapdict[mapname]
+        CoreBase = basic_setup_core(
+            Printer, map_, finish_before="end")
+
+        assert np.all(CoreBase.dipole_data_array.round(2) == np.array([
+            # [0, 3.571065, 7.14213, 10.713195, 0, 0, 0, 0, 0, 0],
+            # [7.5589046, 17.855324, 21.42639, 24.997456, 0, 0, 0, 0, 0, 0],
+            [0, 0.280, 0.560, 0.840, 0, 0, 0, 0, 0, 0],
+            [2.1167, 1.400, 1.680, 1.960, 0, 0, 0, 0, 0, 0]
+        ], dtype="float32").round(2))
+
+        assert np.all(
+            CoreBase.frequency_data_array_quadratic.round(2) == np.array([
+                # [0, 12.752504, 25.505009, 38.257515, 0, 0, 0, 0, 0, 0],
+                # [14.28426, 63.76252, 76.51503, 89.26753, 0, 0, 0, 0, 0, 0],
+                [0, 0.078, 0.1568, 0.235, 0, 0, 0, 0, 0, 0],
+                [1.120, 0.392, 0.470, 0.548, 0, 0, 0, 0, 0, 0],
+            ], dtype="float32").round(2))
+        assert CoreBase.frequency_data_array_linear is None
+
     def test_MI_MC_1(self, capfd):
         self.basis_test_MI_MC("MI_MC_1", capfd, finish_before="used_atoms")
 
@@ -1537,7 +1625,7 @@ class TestSingleCore:
         self.basis_test_MI_MC(
             "MI_MC_3", capfd, "test_MI_MC_3_2", "frequency")
         self.basis_test_MI_MC(
-            "MI_MC_3", capfd, "test_MI_MC_3_3", "end")
+            "MI_MC_3", capfd, "test_MI_MC_3_3", "length_units")
 
     def test_MI_MC_4(self, capfd):
         self.basis_test_MI_MC("MI_MC_4", capfd, "test_MI_MC_4_1", "used_atoms")
@@ -1569,7 +1657,7 @@ class TestSingleCore:
         self.basis_test_MI_MC(
             "MI_MC_6", capfd, "test_MI_MC_6_8", "frequency")
         self.basis_test_MI_MC(
-            "MI_MC_6", capfd, "test_MI_MC_6_9", "end")
+            "MI_MC_6", capfd, "test_MI_MC_6_9", "length_units")
 
     def test_MI_MC_7(self, capfd):
         self.basis_test_MI_MC(
@@ -1583,9 +1671,11 @@ class TestSingleCore:
         self.basis_test_MI_MC(
             "MI_MC_7", capfd, "test_MI_MC_7_5", "frequency")
         self.basis_test_MI_MC(
-            "MI_MC_7", capfd, "test_MI_MC_7_6", "end")
+            "MI_MC_7", capfd, "test_MI_MC_7_6", "length_units")
         self.basis_test_MI_MC(
-            "MI_MC_7", capfd, "test_MI_MC_7_7", "end")
+            "MI_MC_7", capfd, "test_MI_MC_7_7", "length_units")
+        self.basis_test_MI_MC(
+            "MI_MC_7", capfd, "test_MI_MC_7_8", "end")
 
     def test_MI_MC_8(self, capfd):
         self.basis_test_MI_MC(
@@ -1611,7 +1701,7 @@ class TestSingleCore:
         self.basis_test_MI_MC(
             "MI_MC_8", capfd, "test_MI_MC_8_11", "frequency")
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_12", "end")
+            "MI_MC_8", capfd, "test_MI_MC_8_12", "length_units")
 
     def test_MI_MC_9(self, capfd):
         self.basis_test_MI_MC("MI_MC_9", capfd, finish_before="used_atoms")
@@ -2007,6 +2097,17 @@ def basic_setup_core(Printer, map_, finish_before=None):
     setattr(CoreBase, "frequency_gas_phase", freqgas)
     setattr(CoreBase, "frequency_data_array_linear", arr_lin)
     setattr(CoreBase, "frequency_data_array_quadratic", arr_quad)
+
+    if finish_before == "length_units":
+        return CoreBase
+
+    setattr(CoreBase, "length_units", CoreBase.parse_length_units(
+        Printer, map_.rawcore, map_.directory))
+
+    if finish_before == "change_arrays":
+        return CoreBase
+
+    CoreBase.change_map_units()
 
     if finish_before == "end":  # so we can ctrl+F later
         return CoreBase

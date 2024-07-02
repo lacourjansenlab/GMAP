@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 
 # local imports
+import GMAP.src.tools.constants as GM_con
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.MapReader as GM_MR
 
@@ -511,6 +512,21 @@ class RefPars:
                 "Please make sure it has a positive value.",
                 "SU_FP_7", True
             )
+
+        if self.choices["hamiltonian_units"][0] == "cm-1":
+            self.choices["hamiltonian_multiplier"] = [1]
+        else:  # eV
+            self.choices["hamiltonian_multiplier"] = [GM_con.cm2eV]
+
+        if self.choices["energies_units"][0] == "cm-1":
+            self.choices["energies_multiplier"] = [1]
+        else:  # eV
+            self.choices["energies_multiplier"] = [GM_con.cm2eV]
+
+        if self.choices["dipoles_units"][0] == "Debye":
+            self.choices["dipoles_multiplier"] = [1]
+        else:  # eV
+            self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
 
     @staticmethod
     def parse_key(string):
@@ -1361,6 +1377,60 @@ class RawPars:
                 Printer.warning(msg, "SU_WP_17", True)
             elif number_frames is None and stop_frame < start_frame:
                 Printer.warning(msg, "SU_WP_17", True)
+
+        # output units
+        # if the multiplier is defined using set units, make the conversion.
+        # if both, error. If none, also fine.
+        if "hamiltonian_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "hamiltonian_multiplier" in self.choices:
+                Printer.warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'hamiltonian_units' and "
+                    "'hamiltonian_multiplier', but contains both.",
+                    "SU_WP_16", True
+                )
+            else:
+                if self.choices["hamiltonian_units"][0] == "cm-1":
+                    self.choices["hamiltonian_multiplier"] = [1]
+                else:  # eV
+                    self.choices["hamiltonian_multiplier"] = [GM_con.cm2eV]
+
+        if "energies_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "energies_multiplier" in self.choices:
+                Printer.warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'energies_units' and "
+                    "'energies_multiplier', but contains both.",
+                    "SU_WP_16", True
+                )
+            else:
+                if self.choices["energies_units"][0] == "cm-1":
+                    self.choices["energies_multiplier"] = [1]
+                else:  # eV
+                    self.choices["energies_multiplier"] = [GM_con.cm2eV]
+
+        if "dipoles_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "dipoles_multiplier" in self.choices:
+                Printer.warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'dipoles_units' and "
+                    "'dipoles_multiplier', but contains both.",
+                    "SU_WP_16", True
+                )
+            else:
+                if self.choices["dipoles_units"][0] == "Debye":
+                    self.choices["dipoles_multiplier"] = [1]
+                else:  # eV
+                    self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
 
     def finalize_map_pars(self, Printer):
         """Check whether `not_found` is empty

@@ -35,3 +35,10 @@ start_frame                                 0
 number_frames                               999999999
 stop_frame                                  999999999
 
+hamiltonian_units             cm-1
+hamiltonian_multiplier        1
+energies_units                cm-1
+energies_multiplier           1
+dipoles_units                 Debye
+dipoles_multiplier            1
+

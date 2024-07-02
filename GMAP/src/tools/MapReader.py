@@ -7,6 +7,7 @@ import sys
 import numpy as np
 
 # local imports
+import GMAP.src.tools.constants as GM_con
 import GMAP.src.tools.DefaultMapFunctions as GM_DMF
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.ParameterParser as GM_PP
@@ -1087,6 +1088,46 @@ class SingleCore():
         The indices of the atoms in used_atoms that should actually
         be used in electrostatic calculations. The indices are the
         positions of the atoms in used_atoms, starting counting at 0.
+    electrostatic_choice : str or NoneType
+        To what degree the electrostatics should be calculated for this
+        oscillator. 'V' indicates only computing the potential, 'E'
+        potential and electric field, 'G' potential, field, and
+        gradient. None is used to indicate none of those are needed.
+    local_atoms : list of int
+        The indices of the atoms in used_atoms that should be ignored
+        when calculating the electrostatic properties for this
+        oscillator.
+    type : str
+        What kind of oscillator this is. 'linear' for when all
+        (important) atoms of this oscillator lie on a single line,
+        'standard' otherwise.
+    dipole_gas_phase : float
+        The base magnitude of the dipole moment.
+    dipole_data_array : `np.ndarray`
+        A 2D or 3D array with 10 columns and as many rows as atoms in
+        self.electrostatic_atoms. If 3D, it has 3 layers. It stores the
+        coefficients to multiply with the electrostatics to gain the
+        dipole moment.
+
+        2D is for when the gas-phase magnitude should be modified with
+        the resulting value for the array.
+
+        3D is for when each layer results in a component of the vector
+        itself.
+    frequency_gas_phase : float
+        The base value for the absorbing frequency.
+    frequency_data_array_linear : `np.ndarray`
+        A 2D array with 10 columns and as many rows as atoms in
+        self.electrostatic_atoms. Contains the coefficients to multiply
+        with the electrostatics. The sum of that result is then added to
+        the gas phase frequency to obtain the actual frequency.
+    frequency_data_array_quadratic : `np.ndarray`
+        A 2D array with 10 columns and as many rows as atoms in
+        self.electrostatic_atoms. Contains the coefficients to multiply
+        with the square of the electrostatics. The sum of that result is
+        then added to the gas phase frequency to obtain the actual
+        frequency. If frequency_data_array_linear is also present, the
+        result/influence of both will be added.
     """
 
     def __init__(self, Printer, Map):
@@ -1142,6 +1183,13 @@ class SingleCore():
         ) = self.parse_frequency(Printer, rawcore, Map.directory)
         if not self.success:
             return
+
+        self.length_units = self.parse_length_units(
+            Printer, rawcore, Map.directory)
+        if not self.success:
+            return
+
+        self.change_map_units_decision()
 
     def parse_functional_group(self, Printer, rawcore, mapdir):
         """Parses the input for keywords functional_group(_file) in core.txt
@@ -2338,6 +2386,77 @@ class SingleCore():
 
         else:
             return True, fdata
+
+    def parse_length_units(self, Printer, rawcore, mapdir):
+        """Parse the choice for the assumed length units.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        rawcore : dict of str - list of str pairs
+            The raw contents of the file core.txt
+        mapdir : pathlib.Path
+            The path to the directory in which the map is defined.
+
+        Returns
+        -------
+        units : str
+            What length units the map constants assume.
+        """
+
+        if "assume_length_units" not in rawcore:
+            return "ang"
+
+        choice = rawcore["assume_length_units"][0]
+        if choice.lower() in ("angstrom", "ang", "a", "aa"):
+            return "ang"
+        elif choice.lower() in ("bohr", "a0", "au"):
+            return "bohr"
+        else:
+            Printer.warning(
+                "\nCould not interpret the choice for the parameter "
+                "'assume_length_units'"
+                f" in the file {mapdir / 'core.txt'}. Please make sure "
+                "the choice is either 'bohr' or 'angstrom.",
+                "MI_MC_7", False
+            )
+            self.success = False
+            return "ang"
+
+    def change_map_units_decision(self):
+        """See whether to change units, and by what amount."""
+
+        if self.length_units == "ang":  # conversions are only for bohr
+            return
+
+        # this could be made conditional if others are added later!
+        conv_factor = GM_con.bohr2ang
+        self.change_map_units(conv_factor)
+
+    def change_map_units(self, conv_factor):
+        """Actually changes the units of constants."""
+
+        if self.frequency_data_array_linear is not None:
+            self.frequency_data_array_linear[:, 0] *= conv_factor
+            self.frequency_data_array_linear[:, 1:4] *= conv_factor**2
+            self.frequency_data_array_linear[:, 4:] *= conv_factor**3
+
+        if self.frequency_data_array_quadratic is not None:
+            self.frequency_data_array_quadratic[:, 0] *= conv_factor**2
+            self.frequency_data_array_quadratic[:, 1:4] *= conv_factor**4
+            self.frequency_data_array_quadratic[:, 4:] *= conv_factor**6
+
+        if self.dipole_data_array is not None:
+            if len(self.dipole_data_array.shape) == 2:  # 2D array
+                self.dipole_data_array[:, 0] *= conv_factor
+                self.dipole_data_array[:, 1:4] *= conv_factor**2
+                self.dipole_data_array[:, 4:] *= conv_factor**3
+            else:  # 3D array
+                self.dipole_data_array[:, :, 0] *= conv_factor
+                self.dipole_data_array[:, :, 1:4] *= conv_factor**2
+                self.dipole_data_array[:, :, 4:] *= conv_factor**3
 
 
 class PairCore():

@@ -437,6 +437,7 @@ def write_output(RunPars, framenum, outputs):
 
     if "ham" in RunPars.output_data:
         hamiltonian = outputs["hamiltonian"]
+        hamiltonian *= RunPars.hamiltonian_multiplier
         reshaped = hamiltonian[np.triu_indices_from(hamiltonian)]
         write_single(
             RunPars, framenum, framenum_arr,
@@ -445,6 +446,7 @@ def write_output(RunPars, framenum, outputs):
 
     if "ene" in RunPars.output_data:
         energies = outputs["energies"]
+        energies *= RunPars.energies_multiplier
         write_single(
             RunPars, framenum, framenum_arr, RunPars.output_energies_filename,
             energies
@@ -452,6 +454,7 @@ def write_output(RunPars, framenum, outputs):
 
     if "dip" in RunPars.output_data:
         dipoles = outputs["dipoles"]
+        dipoles *= RunPars.dipoles_multiplier
         reshaped = dipoles.T.flatten()
         write_single(
             RunPars, framenum, framenum_arr,

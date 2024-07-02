@@ -174,6 +174,50 @@ output_data
 
 What kind of data the program should generate. Multiple choices can be provided. 'ham' lets the program output a Hamiltonian for each frame, 'dip' makes it output dipoles. 'ene' is used to output the energies file.
 
+hamiltonian_units
+=================
+| (no shorthand available)
+| (options: cm-1, eV)
+| (used by: GEM)
+
+In what units the output hamiltonian should be written. Cannot be used together with hamiltonian_multiplier.
+
+hamiltonian_multiplier
+=================
+| (no shorthand available)
+| (used by: GEM)
+
+The output hamiltonian (in cm-1) will be multiplied by this value before saving. Cannot be used together with hamiltonian_units.
+
+energies_units
+=================
+| (no shorthand available)
+| (options: cm-1, eV)
+| (used by: GEM)
+
+In what units the output energies file should be written. Cannot be used together with energies_multiplier.
+
+energies_multiplier
+=================
+| (no shorthand available)
+| (used by: GEM)
+
+The output energies file (in cm-1) will be multiplied by this value before saving. Cannot be used together with energies_units.
+
+dipoles_units
+=================
+| (no shorthand available)
+| (options: Debye, eBohr)
+| (used by: GEM)
+
+In what units the output dipoles should be written. Cannot be used together with dipoles_multiplier.
+
+dipoles_multiplier
+=================
+| (no shorthand available)
+| (used by: GEM)
+
+The output dipoles (in Debye) will be multiplied by this value before saving. Cannot be used together with dipoles_units.
 
 **********************************************
 parameters for specifying calculation settings
