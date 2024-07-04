@@ -1,0 +1,40 @@
+# This file is made with consideration for very large functional groups.
+# Instead of defining a group on a single line with the same format as AIM
+# did, here, each line becomes a section, and each element on a line becomes
+# a line.
+
+
+newstruct  # flag to indicate a new structure
+           # blank line is fully optional
+[MOL]        # name of the residue. If multiple options, separate by, euh, what?
+
+CS  
+CW  
+NA  # 2
+CW  
+CS  
+CM  
+CW  
+CS  
+CS  
+CW  
+NA  # 10
+CM  
+CW  
+CS  
+CS  
+CW  
+NA  # 16
+CM  
+CT  
+C_2  
+CW  
+NA  # 21
+CW  
+CT  
+CT  
+CM  
+MG  # 26
+
+
+

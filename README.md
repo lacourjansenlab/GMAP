@@ -38,3 +38,26 @@ The ouput files will be inside the sphinx folder, in _build/html. Open _build/ht
 In case you build html documents, the interlinking is relative: you can move (and rename) the 'html' folder to your liking. It can be shared and everything, and it should even be compatible with github pages (if I understand things correctly).
 
 When you've made some choices to the code, and would like to rebuild the docs, not all steps have to be followed again. For minor changes, it is sufficient to redo step 8 only. For major changes (those that involve the addition/removal/restructuring of (sub)modules), restart at step 6.
+
+## how to compile C code
+
+### windows
+
+- make sure to install microsoft visual studio (detailed instructions are a must - AIM repo has them in the manual, page 12).
+- through windows start menu, scroll trough list of programs, select visual studio folder, in there, the desired command prompt. x64 Native Tools for 64 bit windows, x86 Native Tools for 32 bit. __Make sure to open the command prompt in admin mode__.
+- run the following command: ```cl.exe /LD scriptname.cpp``` (generates 4 files)
+- use the .dll file for the program (ignore or delete the other 3 generated ones).
+
+
+### linux
+
+- open terminal
+- ```g++ -fPIC -shared -o scriptname.so scriptname.cpp```
+
+(if installed, using cc instead of g++ also works)
+
+
+### mac
+
+- open terminal
+- ```cc -fPIC -dynamiclib -o scriptname.dylib scriptname.cpp```

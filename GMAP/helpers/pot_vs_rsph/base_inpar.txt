@@ -1,0 +1,20 @@
+# topology_file  D:\Data\PhD\Tutorials\VesnaTube\mix_nvt_new.tpr
+# trajectory_file  D:\Data\PhD\Tutorials\VesnaTube\traj_comp_5_frames.xtc
+
+topology_file  D:\Data\PhD\Tutorials\2N0A\md_0_1.tpr
+trajectory_file  D:\Data\PhD\Tutorials\2N0A\md_0_1.xtc
+
+
+verbose 4
+verbose_logfile 4
+maps_to_use   Amidetemp
+output_format txt
+output_data dip
+
+number_frames 1
+
+log_directory  logdir
+output_directory outdir
+
+estatic_smooth_range 0
+neutral_charge_threshold 0.01

@@ -11,7 +11,6 @@ import numpy as np
 
 # local imports
 import GMAP
-from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class FileLocations:
@@ -278,10 +277,6 @@ def get_bare_file(
             dicts.append(dict_)
             flocs.append(floc.parent)
 
-    if file_parname == "path_test_dir2":
-        dpr([dict_.get("path_test_dir2", None) for dict_ in dicts], files_hc)
-        dpr([flocs], floc_hc)
-
     for dict_, floc in zip(dicts, flocs):
         if file_parname in dict_:
             names = [floc / name for name in dict_[file_parname]]
@@ -289,15 +284,11 @@ def get_bare_file(
     else:
         names = [floc_hc / name for name in files_hc]
 
-    if file_parname == "path_test_dir2":
-        dpr(names)
-        dpr()
-
     return names
 
 
 def get_def_parfile(
-    Files, Printer, cmd_pardict, in_parfile=None, in_pardict={}
+    Files, Printer, cmd_pardict, in_parfile=None, in_pardict=None
 ):
     """
     Given the parameter information on the command line, a new Files instance,
@@ -323,6 +314,9 @@ def get_def_parfile(
         The parameters supplied in the input parameter file.
     """
 
+    if in_pardict is None:
+        in_pardict = {}
+
     name, file_is_hc = get_file(
         Files, "source_directory", "default_parameter_filename",
         Files.sourcedir_hc, [Files.refparfilename_hc],
@@ -340,7 +334,7 @@ def get_def_parfile(
         )
 
     # We need a file to check if the default file is complete (AIM did this
-    # using )
+    # using hard-coded parameters)
     if file_is_hc:
         check_file_found = file_found
     else:
@@ -421,7 +415,7 @@ def check_file_readability(Printer, fname, doquit=True):
     return True
 
 
-def write_output(RunPars, framenum, hamiltonian, dipoles):
+def write_output(RunPars, framenum, outputs):
     """Write the output for a single frame to files.
 
     Writes all outputs - all (requested) datastructures in all
@@ -434,22 +428,33 @@ def write_output(RunPars, framenum, hamiltonian, dipoles):
         parameters.
     framenum : int
         The number of the frame currently being written
-    hamiltonian : `np.ndarray`
-        The computed hamiltonian for this frame.
-    dipoles : `np.ndarray`
-        The computed dipoles for this frame.
+    outputs : dict of str: `np.ndarray` pairs
+        The outputs the program is requested to generate. Currently
+        contains hamiltonian and dipole arrays.
     """
 
     framenum_arr = np.array([framenum], dtype='float32')
 
     if "ham" in RunPars.output_data:
+        hamiltonian = outputs["hamiltonian"]
+        hamiltonian *= RunPars.hamiltonian_multiplier
         reshaped = hamiltonian[np.triu_indices_from(hamiltonian)]
         write_single(
             RunPars, framenum, framenum_arr,
             RunPars.output_hamiltonian_filename, reshaped
         )
 
+    if "ene" in RunPars.output_data:
+        energies = outputs["energies"]
+        energies *= RunPars.energies_multiplier
+        write_single(
+            RunPars, framenum, framenum_arr, RunPars.output_energies_filename,
+            energies
+        )
+
     if "dip" in RunPars.output_data:
+        dipoles = outputs["dipoles"]
+        dipoles *= RunPars.dipoles_multiplier
         reshaped = dipoles.T.flatten()
         write_single(
             RunPars, framenum, framenum_arr,
@@ -479,13 +484,62 @@ def write_single(RunPars, framenum, framenum_arr, fname, data):
     """
 
     if "bin" in RunPars.output_format:
-        with open(fname.parent / f"{fname.name}.bin", "ab+") as fhand:
+        with open(fname.parent / f"{fname.name}.bin", "ab") as fhand:
             framenum_arr.tofile(fhand)  # write frame number
-            data.tofile(fhand)  # write hamiltonian
+            data.tofile(fhand)  # write data itself (Ham or Dip or ...)
 
     if "txt" in RunPars.output_format:
-        with open(fname.parent / f"{fname.name}.txt", "a+") as fhand:
+        with open(
+            fname.parent / f"{fname.name}.txt", "a", encoding='utf-8'
+        ) as fhand:
             fhand.write(f"{framenum} ")  # write frame number
-            data = np.round(data, decimals=6)
-            data.tofile(fhand, sep=" ")  # write hamiltonian
+            # data = np.round(data, decimals=6)
+            decs = 6
+            data = np.rint(data*10**decs)/(10**decs)
+            # write data itself (Ham or Dip or ...)
+            # data.tofile(fhand, sep=" ", format="%#.6g")
+            data.tofile(fhand, sep=" ")
             fhand.write("\n")
+
+
+def clear_output(RunPars):
+    """Prepare an empty file for each output
+
+    If files already exist, clears them. If not, creates them.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    """
+
+    if "ham" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_hamiltonian_filename)
+    if "dip" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_dipole_filename)
+    if "ene" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_energies_filename)
+
+
+def clear_single(RunPars, fname):
+    """Clears any file if it exists prior to writing
+
+    A file shouldn't contain anything when first appended to.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    fname : `pathlib.Path`
+        The name + location of the file to which to write. This filename
+        should not include the extension!
+    """
+
+    if "bin" in RunPars.output_format:
+        with open(fname.parent / f"{fname.name}.bin", "wb") as _:
+            pass
+    if "txt" in RunPars.output_format:
+        with open(fname.parent / f"{fname.name}.txt", "w") as _:
+            pass

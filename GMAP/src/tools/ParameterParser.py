@@ -2,10 +2,13 @@
 # standard library imports
 from pathlib import Path
 
+# 3rd party imports
+import numpy as np
+
 # local imports
+import GMAP.src.tools.constants as GM_con
 import GMAP.src.tools.FileHandler as GM_FH
-from GMAP.src.tools.PrintTools import devprint as dpr
-dpr("", end="")  # to disable error of dpr unused
+import GMAP.src.tools.MapReader as GM_MR
 
 
 class RefPars:
@@ -113,6 +116,11 @@ class RefPars:
         self.fname = fname.resolve()
         self.add_groups()
         self.nondefcount = 0
+
+        if self.is_main:
+            self.compounds = ("couplings_to_use",)
+        else:
+            self.compounds = tuple()
 
         self.parse_refparfile(Printer, self.parse_line_type_protected)
         self.parse_refparfile(Printer, self.parse_line_choice_protected)
@@ -485,6 +493,41 @@ class RefPars:
                 parameter
             ] + [")"]
 
+        # Checking radii for estatic sphere
+        estatic_range = self.choices.get("estatic_range", [1])[0]
+        if estatic_range < 0:
+            Printer.warning(
+                "\nEncountered an issue with the following parameter source: "
+                f"{self.fname}. The parameter estatic_range can only take a "
+                "positive value, but a negative one was detected. Please make "
+                "sure it has a positive value.",
+                "SU_FP_7", True
+            )
+        estatic_smooth_range = self.choices.get("estatic_smooth_range", [1])[0]
+        if estatic_smooth_range < 0:
+            Printer.warning(
+                "\nEncountered an issue with the following parameter source: "
+                f"{self.fname}. The parameter estatic_smooth_range can only "
+                "take a positive value, but a negative one was detected. "
+                "Please make sure it has a positive value.",
+                "SU_FP_7", True
+            )
+
+        if self.choices["hamiltonian_units"][0] == "cm-1":
+            self.choices["hamiltonian_multiplier"] = [1]
+        else:  # eV
+            self.choices["hamiltonian_multiplier"] = [GM_con.cm2eV]
+
+        if self.choices["energies_units"][0] == "cm-1":
+            self.choices["energies_multiplier"] = [1]
+        else:  # eV
+            self.choices["energies_multiplier"] = [GM_con.cm2eV]
+
+        if self.choices["dipoles_units"][0] == "Debye":
+            self.choices["dipoles_multiplier"] = [1]
+        else:  # eV
+            self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
+
     @staticmethod
     def parse_key(string):
         """Extracts parameter name, shorthand and type from key in file
@@ -679,7 +722,7 @@ class RawPars:
         """
 
         with open(fname) as file:
-            given_dict = get_pardict(file)
+            given_dict = get_pardict(file, RefPars.compounds)
 
         instance = cls.from_dict(
             Printer, fname, given_dict, RefPars, is_default
@@ -729,7 +772,7 @@ class RawPars:
         # - extract actual arguments
 
         temp_instance = cls(Printer, Path("command line"), False, {}, {})
-        pardict = {}
+        parfile_mock = []
 
         while len(cmdargs) > 0:
             # Step 1: Figure out what the parameter name is, and where its from
@@ -764,7 +807,8 @@ class RawPars:
                 Printer, cmdargs, curpar, curpar_tocheck, refpars_to_use
             )
 
-            pardict[curpar] = choice
+            parfile_mock.append(curpar + " " + " ".join(choice))
+        pardict = get_pardict(parfile_mock, RefPars.compounds)
 
         instance = cls.from_dict(
             Printer, Path("command line"), pardict, RefPars, is_default
@@ -1145,9 +1189,16 @@ class RawPars:
         if parname_refpars in RefPars.choices:
             found = True
             if do_verify:
-                choice = self.verify_choice(
-                    Printer, parname_refpars, choice, RefPars
-                )
+                # if the parameter name is in RefPars.compounds, this
+                # parameter contains the information from multiple lines.
+                if parname_refpars in RefPars.compounds:
+                    choice = [self.verify_choice(
+                        Printer, parname_refpars, subchoice, RefPars
+                    ) for subchoice in choice]
+                else:
+                    choice = self.verify_choice(
+                        Printer, parname_refpars, choice, RefPars
+                    )
             if not do_verify or choice is None:
                 return None, found, parname_refpars
 
@@ -1167,9 +1218,16 @@ class RawPars:
                 return None, found, parname_refpars
             else:
                 if do_verify:
-                    choice = self.verify_choice(
-                        Printer, parname_refpars, choice, RefPars
-                    )
+                    # if the parameter name is in RefPars.compounds, this
+                    # parameter contains the information from multiple lines.
+                    if parname_refpars in RefPars.compounds:
+                        choice = [self.verify_choice(
+                            Printer, parname_refpars, subchoice, RefPars
+                        ) for subchoice in choice]
+                    else:
+                        choice = self.verify_choice(
+                            Printer, parname_refpars, choice, RefPars
+                        )
                 if not do_verify or choice is None:
                     return None, found, parname_refpars
 
@@ -1272,6 +1330,26 @@ class RawPars:
                 self.choices["influencers_select_atoms"]
             )
 
+        # Checking radii for estatic sphere
+        estatic_range = self.choices.get("estatic_range", [1])[0]
+        if estatic_range < 0:
+            Printer.warning(
+                "\nEncountered an issue with the following parameter source: "
+                f"{self.fname}. The parameter estatic_range can only take a "
+                "positive value, but a negative one was detected. Please make "
+                "sure it has a positive value.",
+                "SU_WP_11", True
+            )
+        estatic_smooth_range = self.choices.get("estatic_smooth_range", [1])[0]
+        if estatic_smooth_range < 0:
+            Printer.warning(
+                "\nEncountered an issue with the following parameter source: "
+                f"{self.fname}. The parameter estatic_smooth_range can only "
+                "take a positive value, but a negative one was detected. "
+                "Please make sure it has a positive value.",
+                "SU_WP_11", True
+            )
+
         # next - frame numbers!
         start_frame = self.choices.get("start_frame", [None])[0]
         number_frames = self.choices.get("number_frames", [None])[0]
@@ -1299,6 +1377,60 @@ class RawPars:
                 Printer.warning(msg, "SU_WP_17", True)
             elif number_frames is None and stop_frame < start_frame:
                 Printer.warning(msg, "SU_WP_17", True)
+
+        # output units
+        # if the multiplier is defined using set units, make the conversion.
+        # if both, error. If none, also fine.
+        if "hamiltonian_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "hamiltonian_multiplier" in self.choices:
+                Printer.warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'hamiltonian_units' and "
+                    "'hamiltonian_multiplier', but contains both.",
+                    "SU_WP_16", True
+                )
+            else:
+                if self.choices["hamiltonian_units"][0] == "cm-1":
+                    self.choices["hamiltonian_multiplier"] = [1]
+                else:  # eV
+                    self.choices["hamiltonian_multiplier"] = [GM_con.cm2eV]
+
+        if "energies_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "energies_multiplier" in self.choices:
+                Printer.warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'energies_units' and "
+                    "'energies_multiplier', but contains both.",
+                    "SU_WP_16", True
+                )
+            else:
+                if self.choices["energies_units"][0] == "cm-1":
+                    self.choices["energies_multiplier"] = [1]
+                else:  # eV
+                    self.choices["energies_multiplier"] = [GM_con.cm2eV]
+
+        if "dipoles_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "dipoles_multiplier" in self.choices:
+                Printer.warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'dipoles_units' and "
+                    "'dipoles_multiplier', but contains both.",
+                    "SU_WP_16", True
+                )
+            else:
+                if self.choices["dipoles_units"][0] == "Debye":
+                    self.choices["dipoles_multiplier"] = [1]
+                else:  # eV
+                    self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
 
     def finalize_map_pars(self, Printer):
         """Check whether `not_found` is empty
@@ -1400,9 +1532,28 @@ class RunPars:
         'self' will be used.
     detected_requires_bonds : bool
         Whether (one of) the maps requested for use require(s) bonds
-    requested_mapdict : dict of str: :class:`~GMAP.src.tools.MapReader.Map`
-        The maps that should be applied during the calculation.
-
+    available_maps_singles : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.SingleMap` pairs
+        The maps that are available during the calculation. These are
+        available for any other maps that might want to know something
+        from these.
+    requested_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.SingleMap` pairs
+        The maps that should be applied during the calculation. This
+        must be a subset of available_maps_singles
+    available_maps_pairs : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.PairMap` pairs
+        The pairmaps that are available during the calculation. If any
+        pairmap requires another, it must be present in at least this list.
+    requested_pairmapdict : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.PairMap` pairs
+        The pair maps that should be applied during the calculation. This
+        must be a subset of available_maps_pairs.
+    pair_v_coupling_dict : dict of (tuple of str): str pairs
+        For each possible pair of oscillator(types), get the coupling map name
+    coupling_v_pair_dict : dict of str: tuple of str pairs
+        For each requested coupling map, get the pairs of oscillators it
+        couples
     """
 
     def __init__(
@@ -1427,9 +1578,9 @@ class RunPars:
                 self.log_filename
             )
 
-        # Resolve conflicts due to choices, change any settings that need to
-        # be changed, due to parameters that interlock.
-        self.resolve(CmdPars, InPars, DefPars, RefPars)
+            # Resolve conflicts due to choices, change any settings that need
+            # to be changed, due to parameters that interlock.
+            self.resolve(Printer, CmdPars, InPars, DefPars, RefPars)
 
     def get_pars(self, Printer, CmdPars, InPars, DefPars, RefPars):
         """Sets attribute for each non-path parameter.
@@ -1645,24 +1796,30 @@ class RunPars:
 
         dirlist = [InPars.choices]
         fnamelist = [InPars.fname]
+
+        # Dedicated defparfile
         if not DefPars.fname == RefPars.fname:
             dirlist.append(DefPars.choices)
             fnamelist.append(DefPars.fname)
 
+        # all ordered file parameters are sorted by the directory the files
+        # should be based in
         for dir_parname, file_parnames in RefPars.organized_filepars.items():
             try:
                 dir_hc = RefPars.choices[dir_parname][0]
             except Exception:
                 dir_hc = Files.cwd
 
+            # What directory are we based on?
             dir_hc = GM_FH.get_bare_file(
                 Files, dir_parname, [dir_hc], RefPars.fname.parent,
                 CmdPars.choices, dirlist, fnamelist
             )
             name = dir_hc[0].resolve()
 
+            # check if directory exists
             if name.is_dir():
-                setattr(self, dir_parname, name.resolve())
+                setattr(self, dir_parname, name)
             else:
                 if self.is_main:
                     Printer.warning(
@@ -1686,6 +1843,7 @@ class RunPars:
                         "SU_NP_3", True
                     )
 
+            # now, consider each file that should live in this directory
             for file_parname in file_parnames:
                 if (
                     self.is_main
@@ -1716,15 +1874,17 @@ class RunPars:
                     file_found = (None not in files_found)
                 else:
                     # If a new file is made, we only have to see if the parent
-                    # directory exists.
+                    # directory exists. (yes, we still have to do this, as the
+                    # file name a user provides could contain further folders)
                     files_found = [file.resolve() for file in files_found]
                     names = files_found
-                    file_found = files_found[0]
+                    file_found = files_found[0]  # start at value of first
                     for file in files_found:
                         par_dir = file.parent
                         if not par_dir.is_dir():
-                            file_found = None
+                            file_found = None  # mark that some is missing!
 
+                # if any of the files for this parameter are missing
                 if not file_found:
                     names = [str(file) for file in names]
                     Printer.warning(
@@ -1736,41 +1896,138 @@ class RunPars:
                         f"the choice for {dir_parname}.\n", "SU_NP_2", True
                     )
 
-                if (
-                    file_parname in RefPars.filepars_create
-                    and self.MainRunPars.prevent_overwrite
-                    and file_found.is_file()
-                ):
-                    # A new file should be made, but if a file of the same
-                    # name already exists, it shouldn't be replaced.
-                    # We already know that the parent directory of the
-                    # requested path exists.
-                    for file in files_found:
-                        rawname = file.name
-                        backup_path = file.resolve()
+                # If the filename already exists, and we don't want to
+                # overwrite, rename existing files!
+                self.rename_outfiles(RefPars, file_parname, files_found, True)
 
-                        addnum = 0
-                        while backup_path.is_file():
-                            addnum += 1
-                            backup_path = file.parent.resolve()
-                            backup_path /= f"#{rawname}.{addnum}#"
+                # Some output parameters add file extensions later!
 
-                        file.rename(backup_path)
+                # if not all files provided have suffixed:
+                if not all(file.suffix for file in files_found):
+                    if 'txt' in self.output_format:
+                        files_tocheck = [
+                            file.with_suffix('.txt') for file in files_found]
+                        self.rename_outfiles(
+                            RefPars, file_parname, files_tocheck)
+                    if 'bin' in self.output_format:
+                        files_tocheck = [
+                            file.with_suffix('.bin') for file in files_found]
+                        self.rename_outfiles(
+                            RefPars, file_parname, files_tocheck)
 
-                if file_parname in RefPars.maybe_list:
-                    setattr(self, file_parname, files_found)
-                else:
-                    setattr(self, file_parname, files_found[0])
+    def rename_outfiles(
+        self, RefPars, file_parname, files_found, do_setattr=False
+    ):
+        """Renames files that would otherwise be overwritten
 
-    def resolve(self, CmdPars, InPars, DefPars, RefPars):
+        The program will create all kinds of files during runtime. But
+        if a file of that name already exists, it will be overwritten.
+        To prevent this, we seek out if such an overwrite will take
+        place, and rename the targeted file.
+
+        Parameters
+        ----------
+        RefPars : :class:`RefPars`
+            Contains all available parameters from GMAP itself (not
+            map-specific)
+        file_parname : str
+            The name of the parameter which' files we're taking care of
+        files_found : list of `pathlib.Path`
+            The requested file locations. If the user provided multiple
+            filenames in the input file, this list will have more than
+            one item.
+        do_setattr : bool
+            Whether the provided filepaths should also be saved as the
+            choice for this parameter.
+        """
+
+        for file in files_found:
+            if (
+                file_parname in RefPars.filepars_create
+                and self.MainRunPars.prevent_overwrite
+                and file.is_file()
+            ):
+                # A new file should be made, but if a file of the same
+                # name already exists, it shouldn't be replaced.
+                # We already know that the parent directory of the
+                # requested path exists.
+                rawname = file.name
+                backup_path = file.resolve()
+
+                addnum = 0
+                while backup_path.is_file():
+                    addnum += 1
+                    backup_path = file.parent.resolve()
+                    backup_path /= f"#{rawname}.{addnum}#"
+
+                file.rename(backup_path)
+
+        if do_setattr:
+            if file_parname in RefPars.maybe_list:
+                setattr(self, file_parname, files_found)
+            else:
+                setattr(self, file_parname, files_found[0])
+
+    def resolve(self, Printer, CmdPars, InPars, DefPars, RefPars):
         """Fix any issues that may arise from the combination of sources.
 
         This either means checking if there are no invalid combinations
         (where a choice for a parameter doesn't make sense given the one
         for a different one), or it means combining choices from
         different sources when their values are interdependent.
+
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        CmdPars : :class:`RawPars`
+            Contains any parameter choices made on the command line
+        InPars : :class:`RawPars`
+            Contains any parameter choices made in the input parameter file
+        DefPars : :class:`RawPars` or :class:`RefPars`
+            Contains all default parameter choices. Might be RefPars, might be
+            from a separate default parameters file.
+        RefPars : :class:`RefPars`
+            Contains all available parameters from GMAP itself (not
+            map-specific)
         """
 
+        self.resolve_framenums(Printer, CmdPars, InPars, DefPars, RefPars)
+        self.resolve_couplings(Printer, CmdPars, InPars, DefPars)
+
+    def resolve_framenums(self, Printer, CmdPars, InPars, DefPars, RefPars):
+        """Make sure the combination of frame numbers makes sense.
+
+        This means making sure that after all sources are combined,
+        there are no inconsistencies - start + num must equal stop.
+
+        If a source doesn't give all three parameters, this requirement
+        is relaxed, and the combination of sources is interpreted
+        somewhat more intelligently.
+
+        CmdPars : :class:`RawPars`
+            Contains any parameter choices made on the command line
+        InPars : :class:`RawPars`
+            Contains any parameter choices made in the input parameter file
+        DefPars : :class:`RawPars` or :class:`RefPars`
+            Contains all default parameter choices. Might be RefPars, might be
+            from a separate default parameters file.
+        RefPars : :class:`RefPars`
+            Contains all available parameters from GMAP itself (not
+            map-specific)
+        """
+
+        # The smoothing should start sooner than we start calculating the
+        # electrostatics to begin with....
+        if self.estatic_smooth_range > (self.estatic_range * 2):
+            Printer.warning(
+                "\nEncountered an issue with the combined choices of "
+                "parameters. The parameter estatic_smooth_range can not "
+                "take a value larger than twice that of estatic_range. "
+                "Please make sure it does not exceed that.",
+                "SU_NP_7", True
+            )
+
+        # An inconsistency with frame parameters?
         all_parameter_names = ("start_frame", "stop_frame", "number_frames")
         found = {}
         for source in (CmdPars, InPars, DefPars, RefPars):
@@ -1824,6 +2081,347 @@ class RunPars:
             for parameter, choice in found.items():
                 setattr(self, parameter, choice)
             break
+
+    def resolve_couplings(self, Printer, CmdPars, InPars, DefPars):
+        """Interprets the requested coupling choices
+
+        The coupling choices are provided on multiple lines, possibly
+        from multiple sources (so a single choice can be changed without
+        having to re-specify all). Combining is simple: the sources are
+        read in increasing order of importance, from beginning to end.
+        every next/new line can overwrite any previous lines.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        CmdPars : :class:`RawPars`
+            Contains any parameter choices made on the command line
+        InPars : :class:`RawPars`
+            Contains any parameter choices made in the input parameter file
+        DefPars : :class:`RawPars` or :class:`RefPars`
+            Contains all default parameter choices. Might be RefPars, might be
+            from a separate default parameters file.
+        """
+
+        couplist = []
+
+        # Later sources modify the choices from earlier!
+        for source in (DefPars, InPars, CmdPars):
+            if "couplings_to_use" in source.choices:
+                if isinstance(source, RefPars):
+                    couplist.extend([source.choices["couplings_to_use"]])
+                else:
+                    couplist.extend(source.choices["couplings_to_use"])
+
+        # now, find all pairs of couplings, and assign the correct
+        # coupling choice to them.
+        coupdict = {}
+        for oscname1 in self.maps_to_use:
+            for oscname2 in self.maps_to_use:
+                coupdict[(oscname1, oscname2)] = None
+        self.pair_v_coupling_dict = coupdict
+
+        failed_couppairs = []
+
+        # coupline corresponds to a single line from RawPars files, and
+        # contains information about a single coupling map.
+        for coupline in couplist:
+            if len(coupline) < 2:
+                Printer.warning(
+                    "\nThe parameter couplings_to_use must always take 2 or "
+                    "more "
+                    "arguments, but only one was provided. Please make sure "
+                    "you specify this parameter correctly.",
+                    "SU_NP_8", True
+                )
+            if coupline[0].lower() == "none":
+                coupmap = None
+            else:
+                coupmap = coupline[0]
+            # each coupline can contain multiple pairs of oscillators. Loop
+            # over each mentioned pair, and process it.
+            for pairstr in coupline[1:]:
+                failed_couppairs = self.interpret_coupling_pairstr(
+                    Printer, pairstr, failed_couppairs, coupmap)
+
+        if failed_couppairs:
+            joined = '\n'.join(failed_couppairs)
+            Printer.warning(
+                "\nAll arguments for the parameter couplings_to_use "
+                "(EXCEPT the first one) represent a pair of groups to "
+                "couple. The following groups received coupling instructions, "
+                "but weren't requested for use by 'maps_to_use':\n"
+                f"{joined}\n"
+                "This might indicate a mistake in the indication, please stop "
+                "the program if this is the case.",
+                "SU_NP_8", True
+            )
+
+        self.coupling_v_pair_dict = {}
+        for key, value in self.pair_v_coupling_dict.items():
+            if value in self.coupling_v_pair_dict:
+                self.coupling_v_pair_dict[value].append(key)
+            else:
+                self.coupling_v_pair_dict[value] = [key]
+
+    def interpret_coupling_pairstr(
+        self, Printer, pairstr, failed_couppairs, coupmap
+    ):
+        """Helper for self.resolve_couplings - processes a single pair.
+
+        Edits the coupling dictionary directly in place.
+
+        Parameters
+        ----------
+        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+            The object that allows to cleanly log and print during runtime,
+            and handle errors.
+        pairstr : str
+            the string from the rawpars files indicating the single pair to
+            be processed here. Might take a few formats:
+
+            - oscname:oscname  indicates a specific pair of oscillators
+            - oscname: indicates any pair containing that oscillator
+            - :all indicates all pairs
+            - :same indicates all pairs of oscillators of the same type
+            - :diff indicates all pairs of oscillators of a different type
+        failed_couppairs : list of str
+            All pairs that contain an oscillator type not requested by
+            the parameter maps_to_use. These are not added to the dict.
+        coupmap : str or None
+            The coupling map that should be used for the pairs denoted using
+            pairstr
+
+        returns
+        -------
+        failed_couppairs : list of str
+            All pairs that contain an oscillator type not requested by
+            the parameter maps_to_use. These are not added to the dict.
+        """
+
+        coupdict = self.pair_v_coupling_dict
+
+        if pairstr.lower() == ":all":
+            for key in coupdict.keys():
+                coupdict[key] = coupmap
+            return failed_couppairs
+        elif pairstr.lower() == ":same":
+            for key in coupdict.keys():
+                if key[0] == key[1]:
+                    coupdict[key] = coupmap
+            return failed_couppairs
+        elif pairstr.lower() == ":diff":
+            for key in coupdict.keys():
+                if key[0] != key[1]:
+                    coupdict[key] = coupmap
+            return failed_couppairs
+
+        pair = pairstr.split(":")
+        if len(pair) != 2:
+            Printer.warning(
+                "\nAll arguments for the parameter couplings_to_use "
+                "(EXCEPT the first one) must contain one ':'. This "
+                "is not the case. Please make sure to have exactly "
+                "one.", "SU_NP_8", True
+            )
+        if len(pair[0]) == 0:
+            Printer.warning(
+                "\nAll arguments for the parameter couplings_to_use "
+                "(EXCEPT the first one) represent a pair of groups to "
+                "couple. While the second group is optional, the "
+                "first one is not. Make sure to give at least the "
+                "first one.", "SU_NP_8", True
+            )
+
+        # if either of the group names in the pair has not been
+        # requested as a group to use, error!
+        if (
+            pair[0] not in self.maps_to_use
+            or (pair[1] not in self.maps_to_use and pair[1] != "")
+        ):
+            failed_couppairs.append(pairstr)
+            return failed_couppairs
+
+        if pair[1] == "":
+            for key in coupdict.keys():
+                if pair[0] in key:
+                    coupdict[key] = coupmap
+            return failed_couppairs
+
+        for key in coupdict.keys():
+            if key in ((pair[0], pair[1]), (pair[1], pair[0])):
+                coupdict[key] = coupmap
+        return failed_couppairs
+
+    # Called by GEM.trj_loop()
+    def manage_dtypes(self):
+        """Convert any values that might need it to the correct datatype.
+
+        This is mostly in preparation for numba and/or c algorithms that
+        are not capable of dealing with the uncertain (system-dependent)
+        choice of datatype that python and numpy have.
+        """
+
+        self.estatic_range = np.float32(self.estatic_range)
+        self.estatic_smooth_range = np.float32(self.estatic_smooth_range)
+
+
+def get_parameters(Files, Printer, in_parfile, argslist):
+    """Collect all provided parameters, and store them.
+
+    Parameters are defined (along with default choices) in the reference
+    parameter file. Users can have a different set of defaults defined
+    in the default parameter file, and specific choices for this (set of)
+    runs in the input parameter file and the command line. This function
+    uses the functionality in src/tools/ParameterParser.py to collect
+    all choices, and construct a final set of choices from them. All
+    generated options are then returned.
+
+    Parameters
+    ----------
+    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
+        Contains all currently known paths and other file-related properties.
+        Has to be updated after RunPars is finalized.
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    in_parfile : `pathlib.Path`
+        The path to the requested input parameter file.
+    argslist : list of str
+        The slice of sys.argv containing all parameter choices given on
+        the command line.
+
+    Returns
+    -------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    Singles_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.SingleMap` pairs
+        Stores all the :class:`~GMAP.src.tools.MapReader.SingleMap` objects for
+        each map supplied. The keys are the Map.name attributes corresponding
+        to the maps stored as values.
+    Pairs_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.MapReader.PairMap` pairs
+        Stores all the :class:`~GMAP.src.tools.MapReader.PairMap` objects for
+        each map supplied. The keys are the Map.name attributes corresponding
+        to the maps stored as values.
+    CmdPars : :class:`RawPars`
+        Contains any parameter choices made on the command line
+    InPars : :class:`RawPars`
+        Contains any parameter choices made in the input parameter file
+    DefPars : :class:`RawPars` or :class:`RefPars`
+        Contains all default parameter choices. Might be RefPars, might be
+        from a separate default parameters file.
+    RefPars : :class:`RefPars`
+        Contains all available parameters from GMAP itself (not map-specific)
+    """
+
+    # very basic parsing of cmd
+
+    # before we can parse the command line, or the input parameter file,
+    # we have to know what parameter names to expect. However, to know
+    # this, we need to open the default parameter file, but we don't
+    # know where it is, before parsing command line and input parameter
+    # file.
+
+    # solution: only look for sourcedir and defparfilename in command
+    # line and input parameter file, do further parsing later.
+
+    # step 3 (See if the arg from cmdline have anything on srcdir or defpar)
+    temp_cmd_pardict = find_defparfile_in_cmd(Printer, argslist)
+
+    if in_parfile:
+        # step 4 (very basic inpar file parser)
+
+        # check if file is UTF8
+        GM_FH.check_file_readability(Printer, in_parfile)
+        with open(in_parfile) as file:
+            in_pardict = get_pardict(file)
+        # step 5 (find which defpar to use)
+        def_parfile = GM_FH.get_def_parfile(
+            Files, Printer, temp_cmd_pardict, in_parfile, in_pardict
+        )
+    else:
+        # step 5 (find which defpar to use)
+        def_parfile = GM_FH.get_def_parfile(Files, Printer, temp_cmd_pardict)
+
+    # as get_def_parfile also checks for the presence of the hard-coded
+    # reference parameter file (regardless of program flow), no need to do
+    # it again.
+    # step 6 (find refparfile)
+    ref_parfile = Files.sourcedir_hc / Files.refparfilename_hc
+    # step 7 (parse refparfile)
+    GM_FH.check_file_readability(Printer, ref_parfile)  # check if file is UTF8
+    RefPars_ = RefPars(Printer, ref_parfile, True)
+
+    # step 8 (parse defparfile)
+    if def_parfile.suffix == ".txt":
+        # check if file is UTF8
+        GM_FH.check_file_readability(Printer, def_parfile)
+        DefPars = RawPars.from_file(
+            Printer, def_parfile, RefPars_, True
+        )
+    elif def_parfile == ref_parfile:
+        DefPars = RefPars_
+        setattr(DefPars, "not_found", {})
+    elif def_parfile.suffix == ".ref":
+        DefPars = RefPars.add_reffile(Printer, def_parfile, RefPars_)
+    else:
+        Printer.warning(
+            f"The requested default parameter file {def_parfile} is of the "
+            "wrong file format. "
+            "Please refer to the manual to see what file types are supported.",
+            "SU_GEM_1", True
+        )
+
+    # step 9 (parse inparfile, not map part)
+    if in_parfile:
+        InPars = RawPars.from_file(
+            Printer, in_parfile, RefPars_, False)
+    else:
+        InPars = RawPars.create_empty(Printer)
+
+    # step 10 (find mapdir in cmdline > inparfile > defparfile)
+    mapdirs = find_mapdir(Files, Printer, argslist, InPars, DefPars)
+
+    # step 11 (for each map, parse parameters.ref, if present)
+    singles_mapdict = GM_MR.scan_mapdirs(mapdirs, "Singles")
+    pairs_mapdict = GM_MR.scan_mapdirs(mapdirs, "Pairs")
+    all_mapdict = singles_mapdict | pairs_mapdict
+    for map_ in all_mapdict.values():
+        map_.find_refpars(Printer)
+
+    # step 12 (finish parsing cmdline, inparfile, defparfile)
+
+    # cmdline
+    CmdPars = RawPars.from_cmdline(
+        Printer, argslist, RefPars_,
+        {name: map_.RefPars for name, map_ in all_mapdict.items()},
+        False
+    )
+
+    for map_ in all_mapdict.values():
+        map_.find_rawpars(Printer, CmdPars, InPars, DefPars)
+
+    CmdPars.finalize_map_pars(Printer)
+    InPars.finalize_map_pars(Printer)
+    if def_parfile != ref_parfile:
+        DefPars.finalize_map_pars(Printer)
+
+    RunPars_ = RunPars(
+        Files, Printer, CmdPars, InPars, DefPars, RefPars_, True
+    )
+
+    for map_ in all_mapdict.values():
+        map_.find_runpars(Files, Printer, RunPars_)
+
+    return (
+        RunPars_, singles_mapdict, pairs_mapdict, CmdPars, InPars, DefPars,
+        RefPars_
+    )
 
 
 def add_missing_frame_parameter(pardict):
@@ -2151,7 +2749,7 @@ def directory_list_checker(Printer, parent, direclist, parname, source):
     return dirs
 
 
-def get_pardict(iterable):
+def get_pardict(iterable, compounds=None):
     """Takes an iterable, and returns it in dict form.
 
     Each iteration of the iterable is subjected to .split(); the zeroeth item
@@ -2164,6 +2762,8 @@ def get_pardict(iterable):
     ----------
     iterable : any iterable
         Contains the information to be converted to a dict.
+    compounds : tuple of str
+        These keys are allowed to occur more than once.
 
     Returns
     -------
@@ -2172,15 +2772,24 @@ def get_pardict(iterable):
         remaining items.
 
     """
+
+    if compounds is None:
+        compounds = tuple()
+
     outdict = {}
     for line in iterable:
         line = cleanline(line).strip()
         if len(line) == 0:
             continue
         linelist = [term.strip() for term in line.split()]
-        linelist = [term for term in linelist if term]
 
-        outdict[linelist[0]] = linelist[1:]
+        if linelist[0] in compounds:
+            if linelist[0] in outdict:
+                outdict[linelist[0]].append(linelist[1:])
+            else:
+                outdict[linelist[0]] = [linelist[1:]]
+        else:
+            outdict[linelist[0]] = linelist[1:]
     return outdict
 
 
@@ -2266,10 +2875,7 @@ def parse_influencerfile_line(Printer, line, groupdict, fname):
     specialchars = "-&|^()"
     allowed_chars = " :" + namechars + specialchars
 
-    # dpr(line)
-    # dpr(allowed_chars)
     problem_chars = [char for char in line if char not in allowed_chars]
-    # dpr(problem_chars)
 
     if problem_chars:
         Printer.warning(
@@ -2309,8 +2915,6 @@ def parse_influencerfile_line(Printer, line, groupdict, fname):
                 fromdict = False
             else:
                 final_choice += "set(['" + curname + "'])"
-
-    # dpr(final_choice)
 
     try:
         exec(final_choice)

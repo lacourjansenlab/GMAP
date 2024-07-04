@@ -66,12 +66,28 @@ electrostatic_choice E   # V, E, or G
 
 # ------------------------
 
-frequency_gas_phase     1714
-frequency_data_file     Skinner.txt
+# These atoms should not be considered when calculating the VEG for this group.
+# The number represents the index at which that atom is present in the
+# used_atoms list.
+
+local_atoms   0 1 3 4 5
 
 # ------------------------
 
-dipole_gas_phase        0.24
+# Indicates what units the map assumes for length (many IR maps have their
+# constants published in Bohr)
+
+assume_length_units    ang
+
+# ------------------------
+
+
+frequency_gas_phase     1714
+frequency_data_file_linear     Skinner.txt
+
+# ------------------------
+
+dipole_gas_phase        0.24  # The (base) magnitude of the dipole vectors
 dipole_data_file        [N/A]   # There is no file - dipole (by default) does not relate to VEG
 
 # -------------------
@@ -88,8 +104,17 @@ dipole_data_file        [N/A]   # There is no file - dipole (by default) does no
 x_uvec    1-0  # this is comment
 y_uvec    3-0
 
-r_vec     1-0
+r_vec     1-0  # only the direction, normalized.
 r_pos     0
+
+# ---------------------
+
+# What should be the midpoint of the sphere defining the charges that can
+# influence VEG.
+
+#VEG_reference  residues 0    # take CoM of all atoms in residue which atom 0 of this oscillator belongs to.
+#VEG_reference  position 1-0  # take #VEG_reference to be this exact position
+VEG_reference  CoM  0 1 3 4  # take CoM of listed atoms
 
 # ---------------------
 

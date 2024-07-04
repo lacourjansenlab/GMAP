@@ -86,15 +86,6 @@ class Printer:
         if verbose_level <= self.verbose_logfile:
             print(prettifier(str(toprint)), file=open(self.logfile, "a"))
 
-    def quit_early(self):
-        """Called when the program is quitted early
-
-        Prints the backlog if there is any.
-        """
-
-        if self.backlog:
-            self.print_backlog()
-
     def print_backlog(self):
         """Prints the backlog so the program can stop.
 
@@ -106,6 +97,9 @@ class Printer:
             self.verbose = 3
             self.verbose_logfile = 4
             self.program_state = "running"
+
+        # create the file (clear it if it exists). File equivalent of
+        # creating an empty list.
         with open(self.logfile, "w") as _:
             pass
 
@@ -131,6 +125,7 @@ class Printer:
             that error can be caught and fed into this function.
         """
 
+        # if error_code[2:6] not in ["_MC_",]:
         self.print(0, message)
 
         # print the traceback in exactly the same way as it would be
@@ -193,8 +188,8 @@ class Timer:
 
         self.times = {}
 
-    def add_time(self, name):
-        self.times[name] = time.perf_counter_ns()
+    def add_time(self, msg):
+        self.times[msg] = time.perf_counter_ns()
 
     def get_time(self, msg):
         return self.times[msg] - self.zero
@@ -315,7 +310,8 @@ def intlist_to_rangelist(intlist, n_int, make_shadow=True):
     intlist : list of int
         The list of integers to be packed.
     n_int : int
-        The amount of integers that can at most be there.
+        The amount of integers that can at most be there. (The provided value
+        itself will never appear!)
     make_shadow : bool, default=True
         Whether the opposite should also be built - a list of all indices
         that weren't in the intlist
@@ -368,7 +364,7 @@ def intlist_to_rangelist(intlist, n_int, make_shadow=True):
                 else:
                     end = num
                 if prevnum + 1 != end:
-                    shadow += rangestrlist(prevnum + 1, end)
+                    shadow += rangestrlist(prevnum + 1, end - 1)
 
             # the last number was 'alone'
             result += rangestrlist(range_start, prevnum)

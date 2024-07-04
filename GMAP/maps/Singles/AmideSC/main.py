@@ -4,21 +4,12 @@ Also is the template/explanation for all that a map can hand directly to
 GMAP. Of course, more functions are allowed, and these files can import
 other custom python files stored in the same directory (or a directory
 therein) as this file.
-
-how about adding these?
- - post_init()
- - pre_run()  # just before per-frame loop
- - pre_frame()
- - post_frame()
- - post_run()
-
- - calculate_freq()
- - calculate_dipole()
 """
 
 import numpy as np
 
 import GMAP.src.tools.MathFunctions as GM_MF
+import GMAP.src.tools.PhysicsFunctions as GM_PF
 
 
 # A function to adjust the parameters of the map. For some kinds of
@@ -174,13 +165,20 @@ def GM_post_run(Printer, Map, Syst):
     pass
 
 
+# This is what GMAP assumes this function to contain if it is not specified.
+# If oscillators belonging to this map should be reported any differently, that
+# method should be specified here.
+def placeholder_GM_str_osc(Syst, Map, osc):
+    return f"living on residue number {Syst.resnums[osc.used_atoms[0]]}"
+
+
 # !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
 # GMAP will not actually 'see' this function and use it. If you want to
 # have this function, just use `def GM_get_rotation_matrix` - see the manual
 # for more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
 def placeholder_GM_get_rotation_matrix(
-    Files, Printer, Map, Syst, osc
+    Printer, Map, Syst, osc
 ):
     """Finds the rotation matrix for a given oscillator.
 
@@ -197,10 +195,6 @@ def placeholder_GM_get_rotation_matrix(
 
     Parameters
     ----------
-    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
-        Contains all currently known paths and other file-related
-        properties.
-        Has to be updated after RunPars is finalized.
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
@@ -241,11 +235,12 @@ def placeholder_GM_get_rotation_matrix(
 
 # !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
 # GMAP will not actually 'see' this function and use it. If you want to
-# have this function, just use `def GM_get_dipole` - see the manual for
+# have this function, just use `def GM_get_dipole_dir` - see the manual for
 # more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
-def placeholder_GM_get_dipole(Files, Printer, Map, Syst, osc):
-    """Finds the dipole moment and its position of a given oscillator.
+def placeholder_GM_get_dipole_dir(Printer, Map, Syst, osc):
+    """Finds the dipole moment direction and its position of a given
+    oscillator.
 
     Most spectroscopic techniques require to know the dipole moment of
     each oscillator. Usually, this dipole moment can be approximated
@@ -261,10 +256,6 @@ def placeholder_GM_get_dipole(Files, Printer, Map, Syst, osc):
 
     Parameters
     ----------
-    Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
-        Contains all currently known paths and other file-related
-        properties.
-        Has to be updated after RunPars is finalized.
     Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
         The object that allows to cleanly log and print during runtime,
         and handle errors.
@@ -280,16 +271,150 @@ def placeholder_GM_get_dipole(Files, Printer, Map, Syst, osc):
 
     Returns
     -------
-    rotation_matrix : `np.ndarray`
-        A 3*3 matrix containing the rotation matrix. If a vector in
-        global coordinates is multiplied with this matrix, the result
-        should be that vector expressed in the coordinate system of this
-        oscillator.
+    r_vec : `np.ndarray`
+        A length-3 vector containing the direction of the dipole moment.
+        The vector must be normalized.
+    r_pos : `np.ndarray`
+        A length-3 vector containing the position of the dipole moment.
+        The vector must lie within the simulation box.
     """
 
     r_vec = (osc.positions_box[1] - osc.positions_box[0]) @ Syst.boxvects
     r_pos = Syst.positions[osc.used_atoms[0]]
     return r_vec, r_pos
+
+
+# the actual magnitude of the dipole moment
+
+# !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
+# GMAP will not actually 'see' this function and use it. If you want to
+# have this function, just use `def GM_get_dipole_mag` - see the manual for
+# more information. This placeholder is just here for illustration (but
+# this map does not actually need this function).
+def placeholder_GM_get_dipole_mag(Printer, Map, Syst, osc):
+    """Finds the magnitude for a given dipole moment.
+
+    Most spectroscopic techniques require to know the dipole moment of
+    each oscillator. Usually, this dipole moment can be approximated
+    easily without calculating it. When defining a dipole moment magnitude
+    using a base value and an optional standard-format VEG-dependence does not
+    suffice, this function can be used.
+
+    .. note::
+        This function is called by the program every time it needs to
+        know the magnitude of the dipole moment
+        of this group. This magnitude could be different for
+        each individual oscillator (so each molecule), each frame, so it
+        will be called that often. But it doesn't always have to return
+        something different.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    Map : :class:`~GMAP.src.tools.MapReader.Map`
+        The object that stores everything the program currently knows
+        about this map.
+    Syst : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The specific oscillator for which the transformation is required.
+
+    Returns
+    -------
+    magnitude : `np.float32`
+        The length that the dipole moment vector should have.
+    """
+
+    return np.float32(0.3)
+
+
+# !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
+# GMAP will not actually 'see' this function and use it. If you want to
+# have this function, just use `def GM_get_dipole` - see the manual for
+# more information. This placeholder is just here for illustration (but
+# this map does not actually need this function).
+def placeholder_GM_calculate_dipole(Printer, Map, Syst, osc):
+    """Finds a given dipole moment and its position.
+
+    Most spectroscopic techniques require to know the dipole moment of
+    each oscillator. Usually, this dipole moment can be approximated
+    easily without calculating it. When a dipole has a more complex
+    format than the program uses by default, this function can be used.
+
+    .. note::
+        This function is simply the call to GM_get_dipole_dir, and then
+        multiplying the resulting r_vec with the result of
+        GM_get_dipole_mag. If only one of those two needs to be changed,
+        it is recommended to make the change there, instead of here.
+
+    Parameters
+    ----------
+    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
+        The object that allows to cleanly log and print during runtime,
+        and handle errors.
+    Map : :class:`~GMAP.src.tools.MapReader.Map`
+        The object that stores everything the program currently knows
+        about this map.
+    Syst : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The specific oscillator for which the transformation is required.
+
+    Returns
+    -------
+    r_vec : `np.ndarray`
+        A length-3 vector containing the direction of the dipole moment.
+        Datatype of this array must be float32!
+    r_pos : `np.ndarray`
+        A length-3 vector containing the position of the dipole moment.
+        The vector must lie within the simulation box.
+        Datatype of this array must be float32!
+    """
+
+    r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
+    r_vec *= Map.code.GM_get_dipole_mag(Printer, Map, Syst, osc)
+    return r_vec, r_pos
+
+
+def placeholder_GM_calculate_frequency(Printer, Map, Syst, osc):
+    return Map.Core.frequency_gas_phase + np.sum(np.multiply(
+        osc.VEGout, Map.Core.frequency_data_array_linear))
+
+
+# !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
+# GMAP will not actually 'see' this function and use it. If you want to
+# have this function, just use `def GM_get_VEG_ref` - see the manual for
+# more information. This placeholder is just here for illustration (but
+# this map does not actually need this function).
+def placeholder_GM_get_VEG_ref_residues(Printer, Map, Syst, osc):
+    atnums = []
+    for atom in [0]:
+        resnum = Syst.resnums[osc.used_atoms[atom]]
+        atnums.extend([*range(
+            Syst.residues.first_ix[resnum],
+            Syst.residues.last_ix[resnum] + 1
+        )])
+    CoM = GM_PF.calc_CoM(Syst, atnums)
+    return CoM
+
+
+# !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
+# GMAP will not actually 'see' this function and use it. If you want to
+# have this function, just use `def GM_get_VEG_ref` - see the manual for
+# more information. This placeholder is just here for illustration (but
+# this map does not actually need this function).
+def placeholder_GM_get_VEG_ref_com(Printer, Map, Syst, osc):
+    atnums = []
+    for atom in [0, 1, 3, 4]:
+        atnums.append(osc.used_atoms[atom])
+    CoM = GM_PF.calc_CoM(Syst, atnums)
+    return CoM
 
 
 # A function to adjust the final python objects built out of the

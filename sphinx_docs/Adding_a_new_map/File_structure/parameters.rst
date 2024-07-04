@@ -4,6 +4,8 @@
 parameters.ref
 ##############
 
+(This applies both to singles and pairs maps)
+
 This is an optional file containing all keyword parameters the map needs. The file must be of the name 'parameters.ref' for it to be recognized.
 
 Any parameter specified here can be set/supplied by the user, so choices can vary for each calculation.

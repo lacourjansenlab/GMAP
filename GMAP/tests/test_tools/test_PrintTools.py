@@ -1,5 +1,43 @@
+"""
+tests missing:
+
+(@ may 2nd '24):
+  (0 missed statements)
+
+- Nothing is missing!
+"""
+
+
 # local imports
 from GMAP.src.tools import PrintTools as GM_PT
+
+
+class TestTimer:
+    def test_init(self):
+        timer = GM_PT.Timer()
+        assert isinstance(timer.zero, int)
+
+
+def test_devprint(capsys):
+    GM_PT.devprint("this is a test")
+    captured = capsys.readouterr()
+    assert captured.out == (
+        "(line   22) this is a test (from test_devprint in test_PrintTools.py)"
+        "\n"
+    )
+
+
+def test_intlist_to_rangelist():
+    intlist = [0, 1, 2, 6, 7, 10]
+    maxint = 12
+
+    rangelist, shadow = GM_PT.intlist_to_rangelist(intlist, maxint, False)
+    assert rangelist == ["0-2", "6", "7", "10"]
+    assert shadow is None
+
+    rangelist, shadow = GM_PT.intlist_to_rangelist(intlist, maxint, True)
+    assert rangelist == ["0-2", "6", "7", "10"]
+    assert shadow == ["3-5", "8", "9", "11"]
 
 
 def test_time_to_str():

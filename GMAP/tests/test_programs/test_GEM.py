@@ -1,8 +1,6 @@
 
-# standard library imports
+# Standard library imports
 from pathlib import Path
-
-# 3rd party imports
 import pytest
 
 # local imports
