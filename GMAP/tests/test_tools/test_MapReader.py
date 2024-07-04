@@ -2107,7 +2107,7 @@ def basic_setup_core(Printer, map_, finish_before=None):
     if finish_before == "change_arrays":
         return CoreBase
 
-    CoreBase.change_map_units()
+    CoreBase.change_map_units_decision()
 
     if finish_before == "end":  # so we can ctrl+F later
         return CoreBase
