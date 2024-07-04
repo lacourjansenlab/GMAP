@@ -4,7 +4,7 @@
 Core.txt file
 #############
 
-(this applies to pairs maps. If you are looking for singles maps instead, go to :ref:`the singles version of this page.<AddMap_FileStruct_SingCore>)
+(this applies to pairs maps. If you are looking for singles maps instead, go to :ref:`the singles version of this page.<AddMap_FileStruct_SingCore>`)
 
 This file forms the basis for any map. For pair maps, it is not required, but optional. It explains the context of the map - what other things should be available to the program, what kind of groups this map is allowed to treat. It works somewhat similar to how one creates input parameter files. All available keywords will be listed here, with an explanation.
 

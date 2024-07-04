@@ -4,7 +4,7 @@
 main.py
 #######
 
-(this applies to singles maps. If you are looking for pairs maps instead, go to :ref:`the pairs version of this page.<AddMap_FileStruct_PairMainPy>)
+(this applies to singles maps. If you are looking for pairs maps instead, go to :ref:`the pairs version of this page.<AddMap_FileStruct_PairMainPy>`)
 
 This file contains the code for the map. A map does not need to have any code - this file does not have to exist. If it does, there are a few functions the program will look for. If they are missing, that is no issue, but their names should not be used for any other purpose.
 
@@ -264,6 +264,12 @@ This kind of information should be collected as part of the initialization. This
 Setting different values for certain parameters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Some parameters are only set simply. Like local_ix. If a more complex selection of local_ix is desired, it can be enforced here.
+
+Changing units
+^^^^^^^^^^^^^^
+The main purpose of a map is to provide constants to calculate spectroscopic properties. These constants assume that the properties they are combined with are provided in certain units (see the :ref:`units page<AddMap_units>` for more information). However, these assumptions might not always match this program. 
+
+One could either do the conversion first, and save the converted constants with the correct assumptions in the files supplied to GMAP, or let GMAP do this conversion. The latter might be preferred if one wants the files to match the original publication of the map. In that case, this function here is the best place for a map to do the conversion. To make the conversion easy, use the function Map.Core.change_map_units().
 
 
 Available attributes of Map

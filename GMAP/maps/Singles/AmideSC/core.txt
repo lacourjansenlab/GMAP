@@ -74,6 +74,14 @@ local_atoms   0 1 3 4 5
 
 # ------------------------
 
+# Indicates what units the map assumes for length (many IR maps have their
+# constants published in Bohr)
+
+assume_length_units    ang
+
+# ------------------------
+
+
 frequency_gas_phase     1714
 frequency_data_file_linear     Skinner.txt
 

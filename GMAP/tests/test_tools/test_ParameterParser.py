@@ -26,6 +26,7 @@ import pytest
 
 # local imports
 from GMAP.src.programs.GEM import alljobs
+from GMAP.src.tools import constants as GM_con
 from GMAP.src.tools import FileHandler as GM_FH
 from GMAP.src.tools import MapReader as GM_MR
 from GMAP.src.tools import ParameterParser as GM_PP
@@ -48,6 +49,9 @@ class TestRefPars:
             "verbose_logfile": [0, 1, 2, 3, 4],
             "output_format": ["bin", "txt"],
             "output_data": ["ham", "dip", "ene"],
+            "hamiltonian_units": ["cm-1", "eV"],
+            "energies_units": ["cm-1", "eV"],
+            "dipoles_units": ["Debye", "eBohr"],
             "str_test_choice": ["pick_this", "not_this", "or_this"],
             "str_test_choice_list": [
                 "pick_this", "and_this", "not_this", "or_this"
@@ -96,6 +100,12 @@ class TestRefPars:
             "start_frame": [0],
             "number_frames": [999999999],
             "stop_frame": [999999999],
+            "hamiltonian_units": ["cm-1"],
+            "hamiltonian_multiplier": [1],
+            "energies_units": ["cm-1"],
+            "energies_multiplier": [1],
+            "dipoles_units": ["Debye"],
+            "dipoles_multiplier": [1],
             "str_test_free": ["freechoice"],
             "str_test_choice": ["pick_this"],
             "str_test_free_list": ["freechoice1", "freechoice2"],
@@ -237,6 +247,9 @@ class TestRefPars:
             "neutral_charge_threshold",
             "estatic_range",
             "estatic_smooth_range",
+            "hamiltonian_multiplier",
+            "energies_multiplier",
+            "dipoles_multiplier",
             "float_test_free",
             "float_test_choice",
             "float_test_free_list",
@@ -258,6 +271,9 @@ class TestRefPars:
             "influencers_select_atoms",
             "output_format",
             "output_data",
+            "hamiltonian_units",
+            "energies_units",
+            "dipoles_units",
             "str_test_free",
             "str_test_choice",
             "str_test_free_list",
@@ -472,6 +488,12 @@ class TestRawPars:
             "start_frame": [0],
             "number_frames": [999999999],
             "stop_frame": [999999999],
+            "hamiltonian_units": ["cm-1"],
+            "hamiltonian_multiplier": [1],
+            "energies_units": ["cm-1"],
+            "energies_multiplier": [1],
+            "dipoles_units": ["Debye"],
+            "dipoles_multiplier": [1],
             "str_test_free": ["freechoice"],
             "str_test_choice": ["not_this"],
             "str_test_free_list": ["freechoice1", "freechoice2"],
@@ -517,6 +539,9 @@ class TestRawPars:
 
         pardict = {
             "verbose": ["4"],
+            "hamiltonian_units": ["eV"],
+            "energies_units": ["eV"],
+            "dipoles_units": ["eBohr"],
             "nobool_test1": [],
             "nobool_test2": ["false"],
             "int_test_free_list": ["88", "44"],
@@ -531,6 +556,12 @@ class TestRawPars:
         assert InPars.is_default is False
         assert InPars.choices == {
             "verbose": [4],
+            "hamiltonian_units": ["eV"],
+            "hamiltonian_multiplier": [GM_con.cm2eV],
+            "energies_units": ["eV"],
+            "energies_multiplier": [GM_con.cm2eV],
+            "dipoles_units": ["eBohr"],
+            "dipoles_multiplier": [GM_con.Debye2ea0],
             "bool_test1": [False],
             "bool_test2": [True],
             "int_test_free_list": [88, 44],
@@ -545,7 +576,10 @@ class TestRawPars:
             "--nobool_test2",
             "-notb3",
             "-tp9", "tast_outfile_2_2_4.txt", "tast_outfile_2_2_0.txt\\;",
-            "--log_directory", "tests/test_tools/Data"
+            "--log_directory", "tests/test_tools/Data",
+            "--hamiltonian_units", "cm-1",
+            "--energies_units", "cm-1",
+            "--dipoles_units", "Debye"
         ]
 
         _, Printer, RefPars, _, _, maprefdict = self.setup_test_SU_WP_cmd(
@@ -566,7 +600,13 @@ class TestRawPars:
                 Path("tast_outfile_2_2_4.txt"),
                 Path("tast_outfile_2_2_0.txt")
             ],
-            "log_directory": [Path("tests/test_tools/Data")]
+            "log_directory": [Path("tests/test_tools/Data")],
+            "hamiltonian_units": ["cm-1"],
+            "hamiltonian_multiplier": [1],
+            "energies_units": ["cm-1"],
+            "energies_multiplier": [1],
+            "dipoles_units": ["Debye"],
+            "dipoles_multiplier": [1],
         }
         # Still missing InPars.not_found
         # Also, test map-shorthand
@@ -712,6 +752,30 @@ class TestRawPars:
         pardict = {
             "influencers_whitelist": [":All"],
             "influencers_select_atoms": ["segid", "*"]
+        }
+        self.systest_pardict(pardict, "SU_WP_16", capsys, isdef=False)
+
+        # ------------------------
+
+        pardict = {
+            "hamiltonian_units": ["cm-1"],
+            "hamiltonian_multiplier": [1]
+        }
+        self.systest_pardict(pardict, "SU_WP_16", capsys, isdef=False)
+
+        # ------------------------
+
+        pardict = {
+            "energies_units": ["cm-1"],
+            "energies_multiplier": [1]
+        }
+        self.systest_pardict(pardict, "SU_WP_16", capsys, isdef=False)
+
+        # ------------------------
+
+        pardict = {
+            "dipoles_units": ["Debye"],
+            "dipoles_multiplier": [1]
         }
         self.systest_pardict(pardict, "SU_WP_16", capsys, isdef=False)
 

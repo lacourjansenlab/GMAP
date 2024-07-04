@@ -3,7 +3,7 @@ File structure
 ##############
 
 All maps are stored inside a map directory, that can be supplied to
-the program using the `map_directory` keyword. The keyword can be given
+the program using the ``map_directory`` keyword. The keyword can be given
 multiple directories, in which case all given directories are searched for
 maps.
 

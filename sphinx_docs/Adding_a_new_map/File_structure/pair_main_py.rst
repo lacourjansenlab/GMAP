@@ -4,7 +4,7 @@
 main.py
 #######
 
-(this applies to pairs maps. If you are looking for singles maps instead, go to :ref:`the singles version of this page.<AddMap_FileStruct_SingMainPy>)
+(this applies to pairs maps. If you are looking for singles maps instead, go to :ref:`the singles version of this page.<AddMap_FileStruct_SingMainPy>`)
 
 This file contains the code for the map. Pair maps do need to have some code - this is the distinguishing factor between them. Within this file, there are a few functions the program will look for. If they are missing, that is no issue, but their names should not be used for any other purpose.
 
