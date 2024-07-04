@@ -117,9 +117,11 @@ def calc_frame(Printer, RunPars, System, outputs):
         if any(data in RunPars.output_data for data in ("ham", "dip", "ene")):
             if oscillator.Map.Core.electrostatic_choice in ("V", "E", "G"):
                 # calculate VEG
-                VEGlib.calcPot_perres_mm(System, RunPars, oscillator)
+                VEGlib.calcVEG_perres_mm(System, RunPars, oscillator)
 
-                # ROTATE VEG!
+            # ROTATE VEG
+            if oscillator.Map.Core.electrostatic_choice in ("E", "G"):
+                oscillator.rotate_VEG()
 
         # do we need dipoles?
         # we also need dipoles for the (full) hamiiltonian.

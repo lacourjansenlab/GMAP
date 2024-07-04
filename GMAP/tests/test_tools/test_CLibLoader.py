@@ -28,7 +28,7 @@ def reset_singletons():
 
 
 class TestVClib:
-    def test_calcPot_perres_mm(self):
+    def test_calcVEG_perres_mm(self):
         cmdline = ["-md", "maps\\;"]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
@@ -42,7 +42,7 @@ class TestVClib:
         System = get_System_1()
         oscillator = get_oscillator_1()
 
-        VEGlib.calcPot_perres_mm(System, RunPars, oscillator)
+        VEGlib.calcVEG_perres_mm(System, RunPars, oscillator)
 
         # Do not remove!!! These are the calculations to get to the correct
         # answer!
@@ -76,17 +76,96 @@ class TestVClib:
         # atdiff_1_2 = (17, 37, 37), (20, 40, 40)
         # atdiff_1_3 = (43, 23, 43), (40, 20, 40)
         # atdist_1 = 55.01817788139, 60, 65.0153827951, 60
+        # pot_1 = 1/55.018 + -0.166/60 + 0/65.015 + -0.832/60
 
+        # potentials
         ans = np.array([
             [0.01666666666667, 0.01817581095026],
             [-0.002557953278597537, -0.0027717718596666],
             [0, 0],
             [-0.015139585119952648, -0.013882521453]
-        ], dtype="float32").sum(0).round(6)
-        assert np.all(oscillator.VEGout[:, 0].round(6) == ans)
-        assert np.all(
-            oscillator.VEGout[:, 1:].round(6) == np.zeros(
-                (2, 9), dtype="float32"))
+        ], dtype="float32").sum(0).round(7)
+        assert np.all(oscillator.VEGout[:, 0].round(7) == ans)
+
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        # !!!!! From here: comma as decimal point for copy-paste into and !!!!!
+        # !!!!! from the windows calculator (which cannot deal with '.')  !!!!!
+        # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+        # weights_res2 = 1, 0,16630631158
+        # weights_res3 = 0, 0,83295238718
+
+        # atdiff_0-2 = -(20, 40, 40), -(23, 43, 43)
+        # atdiff_0_3 = (40, 20, 40), (37, 17, 37)
+        # atdist_0 = 60, 65,0153827951, 60, 55,01817788139
+        # prefac = weighted_charge / d^3
+        #        = 4,629629629629629e-6,   -6,0514626889083057684e-7,
+        #          0, -5,001514910197138206e-6
+        # Ex_0 = sum(prefac * diffX)
+        #      = -0,00026373028008539759035468
+        # Ey_0 = -0,00024418964909623079469788
+        # Ez_0 = -0,00034421994730017355881788
+
+        # atdiff_1_2 = -(17, 37, 37), -(20, 40, 40)
+        # atdiff_1_3 = (43, 23, 43), (40, 20, 40)
+        # atdist_1 = 55,01817788139, 60, 65,0153827951, 60
+        # prefac = weighted_charge / d^3
+        #        = 6,004562790353486e-6,  -7,699366276851851e-7,
+        #          0, -3,85626105175925925e-6
+        # Ex_1 = -0,00024092927695267593
+        # Ey_1 = -0,000268496579170856763
+        # Ez_1 = -0,000345621800206041948
+
+        # fields
+        ans = np.array([
+            [-0.00026373028008539759035468, -0.00024092927695267593],
+            [-0.00024418964909623079469788, -0.000268496579170856763],
+            [-0.00034421994730017355881788, -0.000345621800206041948]
+        ], dtype="float32").round(8)
+        assert np.all(oscillator.VEGout[:, 1:4].round(8) == ans.T)
+
+        # weights_res2 = 1, 0,16630631158
+        # weights_res3 = 0, 0,83295238718
+
+        # Gxx, Gyy, Gzz = prefac - (diffXYZ * diffXYX * prefac2)
+        # Gxy, Gxz, Gyz = -(diffXYZ * diffXYZ * prefac2)
+
+        # atdiff_0-2 = -(20, 40, 40), -(23, 43, 43)
+        # atdiff_0_3 = (40, 20, 40), (37, 17, 37)
+        # atdist_0 = 60, 65,0153827951, 60, 55,01817788139
+        # prefac = 4,629629629629629e-6,   -6,0514626889083057684e-7,
+        #          0, -5,001514910197138206e-6
+        # prefac2 = 3,85802469135802416667e-9, -4,2948635123617997e-10,
+        #           0, -4,95690295316412058756e-9
+
+        # atdiff_1_2 = -(17, 37, 37), -(20, 40, 40)
+        # atdiff_1_3 = (43, 23, 43), (40, 20, 40)
+        # atdist_1 = 55,01817788139, 60, 65,0153827951, 60
+        # prefac = weighted_charge / d^3
+        #        = 6,004562790353486e-6,  -7,699366276851851e-7,
+        #          0, -3,85626105175925925e-6
+        # prefac2 = 5,9510039582765967993e-9, -6,41613856404320916e-10
+        #           0, -0,000000003213550876466049375
+
+        ans = np.array([[
+            # atom 1
+            [0.000003086419, -0.000000377947, 0.000001784485],  # Gxx
+            [-0.000001543209, 0.000000188973, -0.000003568969],  # Gyy
+            [-0.000001543209, 0.000000188973, 0.000001784485],  # Gzz
+            [-0.000003086419, 0.000000424762, 0.000003117891],  # Gxy
+            [-0.000003086419, 0.000000424762, 0.000006786000],  # Gxz
+            [-0.000006172839, 0.000000794120, 0.000003117891]   # Gyz
+        ], [
+            # atom 2
+            [0.000004284722, -0.000000513291, 0.000001285420],  # Gxx
+            [-0.000002142361, 0.000000256645, -0.000002570840],  # Gyy
+            [-0.000002142361, 0.000000256645, 0.000001285420],  # Gzz
+            [-0.000003743181, 0.000000513291, 0.000002570840],  # Gxy
+            [-0.000003743181, 0.000000513291, 0.000005141681],  # Gxz
+            [-0.000008146924, 0.000001026582, 0.000002570840]   # Gyz
+        ]], dtype="float32").sum(2).round(10)
+        print(ans)
+        assert np.all(oscillator.VEGout[:, 4:].round(10) == ans)
 
     def test_CL_VG_1(self, capsys):
         cmdline = ["-md", "maps\\;"]
@@ -165,4 +244,7 @@ def get_oscillator_1():
         "n_local_atoms": np.int32(2),
         "VEGout": VEGout,
         "VEGout_c": np.ctypeslib.as_ctypes(np.ravel(VEGout)),
+        "Map": EmptyClass(**{
+            "electrostatic_choice_c": 3  # we want gradients!!!
+        })
     })

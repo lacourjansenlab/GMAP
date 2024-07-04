@@ -320,6 +320,22 @@ class TestOscillator:
         exp = "Oscillator of type AmideSC living on residue number 18"
         assert oscstr == exp
 
+    def test_rotate_VEG(self):
+        oscillator = GM_SR.Oscillator.__new__(GM_SR.Oscillator)
+        oscillator.VEGout = np.arange(40).reshape((4, 10))
+        oscillator.rotation_matrix = np.array([
+            [0, 1, 0], [0, 0, 1], [1, 0, 0]])
+
+        oscillator.rotate_VEG()
+
+        ans = np.array([
+            [0, 2, 3, 1, 5, 6, 4, 9, 7, 8],
+            [10, 12, 13, 11, 15, 16, 14, 19, 17, 18],
+            [20, 22, 23, 21, 25, 26, 24, 29, 27, 28],
+            [30, 32, 33, 31, 35, 36, 34, 39, 37, 38]
+        ])
+        assert np.all(oscillator.VEGout.round(4) == ans.round(4))
+
 
 def test_gen_universe():
     mapname = "test_code_build_1"
