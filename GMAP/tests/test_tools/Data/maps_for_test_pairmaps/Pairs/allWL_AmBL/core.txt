@@ -1,0 +1,2 @@
+singles_whitelist     :All
+singles_blacklist     AmideSC

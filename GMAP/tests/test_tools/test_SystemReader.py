@@ -1,18 +1,17 @@
 """
 tests missing:
 
-- non-rightangled system
-- MDA system without bond information (both testing it with, and without
-  needing this information)
-- MDA system which does not contain ascending atom indices starting elsewhere
-  than 0 (Do these exist?)
-- An oscillator (and MD file to support it) that has the same atom name
-  multiple times in a single residue
-- An oscillator with more complicated structure (and the first bond not being
-  in the first residue)
-- Oscillator.frame_update()
-- MDA.Universe FileNotFoundError (can we even trigger this one?)
+(@ june 24th '24):
+146, 157-162, 240, 540, 1127, 1170 (9 missed statements)
 
+- non-rightangled system    (146, 1170)
+- MDA system without bond information (both testing it with, and without
+  needing this information)   (157-162)
+- MDA system which does not contain ascending atom indices starting elsewhere
+  than 0 (Do these exist?)   (240)
+- An oscillator (and MD file to support it) that has the same atom name
+  multiple times in a single residue   (540)
+- MDA.Universe FileNotFoundError (can we even trigger this one?)   (1127)
 """
 
 
@@ -23,6 +22,7 @@ import pytest
 
 # local imports
 from .test_MapReader import basic_setup
+import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.SystemReader as GM_SR
 
 # curpath = Path(__file__).resolve()
@@ -34,7 +34,7 @@ class TestSystem:
         mapname = "test_code_build_1"
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -103,7 +103,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -125,7 +125,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -148,7 +148,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -171,7 +171,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System(Files, Printer, RunPars)
@@ -188,7 +188,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System(Files, Printer, RunPars)
@@ -200,12 +200,42 @@ class TestSystem:
         mapname = "AmideSC"
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname)
 
         System = GM_SR.System(Files, Printer, RunPars)
 
         assert len(System.oscillators) == 17
+
+    def test_multiple_res_osc(self):
+        # This is a map of a triple ALA subchain - only 1 present in 1AKI
+        mapname = "test_multiple_res_osc"
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            CmdPars, mapdict, pairs_mapdict
+        ) = parameter_getter(mapname)
+
+        System = GM_SR.System(Files, Printer, RunPars)
+        System.update_properties(Printer)
+
+        assert len(System.oscillators) == 1
+
+        onlyosc = System.oscillators[0]
+        onlyosc.frame_update(Printer, System)
+        # triple ALA lies on resnums 8-10, atnums 135-164, select 2nd AmideBB
+        assert onlyosc.used_atoms == [153, 154, 147, 155, 156, 157]
+
+        # position C = (46.96, 28.12, 37.08)
+        # position N = (46.26, 28.74, 36.11)
+        # average    = (46.61, 28.43, 36.595)
+
+        # box dims   = (69.5689, 69.5689, 69.5689)
+        # average in (-0.5, 0.5) boxdims:  (-22.9589, 28.4300, -32.9739)
+        tocheck = np.round(onlyosc.get_VEG_ref(Printer, System), 4)
+        answer = np.round(
+            np.array([-22.9589, 28.43, -32.9739], dtype="float32"), 4)
+
+        assert np.all(tocheck == answer)
 
     def test_SU_NP_5(self, capsys):
         mapname = "AmideSC"
@@ -217,7 +247,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -240,7 +270,7 @@ class TestSystem:
         ]
         (
             Files, Printer, RunPars, RefPars, DefPars, InPars,
-            CmdPars, mapdict
+            CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
@@ -255,6 +285,57 @@ class TestSystem:
         captured = capsys.readouterr()
         assert captured.out.endswith("SU_NP_6\n")
 
+    def test_MD_SU_6(self, capsys):
+        mapname = "AmideSC"
+        cmdline = [
+            "-md", "maps",
+            "tests/test_tools/Data/maps_for_test_pair-single_dependence\\;",
+            "--couplings_to_use", "AneedsB", ":All\\;"
+        ]
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            CmdPars, mapdict, pairs_mapdict
+        ) = parameter_getter(mapname, cmdline)
+        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+            _ = GM_SR.System(Files, Printer, RunPars)
+        assert pytest_wrapped_sysexit.type is SystemExit
+        captured = capsys.readouterr()
+        assert captured.out.endswith("MD_SU_6\n")
+
+
+class TestOscillator:
+    def test_str_osc(self):
+        mapname = "AmideSC"
+        cmdline = [
+            "-md", "maps\\;",
+            "--influencers_whitelist", ":protein_cannonical", "CL\\;"
+        ]
+        (
+            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            CmdPars, mapdict, pairs_mapdict
+        ) = parameter_getter(mapname, cmdline)
+
+        System = GM_SR.System(Files, Printer, RunPars)
+        oscstr = str(System.oscillators[0])
+        exp = "Oscillator of type AmideSC living on residue number 18"
+        assert oscstr == exp
+
+    def test_rotate_VEG(self):
+        oscillator = GM_SR.Oscillator.__new__(GM_SR.Oscillator)
+        oscillator.VEGout = np.arange(40).reshape((4, 10))
+        oscillator.rotation_matrix = np.array([
+            [0, 1, 0], [0, 0, 1], [1, 0, 0]])
+
+        oscillator.rotate_VEG()
+
+        ans = np.array([
+            [0, 2, 3, 1, 5, 6, 4, 9, 7, 8],
+            [10, 12, 13, 11, 15, 16, 14, 19, 17, 18],
+            [20, 22, 23, 21, 25, 26, 24, 29, 27, 28],
+            [30, 32, 33, 31, 35, 36, 34, 39, 37, 38]
+        ])
+        assert np.all(oscillator.VEGout.round(4) == ans.round(4))
+
 
 def test_gen_universe():
     mapname = "test_code_build_1"
@@ -264,7 +345,7 @@ def test_gen_universe():
     }
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
     universe = GM_SR.gen_universe(Printer, RunPars)
@@ -288,7 +369,7 @@ def test_check_box_charge():
 
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
     charges = np.array([
@@ -313,7 +394,7 @@ def test_MD_SU_1(capsys):
 
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, cmdline, inpardict)
 
     with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
@@ -333,7 +414,7 @@ def test_MD_SU_1(capsys):
 
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
     with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
@@ -351,7 +432,7 @@ def test_MD_SU_3(capsys):
 
     (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
     # First, the total charge is larger than threshold
@@ -386,7 +467,8 @@ def parameter_getter(mapname, cmdline=None, inpardict=None):
 
     # prepare inputs
     cmdadd = [
-        "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;",
+        "--couplings_to_use", "None", ":All\\;"
     ]
     if cmdline is None:
         cmdline = cmdadd
@@ -400,30 +482,33 @@ def parameter_getter(mapname, cmdline=None, inpardict=None):
 
     # generate parameter structures
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        mapdict, pairs_mapdict
     ) = basic_setup(
         cmdline, inpardict, mapname=mapname, finish_before="extract_code")
 
-    # process maps
-    for map_ in mapdict.values():
-        map_.initialize(Files, Printer)
-    # Ditch all maps that contain problems/flaws/issues
-    mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
-    for map_choice in RunPars.maps_to_use:
-        if map_choice not in mapdict:
-            assert False  # In main code, this is MI_GEM_1
-    requested_mapdict = {
-        map_.name: map_ for map_ in mapdict.values()
-        if map_.name in RunPars.maps_to_use
-    }
-    RunPars.requested_mapdict = requested_mapdict
-    if any(map_.Core.requires_bonds for map_ in requested_mapdict.values()):
-        RunPars.detected_requires_bonds = True
-    else:
-        RunPars.detected_requires_bonds = False
+    # # process maps
+    # for map_ in mapdict.values():
+    #     map_.initialize(Files, Printer)
+    # # Ditch all maps that contain problems/flaws/issues
+    # mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
+    # for map_choice in RunPars.maps_to_use:
+    #     if map_choice not in mapdict:
+    #         assert False  # In main code, this is MI_MM_1
+    # requested_mapdict = {
+    #     map_.name: map_ for map_ in mapdict.values()
+    #     if map_.name in RunPars.maps_to_use
+    # }
+    # RunPars.requested_mapdict = requested_mapdict
+    # if any(map_.Core.requires_bonds for map_ in requested_mapdict.values()):
+    #     RunPars.detected_requires_bonds = True
+    # else:
+    #     RunPars.detected_requires_bonds = False
+
+    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
+    GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
 
     return (
         Files, Printer, RunPars, RefPars, DefPars, InPars,
-        CmdPars, mapdict
+        CmdPars, mapdict, pairs_mapdict
     )

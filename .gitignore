@@ -4,5 +4,6 @@ env_**
 **.DS_Store
 **_offsets.**
 .vscode/settings.json
-
-Hammy.txt
+GMAP/sourcefiles/VEG.exp
+GMAP/sourcefiles/VEG.lib
+GMAP/sourcefiles/VEG.obj

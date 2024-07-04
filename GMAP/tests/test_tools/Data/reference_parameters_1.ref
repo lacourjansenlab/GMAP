@@ -4,16 +4,20 @@ trajectory_file(trj)[path_sep]                    ../../../sourcefiles/pdb_1AKI_
 
 source_directory(sd)[path_dir_sd]                 ../../../sourcefiles
 default_parameter_filename(dpf)[path_rel_sd]    [N/A]
+VEG_clib_file[path_rel_sd]                        VEG.dll      
 
 log_directory[path_dir_lg]                        [N/A]
 log_filename[path_rel_lg_c]                       log.log
 
 output_directory[path_dir_op]                     [N/A]
+output_estatics_filename[path_rel_op_c]           estatics.txt
 output_hamiltonian_filename(ohf)[path_rel_op_c]   hamiltonian
 output_dipole_filename(odf)[path_rel_op_c]        dipoles
+output_energies_filename(oef)[path_rel_op_c]      energies
 
 map_directory(md)[list_path_sep]               ../../../maps
 maps_to_use(um)[list_str]                         AmideSC
+couplings_to_use[list_str]                        DipDip :All
 influencers_whitelist[list_str]                   :All
 influencers_blacklist[list_str]                   :None
 influencers_file[path_sep]                        ../../../sourcefiles/infl_file_base.txt
@@ -23,15 +27,26 @@ verbose[int]                                      0 1 [2] 3 4
 verbose_logfile[int]                              0 1 [2] 3 4
 prevent_overwrite[bool]                           False
 output_format[list_str]                           [bin] txt
-output_data[list_str]                             [ham] [dip]
+output_data[list_str]                             [ham] [dip] ene
 
 neutral_charge_threshold[float]                   0.0001
 guess_bonds[bool]                                 False
+
+estatic_range[float]                              20  # this is in angstrom
+estatic_smooth_range[float]                       5  # this is in angstrom
 
 # in order to allow start+number=stop, stop is exclusive.
 start_frame[int]                                  0
 number_frames[int]                                999999999
 stop_frame[int]                                   999999999
+
+# output units
+hamiltonian_units[str]                             [cm-1] eV
+hamiltonian_multiplier[float]                     1
+energies_units[str]                                [cm-1] eV
+energies_multiplier[float]                        1
+dipoles_units[str]                                 [Debye] eBohr
+dipoles_multiplier[float]                         1
 
 
 # test strings

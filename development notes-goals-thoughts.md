@@ -331,34 +331,19 @@ TO DO
 
 If you need a place to quickly write something down, do it here! It can be tidied/sorted/discussed later. If you can write it down cleanly/properly immediately, please do so. But it is better to leave a poor note (that at least you (if no one else) will understand later), than none at all... Thats why I (KvA) made this dump section.
 
+
+- (KvA) TODO before PR:
+  - Done!
 - (KvA) TODO:
+  - start on mapdev-checklist. What things should a mapmaker double check before starting the map (and, simultaneously, have map-testing feature do these checks where possible - at least, write down what it should test)
+    - Indicate whether a VEG dependence file for calcfreq has been supplied or not (and similarly for dipoles etc)
+  - have c code for potential take the influencers into account (possibly not within c code, but create mirror of system? new position/charges/etc array containing only valid influencers?)
   - Links to relevant packages etc in explanation in main documentation page.
-  - GEM.manage_frame - add a print of frame number and ETA (following AIM)
-  - GEM.manage_frame - add a check whether the calculation can be continued (or whether there is not enough time left)
-  - System.update properties (or somewhere around its call in the perframe loop) - add a check to see whether the calculation can even continue (whether the potential sphere radius still fits)
-  - write PhysicsFunctions.calc_dipole(), as well as any other necessary support (also preframe/prerun)
-  - write PhysicsFunctions.calc_frequency(), as well as any other necessary support (also preframe/prerun)
-  - write PhysicsFunctions.calc_coupling(), as well as any other necessary support (also preframe/prerun)
-  - Add output positions (for NISE LD/CD)
-  - Add output raman tensor (for NISE Raman/SFG)
-  - Print report at end of program
-  - References!!!
-  - Add a way to only output frequencies (1D hamiltonian)
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
-- (KvA) Is the way GEM currently finds the defparfile correct? or should we check more/different locations?
-- (KvA) Inpars could/should contain section with coupling choices. First, specify the types of each of the coupled oscillators (N*N-1 options, for N different types of oscillators (= selected maps)), then, the coupling method to be used.
-  - How to deal when user doesn't specify? Maps could/must indicate a default for how to couple with itself, then it shouldn't be absolutely necessary a user gives that information.
-  - Similarly, AIM had a setting for when/wheter to use dipole-dipole coupling for coupling between different kinds of oscillator... What to do?
 - (KvA) Refparfile currently doesn't indicate whether a parameter is optional, or MUST be given by the user. Or is the N/A choice sufficient?
 - (KvA) Chosen map structure forces coupling maps to be complex? At some point, discuss coupling maps more?
 - (KvA) the inpar and temp_cmd dictionaries have a list with choices as the value, even if only a single choice is expected. This is because at the time of creating these objects, we cannot yet know whether we expect a single, or multiple choices.
-- (KvA) I've added some shorthands for cmdlinepars:
-  | parameter name in refparfile | full command line parameter name | shorthand command line parameter name |
-  |------------------------------|----------------------------------|---------------------------------------|
-  | source_directory             | --source_directory               | -sd                                   |
-  | default_parameter_filename   | --default_parameter_filename     | -dpf                                  |
-  | map_directory                | --map_directory                  | -md                                   |
-- (KvA) in spirit of the above, how about -v for verbose=2 (or whatever would be nice/common to use as verbose), -vv for verbose=4 (very verbose), and -nov for verbose=0 (making use of the 'no' prefix we want to include anyways)
+- (KvA) in spirit of the parameter shorthands, how about -v for verbose=2 (or whatever would be nice/common to use as verbose), -vv for verbose=4 (very verbose), and -nov for verbose=0 (making use of the 'no' prefix we want to include anyways)
 - (KvA) what if a parameter check fails? currently, all warnings have an exitbool=True, but is this always necessary/desired?
 - (KvA) currently, cmd line parser assumes a variable has either 1 assigned choice, or a variable amount.
 - (KvA) currently, code to create a RawPars instance for command line input is one big function, not the prettiest - needs tidying up? - maybe other functs, too?
@@ -367,6 +352,7 @@ If you need a place to quickly write something down, do it here! It can be tidie
 - (KvA) In order to run the unittests, move in command prompt to the GMAP directory. In there, run ```pytest tests``` to run all tests. adding the flag ```-s``` allows (some?) python prints to pass through, the flag ```--cov=src``` gives the coverage of the current unit tests. In case of issues, ```--full-trace``` gives a lot more tracebacks and other information. Finally, to see what parts of the code are not covered by the tests, run ```pytest --cov-report term-missing --cov=src tests```. The Fanciest of all? ```pytest --cov-report term-missing:skip-covered --cov=src tests```. Overview:
 
   - ```-s```  lets (some?) python prints through
+  - ```-v```  Makes pytest more verbose (every test name is listed, errors aren't abbreviated)
   - ```-x```  makes pytest quit after it encountered its first error
   - ```-full-trace```  gives the full traceback
   - ```-k```  selects tests of the correct name: ```pytest -k "MyClass and not method"``` ```pytest -k my_function```

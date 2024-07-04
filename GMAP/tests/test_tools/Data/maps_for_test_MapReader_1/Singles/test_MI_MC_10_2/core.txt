@@ -3,6 +3,7 @@ functional_group       [A] A1 A2(1) A3 [B] B1(1) B2 B3
 used_atoms             0 1 2 3 4 5
 electrostatic_atoms    2 3
 electrostatic_choice   E
+local_atoms            2 3
 type                   linear
 
 r_vec                  0.25 * (2-1) + 0.75 * (1-0)

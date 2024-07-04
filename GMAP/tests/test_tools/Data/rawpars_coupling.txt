@@ -1,0 +1,3 @@
+maps_to_use  AmideBB AmideSC
+couplings_to_use  None :All
+couplings_to_use  DipDip AmideSC:AmideBB
