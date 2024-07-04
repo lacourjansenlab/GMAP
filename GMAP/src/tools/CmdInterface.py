@@ -1,3 +1,6 @@
+
+import sys
+
 # local imports
 import GMAP
 # from GMAP.src import programs
@@ -117,3 +120,8 @@ def cmd_to_tools(Files, Printer, allhelps, callcommand, choice, subch):
         Printer.print(0, modch.__doc__)
     else:
         getattr(modch, choice)(callcommand[1:], Files, Printer)
+
+
+def main():
+    callcommand = sys.argv
+    cmd_interface(callcommand)
