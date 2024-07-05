@@ -245,6 +245,8 @@ def get_oscillator_1():
         "VEGout": VEGout,
         "VEGout_c": np.ctypeslib.as_ctypes(np.ravel(VEGout)),
         "Map": EmptyClass(**{
-            "electrostatic_choice_c": 3  # we want gradients!!!
+            "Core": EmptyClass(**{
+                "electrostatic_choice_c": 3  # we want gradients!!!
+            })
         })
     })

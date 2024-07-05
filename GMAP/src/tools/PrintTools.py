@@ -86,6 +86,15 @@ class Printer:
         if verbose_level <= self.verbose_logfile:
             print(prettifier(str(toprint)), file=open(self.logfile, "a"))
 
+    def quit_early(self):
+        """Called when the program is quitted early
+
+        Prints the backlog if there is any.
+        """
+
+        if self.backlog:
+            self.print_backlog()
+
     def print_backlog(self):
         """Prints the backlog so the program can stop.
 
