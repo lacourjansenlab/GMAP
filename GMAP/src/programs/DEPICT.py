@@ -121,7 +121,7 @@ def DEPICT(callcommand, Files, Printer):
         Printer.add_time(2, "Initialization complete", "ms")
 
         # initialize C library
-        GM_CL.VEG_CLib(Printer, RunPars)
+        GM_CL.VEG_CLib(RunPars)
         calc_data(Printer, RunPars, System)
 
     if job in ("show", "calcshow"):

@@ -4,24 +4,19 @@ import sys
 # local imports
 import GMAP
 # from GMAP.src import programs
+from GMAP.src.tools.Exceptions import GmapAttributeError
 import GMAP.src.tools.FileHandler as GM_FH
-import GMAP.src.tools.PrintTools as GM_PT
+from GMAP.src.tools.PrintTools import Printer
 # from GMAP.src.tools.PrintTools import devprint as dpr
 
 
-def _report_unknown_choice(Printer):
-    """Wrapper for warning call SU_GM_1.
+def _report_unknown_choice():
+    """Wrapper for warning call SU_GM_1."""
 
-    Parameters
-    ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
-    """
-    Printer.warning(
+    Printer().warning(
         "\nChoice of program wasn't recognized. Please type the following "
         "for more\ninformation on how to use this package:\n\nGMAP\n\n",
-        "SU_GM_1", True
+        "SU_GM_1", True, GMAPerrclass=GmapAttributeError
     )
 
 
@@ -40,11 +35,11 @@ def cmd_interface(callcommand):
     """
 
     Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
+    printer = Printer(Files)
     with open(Files.script_dir / "logo.txt") as lfile:
         logostr = lfile.read()
 
-    Printer.print(1, logostr)
+    printer.print(1, logostr)
 
     allhelps = ["help", "h", "-h"]
 
@@ -57,23 +52,20 @@ def cmd_interface(callcommand):
     subch = callcommand[2]
 
     if choice.lower() in allhelps:
-        cmd_to_help(Printer, allhelps, subch)
+        cmd_to_help(allhelps, subch)
 
     elif choice in GMAP.alltools:
-        cmd_to_tools(Files, Printer, allhelps, callcommand, choice, subch)
+        cmd_to_tools(Files, allhelps, callcommand, choice, subch)
 
     else:
-        _report_unknown_choice(Printer)
+        _report_unknown_choice()
 
 
-def cmd_to_help(Printer, allhelps, subch):
+def cmd_to_help(allhelps, subch):
     """Determines what help to print.
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     allhelps : list of str
         All items in this list are strings the user might use to get
         help to be printed.
@@ -81,18 +73,19 @@ def cmd_to_help(Printer, allhelps, subch):
         Used by user to indicate intent.
     """
 
+    printer = Printer()
     if subch.lower() in allhelps:
-        Printer.print(0, GMAP.__doc__)
-        Printer.quit_early()
+        printer.print(0, GMAP.__doc__)
+        printer.quit_early()
     elif subch in GMAP.alltools:
         modch = getattr(GMAP, subch)
-        Printer.print(0, modch.__doc__)
-        Printer.quit_early()
+        printer.print(0, modch.__doc__)
+        printer.quit_early()
     else:
-        _report_unknown_choice(Printer)
+        _report_unknown_choice()
 
 
-def cmd_to_tools(Files, Printer, allhelps, callcommand, choice, subch):
+def cmd_to_tools(Files, allhelps, callcommand, choice, subch):
     """Determines which tool to invoke.
 
     Parameters
@@ -115,11 +108,13 @@ def cmd_to_tools(Files, Printer, allhelps, callcommand, choice, subch):
         Used by user to indicate intent.
     """
 
+    printer = Printer()
     modch = getattr(GMAP, choice)
     if subch.lower() in allhelps:
-        Printer.print(0, modch.__doc__)
+        printer.print(0, modch.__doc__)
+        printer.quit_early()
     else:
-        getattr(modch, choice)(callcommand[1:], Files, Printer)
+        getattr(modch, choice)(callcommand[1:], Files, printer)
 
 
 def main():

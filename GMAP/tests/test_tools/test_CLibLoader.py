@@ -35,7 +35,7 @@ class TestVClib:
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter("AmideSC", cmdline)
 
-        VEGlib = GM_CL.VEG_CLib(Printer, RunPars)
+        VEGlib = GM_CL.VEG_CLib(RunPars)
         RunPars.estatic_range = np.float32(60)
         RunPars.estatic_smooth_range = np.float32(5)
 
@@ -177,7 +177,7 @@ class TestVClib:
             RunPars.VEG_clib_file.parent / "doesntexist.txt")
 
         with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            _ = GM_CL.VEG_CLib(Printer, RunPars)
+            _ = GM_CL.VEG_CLib(RunPars)
         assert pytest_wrapped_sysexit.type is SystemExit
         captured = capsys.readouterr()
         assert captured.out.endswith("CL_VG_1\n")
