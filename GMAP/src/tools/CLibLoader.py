@@ -152,7 +152,7 @@ class VEG_CLib(metaclass=Singleton):
             oscillator.electrostatic_atoms_c,  # tocalc
             oscillator.n_estatic_atoms,  # n_osc_ats
             oscillator.VEG_refpos_c,  # spherepos
-            oscillator.Map.electrostatic_choice_c,  # calc_choice
+            oscillator.Map.Core.electrostatic_choice_c,  # calc_choice
             System.positions_c,  # positions
             System.charges_c,  # charges
             System.residues.CoM_c,  # COMs

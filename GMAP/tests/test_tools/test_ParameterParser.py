@@ -2167,7 +2167,7 @@ def test_SU_GEM_1(capsys):
     Printer = GM_PT.Printer(Files)
 
     in_parfile = Path("../test_inpar.txt").resolve()
-    argslist = ["-dpf", "__main__.py"]
+    argslist = ["-dpf", "__init__.py"]
 
     with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
         _ = GM_PP.get_parameters(
