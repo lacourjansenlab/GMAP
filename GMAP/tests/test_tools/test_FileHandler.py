@@ -4,14 +4,14 @@ src/tools/FileHandler.py.
 
 Missing tests:
 
-(@ June 24th '24):
-105, 109-121, 344, 515-520, 538-543 (22 missed statements)
+(@ July 22nd '24):
+97, 101-113, 333, 509-514, 532-537 (20 missed statements)
 
 (CUHTAT - currently unknown how to access this)
-- Program is run using any OS other than windows 64 bit (105, 119-121)
+- Program is run using any OS other than windows 64 bit (97, 101-113)
   (CUHTAT; at least within one single run, probably impossible)
-- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (344)
-- output files are not cleared yet.  (515-543)  (this happens in GEM, just
+- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (333)
+- output files are not cleared yet.  (509-537)  (this happens in GEM, just
   before the per-frame loop)
 """
 
@@ -24,8 +24,9 @@ import numpy as np
 import pytest
 
 # local imports
-from GMAP.src.tools import FileHandler as GM_FH
-from GMAP.src.tools import PrintTools as GM_PT
+import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.Exceptions as GM_Ex
+import GMAP.src.tools.FileHandler as GM_FH
 
 
 def test_get_bare_file():
@@ -42,7 +43,7 @@ def test_get_bare_file():
 
 def test_write_output():
     cwd = Path(".").resolve()
-    RunPars = EmptyClass(**{
+    RunPars = GM_CT.CustomClass(**{
         "output_hamiltonian_filename": cwd / "hamiltonian",
         "output_dipole_filename": cwd / "dipoles",
         "output_energies_filename": cwd / "energies",
@@ -135,7 +136,7 @@ def test_write_output():
 
 def test_write_output_multiplied():
     cwd = Path(".").resolve()
-    RunPars = EmptyClass(**{
+    RunPars = GM_CT.CustomClass(**{
         "output_hamiltonian_filename": cwd / "hamiltonian",
         "output_dipole_filename": cwd / "dipoles",
         "output_energies_filename": cwd / "energies",
@@ -226,23 +227,11 @@ def test_write_output_multiplied():
     assert np.all(txtdip == outputs["energies"])
 
 
-def test_SU_FH_1(capsys):
+def test_SU_FH_1():
     Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
     cwd = Path(".")
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        _ = GM_FH.get_def_parfile(Files, Printer, {
+    with pytest.raises(GM_Ex.GmapFileNotFoundError, match="SU_FH_1$"):
+        _ = GM_FH.get_def_parfile(Files, {
             "default_parameter_filename": [cwd/"doesntexist.dfa"]
         })
-
-    assert pytest_wrapped_sysexit.type is SystemExit
-    captured = capsys.readouterr()
-    assert captured.out.endswith("SU_FH_1\n")
-
-
-class EmptyClass:
-    def __init__(self, **kwargs):
-        for parname, val in kwargs.items():
-            setattr(self, parname, val)
-        return

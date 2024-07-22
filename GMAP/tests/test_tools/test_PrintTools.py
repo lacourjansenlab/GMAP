@@ -1,7 +1,7 @@
 """
 tests missing:
 
-(@ may 2nd '24):
+(@ July 22nd '24):
   (0 missed statements)
 
 - Nothing is missing!
@@ -9,7 +9,7 @@ tests missing:
 
 
 # local imports
-from GMAP.src.tools import PrintTools as GM_PT
+import GMAP.src.tools.PrintTools as GM_PT
 
 
 class TestTimer:

@@ -34,6 +34,7 @@ import matplotlib.pyplot as plt
 import GMAP.src.tools.CLibLoader as GM_CL
 import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
+import GMAP.src.tools.PrintTools as GM_PT
 import GMAP.src.tools.SystemReader as GM_SR
 
 
@@ -47,14 +48,14 @@ def calc_data(Printer, RunPars, System):
     RunPars.manage_dtypes()
     Printer.add_time(3, "Starting on calculation", "ms")
 
-    System.update_properties(Printer)
+    System.update_properties()
     Printer.add_time(4, "done system updates. next: osc updates", "ms")
 
     # only consider a single oscillator
     System.oscillators = [System.oscillators[0]]
     System.nosc = np.int32(1)
     for oscillator in System.oscillators:
-        oscillator.frame_update(Printer, System)
+        oscillator.frame_update(System)
 
     Printer.add_time(4, "updates done. next: initialize", "ms")
 
@@ -87,7 +88,8 @@ def show_data(Printer, RunPars):
     plt.clf()
 
 
-def DEPICT(callcommand, Files, Printer):
+def DEPICT(callcommand, Files):
+    Printer = GM_PT.Printer()
     alljobs = [
         "calculate",
         "show",
@@ -95,11 +97,11 @@ def DEPICT(callcommand, Files, Printer):
     ]
 
     job, in_parfile, argslist = GM_PP.parse_commandline(
-        Files, Printer, callcommand, alljobs, "GMAP DEPICT", True, True
+        Files, callcommand, alljobs, "GMAP DEPICT", True, True
     )
 
     RunPars, mapdict, _, _, _, _ = GM_PP.get_parameters(
-        Files, Printer, in_parfile, argslist
+        Files, in_parfile, argslist
     )
     Printer.add_time(3, "Parsed GMAP parameters", "ms")
 
@@ -111,7 +113,7 @@ def DEPICT(callcommand, Files, Printer):
         Printer.add_time(3, "Added all maps", "ms")
 
         # next - MD system!
-        System = GM_SR.System(Files, Printer, RunPars)
+        System = GM_SR.System(Files, RunPars)
         Printer.add_time(3, "Initialized MD system", "ms")
 
         # GEM is now done - let maps initialize as well

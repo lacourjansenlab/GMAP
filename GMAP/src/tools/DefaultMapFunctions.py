@@ -5,6 +5,7 @@ import numpy as np
 # local imports
 import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.PhysicsFunctions as GM_PF
+import GMAP.src.tools.PrintTools as GM_PT
 # from GMAP.src.tools.PrintTools import devprint as dpr
 
 
@@ -65,16 +66,13 @@ def get_str_osc():
     return base_str_getter
 
 
-def get_get_VEG_ref(Printer, map_):
+def get_get_VEG_ref(map_):
     """Creates the function GM_get_VEG_ref.
 
     Recognizes requested method and finds relevant function.
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
@@ -94,7 +92,7 @@ def get_get_VEG_ref(Printer, map_):
         case "com":
             GM_get_VEG_ref = VEG_from_com(details)
         case "position":
-            GM_get_VEG_ref = VEG_from_position(Printer, map_, details)
+            GM_get_VEG_ref = VEG_from_position(map_, details)
     return GM_get_VEG_ref
 
 
@@ -117,7 +115,7 @@ def VEG_from_residues(local_atoms):
         this oscillator.
     """
 
-    def GM_get_VEG_ref(Printer, Map, Syst, osc):
+    def GM_get_VEG_ref(Map, Syst, osc):
         atnums = []
         for atom in local_atoms:
             resnum = Syst.resnums[osc.used_atoms[atom]]
@@ -150,7 +148,7 @@ def VEG_from_com(local_atoms):
         this oscillator.
     """
 
-    def GM_get_VEG_ref(Printer, Map, Syst, osc):
+    def GM_get_VEG_ref(Map, Syst, osc):
         atnums = [osc.used_atoms[ix] for ix in local_atoms]
         CoM = GM_PF.calc_CoM(Syst, atnums)
         return CoM
@@ -159,16 +157,13 @@ def VEG_from_com(local_atoms):
     return GM_get_VEG_ref
 
 
-def VEG_from_position(Printer, map_, details):
+def VEG_from_position(map_, details):
     """Creates the function GM_get_VEG_ref for given atoms.
 
     Each atom given will count towards the VEG centre.
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
     details : list of str
@@ -183,7 +178,7 @@ def VEG_from_position(Printer, map_, details):
     """
 
     codestring = "\ndef GM_get_VEG_ref"
-    codestring += "(Printer, Map, Syst, osc):\n"
+    codestring += "(Map, Syst, osc):\n"
 
     codestring += "    CoM = " + envelop_int(
         " ".join(details), "osc.positions_box[", "]"
@@ -195,7 +190,7 @@ def VEG_from_position(Printer, map_, details):
         exec(codestring)
     except Exception as ex:
         corefile = (map_.directory / 'core.txt').resolve()
-        Printer.warning(
+        GM_PT.Printer().warning(
             f"\nThe file {corefile} does not contain a valid definition of "
             "VEG_reference.",
             "MI_MC_9", exception=ex
@@ -206,14 +201,11 @@ def VEG_from_position(Printer, map_, details):
     return locals()["GM_get_VEG_ref"]
 
 
-def get_get_dipole_dir(Printer, map_):
+def get_get_dipole_dir(map_):
     """Default for obtaining the dipole
 
     parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
@@ -228,7 +220,7 @@ def get_get_dipole_dir(Printer, map_):
     # based on the r_vec and r_pos lines in the map core, build a function.
 
     # find direction of dipole vector
-    codestring = "\ndef GM_get_dipole_dir(Printer, Map, Syst, osc):\n"
+    codestring = "\ndef GM_get_dipole_dir(Map, Syst, osc):\n"
     codestring += "    r_vec = " + envelop_int(
         " ".join(map_.rawcore["r_vec"]),
         "osc.positions_box[", "]"
@@ -253,7 +245,7 @@ def get_get_dipole_dir(Printer, map_):
         exec(codestring)
     except Exception as ex:
         corefile = (map_.directory / 'core.txt').resolve()
-        Printer.warning(
+        GM_PT.Printer().warning(
             f"\nThe file {corefile} does not contain a valid definition of "
             "r_vec and/or r_pos.",
             "MI_MC_9", exception=ex
@@ -272,7 +264,7 @@ def get_get_dipole_mag():
         The function that can be used to get the magnitude of a dipole moment.
     """
 
-    def GM_get_dipole_mag(Printer, Map, Syst, osc):
+    def GM_get_dipole_mag(Map, Syst, osc):
         if Map.Core.dipole_data_array is not None:
             return uses_maps(
                 Map.Core.dipole_gas_phase,
@@ -285,14 +277,11 @@ def get_get_dipole_mag():
     return GM_get_dipole_mag
 
 
-def get_get_rotation_matrix(Printer, map_):
+def get_get_rotation_matrix(map_):
     """Default for creating a rotation matrix
 
     parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     map_ : :class:`~GMAP.src.tools.MapReader.SingleMap`
         The map instance which this function will belong to.
 
@@ -307,7 +296,7 @@ def get_get_rotation_matrix(Printer, map_):
     given_directions = [key for key in map_.rawcore if key in allparnames]
 
     codestring = "\ndef GM_get_rotation_matrix"
-    codestring += "(Printer, Map, Syst, osc):\n"
+    codestring += "(Map, Syst, osc):\n"
 
     # the first direction should be taken as is
     direc = given_directions[0]
@@ -353,7 +342,7 @@ def get_get_rotation_matrix(Printer, map_):
         exec(codestring)
     except Exception as ex:
         corefile = (map_.directory / 'core.txt').resolve()
-        Printer.warning(
+        GM_PT.Printer().warning(
             f"\nThe file {corefile} does not contain a valid definition of "
             "x_uvec, y_uvec and/or z_uvec.",
             "MI_MC_9", exception=ex
@@ -385,16 +374,16 @@ def get_calculate_dipole(map_):
     """
 
     # the version when we are working with magnitude
-    def GM_get_dipole_vmag(Printer, Map, Syst, osc):
-        r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
-        r_vec *= Map.code.GM_get_dipole_mag(Printer, Map, Syst, osc)
+    def GM_get_dipole_vmag(Map, Syst, osc):
+        r_vec, r_pos = Map.code.GM_get_dipole_dir(Map, Syst, osc)
+        r_vec *= Map.code.GM_get_dipole_mag(Map, Syst, osc)
         r_vec = r_vec.astype("float32")
         return r_vec, r_pos
 
     # the version when we are working with a separate x, y, z component
     # (this one ignores the earlier given r_vec)
-    def GM_get_dipole_vxyz(Printer, Map, Syst, osc):
-        _, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
+    def GM_get_dipole_vxyz(Map, Syst, osc):
+        _, r_pos = Map.code.GM_get_dipole_dir(Map, Syst, osc)
         xyz = [
             uses_maps(omega, [osc.VEGout], [arr]) for omega, arr in zip(
                 Map.Core.dipole_gas_phase, Map.Core.dipole_data_array)
@@ -432,24 +421,24 @@ def get_calculate_frequency(map_):
         The function that every oscillator will call to get its frequency
     """
 
-    def GM_calculate_freq_base(Printer, Map, Syst, osc):
+    def GM_calculate_freq_base(Map, Syst, osc):
         return Map.Core.frequency_gas_phase
 
-    def GM_calculate_freq_VEG_lin(Printer, Map, Syst, osc):
+    def GM_calculate_freq_VEG_lin(Map, Syst, osc):
         freq = uses_maps(
             Map.Core.frequency_gas_phase, [osc.VEGout],
             [Map.Core.frequency_data_array_linear]
         )
         return freq
 
-    def GM_calculate_freq_VEG_quad(Printer, Map, Syst, osc):
+    def GM_calculate_freq_VEG_quad(Map, Syst, osc):
         freq = uses_maps(
-            Map.Core.frequency_gas_phase, [osc.VEGout],
+            Map.Core.frequency_gas_phase, [osc.VEGout**2],
             [Map.Core.frequency_data_array_quadratic]
         )
         return freq
 
-    def GM_calculate_freq_VEG_both(Printer, Map, Syst, osc):
+    def GM_calculate_freq_VEG_both(Map, Syst, osc):
         freq = uses_maps(
             Map.Core.frequency_gas_phase,
             [osc.VEGout, osc.VEGout**2],

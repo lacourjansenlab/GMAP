@@ -4,7 +4,7 @@ src/tools/CLibLoader.py.
 
 Missing tests:
 
-(@ May 2nd '24):
+(@ July 22nd '24):
   (0 missed statements)
 
 - Nothing is missing!
@@ -17,21 +17,16 @@ import pytest
 # local imports
 from .test_SystemReader import parameter_getter
 import GMAP.src.tools.CLibLoader as GM_CL
+import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.PhysicsFunctions as GM_PF
-
-
-# Otherwise, the created singleton will leak between tests.
-# https://github.com/pytest-dev/pytest-mock/issues/100
-@pytest.fixture(autouse=True)
-def reset_singletons():
-    GM_CL.Singleton._instances = {}
 
 
 class TestVClib:
     def test_calcVEG_perres_mm(self):
         cmdline = ["-md", "maps\\;"]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter("AmideSC", cmdline)
 
@@ -164,30 +159,32 @@ class TestVClib:
             [-0.000003743181, 0.000000513291, 0.000005141681],  # Gxz
             [-0.000008146924, 0.000001026582, 0.000002570840]   # Gyz
         ]], dtype="float32").sum(2).round(10)
-        print(ans)
         assert np.all(oscillator.VEGout[:, 4:].round(10) == ans)
 
-    def test_CL_VG_1(self, capsys):
+    def test_CL_VG_1(self):
+        """This test will fail if the singletons are not cleared!!!!
+        """
+
         cmdline = ["-md", "maps\\;"]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter("AmideSC", cmdline)
+
         RunPars.VEG_clib_file = (
             RunPars.VEG_clib_file.parent / "doesntexist.txt")
-
-        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
+        with pytest.raises(GM_Ex.GmapFileNotFoundError, match="CL_VG_1$"):
             _ = GM_CL.VEG_CLib(RunPars)
-        assert pytest_wrapped_sysexit.type is SystemExit
-        captured = capsys.readouterr()
-        assert captured.out.endswith("CL_VG_1\n")
 
+        RunPars.VEG_clib_file = (
+            RunPars.VEG_clib_file.parent / "VEG.obj")
+        with pytest.raises(GM_Ex.GmapOSError, match="CL_VG_1$"):
+            _ = GM_CL.VEG_CLib(RunPars)
 
-class EmptyClass:
-    def __init__(self, **kwargs):
-        for parname, val in kwargs.items():
-            setattr(self, parname, val)
-        return
+        RunPars.VEG_clib_file = (
+            RunPars.VEG_clib_file.parent)
+        with pytest.raises(GM_Ex.GMAPexception, match="CL_VG_1$"):
+            _ = GM_CL.VEG_CLib(RunPars)
 
 
 def get_System_1():
@@ -218,10 +215,10 @@ def get_System_1():
     boxdims = np.array([100, 100, 100], dtype="float32")
     halfbox = np.array([50, 50, 50], dtype="float32")
 
-    return EmptyClass(**{
+    return GM_CT.CustomClass(**{
         "positions_c": np.ctypeslib.as_ctypes(np.ravel(positions)),
         "charges_c": np.ctypeslib.as_ctypes(charges),
-        "residues": EmptyClass(**{
+        "residues": GM_CT.CustomClass(**{
             "CoM_c": np.ctypeslib.as_ctypes(np.ravel(residues_CoM)),
             "first_ix_c": np.ctypeslib.as_ctypes(res_first_ix),
             "last_ix_c": np.ctypeslib.as_ctypes(res_last_ix)
@@ -236,7 +233,7 @@ def get_oscillator_1():
     estat_ats = np.array([0, 1], dtype="int32")
     VEG_refpos = np.array([10, 30, 70], dtype="float32")
     VEGout = np.zeros((2, 10), dtype="float32")
-    return EmptyClass(**{
+    return GM_CT.CustomClass(**{
         "electrostatic_atoms_c": np.ctypeslib.as_ctypes(estat_ats),
         "n_estatic_atoms": np.int32(2),
         "VEG_refpos_c": np.ctypeslib.as_ctypes(VEG_refpos),
@@ -244,8 +241,8 @@ def get_oscillator_1():
         "n_local_atoms": np.int32(2),
         "VEGout": VEGout,
         "VEGout_c": np.ctypeslib.as_ctypes(np.ravel(VEGout)),
-        "Map": EmptyClass(**{
-            "Core": EmptyClass(**{
+        "Map": GM_CT.CustomClass(**{
+            "Core": GM_CT.CustomClass(**{
                 "electrostatic_choice_c": 3  # we want gradients!!!
             })
         })

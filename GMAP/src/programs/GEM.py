@@ -42,7 +42,7 @@ import GMAP.src.tools.SystemReader as GM_SR
 
 
 # TO DO inside!
-def manage_frame(frame, Printer, RunPars):
+def manage_frame(frame, RunPars):
     """Performs all the checks involved with starting a new frame.
 
     Future/TODO:
@@ -56,9 +56,6 @@ def manage_frame(frame, Printer, RunPars):
     ----------
     frame : `MDA.Timestep`
         The frame that will be treated next.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
         The 'main' RunPars instance containing all the basic run-defining
         parameters.
@@ -74,7 +71,7 @@ def manage_frame(frame, Printer, RunPars):
 
 
 # TO DO inside!
-def trj_loop(Printer, RunPars, System):
+def trj_loop(RunPars, System):
     """Performs the main per-frame loop for GEM.
 
     Does the last bit of initialization that needs to happen, and then
@@ -82,9 +79,6 @@ def trj_loop(Printer, RunPars, System):
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
         The 'main' RunPars instance containing all the basic run-defining
         parameters.
@@ -104,64 +98,66 @@ def trj_loop(Printer, RunPars, System):
     # let maps prepare for the calculation
     for mapname in System.oscillators_ordered.keys():  # singles
         map_ = RunPars.requested_mapdict[mapname]
-        map_.code.GM_pre_run(Printer, map_, System)
+        map_.code.GM_pre_run(map_, System)
     for mapname in System.oscillators_ordered_coup.keys():  # pairs
         map_ = RunPars.requested_pairmapdict[mapname]
-        map_.code.GM_pre_run(Printer, map_, System)
+        map_.code.GM_pre_run(map_, System)
 
     # And in case maps did anything weird...
     RunPars.manage_dtypes()
 
-    Printer.add_time(3, "Starting on frames", "ms")
+    GM_PT.Printer().add_time(3, "Starting on frames", "ms")
 
     trj = System.universe.trajectory
     GM_FH.clear_output(RunPars)
     for frame in trj[RunPars.start_frame:]:
-        Printer.add_time(4, "Starting on frame - starting updates", "ms")
+        GM_PT.Printer().add_time(
+            4, "Starting on frame - starting updates", "ms")
         # manage frame number (if not in range, skip, prints, ETA, etc)
-        if manage_frame(frame, Printer, RunPars):
+        if manage_frame(frame, RunPars):
             break
 
         # rebuild the frame-specific data (positions, box, etc)
-        System.update_properties(Printer)
-        Printer.add_time(4, "done system updates. next: osc updates", "ms")
+        System.update_properties()
+        GM_PT.Printer().add_time(
+            4, "done system updates. next: osc updates", "ms")
         for oscillator in System.oscillators:
-            oscillator.frame_update(Printer, System)
+            oscillator.frame_update(System)
 
-        Printer.add_time(4, "updates done. next: initialize", "ms")
+        GM_PT.Printer().add_time(4, "updates done. next: initialize", "ms")
 
         # (only if needed) recalc COM
 
         # initialize output structures (like Ham)
         outputs = GM_PF.generate_output_structures(RunPars, System)
 
-        Printer.add_time(4, "initialize done. next: map init", "ms")
+        GM_PT.Printer().add_time(4, "initialize done. next: map init", "ms")
 
         # call pre-frame funcs of maps
         for mapname in System.oscillators_ordered.keys():  # singles
             map_ = RunPars.requested_mapdict[mapname]
-            map_.code.GM_pre_frame(Printer, map_, System)
+            map_.code.GM_pre_frame(map_, System)
         for mapname in System.oscillators_ordered_coup.keys():  # pairs
             map_ = RunPars.requested_pairmapdict[mapname]
-            map_.code.GM_pre_frame(Printer, map_, System)
+            map_.code.GM_pre_frame(map_, System)
 
-        Printer.add_time(4, "map init done. next: calculation", "ms")
+        GM_PT.Printer().add_time(4, "map init done. next: calculation", "ms")
 
         # perform the actual calculations
         outputs = GM_PF.calc_frame(
-            Printer, RunPars, System, outputs)
+            RunPars, System, outputs)
 
-        Printer.add_time(4, "calculation done. next: map final", "ms")
+        GM_PT.Printer().add_time(4, "calculation done. next: map final", "ms")
 
         # call post-frame functions of maps
         for mapname in System.oscillators_ordered.keys():  # singles
             map_ = RunPars.requested_mapdict[mapname]
-            map_.code.GM_post_frame(Printer, map_, System)
+            map_.code.GM_post_frame(map_, System)
         for mapname in System.oscillators_ordered_coup.keys():  # pairs
             map_ = RunPars.requested_pairmapdict[mapname]
-            map_.code.GM_post_frame(Printer, map_, System)
+            map_.code.GM_post_frame(map_, System)
 
-        Printer.add_time(4, "map final done. next: write output", "ms")
+        GM_PT.Printer().add_time(4, "map final done. next: write output", "ms")
 
         # write calculated data to files
         GM_FH.write_output(RunPars, frame.frame, outputs)
@@ -169,10 +165,10 @@ def trj_loop(Printer, RunPars, System):
     # lastly, do postcalc:
     for mapname in System.oscillators_ordered.keys():  # singles
         map_ = RunPars.requested_mapdict[mapname]
-        map_.code.GM_post_run(Printer, map_, System)
+        map_.code.GM_post_run(map_, System)
     for mapname in System.oscillators_ordered_coup.keys():  # pairs
         map_ = RunPars.requested_pairmapdict[mapname]
-        map_.code.GM_post_run(Printer, map_, System)
+        map_.code.GM_post_run(map_, System)
 
     # print all that the user does not yet know
     # (profiler?)
@@ -180,7 +176,7 @@ def trj_loop(Printer, RunPars, System):
 
 # still a placeholder - this function still has to grow. Should in the
 # end manage the different run modes, and probably do nothing else?
-def GEM(callcommand, Files, Printer):
+def GEM(callcommand, Files):
     # step 1 (is GEM in demo mode?)
     if callcommand[1] in ("demo"):
         exp_inpfile = False
@@ -188,37 +184,37 @@ def GEM(callcommand, Files, Printer):
         exp_inpfile = True
     # step 2 (very basic cmd line parse)
     job, in_parfile, argslist = GM_PP.parse_commandline(
-        Files, Printer, callcommand, alljobs, "GMAP GEM", exp_inpfile, True
+        Files, callcommand, alljobs, "GMAP GEM", exp_inpfile, True
     )
 
     RunPars, singles_mapdict, pairs_mapdict, _, _, _, _ = GM_PP.get_parameters(
-        Files, Printer, in_parfile, argslist
+        Files, in_parfile, argslist
     )
-    Printer.add_time(3, "Parsed GMAP parameters", "ms")
+    GM_PT.Printer().add_time(3, "Parsed GMAP parameters", "ms")
 
     # end of SU errors
 
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
-    GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
-    Printer.add_time(3, "Added all maps", "ms")
+    GM_MR.manage_maps_singles(Files, RunPars, singles_mapdict)
+    GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
+    GM_PT.Printer().add_time(3, "Added all maps", "ms")
 
     # next - MD system!
-    System = GM_SR.System(Files, Printer, RunPars)
-    Printer.add_time(3, "Initialized MD system", "ms")
+    System = GM_SR.System(Files, RunPars)
+    GM_PT.Printer().add_time(3, "Initialized MD system", "ms")
 
     # GEM is now done - let maps initialize as well
     for mapname in System.oscillators_ordered.keys():  # singles
         map_ = RunPars.requested_mapdict[mapname]
-        map_.code.GM_post_init(Files, Printer, map_, System)
+        map_.code.GM_post_init(Files, map_, System)
     for mapname in System.oscillators_ordered_coup.keys():  # pairs
         map_ = RunPars.requested_pairmapdict[mapname]
-        map_.code.GM_post_init(Files, Printer, map_, System)
-    Printer.add_time(2, "Initialization complete", "ms")
+        map_.code.GM_post_init(Files, map_, System)
+    GM_PT.Printer().add_time(2, "Initialization complete", "ms")
 
     # initialize C library
     GM_CL.VEG_CLib(RunPars)
 
-    trj_loop(Printer, RunPars, System)
+    trj_loop(RunPars, System)
 
     GM_PT.devprint("entered main of GEM - yet to be constructed")
 
@@ -242,8 +238,7 @@ def main(callcommand):
         print(__doc__)
     else:
         Files = GM_FH.FileLocations()
-        Printer = GM_PT.Printer(Files)
-        GEM(callcommand, Files, Printer)
+        GEM(callcommand, Files)
 
 
 if __name__ == "__main__":

@@ -48,3 +48,15 @@ class Singleton(type):
             cls._instances[cls] = super(
                 Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
+
+
+class CustomClass:
+    """Creates a new class with attributes equallying given dict entries
+
+    Of the given dictionary, keys will become the attribute names, the
+    values will become the actual stored thing in that attribute.
+    """
+    def __init__(self, **kwargs):
+        for parname, val in kwargs.items():
+            setattr(self, parname, val)
+        return

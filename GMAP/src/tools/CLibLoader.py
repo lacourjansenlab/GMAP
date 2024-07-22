@@ -4,6 +4,7 @@ import ctypes as ct
 
 # local imports
 import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.Exceptions as GM_Ex
 from GMAP.src.tools.PrintTools import Printer
 
 
@@ -45,14 +46,22 @@ class VEG_CLib(metaclass=GM_CT.Singleton):
 
     def __init__(self, RunPars):
         try:
+            msg = (
+                f"\nThe file {RunPars.VEG_clib_file} was requested to be used "
+                "as the VEG c-library. However, the file is invalid. "
+            )
             self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
+        except FileNotFoundError as ex:
+            Printer().warning(
+                msg, "CL_VG_1", True, exception=ex,
+                GMAPerrclass=GM_Ex.GmapFileNotFoundError
+            )
         except Exception as ex:
             # OSError for invalid file (VEG.obj)
             # No others found yet.
             Printer().warning(
-                f"\nThe file {RunPars.VEG_clib_file} was requested to be used "
-                "as the VEG c-library. However, the file is invalid. ",
-                "CL_VG_1", True, exception=ex
+                msg, "CL_VG_1", True, exception=ex,
+                GMAPerrclass=GM_Ex.GmapOSError
             )
 
         self.clib.calcVEG_perres_mm.argtypes = [

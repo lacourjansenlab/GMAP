@@ -35,11 +35,10 @@ def cmd_interface(callcommand):
     """
 
     Files = GM_FH.FileLocations()
-    printer = Printer(Files)
     with open(Files.script_dir / "logo.txt") as lfile:
         logostr = lfile.read()
 
-    printer.print(1, logostr)
+    Printer().print(1, logostr)
 
     allhelps = ["help", "h", "-h"]
 
@@ -93,9 +92,6 @@ def cmd_to_tools(Files, allhelps, callcommand, choice, subch):
     Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
         Contains all currently known paths and other file-related properties.
         Has to be updated after RunPars is finalized.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     allhelps : list of str
         All items in this list are strings the user might use to get
         help to be printed.
@@ -114,7 +110,7 @@ def cmd_to_tools(Files, allhelps, callcommand, choice, subch):
         printer.print(0, modch.__doc__)
         printer.quit_early()
     else:
-        getattr(modch, choice)(callcommand[1:], Files, printer)
+        getattr(modch, choice)(callcommand[1:], Files)
 
 
 def main():

@@ -65,7 +65,7 @@ class Printer(metaclass=GM_CT.Singleton):
 
         self.Timer = Timer(start=Files.start)
 
-        Files.set_exec_os(self)
+        Files.set_exec_os()
 
         # to have some kind of default - will be changed as soon as parameter
         # choices are known.
@@ -93,7 +93,8 @@ class Printer(metaclass=GM_CT.Singleton):
         if "p" in instruction and verbose_level <= self.verbose:
             print(prettifier(str(toprint)))
         if "f" in instruction and verbose_level <= self.verbose_logfile:
-            print(prettifier(str(toprint)), file=open(self.logfile, "a"))
+            with open(self.logfile, "a") as fhand:
+                print(prettifier(str(toprint)), file=fhand)
 
     def quit_early(self):
         """Called when the program is quitted early
@@ -125,7 +126,7 @@ class Printer(metaclass=GM_CT.Singleton):
 
     def warning(
         self, message, error_code, exitbool=False, exception=None,
-        GMAPerrclass=GM_Ex.GMAPexception
+        GMAPerrclass=None
     ):
         """Warning system. Prints the message, and allows to force-quit after.
 
@@ -144,7 +145,15 @@ class Printer(metaclass=GM_CT.Singleton):
             that error can be caught and fed into this function.
         """
 
+        # if this default is set directly in the function signature, a circular
+        # reference problem occurs, and this module MUST be imported before
+        # the exceptions module is imported. This way, the import order does
+        # not matter.
+        if GMAPerrclass is None:
+            GMAPerrclass = GM_Ex.GMAPexception
+
         # if error_code[2:6] not in ["_MC_",]:
+        # if error_code == "MI_MC_9":
         if exitbool:
             printinstruct = "f"
         else:
