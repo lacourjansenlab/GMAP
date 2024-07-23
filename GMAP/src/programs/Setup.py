@@ -20,11 +20,12 @@ from pathlib import Path
 
 # local imports
 # from GMAP.src.tools.PrintTools import devprint as dpr
+import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.PrintTools as GM_PT
 
 
-def Setup(callcommand, Files, Printer):
+def Setup(callcommand, Files):
     """Copies the maps and src dirs and copies them to a new map.
 
     Setup copies the maps folder and the src folder and copies them to
@@ -38,18 +39,17 @@ def Setup(callcommand, Files, Printer):
     Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
         Contains all currently known paths and other file-related
         properties. Has to be updated after RunPars is finalized.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     """
-    Printer.set_state("running", 2, 3)
+
+    printer = GM_PT.Printer()
+    printer.set_state("running", 2, 3)
 
     target = Path(callcommand[1]).resolve()
 
     target_srcdir = target / "sourcefiles_copy"
     target_mapdir = target / "maps_copy"
 
-    verify_target(target, target_srcdir, target_mapdir, Printer)
+    verify_target(target, target_srcdir, target_mapdir)
 
     src_dir = Files.sourcedir_hc
     map_dir = Files.mapdir_hc
@@ -57,10 +57,10 @@ def Setup(callcommand, Files, Printer):
     shutil.copytree(src_dir, target_srcdir)
     shutil.copytree(map_dir, target_mapdir)
 
-    Printer.print(1, f"Copied folders to {target} successfully!")
+    printer.print(1, f"Copied folders to {target} successfully!")
 
 
-def verify_target(target, target_srcdir, target_mapdir, Printer):
+def verify_target(target, target_srcdir, target_mapdir):
     """Verifies that it is possible to copy the folders to target.
 
     The target directory should exist and should not contain files named
@@ -78,29 +78,29 @@ def verify_target(target, target_srcdir, target_mapdir, Printer):
     target_mapdir : 'pathlib.Path'
         The object that is the path that will be the location where the
         maps folder copy will reside.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     """
 
     if not target.is_dir():
-        Printer.warning(
+        GM_PT.Printer().warning(
             f"{target} is not a valid directory. Please submit a valid target "
-            "target directory.", "Setup_1", True
+            "target directory.", "Setup_1", True,
+            GMAPerrclass=GM_Ex.GmapNotADirectoryError
         )
 
     if Path(target_srcdir).exists():
-        Printer.warning(
+        GM_PT.Printer().warning(
             f"The folder {target_srcdir} already exist. Please rename it or "
             "select another target folder.",
-            "Setup_2", True
+            "Setup_2", True,
+            GMAPerrclass=GM_Ex.GmapIsADirectoryError
         )
 
     if Path(target_mapdir).exists():
-        Printer.warning(
+        GM_PT.Printer().warning(
             f"The folder {target_mapdir} already exist. Please rename it or "
             "select another target folder.",
-            "Setup_3", True
+            "Setup_3", True,
+            GMAPerrclass=GM_Ex.GmapIsADirectoryError
         )
 
 
@@ -117,8 +117,7 @@ def main():
         print(__doc__)
     else:
         Files = GM_FH.FileLocations()
-        Printer = GM_PT.Printer(Files)
-        Setup(callcommand, Files, Printer)
+        Setup(callcommand, Files)
 
 
 if __name__ == "__main__":

@@ -2,12 +2,16 @@
 # standard library imports
 import inspect
 import pathlib
-import sys
+# import sys
 import time
 from traceback import TracebackException as TbEx
 
+# local imports
+import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.Exceptions as GM_Ex
 
-class Printer:
+
+class Printer(metaclass=GM_CT.Singleton):
     """Manages prints and logs during runtime.
 
     During runtime, the program can communicate many things, but the user
@@ -61,9 +65,14 @@ class Printer:
 
         self.Timer = Timer(start=Files.start)
 
-        Files.set_exec_os(self)
+        Files.set_exec_os()
 
-    def print(self, verbose_level, toprint):
+        # to have some kind of default - will be changed as soon as parameter
+        # choices are known.
+        self.verbose = 3
+        self.verbose_logfile = 4
+
+    def print(self, verbose_level, toprint, instruction="pf"):
         """Called when something needs to be printed.
 
         Parameters
@@ -78,13 +87,14 @@ class Printer:
         """
 
         if self.program_state == "startup":
-            self.backlog.append([verbose_level, toprint])
+            self.backlog.append([verbose_level, toprint, instruction])
             return
 
-        if verbose_level <= self.verbose:
+        if "p" in instruction and verbose_level <= self.verbose:
             print(prettifier(str(toprint)))
-        if verbose_level <= self.verbose_logfile:
-            print(prettifier(str(toprint)), file=open(self.logfile, "a"))
+        if "f" in instruction and verbose_level <= self.verbose_logfile:
+            with open(self.logfile, "a") as fhand:
+                print(prettifier(str(toprint)), file=fhand)
 
     def quit_early(self):
         """Called when the program is quitted early
@@ -103,8 +113,6 @@ class Printer:
         """
 
         if self.program_state == "startup":
-            self.verbose = 3
-            self.verbose_logfile = 4
             self.program_state = "running"
 
         # create the file (clear it if it exists). File equivalent of
@@ -112,11 +120,14 @@ class Printer:
         with open(self.logfile, "w") as _:
             pass
 
-        for verbose_level, toprint in self.backlog:
-            self.print(verbose_level, toprint)
+        for verbose_level, toprint, instruction in self.backlog:
+            self.print(verbose_level, toprint, instruction)
         self.backlog = []
 
-    def warning(self, message, error_code, exitbool=False, exception=None):
+    def warning(
+        self, message, error_code, exitbool=False, exception=None,
+        GMAPerrclass=None
+    ):
         """Warning system. Prints the message, and allows to force-quit after.
 
         Parameters
@@ -134,24 +145,42 @@ class Printer:
             that error can be caught and fed into this function.
         """
 
+        # if this default is set directly in the function signature, a circular
+        # reference problem occurs, and this module MUST be imported before
+        # the exceptions module is imported. This way, the import order does
+        # not matter.
+        if GMAPerrclass is None:
+            GMAPerrclass = GM_Ex.GMAPexception
+
         # if error_code[2:6] not in ["_MC_",]:
-        self.print(0, message)
+        # if error_code == "MI_MC_9":
+        if exitbool:
+            printinstruct = "f"
+        else:
+            printinstruct = "pf"
+
+        error_message = message
+        self.print(0, message, printinstruct)
 
         # print the traceback in exactly the same way as it would be
         # thrown into the command line.
         if exception:
             traceprint = TbEx.from_exception(exception).format()
-            self.print(4, "\n" + "".join(traceprint))
+            self.print(4, "\n" + "".join(traceprint), printinstruct)
+            if self.verbose == 4:
+                error_message += "\n" + "".join(traceprint)
 
-        self.print(
-            0,
+        msg = (
             "More information can be found in the documentation "
             f"user pages using the following error code: {error_code}"
         )
+        self.print(0, msg, printinstruct)
+        error_message += msg
+
         if exitbool:
             if self.backlog:
                 self.print_backlog()
-            sys.exit()
+            raise GMAPerrclass(error_message, error_code, exception)
 
     def set_state(
         self, new_state, verbose, verbose_logfile, new_logfile=None

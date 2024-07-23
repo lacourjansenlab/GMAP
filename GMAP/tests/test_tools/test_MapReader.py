@@ -4,8 +4,8 @@ src/tools/PhysicsFunctions.py.
 
 Missing tests:
 
-(@ June 25th '24):
-353-361, 1125, 1513 (6 missed statements)
+(@ July 22nd '24):
+328-336, 1097, 1484 (6 missed statements)
 
 (CUHTAT - currently unknown how to access this )
 - Map.append_core() - there was some issue with the corefile (CUHTAT)
@@ -27,11 +27,11 @@ import numpy as np
 
 # local imports
 import GMAP.src.tools.DefaultMapFunctions as GM_DMF
+import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
-import GMAP.src.tools.PrintTools as GM_PT
 
 
 class TestCode:
@@ -41,14 +41,14 @@ class TestCode:
         ]
         inpardict = {}
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
 
         # only test the map made for testing this funtionality
         mapname = "test_extract_code"
         map_ = mapdict[mapname]
-        setattr(map_, "code", map_.extract_code(Printer))
+        setattr(map_, "code", map_.extract_code())
 
         assert map_.code.for_testing(4) == 6
 
@@ -58,14 +58,14 @@ class TestCode:
         ]
         inpardict = {}
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
 
         # only test the map made for testing this funtionality
         mapname = "test_extract_code_nocode"
         map_ = mapdict[mapname]
-        setattr(map_, "code", map_.extract_code(Printer))
+        setattr(map_, "code", map_.extract_code())
 
         assert hasattr(map_.code, "for_testing") is False
 
@@ -77,7 +77,7 @@ class TestCode:
         mapname = "test_extract_code"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="adjust_RunPars",
@@ -86,7 +86,7 @@ class TestCode:
         map_ = mapdict[mapname]
 
         assert RunPars.neutral_charge_threshold == 0.0001
-        map_.code.GM_adjust_RunPars(Files, Printer, map_)
+        map_.code.GM_adjust_RunPars(Files, map_)
         assert RunPars.neutral_charge_threshold == 0.02
 
     def test_GM_adjust_RunPars_default(self):
@@ -97,7 +97,7 @@ class TestCode:
         mapname = "test_extract_code_nocode"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="adjust_RunPars",
@@ -106,7 +106,7 @@ class TestCode:
 
         # only test the map made for testing this funtionality
         map_ = mapdict[mapname]
-        setattr(map_, "code", map_.extract_code(Printer))
+        setattr(map_, "code", map_.extract_code())
         if not map_.code:
             setattr(map_, "code", GM_DMF.NewModule())
 
@@ -126,14 +126,14 @@ class TestCode:
         mapname = "test_find_core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="find_core", mapname=mapname
         )
         map_ = mapdict[mapname]
 
-        setattr(map_, "rawcore", map_.find_core(Printer))
+        setattr(map_, "rawcore", map_.find_core())
 
         assert map_.rawcore["functional_group"] == [[
             "[CYS]", "N", "H", "CA", "C", "O", "CB", "SG(1)", "[CYS]", "N",
@@ -160,12 +160,12 @@ class TestCode:
             + b'\xFA' + b'\xFB' + b'\xFC' + b'\xFD' + b'\xFE' + b'\xFF')
         fhand.close()
 
-        (_, Printer, _, _, _, _, _, mapdict, pairs_mapdict) = basic_setup(
+        (_, _, _, _, _, _, mapdict, pairs_mapdict) = basic_setup(
             cmdline, inpardict, finish_before="append_core", mapname=mapname
         )
         map_ = mapdict[mapname]
 
-        # setattr(map_, "Core", GM_MR.SingleCore(Printer, map_))
+        # setattr(map_, "Core", GM_MR.SingleCore(map_))
         assert not map_.success
         out, _ = capfd.readouterr()
         assert out.endswith("SU_FH_3\n")
@@ -178,14 +178,14 @@ class TestCode:
         mapname = "test_appending"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="append_core", mapname=mapname
         )
         map_ = mapdict[mapname]
 
-        map_.append_core(Printer)
+        map_.append_core()
 
         assert map_.rawcore["influencer_group"] == [
             ["testgroup1", "TST"],
@@ -201,14 +201,14 @@ class TestCode:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
 
-        setattr(map_, "Core", GM_MR.SingleCore(Printer, map_))
+        setattr(map_, "Core", GM_MR.SingleCore(map_))
 
         assert map_.Core.type == "standard"
         found_residues = [
@@ -228,12 +228,12 @@ class TestCode:
             inpardict = {}
             mapname = f"test_MI_MC_6_{i}"
 
-            (_, Printer, _, _, _, _, _, mapdict, _) = basic_setup(
+            (_, _, _, _, _, _, mapdict, _) = basic_setup(
                 cmdline, inpardict, finish_before="Core", mapname=mapname
             )
             map_ = mapdict[mapname]
 
-            setattr(map_, "Core", GM_MR.SingleCore(Printer, map_))
+            setattr(map_, "Core", GM_MR.SingleCore(map_))
 
             out, _ = capfd.readouterr()
             assert out.endswith("MI_MC_6\n")
@@ -244,12 +244,12 @@ class TestCode:
         ]
         inpardict = {}
         mapname = "test_MI_MC_2"
-        (_, Printer, _, _, _, _, _, mapdict, _) = basic_setup(
+        (_, _, _, _, _, _, mapdict, _) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
 
-        setattr(map_, "Core", GM_MR.SingleCore(Printer, map_))
+        setattr(map_, "Core", GM_MR.SingleCore(map_))
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MC_2\n")
@@ -260,12 +260,12 @@ class TestCode:
         ]
         inpardict = {}
         mapname = "test_estatic_None"
-        (_, Printer, _, _, _, _, _, mapdict, _) = basic_setup(
+        (_, _, _, _, _, _, mapdict, _) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
 
-        setattr(map_, "Core", GM_MR.SingleCore(Printer, map_))
+        setattr(map_, "Core", GM_MR.SingleCore(map_))
 
         assert map_.Core.electrostatic_atoms == []
         assert map_.Core.electrostatic_choice is None
@@ -279,7 +279,7 @@ class TestCode:
         mapname = "test_code_build_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
@@ -303,9 +303,9 @@ class TestCode:
             ["positions_box", positions @ Syst.boxvects_inv]
         )
 
-        map_.code_add_builds(Printer)
+        map_.code_add_builds()
         r_vec, r_pos = map_.code.GM_get_dipole_dir(
-            Printer, map_, Syst, osc
+            map_, Syst, osc
         )
         r_vec_dir = np.array([-1.5, 1, 0])  # not normalized
         r_vec_dir /= np.linalg.norm(r_vec_dir)
@@ -317,7 +317,7 @@ class TestCode:
         ).all()
 
         rotation_matrix = np.round(map_.code.GM_get_rotation_matrix(
-            Printer, map_, Syst, osc
+            map_, Syst, osc
         ), 4)
 
         xvec = np.array([1.5, 1, 0])
@@ -338,7 +338,7 @@ class TestCode:
         mapname = "test_code_build_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
@@ -365,9 +365,9 @@ class TestCode:
             ["positions_box", positions @ Syst.boxvects_inv]
         )
 
-        map_.code_add_builds(Printer)
+        map_.code_add_builds()
         r_vec, r_pos = map_.code.GM_get_dipole_dir(
-            Printer, map_, Syst, osc
+            map_, Syst, osc
         )
         r_vec_dir = np.array([1.125, 1.25, 0])  # not normalized
         r_vec_dir /= np.linalg.norm(r_vec_dir)
@@ -384,7 +384,7 @@ class TestCode:
         ).all()
 
         rotation_matrix = np.round(map_.code.GM_get_rotation_matrix(
-            Printer, map_, Syst, osc
+            map_, Syst, osc
         ), 4)
 
         zvec = np.array([0, 2, 0], dtype=np.float64)
@@ -405,7 +405,7 @@ class TestCode:
         mapname = "test_code_build_3"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
@@ -429,9 +429,9 @@ class TestCode:
             ["positions_box", positions @ Syst.boxvects_inv]
         )
 
-        map_.code_add_builds(Printer)
+        map_.code_add_builds()
         r_vec, r_pos = map_.code.GM_get_dipole_dir(
-            Printer, map_, Syst, osc
+            map_, Syst, osc
         )
 
         # this answer is wrong, as we correct for pbc.
@@ -447,7 +447,7 @@ class TestCode:
         ).all()
 
         rotation_matrix = np.round(map_.code.GM_get_rotation_matrix(
-            Printer, map_, Syst, osc
+            map_, Syst, osc
         ), 4)
 
         zvec = np.array([2, 2, 2], dtype=np.float64)
@@ -470,13 +470,13 @@ class TestCode:
         mapname = "test_code_build_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
         map_ = mapdict[mapname]
-        map_.initialize(Files, Printer)
+        map_.initialize(Files)
 
         assert map_.success
 
@@ -489,13 +489,13 @@ class TestCode:
         mapname = "test_MI_MR_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
         map_ = mapdict[mapname]
-        map_.initialize(Files, Printer)
+        map_.initialize(Files)
 
         assert not map_.success
 
@@ -511,13 +511,13 @@ class TestCode:
         mapname = "test_MI_MR_6"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
         map_ = mapdict[mapname]
-        map_.initialize(Files, Printer)
+        map_.initialize(Files)
 
         assert not map_.success
 
@@ -533,13 +533,13 @@ class TestCode:
         mapname = "test_MI_MC_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
         map_ = mapdict[mapname]
-        map_.initialize(Files, Printer)
+        map_.initialize(Files)
 
         assert not map_.success
 
@@ -555,13 +555,13 @@ class TestCode:
         mapname = "test_MI_MC_10_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
         map_ = mapdict[mapname]
-        map_.initialize(Files, Printer)
+        map_.initialize(Files)
 
         assert not map_.success
 
@@ -576,7 +576,7 @@ class TestCode:
         mapname = "test_MI_MC_6_5"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
@@ -584,7 +584,7 @@ class TestCode:
         )
         map_ = mapdict[mapname]
 
-        map_.code_add_builds(Printer)
+        map_.code_add_builds()
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MC_6\n")
@@ -597,7 +597,7 @@ class TestCode:
         mapname = "test_MI_MC_9_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
@@ -605,7 +605,7 @@ class TestCode:
         )
         map_ = mapdict[mapname]
 
-        map_.code_add_builds(Printer)
+        map_.code_add_builds()
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MC_9\n")
@@ -619,7 +619,7 @@ class TestCode:
         mapname = "test_MI_MC_9_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
@@ -627,7 +627,7 @@ class TestCode:
         )
         map_ = mapdict[mapname]
 
-        map_.code_add_builds(Printer)
+        map_.code_add_builds()
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MC_9\n")
@@ -640,7 +640,7 @@ class TestCode:
         mapname = "test_MI_MC_10_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
@@ -648,7 +648,7 @@ class TestCode:
         )
         map_ = mapdict[mapname]
 
-        map_.code_add_builds(Printer)
+        map_.code_add_builds()
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MC_10\n")
@@ -662,7 +662,7 @@ class TestCode:
         mapname = "test_MI_MC_10_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="code_add_builds",
@@ -670,7 +670,7 @@ class TestCode:
         )
         map_ = mapdict[mapname]
 
-        map_.code_add_builds(Printer)
+        map_.code_add_builds()
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MC_10\n")
@@ -683,14 +683,14 @@ class TestCode:
         mapname = "test_MI_MR_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
 
         # only test the map made for testing this funtionality
         map_ = mapdict[mapname]
 
-        map_.extract_code(Printer)
+        map_.extract_code()
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MR_1\n")
@@ -703,7 +703,7 @@ class TestCode:
         mapname = "test_MI_MR_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="find_core", mapname=mapname
@@ -712,7 +712,7 @@ class TestCode:
         # only test the map made for testing this funtionality
         map_ = mapdict[mapname]
 
-        setattr(map_, "rawcore", map_.find_core(Printer))
+        setattr(map_, "rawcore", map_.find_core())
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MR_2\n")
@@ -725,7 +725,7 @@ class TestCode:
         mapname = "test_MI_MR_3_1"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="find_core", mapname=mapname
@@ -734,7 +734,7 @@ class TestCode:
         # only test the map made for testing this funtionality
         map_ = mapdict[mapname]
 
-        setattr(map_, "rawcore", map_.find_core(Printer))
+        setattr(map_, "rawcore", map_.find_core())
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MR_3\n")
@@ -746,7 +746,7 @@ class TestCode:
         mapname = "test_MI_MR_3_2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="append_core", mapname=mapname
@@ -755,7 +755,7 @@ class TestCode:
         # only test the map made for testing this funtionality
         map_ = mapdict[mapname]
 
-        map_.append_core(Printer)
+        map_.append_core()
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MR_3\n")
@@ -768,7 +768,7 @@ class TestCode:
         mapname = "test_MI_MR_4"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="find_core", mapname=mapname
@@ -777,7 +777,7 @@ class TestCode:
         # only test the map made for testing this funtionality
         map_ = mapdict[mapname]
 
-        setattr(map_, "rawcore", map_.find_core(Printer))
+        setattr(map_, "rawcore", map_.find_core())
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MR_4\n")
@@ -790,7 +790,7 @@ class TestCode:
         mapname = "test_MI_MR_6"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="append_core", mapname=mapname
@@ -799,7 +799,7 @@ class TestCode:
         # only test the map made for testing this funtionality
         map_ = mapdict[mapname]
 
-        map_.append_core(Printer)
+        map_.append_core()
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MR_6\n")
@@ -814,27 +814,27 @@ class TestPairMap:
         file.unlink(missing_ok=True)
 
         out = self.run_basic_pairmap("nocore")
-        coupmap = out[8]["nocore"]
+        coupmap = out[7]["nocore"]
         assert coupmap.success is True
 
     def test_pair_nocode(self):
         out = self.run_basic_pairmap("nocode")
-        coupmap = out[8]["nocode"]
+        coupmap = out[7]["nocode"]
         assert coupmap.success is True
 
     def test_pair_faultycore(self):
         out = self.run_basic_pairmap("faulty_core")
-        coupmap = out[8]["faulty_core"]
+        coupmap = out[7]["faulty_core"]
         assert coupmap.success is False
 
     def test_pair_faultyappend(self):
         out = self.run_basic_pairmap("faulty_append_core")
-        coupmap = out[8]["faulty_append_core"]
+        coupmap = out[7]["faulty_append_core"]
         assert coupmap.success is False
 
     def test_missing_singles(self, capsys):
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = self.run_basic_pairmap("missing_singles")
 
@@ -847,16 +847,12 @@ class TestPairMap:
             if map_.name in RunPars.coupling_v_pair_dict.keys()
         }
         RunPars.requested_pairmapdict = requested_mapdict
-        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            pairs_mapdict["missing_singles"].check_singles(RunPars, Printer)
-
-        assert pytest_wrapped_sysexit.type is SystemExit
-        captured = capsys.readouterr()
-        assert captured.out.endswith("MI_MC_2\n")
+        with pytest.raises(GM_Ex.GmapKeyError, match="MI_MC_2$"):
+            pairs_mapdict["missing_singles"].check_singles(RunPars)
 
     def test_missing_pairs(self, capsys):
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = self.run_basic_pairmap("missing_pairs")
 
@@ -869,20 +865,16 @@ class TestPairMap:
             if map_.name in RunPars.coupling_v_pair_dict.keys()
         }
         RunPars.requested_pairmapdict = requested_mapdict
-        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            pairs_mapdict["missing_pairs"].check_pairs(RunPars, Printer)
-
-        assert pytest_wrapped_sysexit.type is SystemExit
-        captured = capsys.readouterr()
-        assert captured.out.endswith("MI_MC_2\n")
+        with pytest.raises(GM_Ex.GmapKeyError, match="MI_MC_2$"):
+            pairs_mapdict["missing_pairs"].check_pairs(RunPars)
 
     def test_BWlists(self):
         out = self.run_basic_pairmap("allWL_AmBL")
-        coupmap = out[8]["allWL_AmBL"]
+        coupmap = out[7]["allWL_AmBL"]
         assert coupmap.Core.allowed_singles == []
 
         out = self.run_basic_pairmap("AmWL_nBL")
-        coupmap = out[8]["AmWL_nBL"]
+        coupmap = out[7]["AmWL_nBL"]
         assert coupmap.Core.allowed_singles == ["AmideSC"]
 
     def test_valid_combinations(self):
@@ -898,22 +890,22 @@ class TestPairMap:
         ]
         inpardict = {}
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname="x"
         )
-        GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
+        GM_MR.manage_maps_singles(Files, RunPars, mapdict)
 
         coupmap = pairs_mapdict["test_valid_combinations_all"]
-        coupmap.initialize(Files, Printer)
+        coupmap.initialize(Files)
         all_singles = ["AmideSC1", "AmideSC2", "AmideSC3", "AmideSC4"]
         for osc1 in all_singles:
             for osc2 in all_singles:
                 assert (osc1, osc2) in coupmap.Core.valid_combinations
 
         coupmap = pairs_mapdict["test_valid_combinations_diff"]
-        coupmap.initialize(Files, Printer)
+        coupmap.initialize(Files)
         all_singles = ["AmideSC1", "AmideSC2", "AmideSC3", "AmideSC4"]
         for osc1 in all_singles:
             for osc2 in all_singles:
@@ -923,7 +915,7 @@ class TestPairMap:
                     assert (osc1, osc2) in coupmap.Core.valid_combinations
 
         coupmap = pairs_mapdict["test_valid_combinations_same_spec"]
-        coupmap.initialize(Files, Printer)
+        coupmap.initialize(Files)
         all_singles = ["AmideSC1", "AmideSC2", "AmideSC3", "AmideSC4"]
         for osc1 in all_singles:
             for osc2 in all_singles:
@@ -947,27 +939,19 @@ class TestPairMap:
 
     def test_MI_MM_3(self, capsys):
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = self.run_basic_pairmap("test_MI_MM_3")
-        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
-
-        assert pytest_wrapped_sysexit.type is SystemExit
-        captured = capsys.readouterr()
-        assert captured.out.endswith("MI_MM_3\n")
+        with pytest.raises(GM_Ex.GmapKeyError, match="MI_MM_3$"):
+            GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
 
     def test_MI_MM_4(self, capsys):
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = self.run_basic_pairmap("test_MI_MM_4")
-        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
-
-        assert pytest_wrapped_sysexit.type is SystemExit
-        captured = capsys.readouterr()
-        assert captured.out.endswith("MI_MM_4\n")
+        with pytest.raises(GM_Ex.GmapKeyError, match="MI_MM_4$"):
+            GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
 
     def run_basic_pairmap(self, mapname):
         cmdline = [
@@ -978,17 +962,17 @@ class TestPairMap:
         ]
         inpardict = {}
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="extract_code", mapname=mapname
         )
 
-        GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
-        pairs_mapdict[mapname].initialize(Files, Printer)
+        GM_MR.manage_maps_singles(Files, RunPars, mapdict)
+        pairs_mapdict[mapname].initialize(Files)
 
         return (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         )
 
@@ -1000,7 +984,7 @@ class TestPairMap:
     #     inpardict = {}
 
     #     (
-    #         Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+    #         Files, RunPars, RefPars, DefPars, InPars, CmdPars,
     #         mapdict, pairs_mapdict
     #     ) = basic_setup(
     #         cmdline, inpardict, finish_before="Core", mapname=mapname
@@ -1012,8 +996,8 @@ class TestPairMap:
     #     # setattr(Corebase, "success", True)
 
     #     # Corebase.parse_functional_group(
-    #     #     Printer, map_.rawcore, map_.directory)
-    #     _ = basic_setup_core(Printer, map_, finish_before=finish_before)
+    #     #     map_.rawcore, map_.directory)
+    #     _ = basic_setup_core(map_, finish_before=finish_before)
 
 
 class TestSingleCore:
@@ -1025,7 +1009,7 @@ class TestSingleCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
@@ -1036,7 +1020,7 @@ class TestSingleCore:
         Corebase = GM_MR.SingleCore.__new__(GM_MR.SingleCore)
         setattr(Corebase, "success", True)
 
-        Corebase.parse_functional_group(Printer, map_.rawcore, map_.directory)
+        Corebase.parse_functional_group(map_.rawcore, map_.directory)
 
         found_residues = [
             [residue.resnames for residue in struct.residues]
@@ -1087,7 +1071,7 @@ class TestSingleCore:
         mapname = "test_funcgroupfile"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
@@ -1098,7 +1082,7 @@ class TestSingleCore:
         Corebase = GM_MR.SingleCore.__new__(GM_MR.SingleCore)
         setattr(Corebase, "success", True)
 
-        Corebase.parse_functional_group(Printer, map_.rawcore, map_.directory)
+        Corebase.parse_functional_group(map_.rawcore, map_.directory)
 
         found_residues = [
             [residue.resnames for residue in struct.residues]
@@ -1126,7 +1110,7 @@ class TestSingleCore:
         mapname = "test_funcgroup_bonded"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
@@ -1137,7 +1121,7 @@ class TestSingleCore:
         Corebase = GM_MR.SingleCore.__new__(GM_MR.SingleCore)
         setattr(Corebase, "success", True)
 
-        Corebase.parse_functional_group(Printer, map_.rawcore, map_.directory)
+        Corebase.parse_functional_group(map_.rawcore, map_.directory)
 
         found_bonds = [struct.bonds for struct in Corebase.functional_group]
         assert found_bonds == [[[6, 13]]]
@@ -1150,15 +1134,15 @@ class TestSingleCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
-        CoreBase = basic_setup_core(Printer, map_, finish_before="used_atoms")
+        CoreBase = basic_setup_core(map_, finish_before="used_atoms")
         setattr(CoreBase, "used_atoms", CoreBase.parse_used_atoms(
-            Printer, map_.rawcore, map_.directory
+            map_.rawcore, map_.directory
         ))
         assert CoreBase.used_atoms == [5, 3, 7, 1, 13, 2, 11]
 
@@ -1170,16 +1154,16 @@ class TestSingleCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="estatic_atoms")
+            map_, finish_before="estatic_atoms")
         setattr(CoreBase, "electrostatic_atoms", CoreBase.parse_estatic_atoms(
-            Printer, map_.rawcore, map_.directory
+            map_.rawcore, map_.directory
         ))
         assert CoreBase.electrostatic_atoms == [2, 3]
 
@@ -1191,16 +1175,16 @@ class TestSingleCore:
         mapname = "test_estatic_None"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="estatic_atoms")
+            map_, finish_before="estatic_atoms")
         setattr(CoreBase, "electrostatic_atoms", CoreBase.parse_estatic_atoms(
-            Printer, map_.rawcore, map_.directory
+            map_.rawcore, map_.directory
         ))
         assert CoreBase.electrostatic_atoms == []
 
@@ -1212,17 +1196,17 @@ class TestSingleCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="estatic_choice")
+            map_, finish_before="estatic_choice")
         setattr(
             CoreBase, "electrostatic_choice", CoreBase.parse_estatic_choice(
-                Printer, map_.rawcore, map_.directory
+                map_.rawcore, map_.directory
             ))
         assert CoreBase.electrostatic_choice == "E"
 
@@ -1235,17 +1219,17 @@ class TestSingleCore:
         mapname = "test_estatic_None"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="estatic_choice")
+            map_, finish_before="estatic_choice")
         setattr(
             CoreBase, "electrostatic_choice", CoreBase.parse_estatic_choice(
-                Printer, map_.rawcore, map_.directory
+                map_.rawcore, map_.directory
             ))
         assert CoreBase.electrostatic_choice is None
 
@@ -1257,17 +1241,17 @@ class TestSingleCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="type")
+            map_, finish_before="type")
         setattr(
             CoreBase, "type", CoreBase.parse_type(
-                Printer, map_.rawcore, map_.directory
+                map_.rawcore, map_.directory
             ))
         assert CoreBase.type == "standard"
 
@@ -1279,17 +1263,17 @@ class TestSingleCore:
         mapname = "test_estatic_None"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="type")
+            map_, finish_before="type")
         setattr(
             CoreBase, "type", CoreBase.parse_type(
-                Printer, map_.rawcore, map_.directory
+                map_.rawcore, map_.directory
             ))
         assert CoreBase.type is None
 
@@ -1301,17 +1285,17 @@ class TestSingleCore:
         mapname = "test_estat_choice_V"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="type")
+            map_, finish_before="type")
         setattr(
             CoreBase, "type", CoreBase.parse_type(
-                Printer, map_.rawcore, map_.directory
+                map_.rawcore, map_.directory
             ))
         assert CoreBase.type is None
 
@@ -1323,16 +1307,16 @@ class TestSingleCore:
         mapname = "test_Core"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="local_atoms")
+            map_, finish_before="local_atoms")
         setattr(CoreBase, "local_atoms", CoreBase.parse_local_atoms(
-            Printer, map_.rawcore, map_.directory
+            map_.rawcore, map_.directory
         ))
         assert CoreBase.local_atoms == [2, 3]
 
@@ -1344,16 +1328,16 @@ class TestSingleCore:
         mapname = "test_local_None"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="local_atoms")
+            map_, finish_before="local_atoms")
         setattr(CoreBase, "local_atoms", CoreBase.parse_local_atoms(
-            Printer, map_.rawcore, map_.directory
+            map_.rawcore, map_.directory
         ))
         assert CoreBase.local_atoms == []
 
@@ -1365,16 +1349,16 @@ class TestSingleCore:
         mapname = "test_dipoles_datafile_maglong"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="dipoles")
+            map_, finish_before="dipoles")
         dip_gas, dip_arr = CoreBase.parse_dipoles(
-            Printer, map_.rawcore, map_.directory)
+            map_.rawcore, map_.directory)
         assert dip_gas == np.float32(0.3)
         assert np.all(dip_arr == np.array([
             [0, 1, 2, 3, 0, 0, 0, 0, 0, 0],
@@ -1389,16 +1373,16 @@ class TestSingleCore:
         mapname = "test_dipoles_datafile_xyzgood"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="dipoles")
+            map_, finish_before="dipoles")
         dip_gas, dip_arr = CoreBase.parse_dipoles(
-            Printer, map_.rawcore, map_.directory)
+            map_.rawcore, map_.directory)
         assert np.all(dip_gas == np.array([0.3, 0.2, 0.1], dtype="float32"))
         assert np.all(dip_arr == np.array([
             [
@@ -1420,16 +1404,16 @@ class TestSingleCore:
         mapname = "test_dipoles_datafile_NA"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="dipoles")
+            map_, finish_before="dipoles")
         dip_gas, dip_arr = CoreBase.parse_dipoles(
-            Printer, map_.rawcore, map_.directory)
+            map_.rawcore, map_.directory)
         assert dip_gas == np.float32(0.3)
         assert dip_arr is None
 
@@ -1442,16 +1426,16 @@ class TestSingleCore:
         mapname = "test_dipoles_datafile_magG"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="dipoles")
+            map_, finish_before="dipoles")
         dip_gas, dip_arr = CoreBase.parse_dipoles(
-            Printer, map_.rawcore, map_.directory)
+            map_.rawcore, map_.directory)
         assert dip_gas == np.float32(0.3)
         assert np.all(dip_arr == np.arange(10, dtype="float32"))
 
@@ -1463,16 +1447,16 @@ class TestSingleCore:
         mapname = "test_dipoles_datafile_maglong"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="frequency")
+            map_, finish_before="frequency")
         freq_gas, freq_arr_lin, freq_arr_quad = CoreBase.parse_frequency(
-            Printer, map_.rawcore, map_.directory)
+            map_.rawcore, map_.directory)
         assert freq_gas == np.float32(1234)
         assert np.all(freq_arr_lin == np.array([
             [0, 1, 2, 3, 0, 0, 0, 0, 0, 0],
@@ -1490,16 +1474,16 @@ class TestSingleCore:
         mapname = "test_dipoles_datafile_NA"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="frequency")
+            map_, finish_before="frequency")
         freq_gas, freq_arr_lin, freq_arr_quad = CoreBase.parse_frequency(
-            Printer, map_.rawcore, map_.directory)
+            map_.rawcore, map_.directory)
         assert freq_gas == np.float32(1234)
         assert freq_arr_lin is None
 
@@ -1512,16 +1496,16 @@ class TestSingleCore:
         mapname = "test_dipoles_datafile_magG"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="frequency")
+            map_, finish_before="frequency")
         freq_gas, freq_arr_lin, freq_arr_quad = CoreBase.parse_frequency(
-            Printer, map_.rawcore, map_.directory)
+            map_.rawcore, map_.directory)
         assert freq_gas == np.float32(1234)
         assert np.all(freq_arr_lin == np.arange(10, dtype="float32"))
 
@@ -1533,14 +1517,14 @@ class TestSingleCore:
         mapname = "test_bohr_const"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="end")
+            map_, finish_before="end")
 
         assert np.all(CoreBase.dipole_data_array.round(2) == np.array([
             # wrong way?
@@ -1588,14 +1572,14 @@ class TestSingleCore:
         mapname = "test_bohr_const2"
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            Printer, map_, finish_before="end")
+            map_, finish_before="end")
 
         assert np.all(CoreBase.dipole_data_array.round(2) == np.array([
             # [0, 3.571065, 7.14213, 10.713195, 0, 0, 0, 0, 0, 0],
@@ -1718,7 +1702,7 @@ class TestSingleCore:
             mapname = "test_" + errcode
 
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
             mapdict, pairs_mapdict
         ) = basic_setup(
             cmdline, inpardict, finish_before="Core", mapname=mapname
@@ -1730,8 +1714,8 @@ class TestSingleCore:
         # setattr(Corebase, "success", True)
 
         # Corebase.parse_functional_group(
-        #     Printer, map_.rawcore, map_.directory)
-        _ = basic_setup_core(Printer, map_, finish_before=finish_before)
+        #     map_.rawcore, map_.directory)
+        _ = basic_setup_core(map_, finish_before=finish_before)
 
         out, _ = capfd.readouterr()
         assert out.endswith(errcode + "\n")
@@ -1751,12 +1735,12 @@ def test_coup_map_dependence(capfd):
         "couplings_to_use": [["NeedsBoth", ":All"]]
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, singles_mapdict, pairs_mapdict
     ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
 
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
-    GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
+    GM_MR.manage_maps_singles(Files, RunPars, singles_mapdict)
+    GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
 
     assert len(RunPars.requested_mapdict) == 1
     assert len(RunPars.requested_pairmapdict) == 1
@@ -1770,11 +1754,11 @@ def test_manage_maps_singles():
         "maps_to_use": maplist
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        Files, RunPars, RefPars, DefPars, InPars, CmdPars,
         mapdict, pairs_mapdict
     ) = basic_setup([], inpars, finish_before="extract_code")
 
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
+    GM_MR.manage_maps_singles(Files, RunPars, mapdict)
 
     assert all(
         key in RunPars.requested_mapdict.keys()
@@ -1789,11 +1773,11 @@ def test_manage_maps_singles():
         "maps_to_use": maplist
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        Files, RunPars, RefPars, DefPars, InPars, CmdPars,
         mapdict, pairs_mapdict
     ) = basic_setup([], inpars, finish_before="extract_code")
 
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
+    GM_MR.manage_maps_singles(Files, RunPars, mapdict)
 
     assert all(
         key in RunPars.requested_mapdict.keys()
@@ -1809,11 +1793,11 @@ def test_manage_maps_pairs():
         "couplings_to_use": [["None", "AmideSC:AmideBB"], ["DipDip", ":same"]]
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        Files, RunPars, RefPars, DefPars, InPars, CmdPars,
         mapdict, pairs_mapdict
     ) = basic_setup([], inpars, finish_before="extract_code")
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
-    GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
+    GM_MR.manage_maps_singles(Files, RunPars, mapdict)
+    GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
 
 
 def test_scan_mapdirs():
@@ -1831,19 +1815,19 @@ def test_map_vac_freq_dip():
         "map_directory": ["Data/maps_for_test_MapReader_1"]
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        Files, RunPars, RefPars, DefPars, InPars, CmdPars,
         mapdict, pairs_mapdict
     ) = basic_setup([], inpars, finish_before="extract_code")
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
+    GM_MR.manage_maps_singles(Files, RunPars, mapdict)
 
     map_ = mapdict["test_vac_dipfreq"]
     # dipole_gas_phase      0.3
 
     # frequency_gas_phase   1200
-    freq = map_.code.GM_calculate_frequency(None, map_, None, None)
+    freq = map_.code.GM_calculate_frequency(map_, None, None)
     assert freq == 1200
 
-    dip_size = map_.code.GM_get_dipole_mag(None, map_, None, None)
+    dip_size = map_.code.GM_get_dipole_mag(map_, None, None)
     assert dip_size == np.float32(0.3)
 
 
@@ -1853,16 +1837,12 @@ def test_MI_MM_1(capsys):
         "maps_to_use": maplist
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        Files, RunPars, RefPars, DefPars, InPars, CmdPars,
         mapdict, pairs_mapdict
     ) = basic_setup([], inpars, finish_before="extract_code")
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
-
-    assert pytest_wrapped_sysexit.type is SystemExit
-    captured = capsys.readouterr()
-    assert captured.out.endswith("MI_MM_1\n")
+    with pytest.raises(GM_Ex.GmapKeyError, match="MI_MM_1$"):
+        GM_MR.manage_maps_singles(Files, RunPars, mapdict)
 
     # ------------------------------------------------------------------
 
@@ -1872,16 +1852,13 @@ def test_MI_MM_1(capsys):
         "couplings_to_use": [["doesntexist", ":All"]]
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        Files, RunPars, RefPars, DefPars, InPars, CmdPars,
         mapdict, pairs_mapdict
     ) = basic_setup([], inpars, finish_before="extract_code")
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
+    GM_MR.manage_maps_singles(Files, RunPars, mapdict)
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
-    assert pytest_wrapped_sysexit.type is SystemExit
-    captured = capsys.readouterr()
-    assert captured.out.endswith("MI_MM_1\n")
+    with pytest.raises(GM_Ex.GmapKeyError, match="MI_MM_1$"):
+        GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
 
 
 def test_MI_MM_2(capsys):
@@ -1894,16 +1871,13 @@ def test_MI_MM_2(capsys):
         "couplings_to_use": [["NeedsBoth", ":All"]]
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, singles_mapdict, pairs_mapdict
     ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
 
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
-    assert pytest_wrapped_sysexit.type is SystemExit
-    captured = capsys.readouterr()
-    assert captured.out.endswith("MI_MM_2\n")
+    GM_MR.manage_maps_singles(Files, RunPars, singles_mapdict)
+    with pytest.raises(GM_Ex.GmapKeyError, match="MI_MM_2$"):
+        GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
 
     # ------------------------------------------------------------------
 
@@ -1915,16 +1889,13 @@ def test_MI_MM_2(capsys):
         "couplings_to_use": [["NeedsBoth", ":All"]]
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, singles_mapdict, pairs_mapdict
     ) = basic_setup(cmdline, inpardict, finish_before="extract_code")
 
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, singles_mapdict)
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
-    assert pytest_wrapped_sysexit.type is SystemExit
-    captured = capsys.readouterr()
-    assert captured.out.endswith("MI_MM_2\n")
+    GM_MR.manage_maps_singles(Files, RunPars, singles_mapdict)
+    with pytest.raises(GM_Ex.GmapKeyError, match="MI_MM_2$"):
+        GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
 
 
 def basic_setup(
@@ -1944,51 +1915,50 @@ def basic_setup(
         refparfilename = Path("sourcefiles/reference_parameters.ref")
 
     Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
 
-    RefPars = GM_PP.RefPars(Printer, refparfilename, True)
+    RefPars = GM_PP.RefPars(refparfilename, True)
     if defparfilename:
         DefPars = GM_PP.RawPars.from_file(
-            Printer, defparfilename, RefPars, True)
+            defparfilename, RefPars, True)
     else:
         DefPars = RefPars
 
     curpath = Path(__file__).resolve()
     InPars = GM_PP.RawPars.from_dict(
-        Printer, curpath, inpardict, RefPars, False
+        curpath, inpardict, RefPars, False
     )
 
-    mapdirs = GM_PP.find_mapdir(Files, Printer, cmdline, InPars, DefPars)
+    mapdirs = GM_PP.find_mapdir(Files, cmdline, InPars, DefPars)
     singles_mapdict = GM_MR.scan_mapdirs(mapdirs, "Singles")
     pairs_mapdict = GM_MR.scan_mapdirs(mapdirs, "Pairs")
     mapdict = singles_mapdict | pairs_mapdict
 
     for map_ in mapdict.values():
-        map_.find_refpars(Printer)
+        map_.find_refpars()
 
     CmdPars = GM_PP.RawPars.from_cmdline(
-        Printer, cmdline, RefPars,
+        cmdline, RefPars,
         {name: map_.RefPars for name, map_ in mapdict.items()},
         False
     )
 
     for map_ in mapdict.values():
-        map_.find_rawpars(Printer, CmdPars, InPars, DefPars)
+        map_.find_rawpars(CmdPars, InPars, DefPars)
 
-    CmdPars.finalize_map_pars(Printer)
-    InPars.finalize_map_pars(Printer)
+    CmdPars.finalize_map_pars()
+    InPars.finalize_map_pars()
     if DefPars.fname != RefPars.fname:
-        DefPars.finalize_map_pars(Printer)
+        DefPars.finalize_map_pars()
 
     RunPars = GM_PP.RunPars(
-        Files, Printer, CmdPars, InPars, DefPars, RefPars, True
+        Files, CmdPars, InPars, DefPars, RefPars, True
     )
 
     for map_ in mapdict.values():
-        map_.find_runpars(Files, Printer, RunPars)
+        map_.find_runpars(Files, RunPars)
 
     returntuple = (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, singles_mapdict, pairs_mapdict
     )
 
@@ -1997,7 +1967,7 @@ def basic_setup(
     # ------------------------------------------------------------------
 
     map_ = singles_mapdict[mapname]
-    setattr(map_, "code", map_.extract_code(Printer))
+    setattr(map_, "code", map_.extract_code())
     if not map_.code:
         setattr(map_, "code", GM_DMF.NewModule())
 
@@ -2011,81 +1981,81 @@ def basic_setup(
         return returntuple
     # ------------------------------------------------------------------
 
-    map_.code.GM_adjust_RunPars(Files, Printer, map_)
+    map_.code.GM_adjust_RunPars(Files, map_)
 
     if finish_before == "find_core":
         return returntuple
     # ------------------------------------------------------------------
 
-    setattr(map_, "rawcore", map_.find_core(Printer))
+    setattr(map_, "rawcore", map_.find_core())
 
     if finish_before == "append_core":
         return returntuple
     # ------------------------------------------------------------------
 
-    map_.append_core(Printer)
-    map_.code.GM_adjust_map_core_raw(Files, Printer, map_)
+    map_.append_core()
+    map_.code.GM_adjust_map_core_raw(Files, map_)
 
     if finish_before == "Core":
         return returntuple
 
-    setattr(map_, "Core", GM_MR.SingleCore(Printer, map_))
+    setattr(map_, "Core", GM_MR.SingleCore(map_))
 
     if finish_before == "code_add_builds":
         return returntuple
 
-    map_.code_add_builds(Printer)
+    map_.code_add_builds()
 
     return returntuple
 
 
-def basic_setup_core(Printer, map_, finish_before=None):
+def basic_setup_core(map_, finish_before=None):
     CoreBase = GM_MR.SingleCore.__new__(GM_MR.SingleCore)
     setattr(CoreBase, "success", True)
-    CoreBase.parse_functional_group(Printer, map_.rawcore, map_.directory)
+    CoreBase.parse_functional_group(map_.rawcore, map_.directory)
     if finish_before == "used_atoms":
         return CoreBase
 
     setattr(CoreBase, "used_atoms", CoreBase.parse_used_atoms(
-        Printer, map_.rawcore, map_.directory
+        map_.rawcore, map_.directory
     ))
     if finish_before == "estatic_atoms":
         return CoreBase
 
     setattr(CoreBase, "electrostatic_atoms", CoreBase.parse_estatic_atoms(
-        Printer, map_.rawcore, map_.directory
+        map_.rawcore, map_.directory
     ))
     if finish_before == "estatic_choice":
         return CoreBase
 
     setattr(CoreBase, "electrostatic_choice", CoreBase.parse_estatic_choice(
-        Printer, map_.rawcore, map_.directory
+        map_.rawcore, map_.directory
     ))
     if finish_before == "type":
         return CoreBase
 
     setattr(CoreBase, "type", CoreBase.parse_type(
-        Printer, map_.rawcore, map_.directory
+        map_.rawcore, map_.directory
     ))
 
     if finish_before == "local_atoms":
         return CoreBase
 
     setattr(CoreBase, "local_atoms", CoreBase.parse_local_atoms(
-        Printer, map_.rawcore, map_.directory
+        map_.rawcore, map_.directory
     ))
 
     if finish_before == "VEG_reference":
         return CoreBase
 
     CoreBase.check_VEG_reference(
-        Printer, map_.rawcore, map_.directory
+        map_.rawcore, map_.directory
     )
 
     if finish_before == "dipoles":
         return CoreBase
 
-    dipgas, arr = CoreBase.parse_dipoles(Printer, map_.rawcore, map_.directory)
+    dipgas, arr = CoreBase.parse_dipoles(map_.rawcore, map_.directory)
     setattr(CoreBase, "dipole_gas_phase", dipgas)
     setattr(CoreBase, "dipole_data_array", arr)
 
@@ -2093,7 +2063,7 @@ def basic_setup_core(Printer, map_, finish_before=None):
         return CoreBase
 
     freqgas, arr_lin, arr_quad = CoreBase.parse_frequency(
-        Printer, map_.rawcore, map_.directory)
+        map_.rawcore, map_.directory)
     setattr(CoreBase, "frequency_gas_phase", freqgas)
     setattr(CoreBase, "frequency_data_array_linear", arr_lin)
     setattr(CoreBase, "frequency_data_array_quadratic", arr_quad)
@@ -2102,7 +2072,7 @@ def basic_setup_core(Printer, map_, finish_before=None):
         return CoreBase
 
     setattr(CoreBase, "length_units", CoreBase.parse_length_units(
-        Printer, map_.rawcore, map_.directory))
+        map_.rawcore, map_.directory))
 
     if finish_before == "change_arrays":
         return CoreBase

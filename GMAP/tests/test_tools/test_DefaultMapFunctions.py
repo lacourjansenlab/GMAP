@@ -3,15 +3,18 @@ Tests all the functions/classes/methods in the file:
 src/tools/DefaultMapFunctions.py.
 
 Missing tests:
-    None?
+
+(@ July 22nd '24):
+  (0 missed statements)
+
 """
 
 # 3rd party imports
 import numpy as np
 
 # local imports
-from GMAP.src.tools import DefaultMapFunctions as GM_DMF
-from .test_PhysicsFunctions import EmptyClass
+import GMAP.src.tools.DefaultMapFunctions as GM_DMF
+import GMAP.src.tools.CodingTools as GM_CT
 import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.PrintTools as GM_PT
 
@@ -69,127 +72,124 @@ def test_prep_coupling():
 
 def test_get_str_osc():
     newfunc = GM_DMF.get_str_osc()
-    osc1 = EmptyClass(**{"used_atoms": [0, 1, 2]})
-    osc2 = EmptyClass(**{"used_atoms": [3, 4, 5]})
-    Syst = EmptyClass(**{"resnums": [0, 0, 0, 1, 1, 1]})
+    osc1 = GM_CT.CustomClass(**{"used_atoms": [0, 1, 2]})
+    osc2 = GM_CT.CustomClass(**{"used_atoms": [3, 4, 5]})
+    Syst = GM_CT.CustomClass(**{"resnums": [0, 0, 0, 1, 1, 1]})
     assert newfunc(Syst, None, osc1) == "living on residue number 0"
     assert newfunc(Syst, None, osc2) == "living on residue number 1"
 
 
 def test_get_get_VEG_ref():
     VEGref_res = ["residues", "0", "2"]
-    map_ = EmptyClass(**{
+    map_ = GM_CT.CustomClass(**{
         "rawcore": {
             "VEG_reference": VEGref_res
         }
     })
-    Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
+    _ = GM_FH.FileLocations()  # still needed for initialization
 
-    mainfunc = GM_DMF.get_get_VEG_ref(Printer, map_)
+    mainfunc = GM_DMF.get_get_VEG_ref(map_)
     subfunc = GM_DMF.VEG_from_residues(VEGref_res[1:])
     confirm_funcs_equal(mainfunc, subfunc)
 
     VEGref_CoM = ["CoM", "0", "2"]
     map_.rawcore["VEG_reference"] = VEGref_CoM
-    mainfunc = GM_DMF.get_get_VEG_ref(Printer, map_)
+    mainfunc = GM_DMF.get_get_VEG_ref(map_)
     subfunc = GM_DMF.VEG_from_com(VEGref_CoM[1:])
     confirm_funcs_equal(mainfunc, subfunc)
 
     VEGref_pos = ["position", "((((0+1)/2.0)+2)/2.0)"]
     map_.rawcore["VEG_reference"] = VEGref_pos
-    mainfunc = GM_DMF.get_get_VEG_ref(Printer, map_)
-    subfunc = GM_DMF.VEG_from_position(Printer, map_, VEGref_pos[1:])
+    mainfunc = GM_DMF.get_get_VEG_ref(map_)
+    subfunc = GM_DMF.VEG_from_position(map_, VEGref_pos[1:])
     confirm_funcs_equal(mainfunc, subfunc)
 
 
 def test_VEG_from_residues():
     VEGref_res = ["residues", "0", "2"]
-    map_ = EmptyClass(**{
+    map_ = GM_CT.CustomClass(**{
         "rawcore": {
             "VEG_reference": VEGref_res
         }
     })
-    Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
+    _ = GM_FH.FileLocations()  # still needed for initialization
     subfunc = GM_DMF.VEG_from_residues(["0", "2"])
 
     Syst = get_syst_VEGtests()
-    osc = EmptyClass(**{
+    osc = GM_CT.CustomClass(**{
         "used_atoms": [0, 1, 2, 3]
     })
 
     out = np.array([1.5, 10, 20])
-    assert np.all(subfunc(Printer, map_, Syst, osc) == out)
+    assert np.all(subfunc(map_, Syst, osc) == out)
 
 
 def test_VEG_from_com():
     VEGref_CoM = ["CoM", "0", "2"]
-    map_ = EmptyClass(**{
+    map_ = GM_CT.CustomClass(**{
         "rawcore": {
             "VEG_reference": VEGref_CoM
         }
     })
-    Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
+    _ = GM_FH.FileLocations()  # still needed for initialization
+
     subfunc = GM_DMF.VEG_from_com(["0", "2"])
 
     Syst = get_syst_VEGtests()
-    osc = EmptyClass(**{
+    osc = GM_CT.CustomClass(**{
         "used_atoms": [0, 1, 2, 3]
     })
 
     out = np.array([1, 10, 20])
-    assert np.all(subfunc(Printer, map_, Syst, osc) == out)
+    assert np.all(subfunc(map_, Syst, osc) == out)
 
 
 def test_VEG_from_position():
     VEGref_pos = ["position", "((((0+1)/2.0)+2)/2.0)"]
-    map_ = EmptyClass(**{
+    map_ = GM_CT.CustomClass(**{
         "rawcore": {
             "VEG_reference": VEGref_pos
         }
     })
-    Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
-    subfunc = GM_DMF.VEG_from_position(Printer, map_, VEGref_pos[1:])
+    _ = GM_FH.FileLocations()  # still needed for initialization
+    subfunc = GM_DMF.VEG_from_position(map_, VEGref_pos[1:])
 
     Syst = get_syst_VEGtests()
-    osc = EmptyClass(**{
+    osc = GM_CT.CustomClass(**{
         "used_atoms": [0, 1, 2, 3]
     })
     osc.positions_box = (
             Syst.positions[osc.used_atoms] @ Syst.boxvects_inv)
 
     out = np.array([1.25, 10, 20])
-    assert np.all(subfunc(Printer, map_, Syst, osc) == out)
+    assert np.all(subfunc(map_, Syst, osc) == out)
 
 
 def test_MI_MC_9(capsys):
     # too few opening brackets (should be 4 instead of two)
     VEGref_pos = ["position", "((0+1)/2.0)+2)/2.0)"]
     Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
-    map_ = EmptyClass(**{
+
+    map_ = GM_CT.CustomClass(**{
         "rawcore": {
             "VEG_reference": VEGref_pos
         },
         "directory": Files.cwd
     })
-    _ = GM_DMF.VEG_from_position(Printer, map_, VEGref_pos[1:])
-    Printer.print_backlog()
+    _ = GM_DMF.VEG_from_position(map_, VEGref_pos[1:])
+    GM_PT.Printer().print_backlog()
     captured = capsys.readouterr()
     assert captured.out.endswith("MI_MC_9\n")
 
     # Syst = get_syst_VEGtests()
-    # osc = EmptyClass(**{
+    # osc = GM_CT.CustomClass(**{
     #     "used_atoms": [0, 1, 2, 3]
     # })
     # osc.positions_box = (
     #         Syst.positions[osc.used_atoms] @ Syst.boxvects_inv)
 
     # out = np.array([1.25, 10, 20])
-    # assert np.all(subfunc(Printer, map_, Syst, osc) == out)
+    # assert np.all(subfunc(map_, Syst, osc) == out)
 
 
 # ==================================================
@@ -276,8 +276,8 @@ def confirm_funcs_equal(funcA, funcB):
 
 
 def get_syst_VEGtests():
-    Syst = EmptyClass(**{
-        "residues": EmptyClass(**{
+    Syst = GM_CT.CustomClass(**{
+        "residues": GM_CT.CustomClass(**{
             "first_ix": [0, 2, 4, 6],
             "last_ix": [1, 3, 5, 7]
         }),
