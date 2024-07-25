@@ -47,10 +47,12 @@ class TestRefPars:
             "verbose": [0, 1, 2, 3, 4],
             "verbose_logfile": [0, 1, 2, 3, 4],
             "output_format": ["bin", "txt"],
-            "output_data": ["ham", "dip", "ene"],
+            "output_data": ["ham", "dip", "ene", "pos", "dbp"],
             "hamiltonian_units": ["cm-1", "eV"],
             "energies_units": ["cm-1", "eV"],
             "dipoles_units": ["Debye", "eBohr"],
+            "positions_units": ["Ang", "Bohr", "nm"],
+            "doublepos_units": ["Ang", "Bohr", "nm"],
             "str_test_choice": ["pick_this", "not_this", "or_this"],
             "str_test_choice_list": [
                 "pick_this", "and_this", "not_this", "or_this"
@@ -77,6 +79,8 @@ class TestRefPars:
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],
             "output_energies_filename": [Path("energies")],
+            "output_positions_filename": [Path("positions")],
+            "output_doublepos_filename": [Path("doublepos")],
             "map_directory": [Path("../../../maps")],
             "maps_to_use": ["AmideSC"],
             "couplings_to_use": ["DipDip", ":All"],
@@ -91,7 +95,7 @@ class TestRefPars:
             "verbose_logfile": [2],
             "prevent_overwrite": [False],
             "output_format": ["bin"],
-            "output_data": ["ham", "dip"],
+            "output_data": ["ham", "dip", "pos"],
             "neutral_charge_threshold": [0.0001],
             "guess_bonds": [False],
             "estatic_range": [20.0],
@@ -105,6 +109,10 @@ class TestRefPars:
             "energies_multiplier": [1],
             "dipoles_units": ["Debye"],
             "dipoles_multiplier": [1],
+            "positions_units": ["Ang"],
+            "positions_multiplier": [1],
+            "doublepos_units": ["Ang"],
+            "doublepos_multiplier": [1],
             "str_test_free": ["freechoice"],
             "str_test_choice": ["pick_this"],
             "str_test_free_list": ["freechoice1", "freechoice2"],
@@ -144,6 +152,7 @@ class TestRefPars:
             "oef": "output_energies_filename",
             "ohf": "output_hamiltonian_filename",
             "odf": "output_dipole_filename",
+            "opf": "output_positions_filename",
             "md": "map_directory",
             "um": "maps_to_use",
             "ts1": "str_test_free",
@@ -180,7 +189,9 @@ class TestRefPars:
             "log_directory": ["log_filename"],
             "output_directory": [
                 "output_estatics_filename", "output_hamiltonian_filename",
-                "output_dipole_filename", "output_energies_filename"],
+                "output_dipole_filename", "output_energies_filename",
+                "output_positions_filename", "output_doublepos_filename"
+            ],
             "path_test_dir1": ["path_test_rel11"],
             "path_test_dir2": [
                 "path_test_rel21_new", "path_test_rel22_new_list"
@@ -206,6 +217,8 @@ class TestRefPars:
             "output_hamiltonian_filename",
             "output_dipole_filename",
             "output_energies_filename",
+            "output_positions_filename",
+            "output_doublepos_filename",
             "map_directory",
             "influencers_file",
             "path_test_free",
@@ -224,6 +237,8 @@ class TestRefPars:
             "output_hamiltonian_filename",
             "output_dipole_filename",
             "output_energies_filename",
+            "output_positions_filename",
+            "output_doublepos_filename",
             "path_test_free_new",
             "path_test_free_new_list",
             "path_test_rel21_new",
@@ -249,6 +264,8 @@ class TestRefPars:
             "hamiltonian_multiplier",
             "energies_multiplier",
             "dipoles_multiplier",
+            "positions_multiplier",
+            "doublepos_multiplier",
             "float_test_free",
             "float_test_choice",
             "float_test_free_list",
@@ -273,6 +290,8 @@ class TestRefPars:
             "hamiltonian_units",
             "energies_units",
             "dipoles_units",
+            "positions_units",
+            "doublepos_units",
             "str_test_free",
             "str_test_choice",
             "str_test_free_list",
@@ -454,6 +473,8 @@ class TestRawPars:
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],
             "output_energies_filename": [Path("energies")],
+            "output_positions_filename": [Path("positions")],
+            "output_doublepos_filename": [Path("doublepos")],
             "map_directory": [Path("../../../maps")],
             "maps_to_use": ["AmideSC"],
             "couplings_to_use": [["DipDip", ":All"]],
@@ -466,7 +487,7 @@ class TestRawPars:
             "verbose_logfile": [1],
             "prevent_overwrite": [False],
             "output_format": ["bin", "txt"],
-            "output_data": ["ham", "dip"],
+            "output_data": ["ham", "dip", "pos"],
             "neutral_charge_threshold": [0.0001],
             "guess_bonds": [False],
             "estatic_range": [20.0],
@@ -480,6 +501,10 @@ class TestRawPars:
             "energies_multiplier": [1],
             "dipoles_units": ["Debye"],
             "dipoles_multiplier": [1],
+            "positions_units": ["Ang"],
+            "positions_multiplier": [1],
+            "doublepos_units": ["Ang"],
+            "doublepos_multiplier": [1],
             "str_test_free": ["freechoice"],
             "str_test_choice": ["not_this"],
             "str_test_free_list": ["freechoice1", "freechoice2"],
@@ -528,6 +553,8 @@ class TestRawPars:
             "hamiltonian_units": ["eV"],
             "energies_units": ["eV"],
             "dipoles_units": ["eBohr"],
+            "positions_units": ["Bohr"],
+            "doublepos_units": ["Bohr"],
             "nobool_test1": [],
             "nobool_test2": ["false"],
             "int_test_free_list": ["88", "44"],
@@ -548,6 +575,10 @@ class TestRawPars:
             "energies_multiplier": [GM_con.cm2eV],
             "dipoles_units": ["eBohr"],
             "dipoles_multiplier": [GM_con.Debye2ea0],
+            "positions_units": ["Bohr"],
+            "positions_multiplier": [GM_con.ang2bohr],
+            "doublepos_units": ["Bohr"],
+            "doublepos_multiplier": [GM_con.ang2bohr],
             "bool_test1": [False],
             "bool_test2": [True],
             "int_test_free_list": [88, 44],
@@ -565,7 +596,9 @@ class TestRawPars:
             "--log_directory", "tests/test_tools/Data",
             "--hamiltonian_units", "cm-1",
             "--energies_units", "cm-1",
-            "--dipoles_units", "Debye"
+            "--dipoles_units", "Debye",
+            "--positions_units", "nm",
+            "--doublepos_units", "nm"
         ]
 
         _, RefPars, _, _, maprefdict = self.setup_test_SU_WP_cmd(
@@ -593,6 +626,10 @@ class TestRawPars:
             "energies_multiplier": [1],
             "dipoles_units": ["Debye"],
             "dipoles_multiplier": [1],
+            "positions_units": ["nm"],
+            "positions_multiplier": [0.1],
+            "doublepos_units": ["nm"],
+            "doublepos_multiplier": [0.1],
         }
         # Still missing InPars.not_found
         # Also, test map-shorthand
@@ -621,6 +658,36 @@ class TestRawPars:
             ["--influencers_select_atoms", "segid", "A\\;"],
             "segid A"
         )
+
+        _, RefPars = TestRawPars.setup_test_SU_WP_base()
+
+        pardict = {
+            "verbose": ["4"],
+            "positions_units": ["Ang"],
+            "doublepos_units": ["Ang"],
+            # "nobool_test1": [],
+            # "nobool_test2": ["false"],
+            # "int_test_free_list": ["88", "44"],
+            # "path_test_dir2": ["../testout2"]
+        }
+
+        InPars = GM_PP.RawPars.from_dict(
+            Path("mydict"), pardict, RefPars, False
+        )
+
+        assert InPars.fname.name == "mydict"
+        assert InPars.is_default is False
+        assert InPars.choices == {
+            "verbose": [4],
+            "positions_units": ["Ang"],
+            "positions_multiplier": [1],
+            "doublepos_units": ["Ang"],
+            "doublepos_multiplier": [1],
+            # "bool_test1": [False],
+            # "bool_test2": [True],
+            # "int_test_free_list": [88, 44],
+            # "path_test_dir2": [Path("../testout2")]
+        }
 
     def test_SU_WP_1(self):
         cmdline = ["int_test_free", "42"]
@@ -770,6 +837,24 @@ class TestRawPars:
         self.systest_pardict(
             pardict, "SU_WP_16", GM_Ex.GmapParameterError, isdef=False)
 
+        # ------------------------
+
+        pardict = {
+            "positions_units": ["Bohr"],
+            "positions_multiplier": [1]
+        }
+        self.systest_pardict(
+            pardict, "SU_WP_16", GM_Ex.GmapParameterError, isdef=False)
+
+        # ------------------------
+
+        pardict = {
+            "doublepos_units": ["Bohr"],
+            "doublepos_multiplier": [1]
+        }
+        self.systest_pardict(
+            pardict, "SU_WP_16", GM_Ex.GmapParameterError, isdef=False)
+
     def test_SU_WP_17(self):
         pardict = {
             "start_frame": [0],
@@ -907,7 +992,7 @@ class TestRunPars:
         assert RunPars.verbose_logfile == 1
         assert RunPars.prevent_overwrite is False
         assert RunPars.output_format == ["bin", "txt"]
-        assert RunPars.output_data == ["ham", "dip"]
+        assert RunPars.output_data == ["ham", "dip", "pos"]
 
         assert RunPars.neutral_charge_threshold == 0.0001
         assert RunPars.guess_bonds is False

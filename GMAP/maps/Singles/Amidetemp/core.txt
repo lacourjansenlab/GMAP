@@ -123,3 +123,9 @@ VEG_reference  CoM  0 1 2 3 4  # take CoM of listed atoms
 type   standard     # standard, linear
 
 
+position       0  # carbon atom
+doublepos_0    0  # carbon atom
+doublepos_1    3  # nitrogen atom
+
+
+

@@ -92,7 +92,7 @@ def get_get_VEG_ref(map_):
         case "com":
             GM_get_VEG_ref = VEG_from_com(details)
         case "position":
-            GM_get_VEG_ref = VEG_from_position(map_, details)
+            GM_get_VEG_ref = interpret_position(map_, details, "VEG_reference")
     return GM_get_VEG_ref
 
 
@@ -157,10 +157,12 @@ def VEG_from_com(local_atoms):
     return GM_get_VEG_ref
 
 
-def VEG_from_position(map_, details):
-    """Creates the function GM_get_VEG_ref for given atoms.
+def interpret_position(map_, details, parname):
+    """Creates a function that finds a requested position.
 
-    Each atom given will count towards the VEG centre.
+    This position could be the definition of the VEG-sphere-centre
+    (VEG reference), but it could also be the position or doublepos
+    output.
 
     Parameters
     ----------
@@ -169,15 +171,18 @@ def VEG_from_position(map_, details):
     details : list of str
         The string(s) explaining what to do. Ints will be converted to
         the box positions of the atoms with that int as used_ix.
+    parname : str
+        The name of the parameter which specified the position currently
+        being analyzed.
 
     Returns
     -------
-    GM_get_VEG_ref : function
-        The function that should be called to find the VEG centre for
-        this oscillator.
+    GM_get_position : function
+        The function that should be called to find the requested
+        position for this oscillator.
     """
 
-    codestring = "\ndef GM_get_VEG_ref"
+    codestring = "\ndef GM_get_position"
     codestring += "(Map, Syst, osc):\n"
 
     codestring += "    CoM = " + envelop_int(
@@ -192,13 +197,13 @@ def VEG_from_position(map_, details):
         corefile = (map_.directory / 'core.txt').resolve()
         GM_PT.Printer().warning(
             f"\nThe file {corefile} does not contain a valid definition of "
-            "VEG_reference.",
+            f"{parname}.",
             "MI_MC_9", exception=ex
         )
         return None
 
     # return GM_get_VEG_ref
-    return locals()["GM_get_VEG_ref"]
+    return locals()["GM_get_position"]
 
 
 def get_get_dipole_dir(map_):
@@ -457,6 +462,26 @@ def get_calculate_frequency(map_):
         return GM_calculate_freq_VEG_lin
     else:
         return GM_calculate_freq_VEG_both
+
+
+def get_get_position(map_):
+    instructions = map_.rawcore["position"]
+    GM_get_positions = interpret_position(map_, instructions, "position")
+    return GM_get_positions
+
+
+def get_get_doublepos(map_):
+    def GM_get_doublepos(Map, Syst, osc):
+        pos0 = GM_get_doublepos0(Map, Syst, osc)
+        pos1 = GM_get_doublepos1(Map, Syst, osc)
+        return pos0, pos1
+
+    instructions = map_.rawcore["doublepos_0"]
+    GM_get_doublepos0 = interpret_position(map_, instructions, "doublepos_0")
+    instructions = map_.rawcore["doublepos_1"]
+    GM_get_doublepos1 = interpret_position(map_, instructions, "doublepos_1")
+
+    return GM_get_doublepos
 
 
 # ------------------------

@@ -517,8 +517,24 @@ class RefPars:
 
         if self.choices["dipoles_units"][0] == "Debye":
             self.choices["dipoles_multiplier"] = [1]
-        else:  # eV
+        else:  # ea0
             self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
+
+        match self.choices["positions_units"][0]:
+            case "Ang":
+                self.choices["positions_multiplier"] = [1]
+            case "Bohr":
+                self.choices["positions_multiplier"] = [GM_con.ang2bohr]
+            case "nm":
+                self.choices["positions_multiplier"] = [0.1]
+
+        match self.choices["doublepos_units"][0]:
+            case "Ang":
+                self.choices["doublepos_multiplier"] = [1]
+            case "Bohr":
+                self.choices["doublepos_multiplier"] = [GM_con.ang2bohr]
+            case "nm":
+                self.choices["doublepos_multiplier"] = [0.1]
 
     @staticmethod
     def parse_key(string):
@@ -1427,6 +1443,48 @@ class RawPars:
                     self.choices["dipoles_multiplier"] = [1]
                 else:  # eV
                     self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
+
+        if "positions_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "positions_multiplier" in self.choices:
+                GM_PT.Printer().warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'positions_units' and "
+                    "'positions_multiplier', but contains both.",
+                    "SU_WP_16", True, GMAPerrclass=GM_Ex.GmapParameterError
+                )
+            else:
+                match self.choices["positions_units"][0]:
+                    case "Ang":
+                        self.choices["positions_multiplier"] = [1]
+                    case "Bohr":
+                        self.choices["positions_multiplier"] = [
+                            GM_con.ang2bohr]
+                    case "nm":
+                        self.choices["positions_multiplier"] = [0.1]
+
+        if "doublepos_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "doublepos_multiplier" in self.choices:
+                GM_PT.Printer().warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'doublepos_units' and "
+                    "'doublepos_multiplier', but contains both.",
+                    "SU_WP_16", True, GMAPerrclass=GM_Ex.GmapParameterError
+                )
+            else:
+                match self.choices["doublepos_units"][0]:
+                    case "Ang":
+                        self.choices["doublepos_multiplier"] = [1]
+                    case "Bohr":
+                        self.choices["doublepos_multiplier"] = [
+                            GM_con.ang2bohr]
+                    case "nm":
+                        self.choices["doublepos_multiplier"] = [0.1]
 
     def finalize_map_pars(self):
         """Check whether `not_found` is empty
@@ -2889,7 +2947,6 @@ def parse_influencerfile_line(line, groupdict, fname):
             GMAPerrclass=GM_Ex.GmapFileSyntaxError
         )
 
-    # return GM_get_dipole
     try:
         newset = locals()["build_set"](groupdict)
     except Exception as ex:

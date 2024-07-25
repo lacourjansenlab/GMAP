@@ -68,7 +68,16 @@ def GM_adjust_map_core_raw(Files, Map):
         about this map.
     """
 
-    pass
+    choice = Map.RunPars.pos_choice
+    match choice:
+        case "C":  # the default
+            Map.rawcore["position"] = ["0"]
+        case "O":
+            Map.rawcore["position"] = ["1"]
+        case "N":
+            Map.rawcore["position"] = ["3"]
+        case "D":
+            Map.rawcore["position"] = ["4"]
 
 
 # A function to adjust the oscillators found for this map. Gets a list

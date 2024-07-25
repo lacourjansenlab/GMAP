@@ -90,6 +90,19 @@ frequency_data_file_linear     Skinner.txt
 dipole_gas_phase        0.24  # The (base) magnitude of the dipole vectors
 dipole_data_file        [N/A]   # There is no file - dipole (by default) does not relate to VEG
 
+# ------------------------
+
+# for the positions output - what positions should be used
+
+# single postion (positions file)
+position       0  # carbon atom
+# (this is a placeholder - this specific map has a parameter that influences
+# this specific line - any changes here are not reflected in the calculation)
+
+# two positions (doublepos file)
+doublepos_0    0  # carbon atom
+doublepos_1    3  # nitrogen atom
+
 # -------------------
 
 # how to calculate the different directions. Currently only supports subtraction.
