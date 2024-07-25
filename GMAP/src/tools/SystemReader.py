@@ -6,6 +6,7 @@ import MDAnalysis as MDA
 import numpy as np
 
 # local imports
+import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.ParameterParser as GM_PP
 import GMAP.src.tools.PhysicsFunctions as GM_PF
 import GMAP.src.tools.PrintTools as GM_PT
@@ -20,9 +21,6 @@ class System:
         Contains all currently known paths and other file-related
         properties.
         Has to be updated after RunPars is finalized.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
         The 'main' RunPars instance containing all the basic run-defining
         parameters.
@@ -115,17 +113,17 @@ class System:
         All oscillators, but grouped by the map they belong to.
     """
 
-    def __init__(self, Files, Printer, RunPars):
-        self.universe = gen_universe(Printer, RunPars)
-        self.set_properties(Printer)
-        self.basic_boxchecks(Printer, RunPars)
+    def __init__(self, Files, RunPars):
+        self.universe = gen_universe(RunPars)
+        self.set_properties()
+        self.basic_boxchecks(RunPars)
 
-        self.find_influencers(Printer, RunPars)
+        self.find_influencers(RunPars)
 
-        self.find_oscillators(Files, Printer, RunPars)
-        self.order_oscillators(Printer, RunPars)
+        self.find_oscillators(Files, RunPars)
+        self.order_oscillators(RunPars)
 
-    def basic_boxchecks(self, Printer, RunPars):
+    def basic_boxchecks(self, RunPars):
         """Performs the first basic analyses on the provided universe.
 
         Doesn't return anything - if anything is amiss, it will just
@@ -133,9 +131,6 @@ class System:
 
         Parameters
         ----------
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
         RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
             The 'main' RunPars instance containing all the basic run-defining
             parameters.
@@ -143,14 +138,14 @@ class System:
 
         self.rightangled = check_box_rightangled(self.universe)
         if not self.rightangled:
-            Printer.warning(
+            GM_PT.Printer().warning(
                 "\nSubmitted MD system is not of cubic, tetragonal or "
                 "orthorhombic symmetry. In the current state, this program "
                 "only supports right-angled systems.",
-                "MD_SU_2", True
+                "MD_SU_2", True, GMAPerrclass=GM_Ex.GmapNotImplementedError
             )
 
-        self.neutral = check_box_charge(Printer, RunPars, self.charges)
+        self.neutral = check_box_charge(RunPars, self.charges)
 
         try:
             self.universe.bonds
@@ -159,16 +154,17 @@ class System:
             if not RunPars.detected_requires_bonds:
                 pass
             else:
-                Printer.warning(
+                GM_PT.Printer().warning(
                     "\nSubmitted MD system does not contain any "
                     "information on "
                     "bonds, but the requested maps do require this. Either "
                     "choose a different map, or provide a different input.",
-                    "MD_SU_5", True, exception=ex
+                    "MD_SU_5", True, exception=ex,
+                    GMAPerrclass=GM_Ex.GmapParameterError
                 )
 
     # TO DO inside!
-    def set_properties(self, Printer):
+    def set_properties(self):
         """Sets the basic properties of the system.
 
         Extracts them from self.universe.atoms, and saves them in self.
@@ -188,7 +184,7 @@ class System:
 
         # make sure resums always follow AIM-convention (regardless of MD input
         # used)
-        self.abs_resnums(Printer)
+        self.abs_resnums()
 
         self.nres = np.int32(self.resnums[-1] + 1)
 
@@ -220,14 +216,8 @@ class System:
         #     self.res_COM_c = np.ctypeslib.as_ctypes(
         #         np.zeros((self.nres * 3), dtype='float32'))
 
-    def abs_resnums(self, Printer):
+    def abs_resnums(self):
         """Renumbers residue numbers so they start at 0, and never reset
-
-        Parameters
-        ----------
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
         """
 
         prevresnum = -1
@@ -237,11 +227,11 @@ class System:
                 # yes, we could just force atomnum to match ix. But if this
                 # MD software does this differently, it might very well do
                 # other things differently as well, so please, check that!
-                Printer.warning(
+                GM_PT.Printer().warning(
                     f"\nThe atom number of the atom at position {ix} "
                     "does "
                     "not match its position in the list.",
-                    "MD_SU_4", True
+                    "MD_SU_4", True, GMAPerrclass=GM_Ex.GmapMDFileError
                 )
             resnum = self.resnums[atomnum]
             if resnum != prevresnum:
@@ -264,7 +254,7 @@ class System:
         self.boxdims_c = np.ctypeslib.as_ctypes(self.boxdims)
         self.halfbox_c = np.ctypeslib.as_ctypes(self.halfbox)
 
-    def find_influencers(self, Printer, RunPars):
+    def find_influencers(self, RunPars):
         """Find the indices of all atoms that are influencers
 
         Influencers are the atoms whose charge should be considered
@@ -274,9 +264,6 @@ class System:
 
         Parameters
         ----------
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
         RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
             The 'main' RunPars instance containing all the basic run-defining
             parameters.
@@ -292,51 +279,58 @@ class System:
                 name = map_inflgroup[0]
                 group_def = " ".join(map_inflgroup[1:])
                 groupdict[name] = GM_PP.parse_influencerfile_line(
-                    Printer, group_def, groupdict, map_.corepath
+                    group_def, groupdict, map_.corepath
                 )
 
-        Printer.print(1, f"\n{GM_PT.make_header('Influencers', '-')}\n\n")
+        GM_PT.Printer().print(
+            1, f"\n{GM_PT.make_header('Influencers', '-')}\n\n")
 
+        # names of residues or residue groups are given to specify infl.
         if isinstance(RunPars.influencers, list):
             choice = GM_PP.parse_influencer_par(" ".join(RunPars.influencers))
             choice = GM_PP.parse_influencerfile_line(
-                Printer, choice, groupdict,
+                choice, groupdict,
                 "parameter file "
             )
             self.influencers_atix = self.residues.manage_influencers(choice)
             influencers_not_included = groupdict["All"] - choice
-            Printer.print(
+            GM_PT.Printer().print(
                 1,
                 "Residue names included in influencers:\n"
                 + ", ".join(choice) +
                 "\n\nResidue names NOT included in influencers:\n"
                 + ", ".join(influencers_not_included)
             )
+
+        # The MDA select_atoms functionality is used to define influencers.
         elif isinstance(RunPars.influencers, str):
             try:
                 atgroup = self.universe.select_atoms(RunPars.influencers)
             except Exception as ex:
-                Printer.warning(
+                GM_PT.Printer().warning(
                     "Some problem occured while selecting atoms for the "
                     "influencers",
                     "SU_NP_6", True, exception=ex
                 )
             self.influencers_atix = atgroup.atoms.ix.tolist()
+
+        # similar to the first, names of residues or residue groups are given.
+        # however, this time, a separate file is used.
         else:  # must be a separate file
             choice = GM_PP.parse_influencerfile(
-                Printer, RunPars.influencers, groupdict)
+                RunPars.influencers, groupdict)
             if "choice" in choice:
                 choice = choice["choice"]
             else:
-                Printer.warning(
+                GM_PT.Printer().warning(
                     "When using a file to specify influencers, the final "
                     "choice of influencers must be given using the group "
                     "'choice'.",
-                    "SU_NP_5", True
+                    "SU_NP_5", True, GMAPerrclass=GM_Ex.GmapFileSyntaxError
                 )
             self.influencers_atix = self.residues.manage_influencers(choice)
             influencers_not_included = groupdict["All"] - choice
-            Printer.print(
+            GM_PT.Printer().print(
                 1,
                 "Residue names included in influencers:\n"
                 + ", ".join(choice) +
@@ -348,7 +342,7 @@ class System:
         atixprint = GM_PT.intlist_to_rangelist(
             self.influencers_atix, self.natoms
         )
-        Printer.print(
+        GM_PT.Printer().print(
             3,
             "Atoms included in influencers:\n"
             + ", ".join(atixprint[0]) +
@@ -359,7 +353,7 @@ class System:
             self.influencers_atix, dtype=np.int32
         )
 
-    def find_oscillators(self, Files, Printer, RunPars):
+    def find_oscillators(self, Files, RunPars):
         """Finds all the oscillators in the MD system
 
         Before an oscillator is considered 'found', it has to match the
@@ -380,9 +374,6 @@ class System:
             Contains all currently known paths and other file-related
             properties.
             Has to be updated after RunPars is finalized.
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
         RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
             The 'main' RunPars instance containing all the basic run-defining
             parameters.
@@ -414,7 +405,7 @@ class System:
         for oscillators in allgroups:
             map_ = oscillators[0].Map
             checked = map_.code.GM_adjust_oscillators(
-                Files, Printer, map_, self, oscillators
+                Files, map_, self, oscillators
             )
             if checked:
                 checked_oscillators.append(checked)
@@ -739,7 +730,7 @@ class System:
                 outlist.append(new_osc)
         return outlist
 
-    def order_oscillators(self, Printer, RunPars):
+    def order_oscillators(self, RunPars):
         """Sort all present oscillators by their map.
 
         Parameters
@@ -797,7 +788,7 @@ class System:
                     ):
                         all_req_maps.append(req_coupmap)
                         mapseq = ", ".join(all_req_maps)
-                        Printer.warning(
+                        GM_PT.Printer().warning(
                             "\nAn issue occurred when determining which "
                             "coupling method should be used to couple the "
                             "following two oscillators:\n"
@@ -806,7 +797,8 @@ class System:
                             f"circular chain: {mapseq}.\nThis might mean the "
                             "choice of coupling was unsuitable, or there is "
                             "a misstake in one of these maps.",
-                            "MD_SU_6", True
+                            "MD_SU_6", True,
+                            GMAPerrclass=GM_Ex.GmapParameterError
                         )
                     else:
                         all_req_maps.append(req_coupmap)
@@ -849,34 +841,30 @@ class System:
                         break
         for coupmapname, oscillators in self.oscillators_ordered_coup.items():
             coupmap = RunPars.requested_pairmapdict[coupmapname]
-            coupmap.check_singles_2(Printer, RunPars, oscillators)
+            coupmap.check_singles_2(RunPars, oscillators)
 
-    def update_properties(self, Printer):
+    def update_properties(self):
         """Reloads the frame-dependent properties of the system.
 
         This function is supposed to be called at the beginning of every
         frame to ensure that the properties stored inside are up to date.
-
-        Parameters
-        ----------
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
         """
 
-        Printer.add_time(4, "positions:", "ms")
+        printer = GM_PT.Printer()
+
+        printer.add_time(4, "positions:", "ms")
         self.positions = self.universe.atoms.positions.astype('float32')
-        Printer.add_time(4, "positions_c:", "ms")
+        printer.add_time(4, "positions_c:", "ms")
         self.positions_c = np.ctypeslib.as_ctypes(np.ravel(self.positions))
-        Printer.add_time(4, "box:", "ms")
+        printer.add_time(4, "box:", "ms")
         self.determine_box()
-        Printer.add_time(4, "COM:", "ms")
+        printer.add_time(4, "COM:", "ms")
         self.residues.CoM = GM_PF.system_CoM(
             self.positions, self.masses, self.boxvects_inv,
             self.boxvects, self.residues.first_ix, self.residues.last_ix,
             self.nres
         )
-        Printer.add_time(4, "COM_c:", "ms")
+        printer.add_time(4, "COM_c:", "ms")
         self.residues.CoM_c = np.ctypeslib.as_ctypes(
             np.ravel(self.residues.CoM))
 
@@ -1122,7 +1110,7 @@ class Oscillator:
         # and back to other representation
         self.VEGout[:, 4:] = temp[:, [0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]]
 
-    def frame_update(self, Printer, Syst):
+    def frame_update(self, Syst):
         """Update the frame-specific attributes of the instance.
 
         When a new frame starts, the system positions array is updated,
@@ -1136,29 +1124,26 @@ class Oscillator:
         """
         self.positions_box = (
             Syst.positions[self.used_atoms] @ Syst.boxvects_inv)
-        self.VEG_refpos = self.get_VEG_ref(Printer, Syst)
+        self.VEG_refpos = self.get_VEG_ref(Syst)
         self.VEG_refpos_c = np.ctypeslib.as_ctypes(self.VEG_refpos)
         if self.Map.Core.electrostatic_choice in ("E", "G"):
-            self.rotation_matrix = self.get_rotation_matrix(Printer, Syst)
+            self.rotation_matrix = self.get_rotation_matrix(Syst)
 
-    def get_VEG_ref(self, Printer, System):
+    def get_VEG_ref(self, System):
         return self.Map.code.GM_get_VEG_ref(
-            Printer, self.Map, System, self
+            self.Map, System, self
         )
 
-    def get_rotation_matrix(self, Printer, System):
+    def get_rotation_matrix(self, System):
         return self.Map.code.GM_get_rotation_matrix(
-            Printer, self.Map, System, self)
+            self.Map, System, self)
 
 
-def gen_universe(Printer, RunPars):
+def gen_universe(RunPars):
     """Calls MDAanalysis.Universe on the supplied files and catches errors.
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
         The 'main' RunPars instance containing all the basic run-defining
         parameters.
@@ -1175,25 +1160,26 @@ def gen_universe(Printer, RunPars):
             guess_bonds=RunPars.guess_bonds
         )
     except FileNotFoundError as ex:
-        Printer.warning(
+        GM_PT.Printer().warning(
             "\nCould not find the topology or trajectory file. "
             "Please make sure "
             "the names are correct.",
-            "MD_SU_1", True, exeption=ex
+            "MD_SU_1", True, exeption=ex,
+            GMAPerrclass=GM_Ex.GmapFileNotFoundError
         )
     except ValueError as ex:
-        Printer.warning(
+        GM_PT.Printer().warning(
             "\nThe given topology and/or trajectory files are of the "
             "wrong type."
             " Please remember that only certain file types and combinations "
             "thereof are currently supported by the program.",
-            "MD_SU_1", True, exception=ex
+            "MD_SU_1", True, exception=ex, GMAPerrclass=GM_Ex.GmapValueError
         )
     except Exception as ex:
-        Printer.warning(
+        GM_PT.Printer().warning(
             "\nThe given topology and/or trajectory files could not be "
             "interpreted.",
-            "MD_SU_1", True, exception=ex
+            "MD_SU_1", True, exception=ex, GMAPerrclass=GM_Ex.GmapMDFileError
         )
 
     return universe
@@ -1221,7 +1207,7 @@ def check_box_rightangled(universe):
         return False
 
 
-def check_box_charge(Printer, RunPars, charges):
+def check_box_charge(RunPars, charges):
     """Checks whether the supplied universe has neutral charge.
 
     If the box has a non-integer charge, the program throws an error
@@ -1229,9 +1215,6 @@ def check_box_charge(Printer, RunPars, charges):
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
         The 'main' RunPars instance containing all the basic run-defining
         parameters.
@@ -1254,14 +1237,14 @@ def check_box_charge(Printer, RunPars, charges):
     if abs(total_charge) > threshold:
         # if charge is not basically integer:
         if abs(round(total_charge) - total_charge) > threshold:
-            Printer.warning(
+            GM_PT.Printer().warning(
                 "\nThe total charge of the MD system deviates too far from an "
                 "integer number. Check whether the files are correct, and "
                 "whether the chosen threshold is relevant for this system.",
-                "MD_SU_3", True
+                "MD_SU_3", True, GMAPerrclass=GM_Ex.GmapParameterError
             )
         else:
-            Printer.warning(
+            GM_PT.Printer().warning(
                 "\nThe total charge of the MD system is of integer, but not "
                 "neutral value. Check whether the files are correct - usually "
                 "md systems have a neutral charge. The program will continue, "

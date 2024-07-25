@@ -681,6 +681,45 @@ The map provides these coefficients just like the linear ones, in a separate fil
 If you specified 'G' as the choice for the parameter 'electrostatic_choice', all 10 columns must be present. They may contain zeros, but they must be there. If you specified 'E' as the choice for the parameter 'electrostatic_choice', the first 4 columns are mandatory. Any extras will be ignored. Similarly, if you specified 'V' as the choice for the parameter 'electrostatic_choice', only the first column must be present, and all others (if present) will be ignored.
 
 
+********
+position
+********
+
+*Mandatory parameter*
+
+One of the available outputs of the program is positions. For each oscillator, (for each frame) a position is written to a file. This parameter allows to specify what position should be written for this oscillator to the positions file. It has no influence on the doublepos file. The syntax is the same as for defining ``r_pos`` and ``VEG_reference position``::
+
+    functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+    used_atoms              0 1 3 4   # CG OD1 ND2 HD21
+    position                0  # write the position of the CG atom to file.
+
+Any kind of position determination is possible. Considering the above example::
+
+    position                (0 + 1) / 2.0
+
+This way, we define the position to be the average position of atoms 0 and 1, or, in other words, the position is halfway between the CG and OD1 atoms.
+
+
+***************************
+doublepos_0 and doublepos_1
+***************************
+
+*Mandatory parameters*
+
+One of the available outputs of the program is doublepos. It is very similar to positions, except that for each oscillator, two separate positions are written to a file. These parameters allow to specify which positions should be written for this oscillator to the doublepos file. It has no influence on the positions file. The syntax is the same as for defining ``r_pos`` and ``VEG_reference position``::
+
+    functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
+    used_atoms              0 1 3 4   # CG OD1 ND2 HD21
+    doublepos_0             0  # write the position of the CG atom to file.
+    doublepos_1             2  # write the position of the ND atom to file.
+
+Any kind of position determination is possible. Considering the above example::
+
+    doublepos_0                (0 + 1) / 2.0
+
+This way, we define the position to be the average position of atoms 0 and 1, or, in other words, the position is halfway between the CG and OD1 atoms.
+
+
 ****************
 influencer_group
 ****************
