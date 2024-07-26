@@ -4,14 +4,14 @@ src/tools/FileHandler.py.
 
 Missing tests:
 
-(@ June 24th '24):
-105, 109-121, 344, 515-520, 538-543 (22 missed statements)
+(@ July 22nd '24):
+97, 101-113, 333, 527-536, 554-559 (20 missed statements)
 
 (CUHTAT - currently unknown how to access this)
-- Program is run using any OS other than windows 64 bit (105, 119-121)
+- Program is run using any OS other than windows 64 bit (97, 101-113)
   (CUHTAT; at least within one single run, probably impossible)
-- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (344)
-- output files are not cleared yet.  (515-543)  (this happens in GEM, just
+- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (333)
+- output files are not cleared yet.  (527-559)  (this happens in GEM, just
   before the per-frame loop)
 """
 
@@ -24,8 +24,9 @@ import numpy as np
 import pytest
 
 # local imports
-from GMAP.src.tools import FileHandler as GM_FH
-from GMAP.src.tools import PrintTools as GM_PT
+import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.Exceptions as GM_Ex
+import GMAP.src.tools.FileHandler as GM_FH
 
 
 def test_get_bare_file():
@@ -42,15 +43,19 @@ def test_get_bare_file():
 
 def test_write_output():
     cwd = Path(".").resolve()
-    RunPars = EmptyClass(**{
+    RunPars = GM_CT.CustomClass(**{
         "output_hamiltonian_filename": cwd / "hamiltonian",
         "output_dipole_filename": cwd / "dipoles",
         "output_energies_filename": cwd / "energies",
-        "output_data": ["ham", "dip", "ene"],
+        "output_positions_filename": cwd / "positions",
+        "output_doublepos_filename": cwd / "doublepos",
+        "output_data": ["ham", "dip", "ene", "pos", "dbp"],
         "output_format": ["bin", "txt"],
         "hamiltonian_multiplier": 1,
         "energies_multiplier": 1,
-        "dipoles_multiplier": 1
+        "dipoles_multiplier": 1,
+        "positions_multiplier": 1,
+        "doublepos_multiplier": 1
     })
 
     framenum = 2
@@ -70,12 +75,30 @@ def test_write_output():
     outputs["energies"] = np.array([
         [100, 101, 102, 103]
     ], dtype="float32")
+    outputs["positions"] = np.array([
+        [4, 5, 6],
+        [7, 8, 9],
+        [1, 2, 3],
+        [3, 4, 5]
+    ], dtype="float32")
+    outputs["doublepos"] = np.array([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+        [3, 4, 5],
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+        [3, 4, 5]
+    ], dtype="float32")
     hamfname = RunPars.output_hamiltonian_filename
     dipfname = RunPars.output_dipole_filename
     enefname = RunPars.output_energies_filename
+    posfname = RunPars.output_positions_filename
+    dbpfname = RunPars.output_doublepos_filename
 
     # clear files
-    for fname in (hamfname, dipfname, enefname):
+    for fname in (hamfname, dipfname, enefname, posfname, dbpfname):
         with open(fname.parent / f"{fname.name}.bin", "wb"):
             pass
         with open(fname.parent / f"{fname.name}.txt", "w"):
@@ -131,19 +154,53 @@ def test_write_output():
     )[1:]  # skip first, that is frame ix
     # txtdip = txtdip.reshape((3, 4)).T
     assert np.all(txtdip == outputs["energies"])
+
+    # -----  test contents positions  -----
+
+    with open(str(posfname) + ".bin", "rb") as fhand:
+        # skip first, that is frame ix
+        bindip = np.fromfile(fhand, dtype="float32")[1:]
+    bindip = bindip.reshape((3, 4)).T
+    assert np.all(bindip == outputs["positions"])
+
+    txtdip = np.loadtxt(
+        str(RunPars.output_positions_filename) + ".txt",
+        dtype="float32"
+    )[1:]  # skip first, that is frame ix
+    txtdip = txtdip.reshape((3, 4)).T
+    assert np.all(txtdip == outputs["positions"])
+
+    # -----  test contents doublepos  -----
+
+    with open(str(dbpfname) + ".bin", "rb") as fhand:
+        # skip first, that is frame ix
+        bindip = np.fromfile(fhand, dtype="float32")[1:]
+    bindip = bindip.reshape((3, 8)).T
+    assert np.all(bindip == outputs["doublepos"])
+
+    txtdip = np.loadtxt(
+        str(RunPars.output_doublepos_filename) + ".txt",
+        dtype="float32"
+    )[1:]  # skip first, that is frame ix
+    txtdip = txtdip.reshape((3, 8)).T
+    assert np.all(txtdip == outputs["doublepos"])
 
 
 def test_write_output_multiplied():
     cwd = Path(".").resolve()
-    RunPars = EmptyClass(**{
+    RunPars = GM_CT.CustomClass(**{
         "output_hamiltonian_filename": cwd / "hamiltonian",
         "output_dipole_filename": cwd / "dipoles",
         "output_energies_filename": cwd / "energies",
-        "output_data": ["ham", "dip", "ene"],
+        "output_positions_filename": cwd / "positions",
+        "output_doublepos_filename": cwd / "doublepos",
+        "output_data": ["ham", "dip", "ene", "pos", "dbp"],
         "output_format": ["bin", "txt"],
         "hamiltonian_multiplier": 2,
         "energies_multiplier": 3,
-        "dipoles_multiplier": 4
+        "dipoles_multiplier": 4,
+        "positions_multiplier": 5,
+        "doublepos_multiplier": 6
     })
 
     framenum = 2
@@ -163,12 +220,30 @@ def test_write_output_multiplied():
     outputs["energies"] = np.array([
         [100, 101, 102, 103]
     ], dtype="float32")
+    outputs["positions"] = np.array([
+        [4, 5, 6],
+        [7, 8, 9],
+        [1, 2, 3],
+        [3, 4, 5]
+    ], dtype="float32")
+    outputs["doublepos"] = np.array([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+        [3, 4, 5],
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+        [3, 4, 5]
+    ], dtype="float32")
     hamfname = RunPars.output_hamiltonian_filename
     dipfname = RunPars.output_dipole_filename
     enefname = RunPars.output_energies_filename
+    posfname = RunPars.output_positions_filename
+    dbpfname = RunPars.output_doublepos_filename
 
     # clear files
-    for fname in (hamfname, dipfname, enefname):
+    for fname in (hamfname, dipfname, enefname, posfname, dbpfname):
         with open(fname.parent / f"{fname.name}.bin", "wb"):
             pass
         with open(fname.parent / f"{fname.name}.txt", "w"):
@@ -225,24 +300,42 @@ def test_write_output_multiplied():
     # txtdip = txtdip.reshape((3, 4)).T
     assert np.all(txtdip == outputs["energies"])
 
+    # -----  test contents positions  -----
 
-def test_SU_FH_1(capsys):
+    with open(str(posfname) + ".bin", "rb") as fhand:
+        # skip first, that is frame ix
+        bindip = np.fromfile(fhand, dtype="float32")[1:]
+    bindip = bindip.reshape((3, 4)).T
+    assert np.all(bindip == outputs["positions"])
+
+    txtdip = np.loadtxt(
+        str(RunPars.output_positions_filename) + ".txt",
+        dtype="float32"
+    )[1:]  # skip first, that is frame ix
+    txtdip = txtdip.reshape((3, 4)).T
+    assert np.all(txtdip == outputs["positions"])
+
+    # -----  test contents doublepos  -----
+
+    with open(str(dbpfname) + ".bin", "rb") as fhand:
+        # skip first, that is frame ix
+        bindip = np.fromfile(fhand, dtype="float32")[1:]
+    bindip = bindip.reshape((3, 8)).T
+    assert np.all(bindip == outputs["doublepos"])
+
+    txtdip = np.loadtxt(
+        str(RunPars.output_doublepos_filename) + ".txt",
+        dtype="float32"
+    )[1:]  # skip first, that is frame ix
+    txtdip = txtdip.reshape((3, 8)).T
+    assert np.all(txtdip == outputs["doublepos"])
+
+
+def test_SU_FH_1():
     Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
     cwd = Path(".")
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        _ = GM_FH.get_def_parfile(Files, Printer, {
+    with pytest.raises(GM_Ex.GmapFileNotFoundError, match="SU_FH_1$"):
+        _ = GM_FH.get_def_parfile(Files, {
             "default_parameter_filename": [cwd/"doesntexist.dfa"]
         })
-
-    assert pytest_wrapped_sysexit.type is SystemExit
-    captured = capsys.readouterr()
-    assert captured.out.endswith("SU_FH_1\n")
-
-
-class EmptyClass:
-    def __init__(self, **kwargs):
-        for parname, val in kwargs.items():
-            setattr(self, parname, val)
-        return

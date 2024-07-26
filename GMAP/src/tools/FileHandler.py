@@ -11,6 +11,8 @@ import numpy as np
 
 # local imports
 import GMAP
+import GMAP.src.tools.Exceptions as GM_Ex
+import GMAP.src.tools.PrintTools as GM_PT
 
 
 class FileLocations:
@@ -64,31 +66,21 @@ class FileLocations:
         self.mapdir_hc = self.script_dir / "maps"
         self.refparfilename_hc = "reference_parameters.ref"
 
-    def set_exec_os(self, Printer):
+        GM_PT.Printer(self)  # initialize the printer!
+
+    def set_exec_os(self):
         """Find and set the exec_os attribute.
 
         .. seealso::
             find_exec_os
                 The function actually identifying the executing os.
-
-        Parameters
-        ----------
-        Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-            The object that allows to cleanly log and print during runtime,
-            and handle errors.
         """
 
-        self.exec_os = find_exec_os(Printer)
+        self.exec_os = find_exec_os()
 
 
-def find_exec_os(Printer):
+def find_exec_os():
     """Determines which os the system is running on.
-
-    Parameters
-    ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
 
     Returns
     -------
@@ -106,22 +98,22 @@ def find_exec_os(Printer):
         elif bits == 64:
             exec_os = "Win64bit"
         else:
-            Printer.warning(
+            GM_PT.Printer().warning(
                 "\nEnvironment was determined to be windows, but it is "
                 "neither a"
                 f" 32, nor 64 bit version. It appears to be {bits} bit. Please"
                 " contact the developers to solve this.",
-                "howtogethere", True
+                "howtogethere", True, GMAPerrclass=GM_Ex.GmapOSError
             )
     elif sys.platform == "darwin":
         exec_os = "MacOS"
     elif sys.platform == "linux":
         exec_os = "Linux"
     else:
-        Printer.warning(
+        GM_PT.Printer().warning(
             f"\nexecuting OS not recognised... sys.platform = {sys.platform}. "
             "Please contact the developers to solve this. ",
-            "howtogethere", True
+            "howtogethere", True, GMAPerrclass=GM_Ex.GmapOSError
         )
 
     return exec_os
@@ -288,7 +280,7 @@ def get_bare_file(
 
 
 def get_def_parfile(
-    Files, Printer, cmd_pardict, in_parfile=None, in_pardict=None
+    Files, cmd_pardict, in_parfile=None, in_pardict=None
 ):
     """
     Given the parameter information on the command line, a new Files instance,
@@ -303,14 +295,11 @@ def get_def_parfile(
     ----------
     Files : :class:`FileLocations`
         Contains all currently known paths and other file-related properties.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     cmd_pardict : dict
         The dict storing the parameter choices from the command line.
-    in_parfile : `pathlib.Path`
+    in_parfile : `pathlib.Path` or NoneType, default=None
         The filename of the input parameter file.
-    in_pardict : dict
+    in_pardict : dict, default={}
         The parameters supplied in the input parameter file.
     """
 
@@ -326,11 +315,11 @@ def get_def_parfile(
     file_found = try_file(name[0])
 
     if not file_found:
-        Printer.warning(
+        GM_PT.Printer().warning(
             f"\nThe requested default parameter file {name} could not be "
             "found, or is not a file. "
             "Please make sure you specified it correctly.\n",
-            "SU_FH_1", True
+            "SU_FH_1", True, GMAPerrclass=GM_Ex.GmapFileNotFoundError
         )
 
     # We need a file to check if the default file is complete (AIM did this
@@ -341,11 +330,11 @@ def get_def_parfile(
         name = Files.sourcedir_hc / Files.refparfilename_hc
         check_file_found = try_file(name)
         if not check_file_found:
-            Printer.warning(
+            GM_PT.Printer().warning(
                 "\nThe requested default parameter file requires the presence "
                 f"of the file {name}, but this file could not be found. "
                 "Please make sure you specified it correctly.\n",
-                "SU_FH_2", True
+                "SU_FH_2", True, GMAPerrclass=GM_Ex.GmapFileNotFoundError
             )
 
     return file_found
@@ -378,10 +367,10 @@ def try_file(fname):
         return None
 
 
-def check_file_readability(Printer, fname, doquit=True):
+def check_file_readability(fname, doprint=True, doquit=True):
     """Checks if a given file can be read.
 
-    If not, throws an error, and quits.
+    If not, lets GM_PT.Printer raise the appropriate error.
 
     .. seealso::
         :func:`try_file`
@@ -389,27 +378,30 @@ def check_file_readability(Printer, fname, doquit=True):
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     fname : `pathlib.Path`
         The path to the file to check.
+    doprint : bool, default=True
+        Whether failure of this test should be reported to the user.
+    doquit : bool, default=True
+        Whether the program should raise an error if the file fname is
+        not readable to the program.
 
     Returns
     -------
-    _ : bool
+    is_readable : bool
         Whether the file is readable.
     """
+
     try:
         with open(fname, 'r', encoding='utf-8') as file:
             for _ in file:
                 pass
     except UnicodeDecodeError:
-        if Printer:
-            Printer.warning(
+        if doprint:
+            GM_PT.Printer().warning(
                 f"\n The file {fname} is of the wrong type, please make sure "
                 "it is a plain text file. ",
-                "SU_FH_3", doquit
+                "SU_FH_3", doquit, GMAPerrclass=GM_Ex.GmapUnicodeDecodeError
             )
         return False
     return True
@@ -459,6 +451,24 @@ def write_output(RunPars, framenum, outputs):
         write_single(
             RunPars, framenum, framenum_arr,
             RunPars.output_dipole_filename, reshaped
+        )
+
+    if "pos" in RunPars.output_data:
+        positions = outputs["positions"]
+        positions *= RunPars.positions_multiplier
+        reshaped = positions.T.flatten()
+        write_single(
+            RunPars, framenum, framenum_arr,
+            RunPars.output_positions_filename, reshaped
+        )
+
+    if "dbp" in RunPars.output_data:
+        doublepos = outputs["doublepos"]
+        doublepos *= RunPars.doublepos_multiplier
+        reshaped = doublepos.T.flatten()
+        write_single(
+            RunPars, framenum, framenum_arr,
+            RunPars.output_doublepos_filename, reshaped
         )
 
 
@@ -520,6 +530,10 @@ def clear_output(RunPars):
         clear_single(RunPars, RunPars.output_dipole_filename)
     if "ene" in RunPars.output_data:
         clear_single(RunPars, RunPars.output_energies_filename)
+    if "pos" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_positions_filename)
+    if "dbp" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_doublepos_filename)
 
 
 def clear_single(RunPars, fname):

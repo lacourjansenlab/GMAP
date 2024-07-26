@@ -16,7 +16,7 @@ import GMAP.src.tools.PhysicsFunctions as GM_PF
 # parameter (especially if theres multiple that are linked), the way
 # RunPar is built might not be correct. In this function, the user can
 # fix that.
-def GM_adjust_RunPars(Files, Printer, Map):
+def GM_adjust_RunPars(Files, Map):
     """Makes the necessary changes to Map.RunPar.
 
     Is expected to not return anything - return value is not caught.
@@ -27,9 +27,6 @@ def GM_adjust_RunPars(Files, Printer, Map):
         Contains all currently known paths and other file-related
         properties.
         Has to be updated after RunPars is finalized.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.
@@ -42,7 +39,7 @@ def GM_adjust_RunPars(Files, Printer, Map):
 # a detected parameter, a different choice is preferred. This function
 # allows to make a different choice, **in the same format as the file**.
 # if more complex behaviour is desired, a separate function is needed.
-def GM_adjust_map_core_raw(Files, Printer, Map):
+def GM_adjust_map_core_raw(Files, Map):
     """Makes the necessary changes to the 'raw' input read from core.txt.
 
     Is expected to not return anything - return value is not caught.
@@ -66,22 +63,28 @@ def GM_adjust_map_core_raw(Files, Printer, Map):
         Contains all currently known paths and other file-related
         properties.
         Has to be updated after RunPars is finalized.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.
     """
 
-    pass
+    choice = Map.RunPars.pos_choice
+    match choice:
+        case "C":  # the default
+            Map.rawcore["position"] = ["0"]
+        case "O":
+            Map.rawcore["position"] = ["1"]
+        case "N":
+            Map.rawcore["position"] = ["3"]
+        case "D":
+            Map.rawcore["position"] = ["4"]
 
 
 # A function to adjust the oscillators found for this map. Gets a list
 # of oscillators, and is supposed to return a list of oscillators.
 # For example, this function could remove some of the oscillators for
 # some reason, and return the rest.
-def GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list):
+def GM_adjust_oscillators(Files, Map, Syst, oscillator_list):
     """Makes the necessary changes to the list of oscillators.
 
     The program finds all oscillators mathing the instructions from
@@ -108,9 +111,6 @@ def GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list):
         Contains all currently known paths and other file-related
         properties.
         Has to be updated after RunPars is finalized.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.
@@ -133,7 +133,7 @@ def GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list):
 # A place to do further initialization if a map requires it. Think of
 # things like building further lookup tables, for instance.
 # (for AmideBB - find neighbours!)
-def GM_post_init(Files, Printer, Map, Syst):
+def GM_post_init(Files, Map, Syst):
     pass
 
 
@@ -141,7 +141,7 @@ def GM_post_init(Files, Printer, Map, Syst):
 # to be filled in, for example). GEM itself builds the coupling table at
 # this point in time. Any preparation stuff that only requires constant
 # properties (masses, charges, bonds, for example) should be done here.
-def GM_pre_run(Printer, Map, Syst):
+def GM_pre_run(Map, Syst):
     pass
 
 
@@ -149,19 +149,19 @@ def GM_pre_run(Printer, Map, Syst):
 # calculated. Any preparation stuff that requires frame-dependent
 # data should be done here. AIM calculated the CoMs here, GEM also
 # builds hamiltonian (as its contents change per frame)
-def GM_pre_frame(Printer, Map, Syst):
+def GM_pre_frame(Map, Syst):
     pass
 
 
 # A place to do things with the results from this frame. GEM itself
 # writes information like the hamiltonian to files at this point in time.
-def GM_post_frame(Printer, Map, Syst):
+def GM_post_frame(Map, Syst):
     pass
 
 
 # A place to wrap up the entire calculation. GEM itself reports on
 # calculation time and treated frames at this point in time.
-def GM_post_run(Printer, Map, Syst):
+def GM_post_run(Map, Syst):
     pass
 
 
@@ -178,7 +178,7 @@ def placeholder_GM_str_osc(Syst, Map, osc):
 # for more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
 def placeholder_GM_get_rotation_matrix(
-    Printer, Map, Syst, osc
+    Map, Syst, osc
 ):
     """Finds the rotation matrix for a given oscillator.
 
@@ -195,9 +195,6 @@ def placeholder_GM_get_rotation_matrix(
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.
@@ -238,7 +235,7 @@ def placeholder_GM_get_rotation_matrix(
 # have this function, just use `def GM_get_dipole_dir` - see the manual for
 # more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
-def placeholder_GM_get_dipole_dir(Printer, Map, Syst, osc):
+def placeholder_GM_get_dipole_dir(Map, Syst, osc):
     """Finds the dipole moment direction and its position of a given
     oscillator.
 
@@ -256,9 +253,6 @@ def placeholder_GM_get_dipole_dir(Printer, Map, Syst, osc):
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.
@@ -291,7 +285,7 @@ def placeholder_GM_get_dipole_dir(Printer, Map, Syst, osc):
 # have this function, just use `def GM_get_dipole_mag` - see the manual for
 # more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
-def placeholder_GM_get_dipole_mag(Printer, Map, Syst, osc):
+def placeholder_GM_get_dipole_mag(Map, Syst, osc):
     """Finds the magnitude for a given dipole moment.
 
     Most spectroscopic techniques require to know the dipole moment of
@@ -310,9 +304,6 @@ def placeholder_GM_get_dipole_mag(Printer, Map, Syst, osc):
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.
@@ -337,7 +328,7 @@ def placeholder_GM_get_dipole_mag(Printer, Map, Syst, osc):
 # have this function, just use `def GM_get_dipole` - see the manual for
 # more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
-def placeholder_GM_calculate_dipole(Printer, Map, Syst, osc):
+def placeholder_GM_calculate_dipole(Map, Syst, osc):
     """Finds a given dipole moment and its position.
 
     Most spectroscopic techniques require to know the dipole moment of
@@ -353,9 +344,6 @@ def placeholder_GM_calculate_dipole(Printer, Map, Syst, osc):
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.
@@ -377,12 +365,12 @@ def placeholder_GM_calculate_dipole(Printer, Map, Syst, osc):
         Datatype of this array must be float32!
     """
 
-    r_vec, r_pos = Map.code.GM_get_dipole_dir(Printer, Map, Syst, osc)
-    r_vec *= Map.code.GM_get_dipole_mag(Printer, Map, Syst, osc)
+    r_vec, r_pos = Map.code.GM_get_dipole_dir(Map, Syst, osc)
+    r_vec *= Map.code.GM_get_dipole_mag(Map, Syst, osc)
     return r_vec, r_pos
 
 
-def placeholder_GM_calculate_frequency(Printer, Map, Syst, osc):
+def placeholder_GM_calculate_frequency(Map, Syst, osc):
     return Map.Core.frequency_gas_phase + np.sum(np.multiply(
         osc.VEGout, Map.Core.frequency_data_array_linear))
 
@@ -392,7 +380,7 @@ def placeholder_GM_calculate_frequency(Printer, Map, Syst, osc):
 # have this function, just use `def GM_get_VEG_ref` - see the manual for
 # more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
-def placeholder_GM_get_VEG_ref_residues(Printer, Map, Syst, osc):
+def placeholder_GM_get_VEG_ref_residues(Map, Syst, osc):
     atnums = []
     for atom in [0]:
         resnum = Syst.resnums[osc.used_atoms[atom]]
@@ -409,7 +397,7 @@ def placeholder_GM_get_VEG_ref_residues(Printer, Map, Syst, osc):
 # have this function, just use `def GM_get_VEG_ref` - see the manual for
 # more information. This placeholder is just here for illustration (but
 # this map does not actually need this function).
-def placeholder_GM_get_VEG_ref_com(Printer, Map, Syst, osc):
+def placeholder_GM_get_VEG_ref_com(Map, Syst, osc):
     atnums = []
     for atom in [0, 1, 3, 4]:
         atnums.append(osc.used_atoms[atom])
@@ -424,7 +412,7 @@ def placeholder_GM_get_VEG_ref_com(Printer, Map, Syst, osc):
 # !!!!!!!!!!!!!!!!!!!!!
 # is this actually needed? Or does this influence the customizable
 # functions only, anyways?
-def GM_adjust_map_core_results(Files, Printer, Map):
+def GM_adjust_map_core_results(Files, Map):
     """Makes the necessary changes to the results derived from core.txt
 
     Is expected to not return anything - return value is not caught.
@@ -435,9 +423,6 @@ def GM_adjust_map_core_results(Files, Printer, Map):
         Contains all currently known paths and other file-related
         properties.
         Has to be updated after RunPars is finalized.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.

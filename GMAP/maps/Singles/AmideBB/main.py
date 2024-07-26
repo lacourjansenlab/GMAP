@@ -1,6 +1,6 @@
 
 
-def GM_adjust_map_core_raw(Files, Printer, Map):
+def GM_adjust_map_core_raw(Files, Map):
 
     all_amino_acid_codes = [
         "ARG", "HIS", "LYS", "ASP", "GLU", "SER", "THR", "ASN", "GLN",

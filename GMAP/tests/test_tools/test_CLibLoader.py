@@ -4,7 +4,7 @@ src/tools/CLibLoader.py.
 
 Missing tests:
 
-(@ May 2nd '24):
+(@ July 22nd '24):
   (0 missed statements)
 
 - Nothing is missing!
@@ -17,25 +17,20 @@ import pytest
 # local imports
 from .test_SystemReader import parameter_getter
 import GMAP.src.tools.CLibLoader as GM_CL
+import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.PhysicsFunctions as GM_PF
-
-
-# Otherwise, the created singleton will leak between tests.
-# https://github.com/pytest-dev/pytest-mock/issues/100
-@pytest.fixture(autouse=True)
-def reset_singletons():
-    GM_CL.Singleton._instances = {}
 
 
 class TestVClib:
     def test_calcVEG_perres_mm(self):
         cmdline = ["-md", "maps\\;"]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter("AmideSC", cmdline)
 
-        VEGlib = GM_CL.VEG_CLib(Printer, RunPars)
+        VEGlib = GM_CL.VEG_CLib(RunPars)
         RunPars.estatic_range = np.float32(60)
         RunPars.estatic_smooth_range = np.float32(5)
 
@@ -164,30 +159,94 @@ class TestVClib:
             [-0.000003743181, 0.000000513291, 0.000005141681],  # Gxz
             [-0.000008146924, 0.000001026582, 0.000002570840]   # Gyz
         ]], dtype="float32").sum(2).round(10)
-        print(ans)
         assert np.all(oscillator.VEGout[:, 4:].round(10) == ans)
 
-    def test_CL_VG_1(self, capsys):
+    def test_calcVEG_perres_mm_influencers(self):
         cmdline = ["-md", "maps\\;"]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter("AmideSC", cmdline)
+
+        VEGlib = GM_CL.VEG_CLib(RunPars)
+        RunPars.estatic_range = np.float32(60)
+        RunPars.estatic_smooth_range = np.float32(5)
+
+        # same system as the previous test, but 1 residue is now not an
+        # influencer
+        System = get_System_1()
+        System.influencers_atix_c = np.ctypeslib.as_ctypes(
+            np.array([0, 1, 2, 3], dtype="int32"))
+        System.n_influencers = np.int32(4)
+        oscillator = get_oscillator_1()
+
+        VEGlib.calcVEG_perres_mm(System, RunPars, oscillator)
+
+        # Do not remove!!! These are the calculations to get to the correct
+        # answer!
+        # NNdtIS = not needed due to influencer setting
+
+        # positions = np.array([
+        #     [8, 28, 68],
+        #     [11, 31, 71],
+        #     [28, 68, 8],
+        #     [31, 71, 11],
+        #     [68, 8, 28],
+        #     [71, 11, 31]
+        # ], dtype="float32")
+        # so, 4 points to take dist to. VEGref = 10, 30, 70
+        # CoM's = (30, 70, 10), (NNdtIS)
+        # dists = sqrt(20**2 + 40**2 + 40**2), NNdtIS
+        # dists = 60, NNdtIS
+        # dists_at_res2 = sqrt(18**2 + 38**2 + 38**2),  ch=1
+        #                 sqrt(21**2 + 41**2 + 41**2)   ch=-1
+        #               = 56.6745092612, 61.6684684421
+        # weights_res2 = 1, 0.16630631158
+        # res3 NNdtIS
+
+        # atdiff_0-2 = (20, 40, 40), (23, 43, 43)
+        # atdiff_0_3 = NNdtIS
+        # atdist_0 = 60, 65.0153827951, NNdtIS
+        # pot_0 = 1/60 + -0.166/65.015 + NNdtIS
+
+        # atdiff_1_2 = (17, 37, 37), (20, 40, 40)
+        # atdiff_1_3 = NNdtIS
+        # atdist_1 = 55.01817788139, 60, NNdtIS
+        # pot_1 = 1/55.018 + -0.166/60 + NNdtIS
+
+        # potentials
+        ans = np.array([
+            [0.01666666666667, 0.01817581095026],
+            [-0.002557953278597537, -0.0027717718596666],
+            [0, 0],  # NNdtIS
+            [0, 0]  # NNdtIS
+        ], dtype="float32").sum(0).round(7)
+        assert np.all(oscillator.VEGout[:, 0].round(7) == ans)
+
+    def test_CL_VG_1(self):
+        """This test will fail if the singletons are not cleared!!!!
+        """
+
+        cmdline = ["-md", "maps\\;"]
+        (
+            Files, RunPars, RefPars, DefPars, InPars,
+            CmdPars, mapdict, pairs_mapdict
+        ) = parameter_getter("AmideSC", cmdline)
+
         RunPars.VEG_clib_file = (
             RunPars.VEG_clib_file.parent / "doesntexist.txt")
+        with pytest.raises(GM_Ex.GmapFileNotFoundError, match="CL_VG_1$"):
+            _ = GM_CL.VEG_CLib(RunPars)
 
-        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            _ = GM_CL.VEG_CLib(Printer, RunPars)
-        assert pytest_wrapped_sysexit.type is SystemExit
-        captured = capsys.readouterr()
-        assert captured.out.endswith("CL_VG_1\n")
+        RunPars.VEG_clib_file = (
+            RunPars.VEG_clib_file.parent / "VEG.obj")
+        with pytest.raises(GM_Ex.GmapOSError, match="CL_VG_1$"):
+            _ = GM_CL.VEG_CLib(RunPars)
 
-
-class EmptyClass:
-    def __init__(self, **kwargs):
-        for parname, val in kwargs.items():
-            setattr(self, parname, val)
-        return
+        RunPars.VEG_clib_file = (
+            RunPars.VEG_clib_file.parent)
+        with pytest.raises(GM_Ex.GMAPexception, match="CL_VG_1$"):
+            _ = GM_CL.VEG_CLib(RunPars)
 
 
 def get_System_1():
@@ -202,6 +261,8 @@ def get_System_1():
     masses = np.array([1, 2, 1, 2, 1, 2], dtype="float32")
     # charges = np.array([1, -1, 0, 1, 0, 0], dtype="float32")
     charges = np.array([1, -1, 1, -1, 1, -1], dtype="float32")
+    influencers = np.array([0, 1, 2, 3, 4, 5], dtype="int32")  # all atoms!
+    n_influencers = np.int32(6)
     boxvects = np.array([
             [100, 0, 0],
             [0, 100, 0],
@@ -218,10 +279,12 @@ def get_System_1():
     boxdims = np.array([100, 100, 100], dtype="float32")
     halfbox = np.array([50, 50, 50], dtype="float32")
 
-    return EmptyClass(**{
+    return GM_CT.CustomClass(**{
         "positions_c": np.ctypeslib.as_ctypes(np.ravel(positions)),
         "charges_c": np.ctypeslib.as_ctypes(charges),
-        "residues": EmptyClass(**{
+        "influencers_atix_c": np.ctypeslib.as_ctypes(influencers),
+        "n_influencers": n_influencers,
+        "residues": GM_CT.CustomClass(**{
             "CoM_c": np.ctypeslib.as_ctypes(np.ravel(residues_CoM)),
             "first_ix_c": np.ctypeslib.as_ctypes(res_first_ix),
             "last_ix_c": np.ctypeslib.as_ctypes(res_last_ix)
@@ -236,7 +299,7 @@ def get_oscillator_1():
     estat_ats = np.array([0, 1], dtype="int32")
     VEG_refpos = np.array([10, 30, 70], dtype="float32")
     VEGout = np.zeros((2, 10), dtype="float32")
-    return EmptyClass(**{
+    return GM_CT.CustomClass(**{
         "electrostatic_atoms_c": np.ctypeslib.as_ctypes(estat_ats),
         "n_estatic_atoms": np.int32(2),
         "VEG_refpos_c": np.ctypeslib.as_ctypes(VEG_refpos),
@@ -244,8 +307,8 @@ def get_oscillator_1():
         "n_local_atoms": np.int32(2),
         "VEGout": VEGout,
         "VEGout_c": np.ctypeslib.as_ctypes(np.ravel(VEGout)),
-        "Map": EmptyClass(**{
-            "Core": EmptyClass(**{
+        "Map": GM_CT.CustomClass(**{
+            "Core": GM_CT.CustomClass(**{
                 "electrostatic_choice_c": 3  # we want gradients!!!
             })
         })

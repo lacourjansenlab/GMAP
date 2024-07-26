@@ -169,10 +169,10 @@ In what format the output files should be created. Bin for binary format, txt fo
 output_data
 ===========
 | (no shorthand available)
-| (options: ham, dip, ene)
+| (options: ham, dip, ene, pos, dbp)
 | (used by: GEM)
 
-What kind of data the program should generate. Multiple choices can be provided. 'ham' lets the program output a Hamiltonian for each frame, 'dip' makes it output dipoles. 'ene' is used to output the energies file.
+What kind of data the program should generate. Multiple choices can be provided. 'ham' lets the program output a Hamiltonian for each frame, 'dip' makes it output dipoles. 'ene' is used to output the energies file (the diagonal of the hamiltonian). 'pos' outputs the positions file (a single position per oscillator), 'dbp' outputs the doublepos file (two positions per oscillator).
 
 hamiltonian_units
 =================
@@ -218,6 +218,38 @@ dipoles_multiplier
 | (used by: GEM)
 
 The output dipoles (in Debye) will be multiplied by this value before saving. Cannot be used together with dipoles_units.
+
+positions_units
+=================
+| (no shorthand available)
+| (options: ang, bohr, nm)
+| (used by: GEM)
+
+In what units the output positions should be written. Cannot be used together with positions_multiplier.
+
+positions_multiplier
+=================
+| (no shorthand available)
+| (used by: GEM)
+
+The output positions (in angstrom) will be multiplied by this value before saving. Cannot be used together with positions_units.
+
+doublepos_units
+=================
+| (no shorthand available)
+| (options: ang, bohr, nm)
+| (used by: GEM)
+
+In what units the output doublepos should be written. Cannot be used together with doublepos_multiplier.
+
+doublepos_multiplier
+=================
+| (no shorthand available)
+| (used by: GEM)
+
+The output doublepos (in angstrom) will be multiplied by this value before saving. Cannot be used together with doublepos_units.
+
+
 
 **********************************************
 parameters for specifying calculation settings

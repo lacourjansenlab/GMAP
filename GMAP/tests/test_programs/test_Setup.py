@@ -6,7 +6,9 @@ import pytest
 from pathlib import Path
 
 # local imports
-from GMAP.src.programs import Setup as GM_Setup
+import GMAP.src.programs.Setup as GM_Setup
+# from GMAP.src.programs import Setup as GM_Setup
+import GMAP.src.tools.Exceptions as GM_Ex
 from GMAP.src.tools import FileHandler as GM_FH
 from GMAP.src.tools import PrintTools as GM_PT
 
@@ -14,62 +16,50 @@ from GMAP.src.tools import PrintTools as GM_PT
 
 
 # Tests if not existing folder raises correct error
-def test_Setup_1(capsys, tmp_path):
-    Printer, sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
+def test_Setup_1(tmp_path):
+    sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
 
     not_a_directory = tmp_path / "not_a_directory"
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        GM_Setup.verify_target(not_a_directory, sourcefiles_dir,
-                               mapfiles_dir, Printer)
-    assert pytest_wrapped_sysexit.type is SystemExit
-
-    captured = capsys.readouterr()
-    assert captured.out.endswith("Setup_1\n")
+    with pytest.raises(GM_Ex.GmapNotADirectoryError, match="Setup_1$"):
+        GM_Setup.verify_target(
+            not_a_directory, sourcefiles_dir, mapfiles_dir)
 
 
-def test_Setup_2(capsys, tmp_path):  # Tests if sourcedir doesn't exist yet
-    Printer, sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
+def test_Setup_2(tmp_path):  # Tests if sourcedir doesn't exist yet
+    sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
 
     sourcefiles_dir.mkdir()
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        GM_Setup.verify_target(tmp_path, sourcefiles_dir,
-                               mapfiles_dir, Printer)
-    assert pytest_wrapped_sysexit.type is SystemExit
-
-    captured = capsys.readouterr()
-    assert captured.out.endswith("Setup_2\n")
+    with pytest.raises(GM_Ex.GmapIsADirectoryError, match="Setup_2$"):
+        GM_Setup.verify_target(
+            tmp_path, sourcefiles_dir, mapfiles_dir)
 
 
-def test_Setup_3(capsys, tmp_path):   # Tests if mapdir doesn't exist yet
-    Printer, sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
+def test_Setup_3(tmp_path):   # Tests if mapdir doesn't exist yet
+    sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
 
     mapfiles_dir.mkdir()
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        GM_Setup.verify_target(tmp_path, sourcefiles_dir,
-                               mapfiles_dir, Printer)
-    assert pytest_wrapped_sysexit.type is SystemExit
+    with pytest.raises(GM_Ex.GmapIsADirectoryError, match="Setup_3$"):
+        GM_Setup.verify_target(
+            tmp_path, sourcefiles_dir, mapfiles_dir)
 
-    captured = capsys.readouterr()
-    assert captured.out.endswith("Setup_3\n")
 
 # The tests below test functions!
 
 
 def test_verify_target(tmp_path):
-    Printer, sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
+    sourcefiles_dir, mapfiles_dir = base_tests(tmp_path)
 
     assert GM_Setup.verify_target(
-        tmp_path, sourcefiles_dir, mapfiles_dir, Printer
+        tmp_path, sourcefiles_dir, mapfiles_dir
     ) is None
 
 
 def test_Setup(tmp_path, capsys):
     callcommand = ["Setup", tmp_path]
     Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
 
     src_dir = Files.sourcedir_hc
     map_dir = Files.mapdir_hc
@@ -77,11 +67,11 @@ def test_Setup(tmp_path, capsys):
     sourcefiles_original = [file.name for file in Path(src_dir).iterdir()]
     map_original = [file.name for file in Path(map_dir).iterdir()]
 
-    GM_Setup.Setup(callcommand, Files, Printer)
+    GM_Setup.Setup(callcommand, Files)
 
     captured = capsys.readouterr()
-    assert captured.out.endswith(GM_PT.prettifier("Copied folders to "
-                                 f"{tmp_path} successfully!\n"))
+    assert captured.out.endswith(
+        GM_PT.prettifier(f"Copied folders to {tmp_path} successfully!\n"))
 
     target_srcdir = tmp_path / "sourcefiles_copy"
     target_mapdir = tmp_path / "maps_copy"
@@ -97,10 +87,9 @@ def test_Setup(tmp_path, capsys):
 
 
 def base_tests(tmp_path):  # Not a test
-    Files = GM_FH.FileLocations()
-    Printer = GM_PT.Printer(Files)
+    _ = GM_FH.FileLocations()
 
     sourcefiles_dir = tmp_path / "sourcefiles_dir"
     mapfiles_dir = tmp_path / "mapfiles_dir"
 
-    return Printer, sourcefiles_dir, mapfiles_dir
+    return sourcefiles_dir, mapfiles_dir
