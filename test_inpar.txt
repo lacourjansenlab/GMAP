@@ -18,7 +18,7 @@
 
 verbose 4
 verbose_logfile 4
-maps_to_use   AmideSC
+maps_to_use   AmideBB AmideSC
 couplings_to_use  None   :All
 couplings_to_use  DipDip  AmideSC:AmideSC
 

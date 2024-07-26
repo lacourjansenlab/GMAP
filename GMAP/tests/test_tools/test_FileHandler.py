@@ -5,7 +5,7 @@ src/tools/FileHandler.py.
 Missing tests:
 
 (@ July 22nd '24):
-97, 101-113, 333, 527-536, 554-559 (20 missed statements)
+97, 101-113, 333, 527-536, 554-559 (24 missed statements)
 
 (CUHTAT - currently unknown how to access this)
 - Program is run using any OS other than windows 64 bit (97, 101-113)
@@ -329,6 +329,49 @@ def test_write_output_multiplied():
     )[1:]  # skip first, that is frame ix
     txtdip = txtdip.reshape((3, 8)).T
     assert np.all(txtdip == outputs["doublepos"])
+
+
+def test_write_legend():
+    def get_resnum_text(resnum):
+        return f"living on residue number {resnum}"
+
+    class MockOsc:
+        def __init__(self, **kwargs):
+            for parname, val in kwargs.items():
+                setattr(self, parname, val)
+
+        def __str__(self):
+            return (
+                f"Oscillator of type {self.Map.name} "
+                f"{self.Map.code.GM_str_osc(self.ix)}"
+            )
+
+    cwd = Path(".").resolve()
+    RunPars = GM_CT.CustomClass(**{
+        "output_legend_filename": cwd / "legend.txt"
+    })
+    map_ = GM_CT.CustomClass(**{
+        "code": GM_CT.CustomClass(**{"GM_str_osc": get_resnum_text}),
+        "name": "mockmap"
+    })
+    System = GM_CT.CustomClass(**{"oscillators": [MockOsc(**{
+        "Map": map_,
+        "ix": ix
+    }) for ix in range(4)]})
+
+    outfname = RunPars.output_legend_filename
+
+    GM_FH.write_legend(RunPars, System)
+
+    with open(str(outfname)) as fhand:
+        contents = fhand.read()
+        assert contents == (
+            "at index 0: Oscillator of type mockmap living on residue number "
+            "0\nat index 1: Oscillator of type mockmap living on residue "
+            "number 1\nat index 2: Oscillator of type mockmap living on "
+            "residue number 2\nat index 3: Oscillator of type mockmap living "
+            "on residue number 3\n"
+        )
 
 
 def test_SU_FH_1():

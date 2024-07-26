@@ -75,6 +75,7 @@ class TestRefPars:
             "source_directory": [Path("../../../sourcefiles")],
             "VEG_clib_file": [Path("VEG.dll")],
             "log_filename": [Path("log.log")],
+            "output_legend_filename": [Path("legend.txt")],
             "output_estatics_filename": [Path("estatics.txt")],
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],
@@ -188,6 +189,7 @@ class TestRefPars:
                 "VEG_clib_file"],
             "log_directory": ["log_filename"],
             "output_directory": [
+                "output_legend_filename",
                 "output_estatics_filename", "output_hamiltonian_filename",
                 "output_dipole_filename", "output_energies_filename",
                 "output_positions_filename", "output_doublepos_filename"
@@ -213,6 +215,7 @@ class TestRefPars:
             "log_directory",
             "log_filename",
             "output_directory",
+            "output_legend_filename",
             "output_estatics_filename",
             "output_hamiltonian_filename",
             "output_dipole_filename",
@@ -233,6 +236,7 @@ class TestRefPars:
         ]
         assert RefPars.filepars_create == [
             "log_filename",
+            "output_legend_filename",
             "output_estatics_filename",
             "output_hamiltonian_filename",
             "output_dipole_filename",
@@ -469,6 +473,7 @@ class TestRawPars:
             "source_directory": [sd],
             "VEG_clib_file": [Path("VEG.dll")],
             "log_filename": [Path("log.log")],
+            "output_legend_filename": [Path("legend.txt")],
             "output_estatics_filename": [Path("estatics.txt")],
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],

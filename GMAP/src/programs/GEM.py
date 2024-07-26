@@ -106,6 +106,9 @@ def trj_loop(RunPars, System):
     # And in case maps did anything weird...
     RunPars.manage_dtypes()
 
+    # Report on the system we're going to treat.
+    GM_FH.write_legend(RunPars, System)
+
     GM_PT.Printer().add_time(3, "Starting on frames", "ms")
 
     trj = System.universe.trajectory
