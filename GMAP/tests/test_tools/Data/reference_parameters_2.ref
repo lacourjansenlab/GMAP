@@ -11,6 +11,7 @@ log_filename[path_rel_lg_c]                       log.log
 
 output_directory[path_dir_op]                     [N/A]
 output_legend_filename[path_rel_op_c]             legend.txt
+output_couplingvis_filename[path_rel_op_c]        couplingvisualization.pdf
 output_estatics_filename[path_rel_op_c]           estatics.txt
 output_hamiltonian_filename(ohf)[path_rel_op_c]   hamiltonian
 output_dipole_filename(odf)[path_rel_op_c]        dipoles
@@ -55,6 +56,9 @@ positions_multiplier[float]                        1
 doublepos_units[str]                               Ang Bohr [nm]
 doublepos_multiplier[float]                        1 
 # polarizabilities -> ang^3, bohr^3
+
+couplingvis_figsize[float]                         8  # width of figure in inches
+couplingvis_dpi[int]                               100
 
 
 # testing array

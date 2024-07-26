@@ -37,6 +37,7 @@ import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
 import GMAP.src.tools.PhysicsFunctions as GM_PF
+import GMAP.src.tools.Plotter as GM_Pl
 import GMAP.src.tools.PrintTools as GM_PT
 import GMAP.src.tools.SystemReader as GM_SR
 
@@ -203,6 +204,11 @@ def GEM(callcommand, Files):
 
     # next - MD system!
     System = GM_SR.System(Files, RunPars)
+
+    # Save overview of found coupling maps to file.
+    if "ham" in RunPars.output_data:
+        GM_Pl.plot_coupling_choices(RunPars, System)
+
     GM_PT.Printer().add_time(3, "Initialized MD system", "ms")
 
     # GEM is now done - let maps initialize as well
