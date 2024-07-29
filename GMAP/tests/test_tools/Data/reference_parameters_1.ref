@@ -10,10 +10,14 @@ log_directory[path_dir_lg]                        [N/A]
 log_filename[path_rel_lg_c]                       log.log
 
 output_directory[path_dir_op]                     [N/A]
+output_legend_filename[path_rel_op_c]             legend.txt
+output_couplingvis_filename[path_rel_op_c]        couplingvisualization.pdf
 output_estatics_filename[path_rel_op_c]           estatics.txt
 output_hamiltonian_filename(ohf)[path_rel_op_c]   hamiltonian
 output_dipole_filename(odf)[path_rel_op_c]        dipoles
 output_energies_filename(oef)[path_rel_op_c]      energies
+output_positions_filename(opf)[path_rel_op_c]     positions
+output_doublepos_filename[path_rel_op_c]          doublepos
 
 map_directory(md)[list_path_sep]               ../../../maps
 maps_to_use(um)[list_str]                         AmideSC
@@ -27,7 +31,7 @@ verbose[int]                                      0 1 [2] 3 4
 verbose_logfile[int]                              0 1 [2] 3 4
 prevent_overwrite[bool]                           False
 output_format[list_str]                           [bin] txt
-output_data[list_str]                             [ham] [dip] ene
+output_data[list_str]                             [ham] [dip] ene [pos] dbp
 
 neutral_charge_threshold[float]                   0.0001
 guess_bonds[bool]                                 False
@@ -42,11 +46,19 @@ stop_frame[int]                                   999999999
 
 # output units
 hamiltonian_units[str]                             [cm-1] eV
-hamiltonian_multiplier[float]                     1
+hamiltonian_multiplier[float]                      1
 energies_units[str]                                [cm-1] eV
-energies_multiplier[float]                        1
+energies_multiplier[float]                         1
 dipoles_units[str]                                 [Debye] eBohr
-dipoles_multiplier[float]                         1
+dipoles_multiplier[float]                          1
+positions_units[str]                               [Ang] Bohr nm
+positions_multiplier[float]                        1
+doublepos_units[str]                               [Ang] Bohr nm
+doublepos_multiplier[float]                        1 
+# polarizabilities -> ang^3, bohr^3
+
+couplingvis_figsize[float]                         8  # width of figure in inches
+couplingvis_dpi[int]                               100
 
 
 # test strings

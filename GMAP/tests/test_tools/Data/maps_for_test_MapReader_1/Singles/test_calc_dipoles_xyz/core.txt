@@ -21,4 +21,7 @@ dipole_data_file      xyz dipolemap.txt
 frequency_gas_phase   1200
 
 
+position       2
+doublepos_0    3
+doublepos_1    1
 

@@ -16,7 +16,7 @@ from GMAP.src.tools import MathFunctions as GM_MF
 # parameter (especially if theres multiple that are linked), the way
 # RunPar is built might not be correct. In this function, the user can
 # fix that.
-def GM_adjust_RunPars(Files, Printer, Map):
+def GM_adjust_RunPars(Files, Map):
     """Makes the necessary changes to Map.RunPar.
 
     Is expected to not return anything - return value is not caught.
@@ -27,9 +27,6 @@ def GM_adjust_RunPars(Files, Printer, Map):
         Contains all currently known paths and other file-related
         properties.
         Has to be updated after RunPars is finalized.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.
@@ -42,7 +39,7 @@ def GM_adjust_RunPars(Files, Printer, Map):
 # a detected parameter, a different choice is preferred. This function
 # allows to make a different choice, **in the same format as the file**.
 # if more complex behaviour is desired, a separate function is needed.
-def GM_adjust_map_core_raw(Files, Printer, Map):
+def GM_adjust_map_core_raw(Files, Map):
     """Makes the necessary changes to the 'raw' input read from core.txt.
 
     Is expected to not return anything - return value is not caught.
@@ -66,9 +63,6 @@ def GM_adjust_map_core_raw(Files, Printer, Map):
         Contains all currently known paths and other file-related
         properties.
         Has to be updated after RunPars is finalized.
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     Map : :class:`~GMAP.src.tools.MapReader.Map`
         The object that stores everything the program currently knows
         about this map.
@@ -90,14 +84,14 @@ def GM_change_coup_type(Map, Syst, oscix1, osc1, oscix2, osc2):
 # A place to actually do any prepwork. Any preparations should be done here
 # (and not pre-frame, for example), as at the time this function is called,
 # more information about the oscillator is available (dipole, VEG properties)
-def GM_prep_coupling(Printer, Map, Syst, oscixlist, osclist):
+def GM_prep_coupling(Map, Syst, oscixlist, osclist):
     for oscix, osc in zip(oscixlist, osclist):
         # if the map has a function specifically for this map, use it!
         if hasattr(osc.Map.code, "CP_DipDip_calc_dipole"):
             (
                 Map.dipole_vec_arr[oscix], dip_pos
             ) = osc.Map.code.CP_DipDip_calc_dipole(
-                Printer, osc.Map, Syst, osc)
+                osc.Map, Syst, osc)
         else:
             Map.dipole_vec_arr[oscix] = osc.dipole_vec
             dip_pos = osc.dipole_pos
@@ -106,7 +100,7 @@ def GM_prep_coupling(Printer, Map, Syst, oscixlist, osclist):
         Map.dipole_pos_arr[oscix] = dip_pos @ Syst.boxvects_inv
 
 
-def GM_calc_coupling(Printer, Map, Syst, hamiltonian):
+def GM_calc_coupling(Map, Syst, hamiltonian):
     for pair in Map.allpairs:
         oscix1, oscix2 = pair
         J = calc_coupling(
@@ -118,7 +112,7 @@ def GM_calc_coupling(Printer, Map, Syst, hamiltonian):
 
 
 # wrapper as not all these types are njit-friendly.
-def GM_calc_coupling_old(Printer, Map, Syst, oscix1, osc1, oscix2, osc2):
+def GM_calc_coupling_old(Map, Syst, oscix1, osc1, oscix2, osc2):
     return calc_coupling(
         oscix1, oscix2, Map.dipole_pos_arr, Map.dipole_vec_arr, Syst.boxvects)
 
@@ -157,7 +151,7 @@ def calc_coupling(oscix1, oscix2, pos_arr, vec_arr, boxvects):
 # (for AmideBB - find neighbours!)
 # (Or, for couplings that MUST get information from an oscillator,
 # check if that specific function exists)
-def GM_post_init(Files, Printer, Map, Syst):
+def GM_post_init(Files, Map, Syst):
     pass
 
 
@@ -165,7 +159,7 @@ def GM_post_init(Files, Printer, Map, Syst):
 # to be filled in, for example). GEM itself builds the coupling table at
 # this point in time. Any preparation stuff that only requires constant
 # properties (masses, charges, bonds, for example) should be done here.
-def GM_pre_run(Printer, Map, Syst):
+def GM_pre_run(Map, Syst):
     setattr(Map, "dipole_vec_arr", np.zeros((Syst.nosc, 3), dtype="float32"))
     setattr(Map, "dipole_pos_arr", np.zeros((Syst.nosc, 3), dtype="float32"))
 
@@ -179,17 +173,17 @@ def GM_pre_run(Printer, Map, Syst):
 # calculated. Any preparation stuff that requires frame-dependent
 # data should be done here. AIM calculated the CoMs here, GEM also
 # builds hamiltonian (as its contents change per frame)
-def GM_pre_frame(Printer, Map, Syst):
+def GM_pre_frame(Map, Syst):
     pass
 
 
 # A place to do things with the results from this frame. GEM itself
 # writes information like the hamiltonian to files at this point in time.
-def GM_post_frame(Printer, Map, Syst):
+def GM_post_frame(Map, Syst):
     pass
 
 
 # A place to wrap up the entire calculation. GEM itself reports on
 # calculation time and treated frames at this point in time.
-def GM_post_run(Printer, Map, Syst):
+def GM_post_run(Map, Syst):
     pass

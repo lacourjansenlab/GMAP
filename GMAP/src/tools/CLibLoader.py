@@ -2,59 +2,13 @@
 # standard lib imports
 import ctypes as ct
 
-
-class Singleton(type):
-    """Metaclassing this class makes any class a singleton.
-
-    Examples
-    --------
-
-    Singleton behaviour (Everything executed in the same session):
-
-    >>> class MyClass1(metaclass=Singleton):
-    >>>     def __init__(self, val=None):
-    >>>         self.val = val
-
-    >>> class MyClass2(metaclass=Singleton):
-    >>>     def __init__(self, val=None):
-    >>>         self.val = val
-
-    >>> MyClass1(1).val
-    1
-    >>> MyClass1(2).val
-    1
-    >>> MyClass2(3).val  # Now, instantiate other class.
-    3
-    >>> Myclass1(4).val
-    1
-    >>> MyClass2(5).val
-    3
-    >>> MyClass1().val
-    1
-    >>> MyClass2().val
-    3
-
-    Each of the classes keeps the value it got when it was instantiated.
-    As they are singletons, they are only instantiated once, and
-    subsequent calls that look like a new instance actually are not.
-
-    The different classes metaclassing this singleton don't influence
-    each other.
-
-    Finally, as they are only instantiated once, any subsequent calls
-    don't even have to supply the (mandatory) parameters.
-    """
-
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(
-                Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
+# local imports
+import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.Exceptions as GM_Ex
+from GMAP.src.tools.PrintTools import Printer
 
 
-class VEG_CLib(metaclass=Singleton):
+class VEG_CLib(metaclass=GM_CT.Singleton):
     """Stores and manages all c functions regarding electrostatics.
 
     Each (external) function in the library has it's own associated
@@ -66,9 +20,6 @@ class VEG_CLib(metaclass=Singleton):
 
     Parameters
     ----------
-    Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-        The object that allows to cleanly log and print during runtime,
-        and handle errors.
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
         The 'main' RunPars instance containing all the basic run-defining
         parameters.
@@ -93,14 +44,24 @@ class VEG_CLib(metaclass=Singleton):
         so a .dll (windows), .so (linux) or .dylib (macOS) file.
     """
 
-    def __init__(self, Printer, RunPars):
+    def __init__(self, RunPars):
         try:
-            self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
-        except Exception as ex:
-            Printer.warning(
+            msg = (
                 f"\nThe file {RunPars.VEG_clib_file} was requested to be used "
-                "as the VEG c-library. However, the file is invalid. ",
-                "CL_VG_1", True, exception=ex
+                "as the VEG c-library. However, the file is invalid. "
+            )
+            self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
+        except FileNotFoundError as ex:
+            Printer().warning(
+                msg, "CL_VG_1", True, exception=ex,
+                GMAPerrclass=GM_Ex.GmapFileNotFoundError
+            )
+        except Exception as ex:
+            # OSError for invalid file (VEG.obj)
+            # No others found yet.
+            Printer().warning(
+                msg, "CL_VG_1", True, exception=ex,
+                GMAPerrclass=GM_Ex.GmapOSError
             )
 
         self.clib.calcVEG_perres_mm.argtypes = [
@@ -110,6 +71,8 @@ class VEG_CLib(metaclass=Singleton):
             ct.c_int,  # calc_choice
             ct.POINTER(ct.c_float),  # positioins
             ct.POINTER(ct.c_float),  # charges
+            ct.POINTER(ct.c_int),  # influencer_atoms
+            ct.c_int,  # n_influencers
             ct.POINTER(ct.c_float),  # COMs
             ct.POINTER(ct.c_int),  # res_first_ix
             ct.POINTER(ct.c_int),  # res_last_ix
@@ -155,6 +118,8 @@ class VEG_CLib(metaclass=Singleton):
             oscillator.Map.Core.electrostatic_choice_c,  # calc_choice
             System.positions_c,  # positions
             System.charges_c,  # charges
+            System.influencers_atix_c,  # influencer_atoms
+            System.n_influencers,  # n_influencers
             System.residues.CoM_c,  # COMs
             System.residues.first_ix_c,  # res_first_ix
             System.residues.last_ix_c,  # res_last_ix

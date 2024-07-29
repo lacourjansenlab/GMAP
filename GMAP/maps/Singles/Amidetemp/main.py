@@ -7,5 +7,5 @@ therein) as this file.
 """
 
 
-def GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list):
+def GM_adjust_oscillators(Files, Map, Syst, oscillator_list):
     return [oscillator_list[2]]

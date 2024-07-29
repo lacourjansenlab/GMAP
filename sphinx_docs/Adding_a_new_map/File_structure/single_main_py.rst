@@ -50,14 +50,13 @@ Files
 An instance of :class:`~GMAP.src.tools.FileHandler.FileLocations`. Stores filepaths and such.
 
 
-Printer
-=======
-An instance of :class:`~GMAP.src.tools.PrintTools.Printer`. Manages prints. If the function needs to throw an error or print something else, this is the class to use.
-
-
 Syst
 ====
 An instance of :class:`~GMAP.src.tools.SystemReader.System`. Stores all available information about the MD system used. Think atom-based information on it's name, element, type, the name and number of its residue, molecule, segment. Also charges, positions, masses and such are in here. 
+
+
+.. important:: 
+    When your functions should report/print anything, **do not** use the python build-in function print. Instead, import the GMAP PrintTools module (``from GMAP.src.tools import PrintTools as GM_PT``), from which you can call an instance of the Printer class. This instance is a singleton (so all print settings for that run are already set), so don't change it! But you can have it print (``GM_PT.Printer().print``), or even trigger an error (``GM_PT.Printer().warning``). See :class:`~GMAP.src.tools.PrintTools.Printer` for detailed information on using these functions.
 
 
 *************************
@@ -68,7 +67,7 @@ The function are in the order at which they're called by the program. This means
 
 
 
-GM_adjust_RunPars(Files, Printer, Map)
+GM_adjust_RunPars(Files, Map)
 ======================================
 Makes the necessary changes to Map.RunPar.
 
@@ -109,16 +108,13 @@ Parameters
 Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
     Contains all currently known paths and other file-related properties.
     Has to be updated after RunPars is finalized.
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
 
 
 
-GM_adjust_map_core_raw(Files, Printer, Map)
+GM_adjust_map_core_raw(Files, Map)
 ===========================================
 
 Makes the necessary changes to the 'raw' input read from core.txt.
@@ -164,16 +160,13 @@ Parameters
 Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
     Contains all currently known paths and other file-related properties.
     Has to be updated after RunPars is finalized.
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
 
 
 
-GM_adjust_oscillators(Files, Printer, Map, Syst, oscillator_list)
+GM_adjust_oscillators(Files, Map, Syst, oscillator_list)
 =================================================================
 
 Finalizes the list of oscillators.
@@ -228,9 +221,6 @@ Parameters
 Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
     Contains all currently known paths and other file-related properties.
     Has to be updated after RunPars is finalized.
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -241,7 +231,7 @@ oscillator_list : list of :class:`~GMAP.src.tools.SystemReader.Oscillator`
 
 
 
-GM_post_init(Files, Printer, Map, Syst)
+GM_post_init(Files, Map, Syst)
 =======================================
 
 Allows the user to do some final initialization steps. These can include building lookup-tables, or computing some basic properties for later use. This function is called when all initialization is done (maps, MD system, etc).
@@ -299,9 +289,6 @@ Parameters
 Files : :class:`~GMAP.src.tools.FileHandler.FileLocations`
     Contains all currently known paths and other file-related properties.
     Has to be updated after RunPars is finalized.
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -310,7 +297,7 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 
-GM_pre_run(Printer, Map, Syst)
+GM_pre_run(Map, Syst)
 =======================================
 
 Allows the user to prepare the structures needed for the run.
@@ -350,9 +337,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -361,7 +345,7 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 
-GM_pre_frame(Printer, Map, Syst)
+GM_pre_frame(Map, Syst)
 =======================================
 
 Allows the user to compute information that will change for each frame.
@@ -403,9 +387,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -414,7 +395,7 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 
-GM_post_frame(Printer, Map, Syst)
+GM_post_frame(Map, Syst)
 =======================================
 
 Allows the user to finalize the frame.
@@ -454,9 +435,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -465,7 +443,7 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 
-GM_post_run(Printer, Map, Syst)
+GM_post_run(Map, Syst)
 =======================================
 
 Allows the user to do some final reports.
@@ -505,9 +483,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -567,7 +542,7 @@ osc : :class:`~GMAP.src.tools.SystemReader.Oscillator`
 
 
 
-GM_get_rotation_matrix(Printer, Map, Syst, osc)
+GM_get_rotation_matrix(Map, Syst, osc)
 ===============================================
 
 Returns the rotation matrix for the provided oscillator osc.
@@ -615,9 +590,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -634,7 +606,7 @@ rotation_matrix : `np.ndarray`
 
 
 
-GM_get_dipole_dir(Printer, Map, Syst, osc)
+GM_get_dipole_dir(Map, Syst, osc)
 ==========================================
 
 Returns the direction of the dipole vector and its position in cartesian coordinates.
@@ -678,9 +650,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -699,7 +668,7 @@ r_pos : `np.ndarray`
 
 
 
-GM_get_dipole_mag(Printer, Map, Syst, osc)
+GM_get_dipole_mag(Map, Syst, osc)
 ==========================================
 
 Returns the magnitude of the dipole vector in Debye.
@@ -741,9 +710,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -760,7 +726,7 @@ magnitude : `np.float32`
 
 
 
-GM_calculate_dipole(Printer, Map, Syst, osc)
+GM_calculate_dipole(Map, Syst, osc)
 ============================================
 
 Returns the dipole vector and its position in cartesian coordinates.
@@ -801,9 +767,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -822,7 +785,7 @@ r_pos : `np.ndarray`
 
 
 
-GM_calculate_frequency(Printer, Map, Syst, osc)
+GM_calculate_frequency(Map, Syst, osc)
 ===============================================
 
 Returns the frequency at which the oscillator is expected to give a signal (resonate), in units of cm-1.
@@ -860,9 +823,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
@@ -879,7 +839,7 @@ freq : float
 
 
 
-GM_get_VEG_ref(Printer, Map, Syst, osc)
+GM_get_VEG_ref(Map, Syst, osc)
 =================================================================
 
 Returns the centerpoint for the sphere of charges contributing to the calculated electrostatics.
@@ -920,9 +880,6 @@ Available attributes of Map
 
 Parameters
 ----------
-Printer : :class:`~GMAP.src.tools.PrintTools.Printer`
-    The object that allows to cleanly log and print during runtime,
-    and handle errors.
 Map : :class:`~GMAP.src.tools.MapReader.Map`
     The object that stores everything the program currently knows
     about this map.
