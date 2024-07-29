@@ -1599,6 +1599,9 @@ class RunPars:
     coupling_v_pair_dict : dict of str: tuple of str pairs
         For each requested coupling map, get the pairs of oscillators it
         couples
+    available_outputs : tuple of str
+        What kinds of output the user can request the program to generate.
+        Is a copy of RefPars.options["output_data"].
     """
 
     def __init__(
@@ -1610,6 +1613,7 @@ class RunPars:
             self.MainRunPars = MainRunPars
         else:
             self.MainRunPars = self
+            self.available_outputs = tuple(RefPars.options["output_data"])
 
         # Extract all 'normal' parameters
         self.get_pars(CmdPars, InPars, DefPars, RefPars)

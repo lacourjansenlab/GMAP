@@ -566,17 +566,19 @@ class SingleMap(Map):
             return
 
         # adding more core-dependent functions to self.code.
-        self.complete_code((
-            "get_VEG_ref",
-            "calculate_dipole",
-            "calculate_frequency",
-            "get_position",
-            "get_doublepos"
-        ), ({"map_": self},)*5)
+        if self.Core.electrostatic_choice:
+            self.complete_code(("get_VEG_ref",), ({"map_": self},))
+        if self.Core.can_output.intersection(["ham", "ene", "dip"]):
+            self.complete_code(("calculate_dipole",), ({"map_": self},))
+            self.complete_code(("get_dipole_mag",))
+        if self.Core.can_output.intersection(["ham", "ene"]):
+            self.complete_code(("calculate_frequency",), ({"map_": self},))
+        if self.Core.can_output.intersection(["pos", "dbp"]):
+            self.complete_code(("get_position",), ({"map_": self},))
+            self.complete_code(("get_doublepos",), ({"map_": self},))
 
         # Add in the remaining code
         self.complete_code((
-            "get_dipole_mag",
             "str_osc",
             "post_init",
             "pre_run",
@@ -595,12 +597,8 @@ class SingleMap(Map):
 
         # build remaining functions (i.e. do something with the contents
         # of core.txt)
-        functs_to_build = [
-            "get_dipole_dir"
-        ]
-        kwargs_for_build = [{
-            "map_": self
-        }]
+        functs_to_build = []
+        kwargs_for_build = []
 
         # If the code doesn't contain a function for getting the dipole, make
         # sure the two necessary keywords are there.
@@ -608,16 +606,21 @@ class SingleMap(Map):
             if not all(
                 keyword in self.rawcore for keyword in ("r_vec", "r_pos")
             ):
-                GM_PT.Printer().warning(
-                    f"\nThe file {self.corepath} does not contain a "
-                    "definition of "
-                    "r_vec and/or r_pos. These two variables have to be "
-                    "present if the map's main.py file does not contain "
-                    "the function 'GM_calculate_dipole'.",
-                    "MI_MC_6"
-                )
-                self.success = False
-                return
+                needed_by = ("ham", "dip", "ene")
+                if self.Core.can_output.intersection(needed_by):
+                    GM_PT.Printer().warning(
+                        f"\nThe file {self.corepath} does not contain a "
+                        "definition of "
+                        "r_vec and/or r_pos. These two variables have to be "
+                        "present if the map's main.py file does not contain "
+                        "the function 'GM_calculate_dipole'.",
+                        "MI_MC_6"
+                    )
+                    self.success = False
+                    return
+            else:
+                functs_to_build.append("get_dipole_dir")
+                kwargs_for_build.append({"map_": self})
 
         # check for existence of xyz_uvec
 
@@ -998,6 +1001,8 @@ class SingleCore():
         have to quit - if the map isn't used, we don't care. Later, when
         looking at the requested maps, if an unsuccessful map is
         requested, we can throw an error and quit!
+    can_output : set of str
+        The output types for which this map can be used.
     functional_group : list of list of list of list of list of str
         The more structured version of what functional group(s) this
         map operates on.
@@ -1064,6 +1069,9 @@ class SingleCore():
         rawcore = Map.rawcore
         self.success = True
 
+        self.can_output = self.parse_can_output(
+            rawcore, Map.RunPars, Map.directory)
+
         self.parse_functional_group(rawcore, Map.directory)
         if not self.success:
             return
@@ -1073,19 +1081,16 @@ class SingleCore():
         if not self.success:
             return
 
-        self.electrostatic_atoms = self.parse_estatic_atoms(
-            rawcore, Map.directory)
-        if not self.success:
-            return
-
-        if self.electrostatic_atoms:
-            self.electrostatic_choice = self.parse_estatic_choice(
+        self.electrostatic_choice = self.parse_estatic_choice(
                 rawcore, Map.directory)
-        else:
-            self.electrostatic_choice = None
         choice_in_C_dict = {None: 0, "V": 1, "E": 2, "G": 3}
         self.electrostatic_choice_c = choice_in_C_dict[
             self.electrostatic_choice]
+        if not self.success:
+            return
+
+        self.electrostatic_atoms = self.parse_estatic_atoms(
+                rawcore, Map.directory)
         if not self.success:
             return
 
@@ -1127,6 +1132,57 @@ class SingleCore():
         self.parse_positions(rawcore, Map.directory)
         if not self.success:
             return
+
+    def parse_can_output(self, rawcore, map_runpars, mapdir):
+        """Parses the input for the keyword can_output in core.txt.
+
+        This is to specify what parameters can('t) be expected, and when
+        this map shouldn't be used.
+
+        Parameters
+        ----------
+        rawcore : dict of str: list of str pairs
+            The raw contents of the file core.txt
+        map_runpars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+            The RunPars instance containing all the map-specific
+            parameters.
+        mapdir : pathlib.Path
+            The path to the directory in which the map is defined.
+
+        Returns
+        -------
+        map_can_do : list of str
+            The output types for which this map can be used.
+        """
+
+        if "can_output" not in rawcore:
+            GM_PT.Printer().warning(
+                "\nCould not find the parameter 'can_output' in the file "
+                f"{mapdir / 'core.txt'}. Without it, the map cannot "
+                "function. Please make sure it is present.",
+                "MI_MC_6"
+            )
+            self.success = False
+            return
+
+        options = map_runpars.MainRunPars.available_outputs
+        map_can_do = rawcore["can_output"]
+
+        if not set(map_can_do).issubset(set(options)):
+            difference = ", ".join(set(map_can_do) - set(options))
+            allowed = ", ".join(options)
+            GM_PT.Printer().warning(
+                "\nThe parameter 'can_output' in the file "
+                f"{mapdir / 'core.txt'} can only take specific options. The "
+                "following of those provided are not amongst the available "
+                f"options: {difference}. These are the available options: "
+                f"{allowed}. Please make sure to only include allowed ones.",
+                "MI_MC_12"
+            )
+            self.success = False
+            return
+
+        return set(map_can_do)
 
     def parse_functional_group(self, rawcore, mapdir):
         """Parses the input for keywords functional_group(_file) in core.txt
@@ -1563,6 +1619,49 @@ class SingleCore():
 
         return used_atoms
 
+    def parse_estatic_choice(self, rawcore, mapdir):
+        """Parse the choice for the parameter electrostatic_choice
+
+        Parameters
+        ----------
+        rawcore : dict of str - list of str pairs
+            The raw contents of the file core.txt
+        mapdir : pathlib.Path
+            The path to the directory in which the map is defined.
+
+        Returns
+        -------
+        estatic_choice : str
+            What electrostatic properties should be calculated for the
+            atoms given for the parameter electrostatic_atoms.
+        """
+
+        # see if it exists
+        if "electrostatic_choice" not in rawcore:
+            GM_PT.Printer().warning(
+                "\nCould not find the parameter 'electrostatic_choice' in the "
+                f"file {mapdir / 'core.txt'}. Without it, the map cannot "
+                "function. Please make sure it is present.",
+                "MI_MC_6"
+            )
+            self.success = False
+            return
+
+        choice = rawcore["electrostatic_choice"][0]
+        if choice.lower() == "none":
+            return None
+        elif choice.upper() not in ("V", "E", "G"):
+            GM_PT.Printer().warning(
+                "\nCould not interpret the choice for the parameter "
+                "'electrostatic_choice'"
+                f" in the file {mapdir / 'core.txt'}. Please make sure the "
+                "choice is either 'None', 'V', 'E', or 'G'.",
+                "MI_MC_8"
+            )
+            self.success = False
+            return
+        return choice.upper()
+
     def parse_estatic_atoms(self, rawcore, mapdir):
         """Parse the choice for the parameter electrostatic_atoms
 
@@ -1583,6 +1682,8 @@ class SingleCore():
 
         # see if it exists
         if "electrostatic_atoms" not in rawcore:
+            if not self.electrostatic_choice:
+                return []
             GM_PT.Printer().warning(
                 "\nCould not find the parameter 'electrostatic_atoms' in the "
                 f"file {mapdir / 'core.txt'}. Without it, the map cannot "
@@ -1628,53 +1729,6 @@ class SingleCore():
 
         return estatic_atoms
 
-    def parse_estatic_choice(self, rawcore, mapdir):
-        """Parse the choice for the parameter electrostatic_choice
-
-        Parameters
-        ----------
-        rawcore : dict of str - list of str pairs
-            The raw contents of the file core.txt
-        mapdir : pathlib.Path
-            The path to the directory in which the map is defined.
-
-        Returns
-        -------
-        estatic_choice : str
-            What electrostatic properties should be calculated for the
-            atoms given for the parameter electrostatic_atoms.
-        """
-
-        # see if it exists
-        if "electrostatic_choice" not in rawcore:
-            # if there are no atoms for which to calculate estatic properties,
-            # it is okay if this parameter is missing.
-            if not self.electrostatic_atoms:
-                return None
-
-            # If there are such atoms, this parameter is required.
-            GM_PT.Printer().warning(
-                "\nCould not find the parameter 'electrostatic_choice' in the "
-                f"file {mapdir / 'core.txt'}. Without it, the map cannot "
-                "function. Please make sure it is present.",
-                "MI_MC_6"
-            )
-            self.success = False
-            return
-
-        choice = rawcore["electrostatic_choice"][0]
-        if choice.upper() not in ("V", "E", "G"):
-            GM_PT.Printer().warning(
-                "\nCould not interpret the choice for the parameter "
-                "'electrostatic_choice'"
-                f" in the file {mapdir / 'core.txt'}. Please make sure the "
-                "choice is either 'V', 'E', or 'G'.",
-                "MI_MC_8"
-            )
-            self.success = False
-            return
-        return choice.upper()
-
     def parse_local_atoms(self, rawcore, mapdir):
         """Parse the choice for the parameter electrostatic_atoms
 
@@ -1695,6 +1749,8 @@ class SingleCore():
 
         # see if it exists
         if "local_atoms" not in rawcore:
+            if not self.electrostatic_choice:
+                return []
             GM_PT.Printer().warning(
                 "\nCould not find the parameter 'local_atoms' in the "
                 f"file {mapdir / 'core.txt'}. Without it, the map cannot "
@@ -1759,9 +1815,7 @@ class SingleCore():
         if "type" not in rawcore:
             # type is only used for rotating VEG matrix (actualy, only
             # the EG part of it)
-            if not self.electrostatic_atoms:
-                return None
-            if self.electrostatic_choice == "V":
+            if self.electrostatic_choice in (None, "V"):
                 return None
 
             GM_PT.Printer().warning(
@@ -1810,6 +1864,8 @@ class SingleCore():
                 return True
 
         if "VEG_reference" not in rawcore:
+            if not self.electrostatic_choice:
+                return None
             GM_PT.Printer().warning(
                 "\nCould not find the parameter 'VEG_reference' in the "
                 f"file {mapdir / 'core.txt'}. Without it, the map cannot "
@@ -1881,6 +1937,9 @@ class SingleCore():
         # always be given.
 
         if "dipole_gas_phase" not in rawcore:
+            needed_by = ("ham", "dip", "ene")
+            if self.can_output.isdisjoint(needed_by):
+                return None, None
             GM_PT.Printer().warning(
                 "\nCould not find the parameter 'dipole_gas_phase' in the "
                 f"file {mapdir / 'core.txt'}. Without it, the map cannot "
@@ -2068,6 +2127,9 @@ class SingleCore():
         """
 
         if "frequency_gas_phase" not in rawcore:
+            needed_by = ("ham", "ene")
+            if self.can_output.isdisjoint(needed_by):
+                return None
             GM_PT.Printer().warning(
                 "\nCould not find the parameter 'frequency_gas_phase' in the "
                 f"file {mapdir / 'core.txt'}. Without it, the map cannot "
@@ -2363,6 +2425,9 @@ class SingleCore():
 
     def parse_positions(self, rawcore, mapdir):
         for parname in "position", "doublepos_0", "doublepos_1":
+            needed_by = ("pos", "dbp")
+            if self.can_output.isdisjoint(needed_by):
+                return ""
             if parname not in rawcore:
                 GM_PT.Printer().warning(
                     f"\nCould not find the parameter '{parname}' in the "
@@ -2769,6 +2834,20 @@ def manage_maps_singles(Files, RunPars, mapdict):
                 "either does not exist, or the map was loaded unsuccessfully "
                 "due to issues with its definition.",
                 "MI_MM_1", True, GMAPerrclass=GM_Ex.GmapKeyError
+            )
+
+    for map_choice in RunPars.maps_to_use:
+        map_ = mapdict[map_choice]
+        if not set(RunPars.output_data).issubset(map_.Core.can_output):
+            difference = ", ".join(
+                set(RunPars.output_data) - map_.Core.can_output)
+            goal = ", ".join(RunPars.output_data)
+            GM_PT.Printer().warning(
+                f"\nThe map {map_choice} was requested for use in calculating "
+                f"{goal}. However, it cannot calculate the following output "
+                f"type(s): {difference}. Please either calculate fewer "
+                "properties, or use a different map.",
+                "MI_MM_5", True, GMAPerrclass=GM_Ex.GmapKeyError
             )
 
     requested_mapdict = {

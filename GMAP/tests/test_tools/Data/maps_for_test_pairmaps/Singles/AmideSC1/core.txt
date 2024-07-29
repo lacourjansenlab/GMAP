@@ -18,6 +18,8 @@
 # add_corefile       proteincore.txt
 
 
+can_output         ham ene dip pos dbp
+
 
 # -----------------------
 

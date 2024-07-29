@@ -1,5 +1,7 @@
 functional_group       [A] A1 A2 A3(1) [B] B1(1) B2 B3
 
+can_output         ham ene dip pos
+
 used_atoms             1 2 3 4
 electrostatic_atoms    2 3
 electrostatic_choice   E

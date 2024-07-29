@@ -11,6 +11,8 @@
 # -----------------------------------------------------------------------------
 
 
+can_output  ham ene dip
+
 functional_group [CYS] N H CA C O CB SG(1) [CYS] N H CA C O CB SG(1)
 
 
@@ -34,10 +36,6 @@ VEG_reference  CoM  1 3
 
 dipole_gas_phase      0.2
 frequency_gas_phase   1500
-
-position       0
-doublepos_0    0
-doublepos_1    3
 
 
 

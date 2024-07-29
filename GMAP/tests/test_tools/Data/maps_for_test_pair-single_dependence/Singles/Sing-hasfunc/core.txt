@@ -1,6 +1,8 @@
 
 add_corefile       proteincore.txt
 
+can_output         ham ene dip pos dbp
+
 functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
 functional_group        [GLN]    CD  OE1  CG  NE2  HE21  HE22
 # functional_group_file   funcgroup.txt

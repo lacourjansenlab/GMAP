@@ -1,4 +1,6 @@
 
+can_output  ham ene dip pos dbp
+
 # does not cover prepros
 functional_group [anyprot] N CA C(1) O [anyprot] N(1) H CA C
 

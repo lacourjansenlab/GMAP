@@ -2,6 +2,8 @@
 
 functional_group [CYS] N H CA C O CB SG(1) [CYS] N H CA C O CB SG(1)
 
+can_output         ham ene dip pos dbp
+
 # add_corefile       proteincore.txt
 
 #  CB SG CB SG

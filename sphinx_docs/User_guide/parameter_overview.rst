@@ -189,6 +189,7 @@ output_format
 In what format the output files should be created. Bin for binary format, txt for text. Both are in a format that NISE can read them. In case multiple options are provided, a file will be created in each requested format.
 
 
+.. _UserGuide_page_parameter_overview_output_data:
 output_data
 ===========
 | (no shorthand available)

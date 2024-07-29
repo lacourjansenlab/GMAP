@@ -1,3 +1,6 @@
+
+can_output         ham ene dip pos dbp
+
 functional_group [CYS] N H CA C O CB SG [DEF] ND HD CAD CD OD CBD SGD
 
 functional_group_bonds SG-13

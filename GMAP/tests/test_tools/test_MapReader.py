@@ -1627,13 +1627,13 @@ class TestSingleCore:
 
     def test_MI_MC_6(self, capfd):
         self.basis_test_MI_MC(
-            "MI_MC_6", capfd, "test_MI_MC_6_1", "estatic_atoms")
+            "MI_MC_6", capfd, "test_MI_MC_6_1", "estatic_choice")
         self.basis_test_MI_MC(
-            "MI_MC_6", capfd, "test_MI_MC_6_2", "estatic_choice")
+            "MI_MC_6", capfd, "test_MI_MC_6_2", "estatic_atoms")
         self.basis_test_MI_MC(
-            "MI_MC_6", capfd, "test_MI_MC_6_3", "type")
+            "MI_MC_6", capfd, "test_MI_MC_6_3", "local_atoms")
         self.basis_test_MI_MC(
-            "MI_MC_6", capfd, "test_MI_MC_6_4", "local_atoms")
+            "MI_MC_6", capfd, "test_MI_MC_6_4", "type")
         self.basis_test_MI_MC(
             "MI_MC_6", capfd, "test_MI_MC_6_6", "VEG_reference")
         self.basis_test_MI_MC(
@@ -1645,11 +1645,11 @@ class TestSingleCore:
 
     def test_MI_MC_7(self, capfd):
         self.basis_test_MI_MC(
-            "MI_MC_7", capfd, "test_MI_MC_7_1", "estatic_atoms")
+            "MI_MC_7", capfd, "test_MI_MC_7_1", "estatic_choice")
         self.basis_test_MI_MC(
-            "MI_MC_7", capfd, "test_MI_MC_7_2", "estatic_choice")
+            "MI_MC_7", capfd, "test_MI_MC_7_2", "local_atoms")
         self.basis_test_MI_MC(
-            "MI_MC_7", capfd, "test_MI_MC_7_3", "VEG_reference")
+            "MI_MC_7", capfd, "test_MI_MC_7_3", "type")
         self.basis_test_MI_MC(
             "MI_MC_7", capfd, "test_MI_MC_7_4", "frequency")
         self.basis_test_MI_MC(
@@ -1663,13 +1663,13 @@ class TestSingleCore:
 
     def test_MI_MC_8(self, capfd):
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_1", "estatic_atoms")
+            "MI_MC_8", capfd, "test_MI_MC_8_1", "estatic_choice")
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_2", "estatic_choice")
+            "MI_MC_8", capfd, "test_MI_MC_8_2", "estatic_atoms")
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_3", "type")
+            "MI_MC_8", capfd, "test_MI_MC_8_3", "local_atoms")
         self.basis_test_MI_MC(
-            "MI_MC_8", capfd, "test_MI_MC_8_4", "local_atoms")
+            "MI_MC_8", capfd, "test_MI_MC_8_4", "type")
         self.basis_test_MI_MC(
             "MI_MC_8", capfd, "test_MI_MC_8_5", "VEG_reference")
         self.basis_test_MI_MC(
@@ -2012,46 +2012,42 @@ def basic_setup(
 def basic_setup_core(map_, finish_before=None):
     CoreBase = GM_MR.SingleCore.__new__(GM_MR.SingleCore)
     setattr(CoreBase, "success", True)
+
+    setattr(CoreBase, "can_output", CoreBase.parse_can_output(
+        map_.rawcore, map_.RunPars, map_.directory))
+    if finish_before == "func_group":
+        return CoreBase
+
     CoreBase.parse_functional_group(map_.rawcore, map_.directory)
     if finish_before == "used_atoms":
         return CoreBase
 
     setattr(CoreBase, "used_atoms", CoreBase.parse_used_atoms(
-        map_.rawcore, map_.directory
-    ))
-    if finish_before == "estatic_atoms":
-        return CoreBase
-
-    setattr(CoreBase, "electrostatic_atoms", CoreBase.parse_estatic_atoms(
-        map_.rawcore, map_.directory
-    ))
+        map_.rawcore, map_.directory))
     if finish_before == "estatic_choice":
         return CoreBase
 
     setattr(CoreBase, "electrostatic_choice", CoreBase.parse_estatic_choice(
-        map_.rawcore, map_.directory
-    ))
-    if finish_before == "type":
+        map_.rawcore, map_.directory))
+    if finish_before == "estatic_atoms":
         return CoreBase
 
-    setattr(CoreBase, "type", CoreBase.parse_type(
-        map_.rawcore, map_.directory
-    ))
-
+    setattr(CoreBase, "electrostatic_atoms", CoreBase.parse_estatic_atoms(
+        map_.rawcore, map_.directory))
     if finish_before == "local_atoms":
         return CoreBase
 
     setattr(CoreBase, "local_atoms", CoreBase.parse_local_atoms(
-        map_.rawcore, map_.directory
-    ))
+        map_.rawcore, map_.directory))
+    if finish_before == "type":
+        return CoreBase
 
+    setattr(CoreBase, "type", CoreBase.parse_type(
+        map_.rawcore, map_.directory))
     if finish_before == "VEG_reference":
         return CoreBase
 
-    CoreBase.check_VEG_reference(
-        map_.rawcore, map_.directory
-    )
-
+    CoreBase.check_VEG_reference(map_.rawcore, map_.directory)
     if finish_before == "dipoles":
         return CoreBase
 

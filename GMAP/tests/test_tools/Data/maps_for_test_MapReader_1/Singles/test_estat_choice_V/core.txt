@@ -1,6 +1,8 @@
 functional_group [CYS] N H CA C O CB SG(1) [DEF] ND HD CAD CD OD CBD SGD(1)
 functional_group [A,B] A11,A12 A2 A3 A41,A42 A5 A6 A7 A8 A9 A10 A11 A12 A13 A14
 
+can_output         ham ene dip pos dbp
+
 used_atoms             5 3 7 1 13 2 11
 electrostatic_atoms    2 3
 electrostatic_choice   V

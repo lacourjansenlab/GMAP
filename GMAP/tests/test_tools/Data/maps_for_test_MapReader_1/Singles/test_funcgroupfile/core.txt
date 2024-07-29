@@ -1,3 +1,7 @@
+
+
+can_output         ham ene dip pos dbp
+
 functional_group_file   funcgroup.txt
 
 requires_bonds False

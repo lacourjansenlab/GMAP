@@ -336,6 +336,10 @@ MI_MC_11
 --------
 There was an issue with the specification for the keyword 'valid_combinations' for one of the maps. [Cite relevant manual page!!]
 
+MI_MC_12
+--------
+The mentioned parameter can only take a limited amount of options, and one of those used is not one of them. [Cite relevant manual page!!]
+
 
 MI_MM
 ======
@@ -355,6 +359,10 @@ Certain couplings maps might indicate they cannot be used for certain types of o
 MI_MM_4
 -------
 Certain couplings maps might indicate they cannot be used for certain types of couplings. Make sure you only use a map for its intended purpose!
+
+MI_MM_5
+-------
+Certain singles maps might indicate they cannot be used for certain types of outputs. Make sure you only use a map for its intended purpose!
 
 
 **********************
