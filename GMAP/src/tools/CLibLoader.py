@@ -71,6 +71,8 @@ class VEG_CLib(metaclass=GM_CT.Singleton):
             ct.c_int,  # calc_choice
             ct.POINTER(ct.c_float),  # positioins
             ct.POINTER(ct.c_float),  # charges
+            ct.POINTER(ct.c_int),  # influencer_atoms
+            ct.c_int,  # n_influencers
             ct.POINTER(ct.c_float),  # COMs
             ct.POINTER(ct.c_int),  # res_first_ix
             ct.POINTER(ct.c_int),  # res_last_ix
@@ -116,6 +118,8 @@ class VEG_CLib(metaclass=GM_CT.Singleton):
             oscillator.Map.Core.electrostatic_choice_c,  # calc_choice
             System.positions_c,  # positions
             System.charges_c,  # charges
+            System.influencers_atix_c,  # influencer_atoms
+            System.n_influencers,  # n_influencers
             System.residues.CoM_c,  # COMs
             System.residues.first_ix_c,  # res_first_ix
             System.residues.last_ix_c,  # res_last_ix

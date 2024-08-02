@@ -161,6 +161,68 @@ class TestVClib:
         ]], dtype="float32").sum(2).round(10)
         assert np.all(oscillator.VEGout[:, 4:].round(10) == ans)
 
+    def test_calcVEG_perres_mm_influencers(self):
+        cmdline = ["-md", "maps\\;"]
+        (
+            Files, RunPars, RefPars, DefPars, InPars,
+            CmdPars, mapdict, pairs_mapdict
+        ) = parameter_getter("AmideSC", cmdline)
+
+        VEGlib = GM_CL.VEG_CLib(RunPars)
+        RunPars.estatic_range = np.float32(60)
+        RunPars.estatic_smooth_range = np.float32(5)
+
+        # same system as the previous test, but 1 residue is now not an
+        # influencer
+        System = get_System_1()
+        System.influencers_atix_c = np.ctypeslib.as_ctypes(
+            np.array([0, 1, 2, 3], dtype="int32"))
+        System.n_influencers = np.int32(4)
+        oscillator = get_oscillator_1()
+
+        VEGlib.calcVEG_perres_mm(System, RunPars, oscillator)
+
+        # Do not remove!!! These are the calculations to get to the correct
+        # answer!
+        # NNdtIS = not needed due to influencer setting
+
+        # positions = np.array([
+        #     [8, 28, 68],
+        #     [11, 31, 71],
+        #     [28, 68, 8],
+        #     [31, 71, 11],
+        #     [68, 8, 28],
+        #     [71, 11, 31]
+        # ], dtype="float32")
+        # so, 4 points to take dist to. VEGref = 10, 30, 70
+        # CoM's = (30, 70, 10), (NNdtIS)
+        # dists = sqrt(20**2 + 40**2 + 40**2), NNdtIS
+        # dists = 60, NNdtIS
+        # dists_at_res2 = sqrt(18**2 + 38**2 + 38**2),  ch=1
+        #                 sqrt(21**2 + 41**2 + 41**2)   ch=-1
+        #               = 56.6745092612, 61.6684684421
+        # weights_res2 = 1, 0.16630631158
+        # res3 NNdtIS
+
+        # atdiff_0-2 = (20, 40, 40), (23, 43, 43)
+        # atdiff_0_3 = NNdtIS
+        # atdist_0 = 60, 65.0153827951, NNdtIS
+        # pot_0 = 1/60 + -0.166/65.015 + NNdtIS
+
+        # atdiff_1_2 = (17, 37, 37), (20, 40, 40)
+        # atdiff_1_3 = NNdtIS
+        # atdist_1 = 55.01817788139, 60, NNdtIS
+        # pot_1 = 1/55.018 + -0.166/60 + NNdtIS
+
+        # potentials
+        ans = np.array([
+            [0.01666666666667, 0.01817581095026],
+            [-0.002557953278597537, -0.0027717718596666],
+            [0, 0],  # NNdtIS
+            [0, 0]  # NNdtIS
+        ], dtype="float32").sum(0).round(7)
+        assert np.all(oscillator.VEGout[:, 0].round(7) == ans)
+
     def test_CL_VG_1(self):
         """This test will fail if the singletons are not cleared!!!!
         """
@@ -199,6 +261,8 @@ def get_System_1():
     masses = np.array([1, 2, 1, 2, 1, 2], dtype="float32")
     # charges = np.array([1, -1, 0, 1, 0, 0], dtype="float32")
     charges = np.array([1, -1, 1, -1, 1, -1], dtype="float32")
+    influencers = np.array([0, 1, 2, 3, 4, 5], dtype="int32")  # all atoms!
+    n_influencers = np.int32(6)
     boxvects = np.array([
             [100, 0, 0],
             [0, 100, 0],
@@ -218,6 +282,8 @@ def get_System_1():
     return GM_CT.CustomClass(**{
         "positions_c": np.ctypeslib.as_ctypes(np.ravel(positions)),
         "charges_c": np.ctypeslib.as_ctypes(charges),
+        "influencers_atix_c": np.ctypeslib.as_ctypes(influencers),
+        "n_influencers": n_influencers,
         "residues": GM_CT.CustomClass(**{
             "CoM_c": np.ctypeslib.as_ctypes(np.ravel(residues_CoM)),
             "first_ix_c": np.ctypeslib.as_ctypes(res_first_ix),

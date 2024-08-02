@@ -352,6 +352,8 @@ class System:
         self.influencers_atix = np.asarray(
             self.influencers_atix, dtype=np.int32
         )
+        self.n_influencers = np.shape(self.influencers_atix)[0]
+        self.influencers_atix_c = np.ctypeslib.as_ctypes(self.influencers_atix)
 
     def find_oscillators(self, Files, RunPars):
         """Finds all the oscillators in the MD system

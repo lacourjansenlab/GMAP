@@ -12,8 +12,9 @@ of points.
     extern "C" {
         __declspec(dllexport) void calcVEG_perres_mm(
             int *tocalc, int n_osc_ats, float *spherepos, int calc_choice,
-            float *positions,
-            float *charges, float *COMs, int *res_first_ix, int *res_last_ix,
+            float *positions, float *charges, int *influencer_atoms,
+            int n_influencers, float *COMs, int *res_first_ix,
+            int *res_last_ix,
             int n_res, int *local_atoms, int n_locals, float r_sphere,
             float r_smooth, float *halfbox, float *boxdims, float *out
         );
@@ -248,7 +249,6 @@ extern "C" {
         out[oscix*10 + 8] -= diffX * diffZ * prefac2;
         out[oscix*10 + 9] -= diffY * diffZ * prefac2;
     }
-}
 
     /*
     Calculate the potential for an oscillator. The sphere determining whether
@@ -258,6 +258,7 @@ extern "C" {
 
     !! local_atoms MUST be sorted for this function to work (fast)!
     */
+
     void calcVEG_perres_mm(
         // single-osc parameters
         int *tocalc,  // the sys-ix of the atoms whose properties are requested
@@ -268,6 +269,8 @@ extern "C" {
         // system parameters
         float *positions, // positions of all atoms in the MD system
         float *charges,  // charges of all atoms in the MD system
+        int *influencer_atoms,  // all atoms (indices) that are influencers
+        int n_influencers,  // the amount of influencers
         
         // residue parameters
         float *COMs,  // the COM of each residue in the system
@@ -318,6 +321,12 @@ extern "C" {
             indices into this function are guaranteed to exist in this
             array. The size of this array is exactly one third that
             of positions.
+        influencer_atoms : int[n_influencers]
+            The indices of the atoms that are allowed to influence the
+            VEG calculated in this function.
+        n_influencers : int
+            The amount of atoms that are considered influencers. This is the
+            length of the influencer_atoms array.
         COMs : float[3 * n_res]
             The centre of mass of each residue present in the MD system
         res_first_ix : int[n_res]
@@ -385,9 +394,12 @@ extern "C" {
         puredist = r_sphere - (r_smooth * 0.5);
         puredist2 = puredist * puredist;
 
-        int resnum, local_search;
+        int resnum, local_search, influencer_search;
         local_search = 0;
+        influencer_search = 0;
         float diff[3], dist, dist2, smooth_factor, weighted_charge;
+
+        // analyze all surrounding charges on a per-residue basis
         for (resnum = 0; resnum < n_res; resnum++) {
             // find distance to residue
             PBC_diff_cubic(
@@ -398,11 +410,21 @@ extern "C" {
             if (dist2 > maxdist2) {
                 continue;
             }
+
+            // Loop over the separate atoms of the influencing residue
             for (
                 sysix = res_first_ix[resnum];
                 sysix <= res_last_ix[resnum];
                 sysix++
             ) {
+                // if this atom is NOT in influencers, skip!
+                if (!in_ordered_array_int(
+                    influencer_atoms, sysix, influencer_search, n_influencers,
+                    &influencer_search)
+                ) {
+                    continue;
+                }
+
                 // if this atom is in local_atoms, skip!
                 if (in_ordered_array_int(
                     local_atoms, sysix, local_search, n_locals, &local_search)
@@ -410,7 +432,7 @@ extern "C" {
                     continue;
                 }
 
-                // Use this part for smoothing on perat basis
+                // Smoothing on per-atom basis
                 PBC_diff_cubic(
                     spherepos, &positions[sysix * 3],
                     halfbox, boxdims, diff);
@@ -420,12 +442,7 @@ extern "C" {
                 }
 
                 weighted_charge = get_weighted_charge(
-                    dist2, puredist, charges, sysix, r_smooth
-                );
-
-                // Use this line when smoothing on perres basis
-                // weighted_charge = charges[sysix] * smooth_factor;
-
+                    dist2, puredist, charges, sysix, r_smooth);
 
                 // loop over the atoms of the oscillator
                 for (oscix = 0; oscix < n_osc_ats; oscix++) {
@@ -447,3 +464,4 @@ extern "C" {
 
         free(refpos);  // free(diff)
     }
+}
