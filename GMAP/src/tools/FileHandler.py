@@ -557,3 +557,30 @@ def clear_single(RunPars, fname):
     if "txt" in RunPars.output_format:
         with open(fname.parent / f"{fname.name}.txt", "w") as _:
             pass
+
+
+def write_legend(RunPars, System):
+    """Writes the contents of the legend file.
+
+    The purpose of the legend file is to specify what the other output
+    files contain. Each file saves some property of the oscillators of
+    the system, but nowhere can you find what oscillators are actually
+    in the file. This file solves that. To make sure the contents are
+    valuable for all kinds of systems/oscillators, each map can specify
+    how it wants its oscillator denoted in this file (and general print
+    outputs of the program) using the function GM_str_osc in the file
+    main.py of the map.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The class containing all the information on the system of the
+        MD trajectory.
+    """
+
+    with open(RunPars.output_legend_filename, "w") as fhand:
+        for oscix, oscillator in enumerate(System.oscillators):
+            fhand.write(f"at index {oscix}: {oscillator}\n")

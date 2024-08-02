@@ -5,6 +5,8 @@ source_directory                GMAP/sourcefiles
 VEG_clib_file                   VEG.dll
 log_filename                    log.log
 
+output_legend_filename          legend.txt
+output_couplingvis_filename     couplingvisualization.pdf
 output_estatics_filename        estatics.txt
 output_hamiltonian_filename     hamiltonian
 output_dipole_filename          dipoles
@@ -47,4 +49,7 @@ positions_units               Ang
 positions_multiplier          1
 doublepos_units               Ang
 doublepos_multiplier          1
+
+couplingvis_figsize           8  # width of figure in inches
+couplingvis_dpi               100
 
