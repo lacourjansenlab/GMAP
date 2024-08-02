@@ -260,6 +260,10 @@ MI_MR_6
 -------
 An extra core file was requested to be appended to the given core file. However, no file of the requested name could be found. If the developer did not provide additional instructions on extra files to add, this is an issue that most likely needs to be fixed by the developer of this map.
 
+MI_MR_7
+-------
+A prerequisite part of the map was missing. This is an issue that most likely needs to be fixed by the developer of this map.
+
 
 MI_MC
 =====

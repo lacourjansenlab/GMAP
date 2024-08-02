@@ -375,6 +375,80 @@ def placeholder_GM_calculate_frequency(Map, Syst, osc):
         osc.VEGout, Map.Core.frequency_data_array_linear))
 
 
+def GM_calculate_raman(Map, Syst, osc):
+    """Returns the raman tensor as a length-6 vector: (xx, xy, xz, yy, yz, zz)
+
+    This method can easily be adapted by other maps for working with raman
+    tensors. Make sure that rotation_matrix is an orthogonal 3*3 numpy array
+    (so, the vectors making it up are orthonormal).
+    Then, the raman_tensor_local can be freely chosen.
+
+    As this is so easily adaptable, this could also be made a standard
+    built-in function for GMAP. The only reason this is not the case
+    currently, is because raman tensors from maps like this are not
+    common yet, so a 'usual' way of determining them has not yet been
+    created. Maybe, they won't stay of fixed magnitude in local coordinates
+    forever, but depend on sth like VEG or atomic distances in the future.
+    """
+
+    # the rotation matrix is available as long as the map specifies
+    # estatic_choice to be E or G (which is the case here). It is made
+    # available immediately at the beginning of the frame.
+    COvec = osc.roation_matrix[0, :]
+    CNvec = osc.roation_matrixrot_mat[1, :]
+    Zvec = osc.roation_matrixrot_mat[2, :]
+
+    theta = 34*np.pi/180
+    raman_tensor_local = np.diag([20, 4, 1])
+
+    rotation_matrix = np.zeros((3, 3))
+    rotation_matrix[0] = np.cos(theta) * COvec - np.sin(theta) * CNvec
+    rotation_matrix[1] = np.sin(theta) * COvec + np.cos(theta) * CNvec
+    rotation_matrix[2] = Zvec
+
+    raman_tensor_system = (
+        rotation_matrix.T @ raman_tensor_local @ rotation_matrix)
+
+    # old (AIM) version:
+    # def tp(vect1):  # tensor product
+    #     tensor = np.zeros((6), dtype='float32')
+    #     tensor[:3] = vect1[0]*vect1
+    #     tensor[3:5] = vect1[1]*vect1[1:]
+    #     tensor[5] = vect1[2]*vect1[2]
+    #     return tensor
+    # Rvec = tp(Rtens[0]) * 20 + tp(Rtens[1]) * 4  + tp(Rtens[2])
+    # (here, Rtens is what the current version calls rotation_matrix)
+
+    # now, to numpify this, first, redefine tp.
+    # def tp(vect1):
+    #     return (vect1[:, None] * vect1[None, :])[np.triu_indices(3)]
+
+    # then, we can do the entire array at once:
+    # consts = np.array([20, 4, 1])
+    # Rvec = (
+    #     Rtens[:, :, None] * Rtens[:, None, :] * consts[:, None, None]
+    # ).sum(axis=0)[np.triu_indices(3)]
+
+    # in summation notation (forgetting the triu-indices for flattening):
+    # with A_ij == A[i, j]
+    # Rvec[i, j] = sum{k=1 -> k=3}(Rtens[k, i] * Rtens[k, j] * consts[k])
+
+    # now, is this equivalent to the new method? Lets derive the summation
+    # notation for the new method! (R = rotation matrix, A = local raman tens)
+    # Assuming A is diagonal (so only a[i, i] exist)
+    # Rvec = R.T @ A @ R
+    # Rvec[i, j] = sum{k=1 -> k=3}(R.T[i, k] * (A @ R)[k, j])
+    #            = sum{k=1 -> k=3}(R[k, i] * A[k, k] * R[k, j])
+    # this is the same as the summation for the AIM version!
+
+    # footnote: what is (A @ R)[k, j]?
+    # write it out: (A @ R)[i, j] = sum{k=1 -> k=3}(A[i, k] * R[k, j])
+    # but, as only k==i exists for A (rest is 0), this becomes:
+    # (A @ R)[i, j] = A[i, i] * R[i, j]
+
+    return raman_tensor_system[np.triu_indices(3)]
+
+
 # !!!! ATTENTION !!!! - THIS IS A PLACEHOLDER!
 # GMAP will not actually 'see' this function and use it. If you want to
 # have this function, just use `def GM_get_VEG_ref` - see the manual for

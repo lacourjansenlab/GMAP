@@ -14,6 +14,7 @@ output_estatics_filename        estatics.txt
 output_hamiltonian_filename     hamiltonian
 output_dipole_filename          dipoles
 output_energies_filename        energies
+output_raman_filename           raman_tensor
 output_positions_filename       positions
 output_doublepos_filename       doublepos
 
@@ -47,6 +48,8 @@ energies_units                cm-1
 energies_multiplier           1
 dipoles_units                 Debye
 dipoles_multiplier            1
+raman_units                   none
+raman_multiplier              1
 positions_units               Ang
 positions_multiplier          1
 doublepos_units               Ang

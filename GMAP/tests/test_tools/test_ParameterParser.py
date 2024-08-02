@@ -4,17 +4,17 @@ src/tools/ParameterParser.py.
 
 Missing tests:
 
-(@ July 22nd '24):
-370-371, 431, 1110, 1220, 1671-1672, 2045 (8 missed statements)
+(@ August 2nd '24):
+370-371, 431, 1133, 1243, 1756-1757, 2130 (8 missed statements)
 
 (CUHTAT - currently unknown how to access this )
 - SU_FP_7 (CUHTAT)   (370-371)
 - RefPars parse choice - unknown dtype (CUHTAT)  (431)
-- RawPars verify choice - unknown dtype (CUHTAT)  (1110)
+- RawPars verify choice - unknown dtype (CUHTAT)  (1133)
 - RawPars checkparexist - variable may occur multiple times, but is also
-  not expected in deffiles (N/A in refpars)  (1220)
-- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1671-1672)
-- RunPars framenums - empty source (CUHTAT)   (2045)
+  not expected in deffiles (N/A in refpars)  (1243)
+- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1756-1757)
+- RunPars framenums - empty source (CUHTAT)   (2130)
 """
 
 # standard library imports
@@ -47,10 +47,11 @@ class TestRefPars:
             "verbose": [0, 1, 2, 3, 4],
             "verbose_logfile": [0, 1, 2, 3, 4],
             "output_format": ["bin", "txt"],
-            "output_data": ["ham", "dip", "ene", "pos", "dbp"],
+            "output_data": ["ham", "dip", "ene", "pos", "dbp", "ram"],
             "hamiltonian_units": ["cm-1", "eV"],
             "energies_units": ["cm-1", "eV"],
             "dipoles_units": ["Debye", "eBohr"],
+            "raman_units": ["none"],
             "positions_units": ["Ang", "Bohr", "nm"],
             "doublepos_units": ["Ang", "Bohr", "nm"],
             "str_test_choice": ["pick_this", "not_this", "or_this"],
@@ -81,6 +82,7 @@ class TestRefPars:
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],
             "output_energies_filename": [Path("energies")],
+            "output_raman_filename": [Path("raman_tensor")],
             "output_positions_filename": [Path("positions")],
             "output_doublepos_filename": [Path("doublepos")],
             "map_directory": [Path("../../../maps")],
@@ -111,6 +113,8 @@ class TestRefPars:
             "energies_multiplier": [1],
             "dipoles_units": ["Debye"],
             "dipoles_multiplier": [1],
+            "raman_units": ["none"],
+            "raman_multiplier": [1],
             "positions_units": ["Ang"],
             "positions_multiplier": [1],
             "doublepos_units": ["Ang"],
@@ -156,6 +160,7 @@ class TestRefPars:
             "oef": "output_energies_filename",
             "ohf": "output_hamiltonian_filename",
             "odf": "output_dipole_filename",
+            "orf": "output_raman_filename",
             "opf": "output_positions_filename",
             "md": "map_directory",
             "um": "maps_to_use",
@@ -195,6 +200,7 @@ class TestRefPars:
                 "output_legend_filename", "output_couplingvis_filename",
                 "output_estatics_filename", "output_hamiltonian_filename",
                 "output_dipole_filename", "output_energies_filename",
+                "output_raman_filename",
                 "output_positions_filename", "output_doublepos_filename"
             ],
             "path_test_dir1": ["path_test_rel11"],
@@ -224,6 +230,7 @@ class TestRefPars:
             "output_hamiltonian_filename",
             "output_dipole_filename",
             "output_energies_filename",
+            "output_raman_filename",
             "output_positions_filename",
             "output_doublepos_filename",
             "map_directory",
@@ -246,6 +253,7 @@ class TestRefPars:
             "output_hamiltonian_filename",
             "output_dipole_filename",
             "output_energies_filename",
+            "output_raman_filename",
             "output_positions_filename",
             "output_doublepos_filename",
             "path_test_free_new",
@@ -274,6 +282,7 @@ class TestRefPars:
             "hamiltonian_multiplier",
             "energies_multiplier",
             "dipoles_multiplier",
+            "raman_multiplier",
             "positions_multiplier",
             "doublepos_multiplier",
             "couplingvis_figsize",
@@ -301,6 +310,7 @@ class TestRefPars:
             "hamiltonian_units",
             "energies_units",
             "dipoles_units",
+            "raman_units",
             "positions_units",
             "doublepos_units",
             "str_test_free",
@@ -486,6 +496,7 @@ class TestRawPars:
             "output_hamiltonian_filename": [Path("hamiltonian")],
             "output_dipole_filename": [Path("dipoles")],
             "output_energies_filename": [Path("energies")],
+            "output_raman_filename": [Path("raman_tensor")],
             "output_positions_filename": [Path("positions")],
             "output_doublepos_filename": [Path("doublepos")],
             "map_directory": [Path("../../../maps")],
@@ -514,6 +525,8 @@ class TestRawPars:
             "energies_multiplier": [1],
             "dipoles_units": ["Debye"],
             "dipoles_multiplier": [1],
+            "raman_units": ["none"],
+            "raman_multiplier": [1],
             "positions_units": ["Ang"],
             "positions_multiplier": [1],
             "doublepos_units": ["Ang"],
@@ -678,6 +691,7 @@ class TestRawPars:
 
         pardict = {
             "verbose": ["4"],
+            "raman_units": ["none"],
             "positions_units": ["Ang"],
             "doublepos_units": ["Ang"],
             # "nobool_test1": [],
@@ -694,6 +708,8 @@ class TestRawPars:
         assert InPars.is_default is False
         assert InPars.choices == {
             "verbose": [4],
+            "raman_units": ["none"],
+            "raman_multiplier": [1],
             "positions_units": ["Ang"],
             "positions_multiplier": [1],
             "doublepos_units": ["Ang"],
@@ -848,6 +864,15 @@ class TestRawPars:
         pardict = {
             "dipoles_units": ["Debye"],
             "dipoles_multiplier": [1]
+        }
+        self.systest_pardict(
+            pardict, "SU_WP_16", GM_Ex.GmapParameterError, isdef=False)
+
+        # ------------------------
+
+        pardict = {
+            "raman_units": ["none"],
+            "raman_multiplier": [2]
         }
         self.systest_pardict(
             pardict, "SU_WP_16", GM_Ex.GmapParameterError, isdef=False)

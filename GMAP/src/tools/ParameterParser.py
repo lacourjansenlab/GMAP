@@ -520,6 +520,13 @@ class RefPars:
         else:  # ea0
             self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
 
+        if self.choices["raman_units"][0] == "none":
+            self.choices["raman_multiplier"] = [1]
+        # else:
+        # There is only one unit option for raman at the moment, as the
+        # units used in raman are a bit (very) confusing. If we ever want
+        # to add more, this is where they go!
+
         match self.choices["positions_units"][0]:
             case "Ang":
                 self.choices["positions_multiplier"] = [1]
@@ -1443,6 +1450,22 @@ class RawPars:
                     self.choices["dipoles_multiplier"] = [1]
                 else:  # eV
                     self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
+
+        if "raman_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "raman_multiplier" in self.choices:
+                GM_PT.Printer().warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'raman_units' and "
+                    "'raman_multiplier', but contains both.",
+                    "SU_WP_16", True, GMAPerrclass=GM_Ex.GmapParameterError
+                )
+            else:
+                if self.choices["raman_units"][0] == "none":
+                    self.choices["raman_multiplier"] = [1]
+                # no else needed, only one option available.
 
         if "positions_units" in self.choices:
             if self.is_default:  # for default, use multiplier

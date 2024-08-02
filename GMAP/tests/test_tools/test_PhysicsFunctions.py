@@ -4,10 +4,11 @@ src/tools/PhysicsFunctions.py.
 
 Missing tests:
 
-(@ July 22nd '24):
-110-146, 287-299  (29 missed statements)
+(@ August 2nd '24):
+110-158, 243-244, 335-356  (29 missed statements)
 
 - [WIP] calc_frame not yet tested  (110-146)
+- calc_raman not yet tested (as so custom) (243-244)
 - generate_output_structures not yet tested (287-299)
 """
 

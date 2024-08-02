@@ -565,6 +565,9 @@ class SingleMap(Map):
         if not self.success:
             return
 
+        # make sure that all functions that must be present, are.
+        self.assert_function_presence()
+
         # adding more core-dependent functions to self.code.
         if self.Core.electrostatic_choice:
             self.complete_code(("get_VEG_ref",), ({"map_": self},))
@@ -602,7 +605,7 @@ class SingleMap(Map):
 
         # If the code doesn't contain a function for getting the dipole, make
         # sure the two necessary keywords are there.
-        if not hasattr(self.code, "get_dipole_dir"):
+        if not hasattr(self.code, "GM_get_dipole_dir"):
             if not all(
                 keyword in self.rawcore for keyword in ("r_vec", "r_pos")
             ):
@@ -648,6 +651,21 @@ class SingleMap(Map):
             kwargs_for_build.append({"map_": self})
 
         self.complete_code(functs_to_build, kwargs_for_build)
+
+    def assert_function_presence(self):
+        if (
+            self.Core.can_output.intersection(["ram"])
+            and not hasattr(self.code, "GM_calculate_raman")
+        ):
+            GM_PT.Printer().warning(
+                f"\nThe map {self.name} stored in {self.directory} does not "
+                "provide the function 'GM_calculate_raman' while its choice "
+                "for can_output does indicate it can compute raman tensors. "
+                "Without this function, this map cannot be used.",
+                "MI_MR_7"
+            )
+            self.success = False
+            return
 
 
 class PairMap(Map):
@@ -1699,19 +1717,16 @@ class SingleCore():
                 int(num) for num in rawcore["electrostatic_atoms"]
             ]
         except Exception as ex:
-            if rawcore["electrostatic_atoms"][0].lower() == "none":
-                estatic_atoms = []
-            else:
-                GM_PT.Printer().warning(
-                    "\nCould not interpret the choice for the parameter "
-                    "'electrostatic_atoms'"
-                    f" in the file {mapdir / 'core.txt'}. Please make sure "
-                    "the choice consists of nothing but numbers separated by "
-                    "spaces.",
-                    "MI_MC_7", exception=ex
-                )
-                self.success = False
-                return
+            GM_PT.Printer().warning(
+                "\nCould not interpret the choice for the parameter "
+                "'electrostatic_atoms'"
+                f" in the file {mapdir / 'core.txt'}. Please make sure "
+                "the choice consists of nothing but numbers separated by "
+                "spaces.",
+                "MI_MC_7", exception=ex
+            )
+            self.success = False
+            return
 
         # now, see if choice is valid
         maxlen = len(self.used_atoms)

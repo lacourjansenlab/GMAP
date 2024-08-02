@@ -1124,6 +1124,7 @@ class Oscillator:
         Syst : :class:`~GMAP.src.tools.SystemReader.System`
             The object that stores all information on the MD system
         """
+
         self.positions_box = (
             Syst.positions[self.used_atoms] @ Syst.boxvects_inv)
         self.VEG_refpos = self.get_VEG_ref(Syst)

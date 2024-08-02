@@ -3,10 +3,14 @@ A file containing all kinds of constants that the program might need.
 """
 
 
+import numpy as np
+
+
 # constants
 h = 6.62607015e-34  # planck constant in (J Hz-1)
 c = 2.99792458e8  # speed of light in (m s-1)
 e = 1.602176634e-19  # elementary charge in (coulombs)
+deg2rad = np.float32(np.pi/180)  # 1 degree in radians
 
 # lengths
 angstrom = 1e-10  # angstrom in m

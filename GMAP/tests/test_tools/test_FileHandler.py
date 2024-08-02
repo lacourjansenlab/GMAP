@@ -4,14 +4,14 @@ src/tools/FileHandler.py.
 
 Missing tests:
 
-(@ July 22nd '24):
-97, 101-113, 333, 527-536, 554-559 (24 missed statements)
+(@ August 2nd '24):
+97, 101-113, 333, 536-547, 565-570 (26 missed statements)
 
 (CUHTAT - currently unknown how to access this)
 - Program is run using any OS other than windows 64 bit (97, 101-113)
   (CUHTAT; at least within one single run, probably impossible)
 - the reference parameter file could not be found (SU_FH_2) (CUHTAT) (333)
-- output files are not cleared yet.  (527-559)  (this happens in GEM, just
+- output files are not cleared yet.  (536-570)  (this happens in GEM, just
   before the per-frame loop)
 """
 
@@ -47,13 +47,15 @@ def test_write_output():
         "output_hamiltonian_filename": cwd / "hamiltonian",
         "output_dipole_filename": cwd / "dipoles",
         "output_energies_filename": cwd / "energies",
+        "output_raman_filename": cwd / "raman_tensor",
         "output_positions_filename": cwd / "positions",
         "output_doublepos_filename": cwd / "doublepos",
-        "output_data": ["ham", "dip", "ene", "pos", "dbp"],
+        "output_data": ["ham", "dip", "ene", "pos", "dbp", "ram"],
         "output_format": ["bin", "txt"],
         "hamiltonian_multiplier": 1,
         "energies_multiplier": 1,
         "dipoles_multiplier": 1,
+        "raman_multiplier": 1,
         "positions_multiplier": 1,
         "doublepos_multiplier": 1
     })
@@ -75,6 +77,12 @@ def test_write_output():
     outputs["energies"] = np.array([
         [100, 101, 102, 103]
     ], dtype="float32")
+    outputs["raman"] = np.array([
+        [1, 2, 3, 4, 5, 6],
+        [7, 8, 9, 10, 11, 12],
+        [13, 14, 15, 16, 17, 18],
+        [19, 20, 21, 22, 23, 24]
+    ], dtype='float32')
     outputs["positions"] = np.array([
         [4, 5, 6],
         [7, 8, 9],
@@ -94,11 +102,12 @@ def test_write_output():
     hamfname = RunPars.output_hamiltonian_filename
     dipfname = RunPars.output_dipole_filename
     enefname = RunPars.output_energies_filename
+    ramfname = RunPars.output_raman_filename
     posfname = RunPars.output_positions_filename
     dbpfname = RunPars.output_doublepos_filename
 
     # clear files
-    for fname in (hamfname, dipfname, enefname, posfname, dbpfname):
+    for fname in (hamfname, dipfname, enefname, ramfname, posfname, dbpfname):
         with open(fname.parent / f"{fname.name}.bin", "wb"):
             pass
         with open(fname.parent / f"{fname.name}.txt", "w"):
@@ -125,6 +134,21 @@ def test_write_output():
     squareham = squareham + squareham.T - np.diag(np.diag(squareham))
     assert np.all(squareham == outputs["hamiltonian"])
 
+    # -----  test contents energies  -----
+
+    with open(str(enefname) + ".bin", "rb") as fhand:
+        # skip first, that is frame ix
+        bindip = np.fromfile(fhand, dtype="float32")[1:]
+    # bindip = bindip.reshape((3, 4)).T
+    assert np.all(bindip == outputs["energies"])
+
+    txtdip = np.loadtxt(
+        str(RunPars.output_energies_filename) + ".txt",
+        dtype="float32"
+    )[1:]  # skip first, that is frame ix
+    # txtdip = txtdip.reshape((3, 4)).T
+    assert np.all(txtdip == outputs["energies"])
+
     # -----  test contents dipoles  -----
 
     with open(str(dipfname) + ".bin", "rb") as fhand:
@@ -140,20 +164,20 @@ def test_write_output():
     txtdip = txtdip.reshape((3, 4)).T
     assert np.all(txtdip == outputs["dipoles"])
 
-    # -----  test contents energies  -----
+    # -----  test contents raman  -----
 
-    with open(str(enefname) + ".bin", "rb") as fhand:
+    with open(str(ramfname) + ".bin", "rb") as fhand:
         # skip first, that is frame ix
-        bindip = np.fromfile(fhand, dtype="float32")[1:]
-    # bindip = bindip.reshape((3, 4)).T
-    assert np.all(bindip == outputs["energies"])
+        binram = np.fromfile(fhand, dtype="float32")[1:]
+    binram = binram.reshape((6, 4)).T
+    assert np.all(binram == outputs["raman"])
 
-    txtdip = np.loadtxt(
-        str(RunPars.output_energies_filename) + ".txt",
+    txtram = np.loadtxt(
+        str(RunPars.output_raman_filename) + ".txt",
         dtype="float32"
     )[1:]  # skip first, that is frame ix
-    # txtdip = txtdip.reshape((3, 4)).T
-    assert np.all(txtdip == outputs["energies"])
+    txtram = txtram.reshape((6, 4)).T
+    assert np.all(txtram == outputs["raman"])
 
     # -----  test contents positions  -----
 
@@ -192,15 +216,17 @@ def test_write_output_multiplied():
         "output_hamiltonian_filename": cwd / "hamiltonian",
         "output_dipole_filename": cwd / "dipoles",
         "output_energies_filename": cwd / "energies",
+        "output_raman_filename": cwd / "raman_tensor",
         "output_positions_filename": cwd / "positions",
         "output_doublepos_filename": cwd / "doublepos",
-        "output_data": ["ham", "dip", "ene", "pos", "dbp"],
+        "output_data": ["ham", "dip", "ene", "pos", "dbp", "ram"],
         "output_format": ["bin", "txt"],
         "hamiltonian_multiplier": 2,
         "energies_multiplier": 3,
         "dipoles_multiplier": 4,
-        "positions_multiplier": 5,
-        "doublepos_multiplier": 6
+        "raman_multiplier": 5,
+        "positions_multiplier": 6,
+        "doublepos_multiplier": 7,
     })
 
     framenum = 2
@@ -220,6 +246,12 @@ def test_write_output_multiplied():
     outputs["energies"] = np.array([
         [100, 101, 102, 103]
     ], dtype="float32")
+    outputs["raman"] = np.array([
+        [1, 2, 3, 4, 5, 6],
+        [7, 8, 9, 10, 11, 12],
+        [13, 14, 15, 16, 17, 18],
+        [19, 20, 21, 22, 23, 24]
+    ], dtype='float32')
     outputs["positions"] = np.array([
         [4, 5, 6],
         [7, 8, 9],
@@ -239,11 +271,12 @@ def test_write_output_multiplied():
     hamfname = RunPars.output_hamiltonian_filename
     dipfname = RunPars.output_dipole_filename
     enefname = RunPars.output_energies_filename
+    ramfname = RunPars.output_raman_filename
     posfname = RunPars.output_positions_filename
     dbpfname = RunPars.output_doublepos_filename
 
     # clear files
-    for fname in (hamfname, dipfname, enefname, posfname, dbpfname):
+    for fname in (hamfname, dipfname, enefname, ramfname, posfname, dbpfname):
         with open(fname.parent / f"{fname.name}.bin", "wb"):
             pass
         with open(fname.parent / f"{fname.name}.txt", "w"):
@@ -270,6 +303,21 @@ def test_write_output_multiplied():
     squareham = squareham + squareham.T - np.diag(np.diag(squareham))
     assert np.all(squareham == outputs["hamiltonian"])
 
+    # -----  test contents energies  -----
+
+    with open(str(enefname) + ".bin", "rb") as fhand:
+        # skip first, that is frame ix
+        bindip = np.fromfile(fhand, dtype="float32")[1:]
+    # bindip = bindip.reshape((3, 4)).T
+    assert np.all(bindip == outputs["energies"])
+
+    txtdip = np.loadtxt(
+        str(RunPars.output_energies_filename) + ".txt",
+        dtype="float32"
+    )[1:]  # skip first, that is frame ix
+    # txtdip = txtdip.reshape((3, 4)).T
+    assert np.all(txtdip == outputs["energies"])
+
     # -----  test contents dipoles  -----
 
     with open(str(dipfname) + ".bin", "rb") as fhand:
@@ -285,20 +333,20 @@ def test_write_output_multiplied():
     txtdip = txtdip.reshape((3, 4)).T
     assert np.all(txtdip == outputs["dipoles"])
 
-    # -----  test contents energies  -----
+    # -----  test contents raman  -----
 
-    with open(str(enefname) + ".bin", "rb") as fhand:
+    with open(str(ramfname) + ".bin", "rb") as fhand:
         # skip first, that is frame ix
-        bindip = np.fromfile(fhand, dtype="float32")[1:]
-    # bindip = bindip.reshape((3, 4)).T
-    assert np.all(bindip == outputs["energies"])
+        binram = np.fromfile(fhand, dtype="float32")[1:]
+    binram = binram.reshape((6, 4)).T
+    assert np.all(binram == outputs["raman"])
 
-    txtdip = np.loadtxt(
-        str(RunPars.output_energies_filename) + ".txt",
+    txtram = np.loadtxt(
+        str(RunPars.output_raman_filename) + ".txt",
         dtype="float32"
     )[1:]  # skip first, that is frame ix
-    # txtdip = txtdip.reshape((3, 4)).T
-    assert np.all(txtdip == outputs["energies"])
+    txtram = txtram.reshape((6, 4)).T
+    assert np.all(txtram == outputs["raman"])
 
     # -----  test contents positions  -----
 

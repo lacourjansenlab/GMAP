@@ -4,17 +4,16 @@ src/tools/PhysicsFunctions.py.
 
 Missing tests:
 
-(@ July 22nd '24):
-328-336, 1097, 1484 (6 missed statements)
+(@ August 2nd '24):
+328-336, 1564 (5 missed statements)
 
 (CUHTAT - currently unknown how to access this )
 - Map.append_core() - there was some issue with the corefile (CUHTAT)
-  (353-361)
+  (328-336)
   Any stuff wrong with the corefile will have its own warning call (and not
   use raise) - MI_MC_5
-- SingleCore.parse_type was not successful, so we stop map reading  (1125)
 - The structure of the map has no bonds (but the parameter giving bonds has
-  been used) (1513)
+  been used) (1564)
 """
 
 
@@ -803,6 +802,24 @@ class TestCode:
 
         out, _ = capfd.readouterr()
         assert out.endswith("MI_MR_6\n")
+
+    def test_MI_MR_7(self, capfd):
+        cmdline = [
+            "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        ]
+        inpardict = {}
+        mapname = "test_MI_MR_7"
+
+        (
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
+        ) = basic_setup(
+            cmdline, inpardict, finish_before="extract_code", mapname=mapname
+        )
+        map_ = mapdict[mapname]
+        map_.initialize(Files)
+        out, _ = capfd.readouterr()
+        assert out.endswith("MI_MR_7\n")
 
 
 class TestPairMap:
@@ -1597,6 +1614,23 @@ class TestSingleCore:
             ], dtype="float32").round(2))
         assert CoreBase.frequency_data_array_linear is None
 
+    def test_posonlymap(self):
+        cmdline = [
+            "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+        ]
+        inpardict = {}
+        mapname = "test_posonly"
+        (
+            Files, RunPars, RefPars, DefPars, InPars, CmdPars,
+            mapdict, pairs_mapdict
+        ) = basic_setup(
+            cmdline, inpardict, finish_before="Core", mapname=mapname
+        )
+        map_ = mapdict[mapname]
+        CoreBase = basic_setup_core(
+            map_, finish_before="end")
+        assert CoreBase.success
+
     def test_MI_MC_1(self, capfd):
         self.basis_test_MI_MC("MI_MC_1", capfd, finish_before="used_atoms")
 
@@ -1689,6 +1723,9 @@ class TestSingleCore:
 
     def test_MI_MC_9(self, capfd):
         self.basis_test_MI_MC("MI_MC_9", capfd, finish_before="used_atoms")
+
+    def test_MI_MC_12(self, capfd):
+        self.basis_test_MI_MC("MI_MC_12", capfd, finish_before="func_group")
 
     def basis_test_MI_MC(
         self, errcode, capfd, mapname=None, finish_before=None
@@ -1896,6 +1933,23 @@ def test_MI_MM_2(capsys):
     GM_MR.manage_maps_singles(Files, RunPars, singles_mapdict)
     with pytest.raises(GM_Ex.GmapKeyError, match="MI_MM_2$"):
         GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
+
+
+def test_MI_MM_5(capsys):
+    cmdline = [
+        "-md", "tests/test_tools/Data/maps_for_test_MapReader_1\\;"
+    ]
+    maplist = ["test_posonly"]
+    inpars = {
+        "maps_to_use": maplist
+    }
+    (
+        Files, RunPars, RefPars, DefPars, InPars, CmdPars,
+        mapdict, pairs_mapdict
+    ) = basic_setup(cmdline, inpars, finish_before="extract_code")
+
+    with pytest.raises(GM_Ex.GmapKeyError, match="MI_MM_5$"):
+        GM_MR.manage_maps_singles(Files, RunPars, mapdict)
 
 
 def basic_setup(

@@ -137,6 +137,9 @@ def calc_frame(RunPars, System, outputs):
             outputs["hamiltonian"][oscix, oscix] = calc_frequency(
                 System, oscillator)
 
+        if "ram" in RunPars.output_data:
+            outputs["raman"][oscix] = calc_raman(System, oscillator)
+
         if "pos" in RunPars.output_data:
             outputs["positions"][oscix] = get_positions(System, oscillator)
 
@@ -213,6 +216,32 @@ def calc_frequency(System, oscillator):
 
     map_ = oscillator.Map
     return map_.code.GM_calculate_frequency(map_, System, oscillator)
+
+
+def calc_raman(System, oscillator):
+    """Calculate the frequency for a given oscillator
+
+    The oscillator 'knows' how this should be done - invoke that method.
+
+    Parameters
+    ----------
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    oscillator : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The specific oscillator for which the calculation is requested.
+
+    Returns
+    -------
+    tensvect : `np.ndarray`
+        A length-6 vector representing the .
+        The vector must lie within the simulation box.
+        Datatype of this array must be float32!
+    """
+
+    map_ = oscillator.Map
+    return map_.code.GM_calculate_raman(map_, System, oscillator)
 
 
 def get_positions(System, oscillator):
@@ -304,21 +333,24 @@ def generate_output_structures(RunPars, System):
     """
 
     outputs = {}
+    nosc = System.nosc
     if any(data in RunPars.output_data for data in ("ham",)):
-        outputs["hamiltonian"] = np.zeros(
-            (System.nosc, System.nosc), dtype="float32")
-        outputs["dipole_pos"] = np.zeros((System.nosc, 3), dtype="float32")
+        outputs["hamiltonian"] = np.zeros((nosc, nosc), dtype="float32")
+        outputs["dipole_pos"] = np.zeros((nosc, 3), dtype="float32")
 
     if any(data in RunPars.output_data for data in ("ene",)):
-        outputs["energies"] = np.zeros((System.nosc,), dtype="float32")
+        outputs["energies"] = np.zeros((nosc,), dtype="float32")
 
     if any(data in RunPars.output_data for data in ("ham", "dip")):
-        outputs["dipoles"] = np.zeros((System.nosc, 3), dtype="float32")
+        outputs["dipoles"] = np.zeros((nosc, 3), dtype="float32")
 
     if any(data in RunPars.output_data for data in ("pos",)):
-        outputs["positions"] = np.zeros((System.nosc, 3), dtype="float32")
+        outputs["positions"] = np.zeros((nosc, 3), dtype="float32")
 
     if any(data in RunPars.output_data for data in ("dbp",)):
-        outputs["doublepos"] = np.zeros((System.nosc*2, 3), dtype="float32")
+        outputs["doublepos"] = np.zeros((nosc*2, 3), dtype="float32")
+
+    if any(data in RunPars.output_data for data in ("dbp",)):
+        outputs["raman"] = np.zeros((nosc, 6), dtype="float32")
 
     return outputs
