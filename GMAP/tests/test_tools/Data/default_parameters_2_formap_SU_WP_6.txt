@@ -12,6 +12,8 @@ output_estatics_filename        estatics.txt
 output_hamiltonian_filename     hamiltonian
 output_dipole_filename          dipoles
 output_energies_filename        energies
+output_positions_filename       positions
+output_doublepos_filename       doublepos
 
 map_directory                   ../../../maps
 maps_to_use                     AmideSC
@@ -25,7 +27,7 @@ verbose                         3
 verbose_logfile                 1
 prevent_overwrite               False
 output_format                           bin txt
-output_data                             ham dip
+output_data                             ham dip pos
 
 neutral_charge_threshold                   0.0001
 guess_bonds                                False
@@ -44,6 +46,10 @@ energies_units                cm-1
 energies_multiplier           1
 dipoles_units                 Debye
 dipoles_multiplier            1
+positions_units               Ang
+positions_multiplier          1
+doublepos_units               Ang
+doublepos_multiplier          1
 
 
 # # testing array

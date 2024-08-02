@@ -124,10 +124,10 @@ def calc_frame(RunPars, System, outputs):
         # we also need dipoles for the (full) hamiiltonian.
         if any(data in RunPars.output_data for data in ("ham", "dip")):
             r_vec, r_pos = calc_dipole(System, oscillator)
-            outputs["dipoles"][oscix] = r_vec
+            outputs["dipoles"][oscix] = r_vec  # needed for both ham and dip
 
             if any(data in RunPars.output_data for data in ("ham")):
-                outputs["dipole_pos"][oscix] = r_pos
+                outputs["dipole_pos"][oscix] = r_pos  # only ham!
 
         if "ene" in RunPars.output_data:
             outputs["energies"][oscix] = calc_frequency(
@@ -135,6 +135,15 @@ def calc_frame(RunPars, System, outputs):
 
         if "ham" in RunPars.output_data:
             outputs["hamiltonian"][oscix, oscix] = calc_frequency(
+                System, oscillator)
+
+        if "pos" in RunPars.output_data:
+            outputs["positions"][oscix] = get_positions(System, oscillator)
+
+        if "dbp" in RunPars.output_data:
+            # very similar to positions, but doublepos returns two positions
+            # simultaneously, so we catch both into the doublepos array.
+            outputs["doublepos"][oscix*2:(oscix+1)*2] = get_doublepos(
                 System, oscillator)
 
     # calculate the couplings for the hamiltonian
@@ -204,6 +213,16 @@ def calc_frequency(System, oscillator):
 
     map_ = oscillator.Map
     return map_.code.GM_calculate_frequency(map_, System, oscillator)
+
+
+def get_positions(System, oscillator):
+    map_ = oscillator.Map
+    return map_.code.GM_get_position(map_, System, oscillator)
+
+
+def get_doublepos(System, oscillator):
+    map_ = oscillator.Map
+    return map_.code.GM_get_doublepos(map_, System, oscillator)
 
 
 def prep_coupling(RunPars, System):
@@ -295,5 +314,11 @@ def generate_output_structures(RunPars, System):
 
     if any(data in RunPars.output_data for data in ("ham", "dip")):
         outputs["dipoles"] = np.zeros((System.nosc, 3), dtype="float32")
+
+    if any(data in RunPars.output_data for data in ("pos",)):
+        outputs["positions"] = np.zeros((System.nosc, 3), dtype="float32")
+
+    if any(data in RunPars.output_data for data in ("dbp",)):
+        outputs["doublepos"] = np.zeros((System.nosc*2, 3), dtype="float32")
 
     return outputs

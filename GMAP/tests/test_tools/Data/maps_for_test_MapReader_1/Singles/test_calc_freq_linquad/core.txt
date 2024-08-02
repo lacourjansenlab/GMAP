@@ -23,4 +23,8 @@ frequency_data_file_linear      freqmap.txt
 frequency_data_file_quadratic   freqmap.txt
 
 
+position       0
+doublepos_0    0
+doublepos_1    1
+
 

@@ -453,6 +453,24 @@ def write_output(RunPars, framenum, outputs):
             RunPars.output_dipole_filename, reshaped
         )
 
+    if "pos" in RunPars.output_data:
+        positions = outputs["positions"]
+        positions *= RunPars.positions_multiplier
+        reshaped = positions.T.flatten()
+        write_single(
+            RunPars, framenum, framenum_arr,
+            RunPars.output_positions_filename, reshaped
+        )
+
+    if "dbp" in RunPars.output_data:
+        doublepos = outputs["doublepos"]
+        doublepos *= RunPars.doublepos_multiplier
+        reshaped = doublepos.T.flatten()
+        write_single(
+            RunPars, framenum, framenum_arr,
+            RunPars.output_doublepos_filename, reshaped
+        )
+
 
 def write_single(RunPars, framenum, framenum_arr, fname, data):
     """Write a single datastructure to files of given name.
@@ -512,6 +530,10 @@ def clear_output(RunPars):
         clear_single(RunPars, RunPars.output_dipole_filename)
     if "ene" in RunPars.output_data:
         clear_single(RunPars, RunPars.output_energies_filename)
+    if "pos" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_positions_filename)
+    if "dbp" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_doublepos_filename)
 
 
 def clear_single(RunPars, fname):

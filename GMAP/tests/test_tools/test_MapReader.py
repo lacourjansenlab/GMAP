@@ -1524,7 +1524,7 @@ class TestSingleCore:
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            map_, finish_before="end")
+            map_, finish_before="positions")
 
         assert np.all(CoreBase.dipole_data_array.round(2) == np.array([
             # wrong way?
@@ -1579,7 +1579,7 @@ class TestSingleCore:
         )
         map_ = mapdict[mapname]
         CoreBase = basic_setup_core(
-            map_, finish_before="end")
+            map_, finish_before="positions")
 
         assert np.all(CoreBase.dipole_data_array.round(2) == np.array([
             # [0, 3.571065, 7.14213, 10.713195, 0, 0, 0, 0, 0, 0],
@@ -1659,7 +1659,7 @@ class TestSingleCore:
         self.basis_test_MI_MC(
             "MI_MC_7", capfd, "test_MI_MC_7_7", "length_units")
         self.basis_test_MI_MC(
-            "MI_MC_7", capfd, "test_MI_MC_7_8", "end")
+            "MI_MC_7", capfd, "test_MI_MC_7_8", "positions")
 
     def test_MI_MC_8(self, capfd):
         self.basis_test_MI_MC(
@@ -2079,5 +2079,10 @@ def basic_setup_core(map_, finish_before=None):
 
     CoreBase.change_map_units_decision()
 
-    if finish_before == "end":  # so we can ctrl+F later
+    if finish_before == "positions":  # so we can ctrl+F later
+        return CoreBase
+
+    CoreBase.parse_positions(map_.rawcore, map_.directory)
+
+    if finish_before == "end":
         return CoreBase

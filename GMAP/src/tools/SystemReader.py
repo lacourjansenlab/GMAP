@@ -285,6 +285,7 @@ class System:
         GM_PT.Printer().print(
             1, f"\n{GM_PT.make_header('Influencers', '-')}\n\n")
 
+        # names of residues or residue groups are given to specify infl.
         if isinstance(RunPars.influencers, list):
             choice = GM_PP.parse_influencer_par(" ".join(RunPars.influencers))
             choice = GM_PP.parse_influencerfile_line(
@@ -300,6 +301,8 @@ class System:
                 "\n\nResidue names NOT included in influencers:\n"
                 + ", ".join(influencers_not_included)
             )
+
+        # The MDA select_atoms functionality is used to define influencers.
         elif isinstance(RunPars.influencers, str):
             try:
                 atgroup = self.universe.select_atoms(RunPars.influencers)
@@ -310,6 +313,9 @@ class System:
                     "SU_NP_6", True, exception=ex
                 )
             self.influencers_atix = atgroup.atoms.ix.tolist()
+
+        # similar to the first, names of residues or residue groups are given.
+        # however, this time, a separate file is used.
         else:  # must be a separate file
             choice = GM_PP.parse_influencerfile(
                 RunPars.influencers, groupdict)

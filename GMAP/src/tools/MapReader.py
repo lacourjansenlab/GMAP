@@ -565,12 +565,14 @@ class SingleMap(Map):
         if not self.success:
             return
 
-        self.complete_code(("get_VEG_ref",), ({"map_": self},))
-
-        self.complete_code(
-            ("calculate_dipole", "calculate_frequency"),
-            ({"map_": self}, {"map_": self})
-        )
+        # adding more core-dependent functions to self.code.
+        self.complete_code((
+            "get_VEG_ref",
+            "calculate_dipole",
+            "calculate_frequency",
+            "get_position",
+            "get_doublepos"
+        ), ({"map_": self},)*5)
 
         # Add in the remaining code
         self.complete_code((
@@ -1121,6 +1123,10 @@ class SingleCore():
             return
 
         self.change_map_units_decision()
+
+        self.parse_positions(rawcore, Map.directory)
+        if not self.success:
+            return
 
     def parse_functional_group(self, rawcore, mapdir):
         """Parses the input for keywords functional_group(_file) in core.txt
@@ -2319,7 +2325,21 @@ class SingleCore():
         self.change_map_units(conv_factor)
 
     def change_map_units(self, conv_factor):
-        """Actually changes the units of constants."""
+        """Actually changes the units of constants.
+
+        This change means multiplying the frequency and dipole data
+        arrays with the appropriate positive power of conv_factor.
+
+        For example, the first column (potential) of the linear
+        frequency and the dipole array is multiplied by just
+        conv_factor, while their second, third and fourth columns
+        (field) are multiplied by conv_factor^2.
+
+        Parameters
+        ----------
+        conv_factor : float
+            The value that the arrays should be multiplied by.
+        """
 
         if self.frequency_data_array_linear is not None:
             self.frequency_data_array_linear[:, 0] *= conv_factor
@@ -2340,6 +2360,18 @@ class SingleCore():
                 self.dipole_data_array[:, :, 0] *= conv_factor
                 self.dipole_data_array[:, :, 1:4] *= conv_factor**2
                 self.dipole_data_array[:, :, 4:] *= conv_factor**3
+
+    def parse_positions(self, rawcore, mapdir):
+        for parname in "position", "doublepos_0", "doublepos_1":
+            if parname not in rawcore:
+                GM_PT.Printer().warning(
+                    f"\nCould not find the parameter '{parname}' in the "
+                    f"file {mapdir / 'core.txt'}. Without it, the map cannot "
+                    "function. Please make sure it is present.",
+                    "MI_MC_6"
+                )
+                self.success = False
+                return
 
 
 class PairCore():

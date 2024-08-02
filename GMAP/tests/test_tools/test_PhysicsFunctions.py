@@ -91,6 +91,42 @@ def test_system_CoM():
     ).round(4) == ans)
 
 
+def test_get_positions():
+    cmdline = ["--verbose", "4"]
+    (
+        Files, RunPars, RefPars, DefPars, InPars,
+        CmdPars, mapdict, pairs_mapdict
+    ) = parameter_getter("test_calc_dipoles_xyz", cmdline)
+    # position - 2,  db0 - 3, db1 - 1
+
+    System = get_System_1()
+    oscillator = get_oscillator_1()
+    setattr(oscillator, "Map", mapdict["test_calc_dipoles_xyz"])
+    setattr(
+        oscillator, "positions_box",
+        System.positions[0:4] @ System.boxvects_inv)
+
+    setattr(
+        oscillator, "rotation_matrix",
+        oscillator.Map.code.GM_get_rotation_matrix(
+            oscillator.Map, System, oscillator))
+
+    pos = GM_PF.get_positions(System, oscillator)
+    assert np.all(pos.round(4) == np.array([28, -32, 8], dtype="float32"))
+    dbp = GM_PF.get_doublepos(System, oscillator)
+    assert np.all(np.array(dbp).round(4) == np.array(
+        [[31, -29, 11], [11, 31, -29]], dtype="float32"))
+
+    # positions = np.array([
+    #     [8, 28, 68],
+    #     [11, 31, 71],
+    #     [28, 68, 8],
+    #     [31, 71, 11],
+    #     [68, 8, 28],
+    #     [71, 11, 31]
+    # ]
+
+
 def test_calc_dipole_xyz():
     cmdline = ["--verbose", "4"]
     (

@@ -101,7 +101,7 @@ def test_get_get_VEG_ref():
     VEGref_pos = ["position", "((((0+1)/2.0)+2)/2.0)"]
     map_.rawcore["VEG_reference"] = VEGref_pos
     mainfunc = GM_DMF.get_get_VEG_ref(map_)
-    subfunc = GM_DMF.VEG_from_position(map_, VEGref_pos[1:])
+    subfunc = GM_DMF.interpret_position(map_, VEGref_pos[1:], "VEG_reference")
     confirm_funcs_equal(mainfunc, subfunc)
 
 
@@ -144,7 +144,7 @@ def test_VEG_from_com():
     assert np.all(subfunc(map_, Syst, osc) == out)
 
 
-def test_VEG_from_position():
+def test_interpret_position():
     VEGref_pos = ["position", "((((0+1)/2.0)+2)/2.0)"]
     map_ = GM_CT.CustomClass(**{
         "rawcore": {
@@ -152,7 +152,7 @@ def test_VEG_from_position():
         }
     })
     _ = GM_FH.FileLocations()  # still needed for initialization
-    subfunc = GM_DMF.VEG_from_position(map_, VEGref_pos[1:])
+    subfunc = GM_DMF.interpret_position(map_, VEGref_pos[1:], "VEG_reference")
 
     Syst = get_syst_VEGtests()
     osc = GM_CT.CustomClass(**{
@@ -176,7 +176,7 @@ def test_MI_MC_9(capsys):
         },
         "directory": Files.cwd
     })
-    _ = GM_DMF.VEG_from_position(map_, VEGref_pos[1:])
+    _ = GM_DMF.interpret_position(map_, VEGref_pos[1:], "VEG_reference")
     GM_PT.Printer().print_backlog()
     captured = capsys.readouterr()
     assert captured.out.endswith("MI_MC_9\n")

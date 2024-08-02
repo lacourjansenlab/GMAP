@@ -29,3 +29,7 @@ VEG_reference  CoM  0 1 3 4  # take CoM of listed atoms
 type   standard     # standard, linear
 
 NeedsBoth.scalar1   3
+
+position       0
+doublepos_0    0
+doublepos_1    1
