@@ -11,7 +11,7 @@ import numpy as np
 import pytest
 
 # local imports
-from GMAP.src.tools import MathFunctions as GM_MF
+import GMAP.src.tools.MathFunctions as GM_MF
 
 
 def test_PBC_back2box():

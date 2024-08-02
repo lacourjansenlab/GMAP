@@ -1,5 +1,5 @@
 
-def GM_calc_coupling(Printer, Map, Syst, hamiltonian):
+def GM_calc_coupling(Map, Syst, hamiltonian):
     for pair in Map.allpairs:
         oscix1, oscix2 = pair
         J = 1.234

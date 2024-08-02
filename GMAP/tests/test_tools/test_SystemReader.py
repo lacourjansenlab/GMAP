@@ -1,17 +1,17 @@
 """
 tests missing:
 
-(@ june 24th '24):
-146, 157-162, 240, 540, 1127, 1170 (9 missed statements)
+(@ July 22nd '24):
+141, 152-157, 230, 525, 1157, 1201 (9 missed statements)
 
-- non-rightangled system    (146, 1170)
+- non-rightangled system    (141, 1201)
 - MDA system without bond information (both testing it with, and without
-  needing this information)   (157-162)
+  needing this information)   (152-157)
 - MDA system which does not contain ascending atom indices starting elsewhere
-  than 0 (Do these exist?)   (240)
+  than 0 (Do these exist?)   (230)
 - An oscillator (and MD file to support it) that has the same atom name
-  multiple times in a single residue   (540)
-- MDA.Universe FileNotFoundError (can we even trigger this one?)   (1127)
+  multiple times in a single residue   (525)
+- MDA.Universe FileNotFoundError (can we even trigger this one?)   (1157)
 """
 
 
@@ -22,6 +22,7 @@ import pytest
 
 # local imports
 from .test_MapReader import basic_setup
+import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.SystemReader as GM_SR
 
@@ -33,13 +34,13 @@ class TestSystem:
     def test_set_properties(self):
         mapname = "test_code_build_1"
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname)
 
         System = GM_SR.System.__new__(GM_SR.System)
-        setattr(System, "universe", GM_SR.gen_universe(Printer, RunPars))
-        System.set_properties(Printer)
+        setattr(System, "universe", GM_SR.gen_universe(RunPars))
+        System.set_properties()
 
         all_properties = (
             System.atnums, System.atnames, System.resnums, System.resnames,
@@ -102,15 +103,15 @@ class TestSystem:
             "--influencers_whitelist", ":protein_cannonical", "CL\\;"
         ]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
-        setattr(System, "universe", GM_SR.gen_universe(Printer, RunPars))
-        System.set_properties(Printer)
-        System.basic_boxchecks(Printer, RunPars)
-        System.find_influencers(Printer, RunPars)
+        setattr(System, "universe", GM_SR.gen_universe(RunPars))
+        System.set_properties()
+        System.basic_boxchecks(RunPars)
+        System.find_influencers(RunPars)
 
         print(System.influencers_atix[-20:])
         target = np.array([*range(1960)] + [*range(33868, 33876)])
@@ -124,15 +125,15 @@ class TestSystem:
             "--influencers_select_atoms", "protein", "or", "resname", "CL\\;"
         ]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
-        setattr(System, "universe", GM_SR.gen_universe(Printer, RunPars))
-        System.set_properties(Printer)
-        System.basic_boxchecks(Printer, RunPars)
-        System.find_influencers(Printer, RunPars)
+        setattr(System, "universe", GM_SR.gen_universe(RunPars))
+        System.set_properties()
+        System.basic_boxchecks(RunPars)
+        System.find_influencers(RunPars)
 
         print(System.influencers_atix[-20:])
         target = np.array([*range(1960)] + [*range(33868, 33876)])
@@ -147,15 +148,15 @@ class TestSystem:
             "--verbose", "4"
         ]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
-        setattr(System, "universe", GM_SR.gen_universe(Printer, RunPars))
-        System.set_properties(Printer)
-        System.basic_boxchecks(Printer, RunPars)
-        System.find_influencers(Printer, RunPars)
+        setattr(System, "universe", GM_SR.gen_universe(RunPars))
+        System.set_properties()
+        System.basic_boxchecks(RunPars)
+        System.find_influencers(RunPars)
 
         print(System.influencers_atix[-20:])
         target = np.array([*range(1960, 33876)])
@@ -170,11 +171,11 @@ class TestSystem:
             "--influencers_whitelist", ":protein_cannonical", "CL\\;"
         ]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
-        System = GM_SR.System(Files, Printer, RunPars)
+        System = GM_SR.System(Files, RunPars)
 
         assert len(System.oscillators) == 17
 
@@ -187,11 +188,11 @@ class TestSystem:
             "--influencers_whitelist", ":protein_cannonical", "CL\\;"
         ]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
-        System = GM_SR.System(Files, Printer, RunPars)
+        System = GM_SR.System(Files, RunPars)
 
         assert len(System.oscillators) == 145
 
@@ -199,11 +200,11 @@ class TestSystem:
         # just AmideSC
         mapname = "AmideSC"
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname)
 
-        System = GM_SR.System(Files, Printer, RunPars)
+        System = GM_SR.System(Files, RunPars)
 
         assert len(System.oscillators) == 17
 
@@ -211,17 +212,17 @@ class TestSystem:
         # This is a map of a triple ALA subchain - only 1 present in 1AKI
         mapname = "test_multiple_res_osc"
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname)
 
-        System = GM_SR.System(Files, Printer, RunPars)
-        System.update_properties(Printer)
+        System = GM_SR.System(Files, RunPars)
+        System.update_properties()
 
         assert len(System.oscillators) == 1
 
         onlyosc = System.oscillators[0]
-        onlyosc.frame_update(Printer, System)
+        onlyosc.frame_update(System)
         # triple ALA lies on resnums 8-10, atnums 135-164, select 2nd AmideBB
         assert onlyosc.used_atoms == [153, 154, 147, 155, 156, 157]
 
@@ -231,13 +232,13 @@ class TestSystem:
 
         # box dims   = (69.5689, 69.5689, 69.5689)
         # average in (-0.5, 0.5) boxdims:  (-22.9589, 28.4300, -32.9739)
-        tocheck = np.round(onlyosc.get_VEG_ref(Printer, System), 4)
+        tocheck = np.round(onlyosc.get_VEG_ref(System), 4)
         answer = np.round(
             np.array([-22.9589, 28.43, -32.9739], dtype="float32"), 4)
 
         assert np.all(tocheck == answer)
 
-    def test_SU_NP_5(self, capsys):
+    def test_SU_NP_5(self):
         mapname = "AmideSC"
         cmdline = [
             "-md", "maps\\;",
@@ -246,46 +247,38 @@ class TestSystem:
             "--verbose", "4"
         ]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
-        setattr(System, "universe", GM_SR.gen_universe(Printer, RunPars))
-        System.set_properties(Printer)
-        System.basic_boxchecks(Printer, RunPars)
+        setattr(System, "universe", GM_SR.gen_universe(RunPars))
+        System.set_properties()
+        System.basic_boxchecks(RunPars)
 
-        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            System.find_influencers(Printer, RunPars)
+        with pytest.raises(GM_Ex.GmapFileSyntaxError, match="SU_NP_5$"):
+            System.find_influencers(RunPars)
 
-        assert pytest_wrapped_sysexit.type is SystemExit
-        captured = capsys.readouterr()
-        assert captured.out.endswith("SU_NP_5\n")
-
-    def test_SU_NP_6(self, capsys):
+    def test_SU_NP_6(self):
         mapname = "AmideSC"
         cmdline = [
             "-md", "maps\\;",
             "--influencers_select_atoms", "or", "resname", "CL\\;"
         ]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
         System = GM_SR.System.__new__(GM_SR.System)
-        setattr(System, "universe", GM_SR.gen_universe(Printer, RunPars))
-        System.set_properties(Printer)
-        System.basic_boxchecks(Printer, RunPars)
+        setattr(System, "universe", GM_SR.gen_universe(RunPars))
+        System.set_properties()
+        System.basic_boxchecks(RunPars)
 
-        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            System.find_influencers(Printer, RunPars)
+        with pytest.raises(GM_Ex.GMAPexception, match="SU_NP_6$"):
+            System.find_influencers(RunPars)
 
-        assert pytest_wrapped_sysexit.type is SystemExit
-        captured = capsys.readouterr()
-        assert captured.out.endswith("SU_NP_6\n")
-
-    def test_MD_SU_6(self, capsys):
+    def test_MD_SU_6(self):
         mapname = "AmideSC"
         cmdline = [
             "-md", "maps",
@@ -293,14 +286,12 @@ class TestSystem:
             "--couplings_to_use", "AneedsB", ":All\\;"
         ]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
-        with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-            _ = GM_SR.System(Files, Printer, RunPars)
-        assert pytest_wrapped_sysexit.type is SystemExit
-        captured = capsys.readouterr()
-        assert captured.out.endswith("MD_SU_6\n")
+
+        with pytest.raises(GM_Ex.GmapParameterError, match="MD_SU_6$"):
+            _ = GM_SR.System(Files, RunPars)
 
 
 class TestOscillator:
@@ -311,11 +302,11 @@ class TestOscillator:
             "--influencers_whitelist", ":protein_cannonical", "CL\\;"
         ]
         (
-            Files, Printer, RunPars, RefPars, DefPars, InPars,
+            Files, RunPars, RefPars, DefPars, InPars,
             CmdPars, mapdict, pairs_mapdict
         ) = parameter_getter(mapname, cmdline)
 
-        System = GM_SR.System(Files, Printer, RunPars)
+        System = GM_SR.System(Files, RunPars)
         oscstr = str(System.oscillators[0])
         exp = "Oscillator of type AmideSC living on residue number 18"
         assert oscstr == exp
@@ -344,11 +335,11 @@ def test_gen_universe():
         "trajectory_file": ["../../sourcefiles/pdb_1AKI_50frame.xtc"]
     }
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
-    universe = GM_SR.gen_universe(Printer, RunPars)
+    universe = GM_SR.gen_universe(RunPars)
     assert isinstance(universe, MDA.Universe)
     assert len(universe.atoms) == 33876
 
@@ -368,7 +359,7 @@ def test_check_box_charge():
     inpardict = {"neutral_charge_threshold": ["0.001"]}
 
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
@@ -376,12 +367,12 @@ def test_check_box_charge():
         0.2, 0.4, -0.3, -0.3
     ])
 
-    assert GM_SR.check_box_charge(Printer, RunPars, charges)
+    assert GM_SR.check_box_charge(RunPars, charges)
 
 
 # there are 3 of these in gen_universe.
 # the 1st one (FileNotFoundError) is already protected by SU_NP_2
-def test_MD_SU_1(capsys):
+def test_MD_SU_1():
 
     # ----- ValueError -------------------------------------------------
 
@@ -393,16 +384,12 @@ def test_MD_SU_1(capsys):
     }
 
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, cmdline, inpardict)
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        _ = GM_SR.gen_universe(Printer, RunPars)
-
-    assert pytest_wrapped_sysexit.type is SystemExit
-    captured = capsys.readouterr()
-    assert captured.out.endswith("MD_SU_1\n")
+    with pytest.raises(GM_Ex.GmapValueError, match="MD_SU_1$"):
+        _ = GM_SR.gen_universe(RunPars)
 
     # ----- Other (AttributeError?) ------------------------------------
 
@@ -413,16 +400,12 @@ def test_MD_SU_1(capsys):
     }
 
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        _ = GM_SR.gen_universe(Printer, RunPars)
-
-    assert pytest_wrapped_sysexit.type is SystemExit
-    captured = capsys.readouterr()
-    assert captured.out.endswith("MD_SU_1\n")
+    with pytest.raises(GM_Ex.GmapMDFileError, match="MD_SU_1$"):
+        _ = GM_SR.gen_universe(RunPars)
 
 
 def test_MD_SU_3(capsys):
@@ -431,7 +414,7 @@ def test_MD_SU_3(capsys):
     inpardict = {"neutral_charge_threshold": ["0.001"]}
 
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, mapdict, pairs_mapdict
     ) = parameter_getter(mapname, inpardict=inpardict)
 
@@ -442,12 +425,8 @@ def test_MD_SU_3(capsys):
         0.2, 0.4, -0.3, -0.3, 0.1
     ])
 
-    with pytest.raises(SystemExit) as pytest_wrapped_sysexit:
-        _ = GM_SR.check_box_charge(Printer, RunPars, charges)
-
-    assert pytest_wrapped_sysexit.type is SystemExit
-    captured = capsys.readouterr()
-    assert captured.out.endswith("MD_SU_3\n")
+    with pytest.raises(GM_Ex.GmapParameterError, match="MD_SU_3$"):
+        _ = GM_SR.check_box_charge(RunPars, charges)
 
     # Then, total charge is larger than threshold, but only because
     # there is a whole number involved. The decimal part still complies.
@@ -457,7 +436,7 @@ def test_MD_SU_3(capsys):
         0.2, 0.4, 0.3, 0.1
     ])
 
-    assert not GM_SR.check_box_charge(Printer, RunPars, charges)
+    assert not GM_SR.check_box_charge(RunPars, charges)
 
     captured = capsys.readouterr()
     assert captured.out.endswith("MD_SU_3\n")
@@ -482,14 +461,14 @@ def parameter_getter(mapname, cmdline=None, inpardict=None):
 
     # generate parameter structures
     (
-        Files, Printer, RunPars, RefPars, DefPars, InPars, CmdPars,
+        Files, RunPars, RefPars, DefPars, InPars, CmdPars,
         mapdict, pairs_mapdict
     ) = basic_setup(
         cmdline, inpardict, mapname=mapname, finish_before="extract_code")
 
     # # process maps
     # for map_ in mapdict.values():
-    #     map_.initialize(Files, Printer)
+    #     map_.initialize(Files)
     # # Ditch all maps that contain problems/flaws/issues
     # mapdict = {map_.name: map_ for map_ in mapdict.values() if map_.success}
     # for map_choice in RunPars.maps_to_use:
@@ -505,10 +484,10 @@ def parameter_getter(mapname, cmdline=None, inpardict=None):
     # else:
     #     RunPars.detected_requires_bonds = False
 
-    GM_MR.manage_maps_singles(Files, Printer, RunPars, mapdict)
-    GM_MR.manage_maps_pairs(Files, Printer, RunPars, pairs_mapdict)
+    GM_MR.manage_maps_singles(Files, RunPars, mapdict)
+    GM_MR.manage_maps_pairs(Files, RunPars, pairs_mapdict)
 
     return (
-        Files, Printer, RunPars, RefPars, DefPars, InPars,
+        Files, RunPars, RefPars, DefPars, InPars,
         CmdPars, mapdict, pairs_mapdict
     )
