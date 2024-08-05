@@ -69,7 +69,7 @@ class VEG_CLib(metaclass=GM_CT.Singleton):
             ct.c_int,  # n_osc_ats
             ct.POINTER(ct.c_float),  # spherepos
             ct.c_int,  # calc_choice
-            ct.POINTER(ct.c_float),  # positioins
+            ct.POINTER(ct.c_float),  # positions
             ct.POINTER(ct.c_float),  # charges
             ct.POINTER(ct.c_int),  # influencer_atoms
             ct.c_int,  # n_influencers

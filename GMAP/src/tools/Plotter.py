@@ -10,6 +10,32 @@ import GMAP.src.tools.ColorSchemes as GM_CS
 
 
 def plot_coupling_choices(RunPars, System):
+    """Creates the plot showing what coupling method is picked for each entry.
+
+    The plot has a maximum of 28 colors (different coupling methods) it
+    can display at a time. Colors are picked automatically to have the
+    largest possible separation.
+
+    Parameters
+    ----------
+     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic run-defining
+        parameters.
+    System : :class:`~GMAP.src.tools.SystemReader.System
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+
+    Returns
+    -------
+    fig : `matplotlib.figure.Figure`
+        The figure in which the plot was made. Should not be caught in
+        a normal run, this output is just for testing purposes.
+    ax : `matplotlib.axes._axes.Axes`
+        The axis on which the plot was made. Should not be caught in a
+        normal run, this output is just for testing purposes.
+    """
+
     nosc = System.nosc  # amount of oscillators
 
     # Obtain colors for plotting

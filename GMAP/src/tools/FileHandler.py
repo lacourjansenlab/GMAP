@@ -453,6 +453,15 @@ def write_output(RunPars, framenum, outputs):
             RunPars.output_dipole_filename, reshaped
         )
 
+    if "ram" in RunPars.output_data:
+        raman = outputs["raman"]
+        raman *= RunPars.raman_multiplier
+        reshaped = raman.T.flatten()
+        write_single(
+            RunPars, framenum, framenum_arr,
+            RunPars.output_raman_filename, reshaped
+        )
+
     if "pos" in RunPars.output_data:
         positions = outputs["positions"]
         positions *= RunPars.positions_multiplier
@@ -526,10 +535,12 @@ def clear_output(RunPars):
 
     if "ham" in RunPars.output_data:
         clear_single(RunPars, RunPars.output_hamiltonian_filename)
-    if "dip" in RunPars.output_data:
-        clear_single(RunPars, RunPars.output_dipole_filename)
     if "ene" in RunPars.output_data:
         clear_single(RunPars, RunPars.output_energies_filename)
+    if "dip" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_dipole_filename)
+    if "ram" in RunPars.output_data:
+        clear_single(RunPars, RunPars.output_raman_filename)
     if "pos" in RunPars.output_data:
         clear_single(RunPars, RunPars.output_positions_filename)
     if "dbp" in RunPars.output_data:

@@ -114,5 +114,11 @@ def cmd_to_tools(Files, allhelps, callcommand, choice, subch):
 
 
 def main():
+    """The entrypoint for the entire GMAP program. GMAP aliases here.
+
+    Collects the command line instructions, and passes them to the
+    function interpreting these.
+    """
+
     callcommand = sys.argv
     cmd_interface(callcommand)

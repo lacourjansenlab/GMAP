@@ -7,6 +7,30 @@ import GMAP.src.tools.PrintTools as GM_PT
 
 
 class GMAPexception(Exception):
+    """The base exception to all errors raised by GMAP.
+
+    Because all errors raised by the program inherit from this one, it
+    is easier for any code calling this program to identify any errors
+    raised.
+
+    If it is appropriate to, for example, raise an IndexError somewhere,
+    instead, GMAP raises the GmapIndexError - a class that inherits from
+    this GMAPexception, and from IndexError (to aid callers). If an
+    error is not easily traceable back to python errors, it does not
+    inherit from any of those, just this one.
+
+    Parameters
+    ----------
+    message : str
+        The message to display when the error triggers.
+    error_code : str, default=""
+        The code of the triggered error. These error codes also exist
+        in the manual. There is more information there, and clickable
+        links to the relevant manual pages for solving the issues that
+        arose.
+    cause : , default=None
+    """
+
     def __init__(self, message, error_code="", cause=None):
         # super(GMAPexception, self).__init__(f"with code {error_code}")
         if GM_PT.Printer().verbose != 4:

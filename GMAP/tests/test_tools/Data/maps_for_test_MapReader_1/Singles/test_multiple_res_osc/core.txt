@@ -3,6 +3,8 @@
 functional_group      [ALA]  N H CA C O  [ALA] N H CA C O [ALA] N H CA C O
 functional_group_bonds   8-10  5-3  0-1
 
+can_output         ham ene dip pos dbp
+
 #             C O CA N H  CA
 #             0 1 2 3  4  5
 used_atoms    8 9 7 10 11 12  # just a normal amide bond in a chain

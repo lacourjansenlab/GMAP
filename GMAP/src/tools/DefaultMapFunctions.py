@@ -465,12 +465,28 @@ def get_calculate_frequency(map_):
 
 
 def get_get_position(map_):
+    """Default for obtaining the position.
+
+    By default, the author of a map uses the oscillator-indices to
+    indicate what position (e.g. just an atom index) should be returned.
+    Those instructions are interpreted here and converted to a function
+    that can be used during runs.
+    """
+
     instructions = map_.rawcore["position"]
     GM_get_positions = interpret_position(map_, instructions, "position")
     return GM_get_positions
 
 
 def get_get_doublepos(map_):
+    """Default for obtaining the double positions.
+
+    By default, the author of a map uses the oscillator-indices to
+    indicate what positions (e.g. just an atom index) should be returned.
+    Those instructions are interpreted here and converted to a function
+    that can be used during runs.
+    """
+
     def GM_get_doublepos(Map, Syst, osc):
         pos0 = GM_get_doublepos0(Map, Syst, osc)
         pos1 = GM_get_doublepos1(Map, Syst, osc)

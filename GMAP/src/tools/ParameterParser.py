@@ -520,6 +520,15 @@ class RefPars:
         else:  # ea0
             self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
 
+        if self.choices["raman_units"][0] == "Ang3":
+            self.choices["raman_multiplier"] = [1]
+        else:  # bohr3
+            self.choices["raman_multiplier"] = [GM_con.ang2bohr ** 3]
+        # else:
+        # There is only one unit option for raman at the moment, as the
+        # units used in raman are a bit (very) confusing. If we ever want
+        # to add more, this is where they go!
+
         match self.choices["positions_units"][0]:
             case "Ang":
                 self.choices["positions_multiplier"] = [1]
@@ -1444,6 +1453,23 @@ class RawPars:
                 else:  # eV
                     self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
 
+        if "raman_units" in self.choices:
+            if self.is_default:  # for default, use multiplier
+                pass
+            elif "raman_multiplier" in self.choices:
+                GM_PT.Printer().warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. The source should contain only "
+                    "one of the parameters 'raman_units' and "
+                    "'raman_multiplier', but contains both.",
+                    "SU_WP_16", True, GMAPerrclass=GM_Ex.GmapParameterError
+                )
+            else:
+                if self.choices["raman_units"][0] == "Ang3":
+                    self.choices["raman_multiplier"] = [1]
+                else:  # bohr3
+                    self.choices["raman_multiplier"] = [GM_con.ang2bohr ** 3]
+
         if "positions_units" in self.choices:
             if self.is_default:  # for default, use multiplier
                 pass
@@ -1599,6 +1625,9 @@ class RunPars:
     coupling_v_pair_dict : dict of str: tuple of str pairs
         For each requested coupling map, get the pairs of oscillators it
         couples
+    available_outputs : tuple of str
+        What kinds of output the user can request the program to generate.
+        Is a copy of RefPars.options["output_data"].
     """
 
     def __init__(
@@ -1610,6 +1639,7 @@ class RunPars:
             self.MainRunPars = MainRunPars
         else:
             self.MainRunPars = self
+            self.available_outputs = tuple(RefPars.options["output_data"])
 
         # Extract all 'normal' parameters
         self.get_pars(CmdPars, InPars, DefPars, RefPars)

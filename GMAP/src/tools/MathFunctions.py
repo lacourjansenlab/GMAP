@@ -3,6 +3,53 @@ from numba import njit
 import numpy as np
 
 
+# (as I keep searching here for this, I'm putting this here)
+# rotating vectors and tensors in numpy:
+
+# assuming R is the rotation matrix that rotates base (or global, or default)
+# coordinates in changed/local ones. (so R rotates cartesian to box, or
+# MD to molecule). R must then look like this:
+# R[0] = local x vector defined in global coordinates (same for 1=y and 2=z)
+# Ri = R^-1, such that R @ Ri = np.diag([1, 1, 1])
+
+# v = some vector in global coords, v' is that same vector in local coords:
+# v = v' @ R   (and v' = v @ Ri)
+# This makes sense, as we take v'[0] amounts of R[0], etc, giving the 'total'
+# amount of global that v' represents.
+# This can be seen in how we convert cartesian to box and back.
+# also, how we convert the global field to local field (local = global @ invRM)
+
+# Tensors (like the electric field gradient and raman tensor) are seen as
+# operators (although they aren't used much as such) - a tensor T operates on
+# a vector v to do:  v -> vT
+# Then, analogously, T' does v' -> v'T'
+# so, how to find T' if we have T (or vice versa?)
+# v' = v @ Ri
+# v' @ T' = v @ Ri @ T'
+# v @ T = v @ Ri @ T' @ R
+# T = Ri @ T' @ R
+# and the other way around:
+# R @ T @ Ri = R @ Ri @ T' @ R @ Ri = T'
+# So, T = Ri @ T' @ R,    and T' = R @ T @ Ri
+# (the latter can be seen in rotating the global VEG)
+
+# But, when rotating global to local (and vice versa), we use R.T instead of
+# Ri, why? R.T is cheaper, and the two are equal if the matrix consists of
+# real-valued orthonormal vectors (which is the case for the global-local
+# matrix, but not for the cartesian-box matrix)
+
+# numpy matrix multiplication:
+# A = np.array([[a11, a12, a13], [a21, a22, a23], [a31, a32, a33]])
+# Then, this holds true: A @ B == np.array([
+#     [a11*b11 + a12*b21 + a13*b31, a11*b12 + a12*b22 + a13*b32, ...],
+#     [a21*b11 + a22*b21 + a23*b31, a21*b12 + a22*b22 + a23*b32, ...],
+#     [a31*b11 + a32*b21 + a33*b31, a31*b12 + a32*b22 + a33*b32, ...],
+# ])
+# Trick for memorization:
+# if C = A @ B, then C[i, j] = sum{k=1 -> k=3}(A[i, k] * B[k, j])
+# (hence, why A's second dimension must equal B's first)
+
+
 def PBC_triclinic(vect, boxvects, boxvects_inv):
     """Translates the vector to within the box centred around the origin
 
@@ -40,6 +87,10 @@ def PBC_triclinic(vect, boxvects, boxvects_inv):
 
 @njit
 def PBC_back2box(vect, boxvects):
+    """Takes a vector in box coordinates, moves it to lie within the
+    main box, and translate back to global/system/MD coordinates.
+    """
+
     half = np.float32(0.5)
     return (vect - np.floor(vect + half)) @ boxvects
 
@@ -96,6 +147,7 @@ def crossprod(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
     vect3 : `np.ndarray`
         The cross product of `vect1` and `vect2`.
     """
+
     vect3 = np.empty((3,))
     vect3[0] = vect1[1]*vect2[2]-vect1[2]*vect2[1]
     vect3[1] = vect1[2]*vect2[0]-vect1[0]*vect2[2]
@@ -121,6 +173,7 @@ def dotprod(vect1: np.ndarray, vect2: np.ndarray) -> float:
     vect3 : `np.ndarray`
         The dot product of `vect1` and `vect2`.
     """
+
     return vect1[0]*vect2[0] + vect1[1]*vect2[1] + vect1[2]*vect2[2]
 
 
@@ -142,6 +195,7 @@ def vec3_len(vect: np.ndarray) -> float:  # replacement for np.linalg.norm
     length : float
         The length of the provided vector.
     """
+
     return np.sqrt(vect[0]*vect[0] + vect[1]*vect[1] + vect[2]*vect[2])
 
 
@@ -167,6 +221,7 @@ def project(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
     vectout : `np.ndarray`
         The part of `vect2` that is orthogonal to `vect1`.
     """
+
     inprod = dotprod(vect1, vect2)/dotprod(vect1, vect1)
     vectout = vect2 - inprod*vect1
     return vectout
