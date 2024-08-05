@@ -653,6 +653,13 @@ class SingleMap(Map):
         self.complete_code(functs_to_build, kwargs_for_build)
 
     def assert_function_presence(self):
+        """Checks whether certain functions are present in self.code.
+
+        This is important for when there is no default available for
+        any given function. The only functions without default are
+        optional; only required for specific outputs.
+        """
+
         if (
             self.Core.can_output.intersection(["ram"])
             and not hasattr(self.code, "GM_calculate_raman")
@@ -2439,6 +2446,21 @@ class SingleCore():
                 self.dipole_data_array[:, :, 4:] *= conv_factor**3
 
     def parse_positions(self, rawcore, mapdir):
+        """Parse the choice for the positions to report.
+
+        The main purpose is to make sure that if the map says it can
+        generate positions, the required keywords are actually there.
+        Converting them to a usable function is done by the SingleMap
+        class after the core has been created.
+
+        Parameters
+        ----------
+        rawcore : dict of str - list of str pairs
+            The raw contents of the file core.txt
+        mapdir : pathlib.Path
+            The path to the directory in which the map is defined.
+        """
+
         for parname in "position", "doublepos_0", "doublepos_1":
             needed_by = ("pos", "dbp")
             if self.can_output.isdisjoint(needed_by):

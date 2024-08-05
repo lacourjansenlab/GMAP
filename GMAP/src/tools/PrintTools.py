@@ -46,6 +46,7 @@ class Printer(metaclass=GM_CT.Singleton):
     verbose_logfile : int
         How verbose the prints to the log file should be.
     """
+
     def __init__(self, Files):
         # The requested log file name/location is not immediately known, but
         # we still want to log information of the run. As long as the logfile
@@ -210,6 +211,19 @@ class Printer(metaclass=GM_CT.Singleton):
             self.print_backlog()
 
     def add_time(self, verbose_level, msg, precision='s'):
+        """Adds a timestamp to the program output to track speed.
+
+        Parameters
+        ----------
+        verbose_level : int
+            At what verbose setting (or higher) used by the user this
+            message should be reported.
+        msg : str
+            The text that should be reported along with the timestamp.
+        precision : str, default="s"
+            To what precision the time should be reported.
+        """
+
         self.Timer.add_time(msg)
         self.print(
             verbose_level,
@@ -218,6 +232,27 @@ class Printer(metaclass=GM_CT.Singleton):
 
 
 class Timer:
+    """Manages the timekeeping during runtime.
+
+    Times can be either added, or read from here.
+
+    Parameters
+    ----------
+    start : int, default=None
+        If provided, this is used as the reference time, instead of the
+        time at which the class was created. This new starting time
+        should be created using time.perf_counter_ns()
+
+    Attributes
+    ----------
+    zero : int
+        The reference point to which all times should be compared.
+    times : dict of str: int pairs.
+        The different times that the timer was requested to save. The
+        keys are the messages the times were accompanied by, the values
+        are the actual (raw perf_counter_ns()) times.
+    """
+
     def __init__(self, start=None):
         if start is None:
             self.zero = time.perf_counter_ns()
@@ -227,9 +262,28 @@ class Timer:
         self.times = {}
 
     def add_time(self, msg):
+        """Add another time to the dict.
+
+        Parameters
+        ----------
+        msg : str
+            The key with which the time is stored.
+        """
+
         self.times[msg] = time.perf_counter_ns()
 
     def get_time(self, msg):
+        """Retrieve a time from the dict.
+
+        Times retrieved have self.zero subtracted first, so they become
+        useful/meaningful.
+
+        Parameters
+        ----------
+        msg : str
+            The key from which the time should be retrieved.
+        """
+
         return self.times[msg] - self.zero
 
 

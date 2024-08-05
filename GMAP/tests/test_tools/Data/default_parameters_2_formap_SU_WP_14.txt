@@ -48,7 +48,7 @@ energies_units                cm-1
 energies_multiplier           1
 dipoles_units                 Debye
 dipoles_multiplier            1
-raman_units                   none
+raman_units                   Ang3
 raman_multiplier              1
 positions_units               Ang
 positions_multiplier          1

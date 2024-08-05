@@ -35,8 +35,8 @@ import numpy as np
 
 # But, when rotating global to local (and vice versa), we use R.T instead of
 # Ri, why? R.T is cheaper, and the two are equal if the matrix consists of
-# orthonormal vectors (which is the case for the global-local matrix, but not
-# for the cartesian-box matrix)
+# real-valued orthonormal vectors (which is the case for the global-local
+# matrix, but not for the cartesian-box matrix)
 
 # numpy matrix multiplication:
 # A = np.array([[a11, a12, a13], [a21, a22, a23], [a31, a32, a33]])
@@ -87,6 +87,10 @@ def PBC_triclinic(vect, boxvects, boxvects_inv):
 
 @njit
 def PBC_back2box(vect, boxvects):
+    """Takes a vector in box coordinates, moves it to lie within the
+    main box, and translate back to global/system/MD coordinates.
+    """
+
     half = np.float32(0.5)
     return (vect - np.floor(vect + half)) @ boxvects
 

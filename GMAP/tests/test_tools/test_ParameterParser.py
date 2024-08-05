@@ -51,7 +51,7 @@ class TestRefPars:
             "hamiltonian_units": ["cm-1", "eV"],
             "energies_units": ["cm-1", "eV"],
             "dipoles_units": ["Debye", "eBohr"],
-            "raman_units": ["none"],
+            "raman_units": ["Ang3", "Bohr3"],
             "positions_units": ["Ang", "Bohr", "nm"],
             "doublepos_units": ["Ang", "Bohr", "nm"],
             "str_test_choice": ["pick_this", "not_this", "or_this"],
@@ -113,7 +113,7 @@ class TestRefPars:
             "energies_multiplier": [1],
             "dipoles_units": ["Debye"],
             "dipoles_multiplier": [1],
-            "raman_units": ["none"],
+            "raman_units": ["Ang3"],
             "raman_multiplier": [1],
             "positions_units": ["Ang"],
             "positions_multiplier": [1],
@@ -525,7 +525,7 @@ class TestRawPars:
             "energies_multiplier": [1],
             "dipoles_units": ["Debye"],
             "dipoles_multiplier": [1],
-            "raman_units": ["none"],
+            "raman_units": ["Ang3"],
             "raman_multiplier": [1],
             "positions_units": ["Ang"],
             "positions_multiplier": [1],
@@ -581,6 +581,7 @@ class TestRawPars:
             "hamiltonian_units": ["eV"],
             "energies_units": ["eV"],
             "dipoles_units": ["eBohr"],
+            "raman_units": ["Bohr3"],
             "positions_units": ["Bohr"],
             "doublepos_units": ["Bohr"],
             "nobool_test1": [],
@@ -603,6 +604,8 @@ class TestRawPars:
             "energies_multiplier": [GM_con.cm2eV],
             "dipoles_units": ["eBohr"],
             "dipoles_multiplier": [GM_con.Debye2ea0],
+            "raman_units": ["Bohr3"],
+            "raman_multiplier": [GM_con.ang2bohr**3],
             "positions_units": ["Bohr"],
             "positions_multiplier": [GM_con.ang2bohr],
             "doublepos_units": ["Bohr"],
@@ -691,7 +694,7 @@ class TestRawPars:
 
         pardict = {
             "verbose": ["4"],
-            "raman_units": ["none"],
+            "raman_units": ["Ang3"],
             "positions_units": ["Ang"],
             "doublepos_units": ["Ang"],
             # "nobool_test1": [],
@@ -708,7 +711,7 @@ class TestRawPars:
         assert InPars.is_default is False
         assert InPars.choices == {
             "verbose": [4],
-            "raman_units": ["none"],
+            "raman_units": ["Ang3"],
             "raman_multiplier": [1],
             "positions_units": ["Ang"],
             "positions_multiplier": [1],
@@ -871,7 +874,7 @@ class TestRawPars:
         # ------------------------
 
         pardict = {
-            "raman_units": ["none"],
+            "raman_units": ["Ang3"],
             "raman_multiplier": [2]
         }
         self.systest_pardict(

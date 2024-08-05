@@ -52,7 +52,7 @@ energies_units[str]                                [cm-1] eV
 energies_multiplier[float]                         1
 dipoles_units[str]                                 [Debye] eBohr
 dipoles_multiplier[float]                          1
-raman_units[str]                                   [none]
+raman_units[str]                                   [Ang3] Bohr3
 raman_multiplier[float]                             1
 positions_units[str]                               [Ang] Bohr nm
 positions_multiplier[float]                        1

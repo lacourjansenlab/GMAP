@@ -981,6 +981,9 @@ class Oscillator:
 
     Parameters
     ----------
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The class containing all the information on the system of the
+        MD trajectory.
     atoms : list of int
         The indices of the atoms that make up this oscillator. All atoms
         specified in functional_group are in here.
@@ -1133,11 +1136,52 @@ class Oscillator:
             self.rotation_matrix = self.get_rotation_matrix(Syst)
 
     def get_VEG_ref(self, System):
+        """Obtain the VEG point for the current system. Must be repeated
+        every frame.
+
+        Parameters
+        ----------
+        System : :class:`~GMAP.src.tools.SystemReader.System`
+            The class containing all the information on the system of the
+            MD trajectory.
+
+        Returns
+        -------
+        VEG_ref : `np.ndarray`
+            A 1D array of length 3 and type float32. This point is the
+            center of a sphere with radius spheresize. All charges
+            located within that sphere will (if allowed by locals and
+            influencers) make up the final potential, field and gradient
+            calculated for this oscillator.
+        """
+
         return self.Map.code.GM_get_VEG_ref(
             self.Map, System, self
         )
 
     def get_rotation_matrix(self, System):
+        """Obtain the rotation matrix for the current system. Must be
+        repeated every frame.
+
+        Parameters
+        ----------
+        System : :class:`~GMAP.src.tools.SystemReader.System`
+            The class containing all the information on the system of the
+            MD trajectory.
+
+        Returns
+        -------
+        rotation_matrix : `np.ndarray`
+            A 2D array of shape (3, 3) and type float32. The first row
+            is the x-direction unit vector of the oscillator, defined
+            in global (/system/MD) coordinates. The second row is the
+            y-direction, the third the z. These three vectors must
+            always be orthonormal (and real). It is used for example to
+            rotate the computed field and gradient into the local
+            coordinates (through multiplying with the transpose of the
+            matrix provided here.
+        """
+
         return self.Map.code.GM_get_rotation_matrix(
             self.Map, System, self)
 

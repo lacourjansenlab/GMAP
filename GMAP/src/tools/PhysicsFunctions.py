@@ -219,7 +219,7 @@ def calc_frequency(System, oscillator):
 
 
 def calc_raman(System, oscillator):
-    """Calculate the frequency for a given oscillator
+    """Calculate the raman tensor for a given oscillator
 
     The oscillator 'knows' how this should be done - invoke that method.
 
@@ -235,8 +235,8 @@ def calc_raman(System, oscillator):
     Returns
     -------
     tensvect : `np.ndarray`
-        A length-6 vector representing the .
-        The vector must lie within the simulation box.
+        A length-6 vector representing the upper triangular part of the
+        raman tensor.
         Datatype of this array must be float32!
     """
 
@@ -245,11 +245,51 @@ def calc_raman(System, oscillator):
 
 
 def get_positions(System, oscillator):
+    """Determine the position for a given oscillator.
+
+    The oscillator 'knows' how this should be done - invoke that method.
+
+    Parameters
+    ----------
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    oscillator : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The specific oscillator for which the calculation is requested.
+
+    Returns
+    -------
+    pos : `np.ndarray`
+        A length-3 vector representing the position of the oscillator.
+        Datatype of this array must be float32!
+    """
+
     map_ = oscillator.Map
     return map_.code.GM_get_position(map_, System, oscillator)
 
 
 def get_doublepos(System, oscillator):
+    """Determine the positions for a given oscillator.
+
+    The oscillator 'knows' how this should be done - invoke that method.
+
+    Parameters
+    ----------
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    oscillator : :class:`~GMAP.src.tools.SystemReader.Oscillator`
+        The specific oscillator for which the calculation is requested.
+
+    Returns
+    -------
+    doublepos : `np.ndarray`
+        Two length-3 vectors representing the positions of the oscillator.
+        Datatype of these arrays must be float32!
+    """
+
     map_ = oscillator.Map
     return map_.code.GM_get_doublepos(map_, System, oscillator)
 

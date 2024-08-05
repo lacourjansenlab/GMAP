@@ -39,6 +39,11 @@ class Singleton(type):
 
     Finally, as they are only instantiated once, any subsequent calls
     don't even have to supply the (mandatory) parameters.
+
+    Note for developers: These singletons are confusing to pytest. When
+    running tests, make sure that the 'reset_singletons' fixture is
+    autoused during the session (runs every function). It should be if
+    the tests report they are using conftest.py.
     """
 
     _instances = {}
@@ -56,6 +61,7 @@ class CustomClass:
     Of the given dictionary, keys will become the attribute names, the
     values will become the actual stored thing in that attribute.
     """
+
     def __init__(self, **kwargs):
         for parname, val in kwargs.items():
             setattr(self, parname, val)

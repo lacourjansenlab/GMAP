@@ -520,8 +520,10 @@ class RefPars:
         else:  # ea0
             self.choices["dipoles_multiplier"] = [GM_con.Debye2ea0]
 
-        if self.choices["raman_units"][0] == "none":
+        if self.choices["raman_units"][0] == "Ang3":
             self.choices["raman_multiplier"] = [1]
+        else:  # bohr3
+            self.choices["raman_multiplier"] = [GM_con.ang2bohr ** 3]
         # else:
         # There is only one unit option for raman at the moment, as the
         # units used in raman are a bit (very) confusing. If we ever want
@@ -1463,9 +1465,10 @@ class RawPars:
                     "SU_WP_16", True, GMAPerrclass=GM_Ex.GmapParameterError
                 )
             else:
-                if self.choices["raman_units"][0] == "none":
+                if self.choices["raman_units"][0] == "Ang3":
                     self.choices["raman_multiplier"] = [1]
-                # no else needed, only one option available.
+                else:  # bohr3
+                    self.choices["raman_multiplier"] = [GM_con.ang2bohr ** 3]
 
         if "positions_units" in self.choices:
             if self.is_default:  # for default, use multiplier
