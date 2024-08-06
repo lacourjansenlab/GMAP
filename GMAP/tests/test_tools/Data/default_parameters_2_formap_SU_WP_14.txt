@@ -29,34 +29,35 @@ influencers_select_atoms        segid *
 verbose                         3
 verbose_logfile                 1
 prevent_overwrite               False
-output_format                           bin txt
-output_data                             ham dip pos
+dont_report_error               none
+output_format                   bin txt
+output_data                     ham dip pos
 
-neutral_charge_threshold                   0.0001
-guess_bonds                                False
+neutral_charge_threshold        0.0001
+guess_bonds                     False
 
-estatic_range                               20  # this is in angstrom
-estatic_smooth_range                        5  # this is in angstrom
+estatic_range                   20  # this is in angstrom
+estatic_smooth_range            5  # this is in angstrom
 
-start_frame                                 0
-number_frames                               999999999
-stop_frame                                  999999999
+start_frame                     0
+number_frames                   999999999
+stop_frame                      999999999
 
-hamiltonian_units             cm-1
-hamiltonian_multiplier        1
-energies_units                cm-1
-energies_multiplier           1
-dipoles_units                 Debye
-dipoles_multiplier            1
-raman_units                   Ang3
-raman_multiplier              1
-positions_units               Ang
-positions_multiplier          1
-doublepos_units               Ang
-doublepos_multiplier          1
+hamiltonian_units               cm-1
+hamiltonian_multiplier          1
+energies_units                  cm-1
+energies_multiplier             1
+dipoles_units                   Debye
+dipoles_multiplier              1
+raman_units                     Ang3
+raman_multiplier                1
+positions_units                 Ang
+positions_multiplier            1
+doublepos_units                 Ang
+doublepos_multiplier            1
 
-couplingvis_figsize           8  # width of figure in inches
-couplingvis_dpi               100
+couplingvis_figsize             8  # width of figure in inches
+couplingvis_dpi                 100
 
 
 # # testing array

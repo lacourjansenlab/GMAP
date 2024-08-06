@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 
 # local imports
+import GMAP.src.tools.CodingTools as GM_CT
 import GMAP.src.tools.constants as GM_con
 import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.FileHandler as GM_FH
@@ -469,7 +470,8 @@ class RefPars:
                 break
         else:
             GM_PT.Printer().warning(
-                "Encountered an issue with the following reference parameter "
+                "\nEncountered an issue with the following reference "
+                "parameter "
                 f"file: {self.fname}. The file should contain the parameters "
                 "'influencers_whitelist' and 'influencers_blacklist', but "
                 "contains neither.",
@@ -484,6 +486,20 @@ class RefPars:
             self.choices["influencers"] = [":All", "-", "("] + self.choices[
                 parameter
             ] + [")"]
+
+        # error codes - make sure they're of the correct format (2 _)
+        for error_code in self.choices["dont_report_error"]:
+            if error_code.lower() == "none":
+                continue
+            error_code = error_code.split("_")
+            if len(error_code) != 3:
+                GM_PT.Printer().warning(
+                    "\nEncountered an issue with the following reference "
+                    f"parameter file: {self.fname}. Any error codes "
+                    "provided should contain two underscores, even if "
+                    "providing partial error codes.",
+                    "SU_FP_7", True, GMAPerrclass=GM_Ex.GmapFileSyntaxError
+                )
 
         # Checking radii for estatic sphere
         estatic_range = self.choices.get("estatic_range", [1])[0]
@@ -1342,6 +1358,21 @@ class RawPars:
                 self.choices["influencers_select_atoms"]
             )
 
+        # error codes - make sure they're of the correct format (2 _)
+        error_codes = self.choices.get("dont_report_error", ["None"])
+        for error_code in error_codes:
+            if error_code.lower() == "none":
+                continue
+            error_code = error_code.split("_")
+            if len(error_code) != 3:
+                GM_PT.Printer().warning(
+                    "\nEncountered an issue with the following parameter "
+                    f"source: {self.fname}. Any error codes "
+                    "provided should contain two underscores, even if "
+                    "providing partial error codes.",
+                    "SU_WP_12", True, GMAPerrclass=GM_Ex.GmapFileSyntaxError
+                )
+
         # Checking radii for estatic sphere
         estatic_range = self.choices.get("estatic_range", [1])[0]
         if estatic_range < 0:
@@ -1648,9 +1679,10 @@ class RunPars:
         self.get_files(Files, CmdPars, InPars, DefPars, RefPars)
 
         if self.is_main:
+            self.resolve_errorcodes()
             GM_PT.Printer().set_state(
                 "running", self.verbose, self.verbose_logfile,
-                self.log_filename
+                self.log_filename, self.dont_report_error
             )
 
             # Resolve conflicts due to choices, change any settings that need
@@ -2231,6 +2263,15 @@ class RunPars:
                 self.coupling_v_pair_dict[value].append(key)
             else:
                 self.coupling_v_pair_dict[value] = [key]
+
+    def resolve_errorcodes(self):
+        # due to tests in RefPars and RawPars, we now know that the codes
+        # either are 'none', or a true code. Remove the none's, and change
+        # data type for valid comparisons later.
+        self.dont_report_error = [
+            GM_CT.ErrCode(error) for error in self.dont_report_error
+            if error.lower() != "none"
+        ]
 
     def interpret_coupling_pairstr(
         self, pairstr, failed_couppairs, coupmap

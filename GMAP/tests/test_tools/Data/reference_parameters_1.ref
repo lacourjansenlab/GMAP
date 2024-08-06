@@ -31,6 +31,7 @@ influencers_select_atoms[list_str]                segid *
 verbose[int]                                      0 1 [2] 3 4
 verbose_logfile[int]                              0 1 [2] 3 4
 prevent_overwrite[bool]                           False
+dont_report_error[list_str]                       none
 output_format[list_str]                           [bin] txt
 output_data[list_str]                             [ham] [dip] ene [pos] dbp ram
 

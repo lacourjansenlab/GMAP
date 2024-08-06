@@ -41,7 +41,7 @@ class GMAPexception(Exception):
 
     def __str__(self):
         # return f"\nError code {self.error_code}."
-        if GM_PT.Printer().verbose == 4 and self.error_code is not None:
+        if GM_PT.Printer().verbose == 4 and self.cause is not None:
             cc = self.cause.__class__
             return (
                 f"\n{cc.__module__}.{cc.__name__} "

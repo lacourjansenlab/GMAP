@@ -171,6 +171,14 @@ verbose_logfile
 How verbose the prints to the log file should be.
 
 
+dont_report_error
+=================
+| (no shorthand available)
+| (used by: GEM, DEPICT)
+
+What errors shouldn't be printed. Error codes are of the format AA_BB_C. To silence a very specific error, give the entire code. To silence a specific group, leave the varying parts blank (but leave the underscores): AA_BB\_ will silence all errors starting with AA_BB\_, AA__C will silence all errors that start with AA and end with C (with variable middle part), etc. You can keep as many parts blank as you want.
+
+
 prevent_overwrite
 =================
 | (no shorthand available)
