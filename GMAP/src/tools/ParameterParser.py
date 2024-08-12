@@ -1650,7 +1650,7 @@ class RunPars:
         if self.is_main:
             GM_PT.Printer().set_state(
                 "running", self.verbose, self.verbose_logfile,
-                self.log_filename
+                self.command_line_color, self.log_filename
             )
 
             # Resolve conflicts due to choices, change any settings that need

@@ -9,6 +9,8 @@ from traceback import TracebackException as TbEx
 # local imports
 import GMAP.src.tools.CodingTools as GM_CT
 import GMAP.src.tools.Exceptions as GM_Ex
+import GMAP.src.tools.MathFunctions as GM_MF
+import GMAP.src.tools.Plotter as GM_Pl
 
 
 class Printer(metaclass=GM_CT.Singleton):
@@ -63,6 +65,7 @@ class Printer(metaclass=GM_CT.Singleton):
         # 'demo' for when running in demo mode
         # 'running' for when running normally
         self.program_state = "startup"
+        self.color_mode = "white"  # in case some terminal cannot handle others
 
         self.Timer = Timer(start=Files.start)
 
@@ -90,12 +93,14 @@ class Printer(metaclass=GM_CT.Singleton):
         if self.program_state == "startup":
             self.backlog.append([verbose_level, toprint, instruction])
             return
-
+        toprint = str(toprint)
         if "p" in instruction and verbose_level <= self.verbose:
-            print(prettifier(str(toprint)))
+            print(prettifier(change_color(toprint, self.color_mode)))
         if "f" in instruction and verbose_level <= self.verbose_logfile:
             with open(self.logfile, "a") as fhand:
-                print(prettifier(str(toprint)), file=fhand)
+                # change color here so color codes/markers are not present in
+                # the log files
+                print(prettifier(change_color(toprint, "white")), file=fhand)
 
     def quit_early(self):
         """Called when the program is quitted early
@@ -184,7 +189,7 @@ class Printer(metaclass=GM_CT.Singleton):
             raise GMAPerrclass(error_message, error_code, exception)
 
     def set_state(
-        self, new_state, verbose, verbose_logfile, new_logfile=None
+        self, new_state, verbose, verbose_logfile, color_mode, new_logfile=None
     ):
         """Change the current state of Printer
 
@@ -206,9 +211,12 @@ class Printer(metaclass=GM_CT.Singleton):
         self.program_state = new_state
         self.verbose = verbose
         self.verbose_logfile = verbose_logfile
+        self.color_mode = color_mode
         if new_logfile:
             self.logfile = new_logfile
             self.print_backlog()
+        # color_test()
+        # GM_Pl.plot_color_conv()
 
     def add_time(self, verbose_level, msg, precision='s'):
         """Adds a timestamp to the program output to track speed.
@@ -287,7 +295,31 @@ class Timer:
         return self.times[msg] - self.zero
 
 
-def prettifier(string, deslen=79):
+def color_test():  # run this one with prettifier to 150 (8 colors per row)
+    def doprint(string):
+        convstring = change_color(string, "4bit")
+        Printer().print(0, string + convstring)
+
+    step = 16
+    range_ = [*range(0, 255, step)] + [255]
+    for r in range_:
+        Printer().print(0, f"\nRed value: {r}", instruction="p")
+        Printer().print(0, " Blue -> " + "".join(
+            [f"{ix:<7}" for ix in range_]) + "\nGreen", instruction="p")
+        for g in range_:
+            string = f"{g:>4}   "
+            # manual: either do (0, 127, 16), or (128, 255, 16)
+            for b in range_:
+                shortstr = f"\033[38;2;{r};{g};{b}m███\033[0m"
+                string += shortstr
+                string += change_color(shortstr, "4bit")
+                string += " "
+            Printer().print(0, string, instruction="p")
+        if r == 128:
+            break
+
+
+def prettifier(string, deslen=150):
     """Formats a given string to create soft-wrap-like behaviour.
 
     Parameters
@@ -306,16 +338,23 @@ def prettifier(string, deslen=79):
     startlst = string.split("\n")
     endlst = []
 
+    # We always take the length of the 'white' string, not the original;
+    # color swaps don't take up space in the command line, but here they do
+    # represent a length of up to 16!
+
     for item in startlst:
-        if len(item) > deslen:
+        ilen = len(change_color(item, "white"))
+        if ilen > deslen:
             itemlst = item.split(" ")
             buildstr = ""
             for subitem in itemlst:
-                if len(buildstr) + len(subitem) >= deslen:
+                slen = len(change_color(subitem, "white"))
+                blen = len(change_color(buildstr, "white"))
+                if blen + slen >= deslen:
                     endlst.append(buildstr)
                     buildstr = subitem
                 else:
-                    if len(buildstr) == 0:
+                    if blen == 0:
                         buildstr = subitem
                     else:
                         buildstr += " " + subitem
@@ -324,6 +363,82 @@ def prettifier(string, deslen=79):
             endlst.append(item)
 
     return "\n".join(endlst)
+
+
+def change_color(string, target_mode):
+    """GMAP defaults to 24-bit color. Change this to 4-bit or white.
+    """
+
+    # implemented to make the function easy to use, but the input will always
+    # be in 24bit format...
+    if target_mode == "24bit":
+        return string
+
+    # make sure the beginning text has a color, too (just for code
+    # simplification, not actually in output)
+    string_split = string.split("\033[")
+    if len(string_split) == 1:  # no color marker!
+        return string
+
+    # prepare the string - split it up into a list in which each item
+    # represents a monocolor segment. The item is a list of length 2, first
+    # the ansi color string, then the actual string.
+    newstr = "0m" + string
+    string_split = newstr.split("\033[")
+    # cut only at first m as thats the end of the color marker
+    string_list = [item.split("m", 1) for item in string_split]
+
+    # now, change the color of each monocolor substring
+    if target_mode == "4bit":  # 8 colors + their bright varieties
+        for item in string_list:
+            item[0] = ANSI24_to_ANSI4(item[0])
+        outputlist = [string_list[0][1]]  # don't keep color of first item
+        outputlist += [f"\033[{item[0]}m{item[1]}" for item in string_list[1:]]
+        return "".join(outputlist)
+    else:
+        # just delete any color markers
+        output = "".join([item[1] for item in string_list])
+        return output
+
+
+def ANSI24_to_ANSI4(colorstr):
+    """input colorstr in ANSI format (e.g. 38;2;45;61;32)"""
+
+    warning_msg = "\nInvalid color specification."
+
+    color_split = colorstr.split(";")  # get all useful values
+    color_new = []
+    while len(color_split) > 0:
+        match color_split[0]:
+            case "0":  # reset command - no extra's expected
+                color_new.append("0")
+                color_split = color_split[1:]
+
+            case "38":  # foreground - 5 items including this one
+                curr_color = color_split[:5]
+                if len(curr_color) != 5:  # premature end of list
+                    Printer().warning(warning_msg, "PT_CC_1", True)
+
+                new_col, bright = GM_MF.convert_color_24_4(*curr_color[2:])
+                if bright:
+                    color_new.append("1")
+                color_new.append(str(30 + new_col))
+                color_split = color_split[5:]
+
+            case "48":  # background - 5 items including this one
+                curr_color = color_split[:5]
+                if len(curr_color) != 5:  # premature end of list
+                    Printer().warning(warning_msg, "PT_CC_1", True)
+
+                # no bright - a bright background is not possible
+                new_col = GM_MF.convert_color_24_4(*curr_color[2:])[0]
+                color_new.append(str(40 + new_col))
+                color_split = color_split[5:]
+
+            case _:
+                Printer().warning(warning_msg, "PT_CC_1", True)
+
+    return ";".join(color_new)
 
 
 def devprint(*args, **kwargs):

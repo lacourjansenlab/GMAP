@@ -37,6 +37,12 @@ def cmd_interface(callcommand):
     Files = GM_FH.FileLocations()
     with open(Files.script_dir / "logo.txt") as lfile:
         logostr = lfile.read()
+    # convert abbr to actual color markers
+    # logostr = logostr.replace("P", "\033[38;2;229;140;140m")
+    # logostr = logostr.replace("G", "\033[38;2;140;229;140m")
+    logostr = logostr.replace("P", "\033[38;2;240;96;112m")
+    logostr = logostr.replace("G", "\033[38;2;128;240;112m")
+    logostr += "\033[0m"
 
     Printer().print(1, logostr)
 

@@ -1,6 +1,13 @@
+
+# standard library imports
+import math
+
 # 3rd party lib imports
 from numba import njit
 import numpy as np
+
+# local imports
+import GMAP.src.tools.constants as GM_con
 
 
 # (as I keep searching here for this, I'm putting this here)
@@ -225,3 +232,96 @@ def project(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
     inprod = dotprod(vect1, vect2)/dotprod(vect1, vect1)
     vectout = vect2 - inprod*vect1
     return vectout
+
+
+def calc_color_dist(r1, g1, b1, r2, g2, b2):
+    # redmean method: https://en.wikipedia.org/wiki/Color_difference
+    r_bar = 0.5 * (r1 + r2)
+    delC = math.sqrt(
+        (2 + r_bar/255) * abs(r1 - r2)**2
+        + 4 * abs(g1 - g2)**2
+        + (2 + (255 - r_bar)/255) * abs(b1 - b2)**2
+    )
+    return delC
+
+
+def convert_color_24_4(r, g, b, lookup={}):
+    rgb = (int(r), int(g), int(b))
+
+    if rgb in lookup:
+        return lookup[rgb]
+
+    maxdist = 765
+    outcolor = (255, 255, 255)
+    for ix, (col, output) in enumerate(GM_con.printed_colors.items()):
+        delC = calc_color_dist(*rgb, *col)
+        if 0 < ix < 4:
+            delC *= 2
+        if delC < maxdist:
+            maxdist = delC
+            outcolor = output
+
+    lookup[rgb] = outcolor
+    return outcolor
+
+
+def convert_color_24_4_first(r, g, b):
+    r = int(r)
+    g = int(g)
+    b = int(b)
+    delC_black = calc_color_dist(r, g, b, 0, 0, 0)
+    delC_white = calc_color_dist(r, g, b, 255, 255, 255)
+
+    # If close to white, return white
+    if delC_white < 150:
+        return 7, True
+    if delC_white < 250:
+        return 7, False
+
+    # If close to black, return black
+    if delC_black < 100:
+        return 0, False
+    if delC_black < 200:
+        return 0, True
+
+    brightness, midval, maxval = sorted([r, g, b])
+
+    if (
+        delC_white < 350  # close to white
+        or math.sqrt((midval - brightness)**2 + (maxval - midval)**2) > 160
+    ):
+        bright_return = True
+    else:
+        bright_return = False
+
+    # if midval != 0:
+    #     ratio = maxval/midval
+    # else:
+    #     ratio = 100
+    if midval == brightness:
+        ratio = 100
+    else:
+        ratio = (maxval - brightness) / (midval - brightness)
+
+    ratio_threshold = 2.2
+    if r == maxval:  # predominantly red
+        if ratio > ratio_threshold:  # red.
+            return 1, bright_return
+        if g == midval:  # yellow
+            return 3, bright_return
+        if b == midval:  # magenta
+            return 5, bright_return
+    if g == maxval:  # predominantly green
+        if ratio > ratio_threshold:  # green.
+            return 2, bright_return
+        if r == midval:  # yellow
+            return 3, bright_return
+        if b == midval:  # cyan
+            return 6, bright_return
+    if b == maxval:  # predominantly blue
+        if ratio > ratio_threshold:  # blue.
+            return 4, bright_return
+        if r == midval:  # magenta
+            return 5, bright_return
+        if g == midval:  # cyan
+            return 6, bright_return

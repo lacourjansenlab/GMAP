@@ -7,6 +7,7 @@ import sys
 import time
 
 # 3rd party lib imports
+import colorama  # pytest also uses this!
 import numpy as np
 
 # local imports
@@ -61,6 +62,8 @@ class FileLocations:
         self.cwd = Path(".").resolve()
         self.now = datetime.datetime.now()
         self.now_str = self.now.strftime("%Y-%m-%d_%H-%M-%S")
+
+        colorama.just_fix_windows_console()  # Enable colors in program output!
 
         self.sourcedir_hc = self.script_dir / "sourcefiles"
         self.mapdir_hc = self.script_dir / "maps"
