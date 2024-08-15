@@ -485,6 +485,10 @@ class RefPars:
                 parameter
             ] + [")"]
 
+        # safe mode!
+        if self.choices["safe_mode"] == ["True"]:
+            self.choices["command_line_color"] = ["white"]
+
         # Checking radii for estatic sphere
         estatic_range = self.choices.get("estatic_range", [1])[0]
         if estatic_range < 0:
@@ -1342,6 +1346,11 @@ class RawPars:
                 self.choices["influencers_select_atoms"]
             )
 
+        # safe mode!
+        if "safe_mode" in self.choices:
+            if self.choices["safe_mode"] == ["True"]:
+                self.choices["command_line_color"] = ["white"]
+
         # Checking radii for estatic sphere
         estatic_range = self.choices.get("estatic_range", [1])[0]
         if estatic_range < 0:
@@ -1650,8 +1659,10 @@ class RunPars:
         if self.is_main:
             GM_PT.Printer().set_state(
                 "running", self.verbose, self.verbose_logfile,
-                self.command_line_color, self.log_filename
+                self.command_line_color, self.command_line_length,
+                self.log_filename
             )
+            GM_PT.Printer().setenv(self.safe_mode, self.dark_mode)
 
             # Resolve conflicts due to choices, change any settings that need
             # to be changed, due to parameters that interlock.

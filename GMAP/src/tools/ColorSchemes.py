@@ -25,8 +25,36 @@ A sequential rainbow generator! Feed it the amount of colors you'd like,
 and out comes a list of those colors nicely distributed along the rainbow.
 """
 
+# 3rd party imports
 import matplotlib.colors as mplC
 from matplotlib import colormaps
+
+# local imports
+import GMAP.src.tools.CodingTools as GM_CT
+
+
+class PrinterColors(GM_CT.CustomClass):
+    """Saves the provided color strings (ANSI sequences)"""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.coldict = kwargs
+        self.coldict_r = {v: k for k, v in self.coldict.items()}
+
+
+StandInColors = PrinterColors(**{
+    col: f"\033<{col}>" for col in ("pink", "green")
+})
+
+DarkModeColors = PrinterColors(**{
+    "pink": "\033[38;2;240;96;112m",
+    "green": "\033[38;2;128;240;112m"
+})
+
+
+LightModeColors = PrinterColors(**{
+    "pink": "\033[38;2;188;64;64m",
+    "green": "\033[38;2;55;102;47m"
+})
 
 
 class QualitativeColorScheme:

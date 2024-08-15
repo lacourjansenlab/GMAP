@@ -34,20 +34,50 @@ def cmd_interface(callcommand):
         actually requested from the program.
     """
 
+    # The very first initialization the program needs/assumes. Also initializes
+    # the printing tool (Printer()).
     Files = GM_FH.FileLocations()
+
+    # Deduce whether we should be running in safe mode / dark mode.
+    final_callcommand = []
+    safe_mode = False
+    dark_mode = True
+    for item in callcommand:
+        match item.lower():
+            case "-safe" | "--safe_mode":
+                safe_mode = True
+            case "-nodm" | "--nodark_mode":
+                dark_mode = False
+            case "-dm" | "--dark_mode":
+                dark_mode = True
+            case _:
+                pass
+        final_callcommand.append(item)
+    callcommand = final_callcommand
+    Printer().setenv(safe_mode, dark_mode)
+    colors = Printer().colors
+
+    # Now, load/print logo!
     with open(Files.script_dir / "logo.txt") as lfile:
         logostr = lfile.read()
     # convert abbr to actual color markers
     # logostr = logostr.replace("P", "\033[38;2;229;140;140m")
     # logostr = logostr.replace("G", "\033[38;2;140;229;140m")
-    logostr = logostr.replace("P", "\033[38;2;240;96;112m")
-    logostr = logostr.replace("G", "\033[38;2;128;240;112m")
+    # logostr = logostr.replace("P", "\033[38;2;240;96;112m")
+    # logostr = logostr.replace("G", "\033[38;2;128;240;112m")
+    logostr = logostr.replace("P", colors.pink)
+    logostr = logostr.replace("G", colors.green)
     logostr += "\033[0m"
 
-    Printer().print(1, logostr)
+    Printer().print(1, "\n\n" + logostr + "\n")
+    Printer().print(
+        1,
+        "\nFor the most up-to-date version of GMAP, reporting bugs/issues, "
+        "suggesting improvements for the program, questions, or any other "
+        "kind of feedback, go to github.com/Kimvana/GMAP\n"
+    )
 
     allhelps = ["help", "h", "-h"]
-
     if len(callcommand) == 1:
         callcommand.append(allhelps[0])
     if len(callcommand) == 2:

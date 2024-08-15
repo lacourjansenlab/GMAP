@@ -339,6 +339,15 @@ If you need a place to quickly write something down, do it here! It can be tidie
     - Indicate whether a VEG dependence file for calcfreq has been supplied or not (and similarly for dipoles etc)
   - have c code for potential take the influencers into account (possibly not within c code, but create mirror of system? new position/charges/etc array containing only valid influencers?)
   - Links to relevant packages etc in explanation in main documentation page.
+- (KvA) If ever needed - we can detect windows command line background color like this: 
+```python
+import colorama
+colors = colorama.win32.GetConsoleScreenBufferInfo().wAttributes
+background_color = colors >> 4
+foreground_color = colors % 16
+```
+Why? The colors are stored in binary format. Counting from the right, the first 3 bits are used for the color (allowing the 8 choices used in 4-bit colors), then a bit for bright/not bright, then 3 bits for the background color, and another for bright/not bright. The order of the colors is different from ANSI: black, blue, green, cyan, red, magenta, yellow, white.
+- (KvA) There doesn't seem to be an easy alternative for non-windows :(
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Refparfile currently doesn't indicate whether a parameter is optional, or MUST be given by the user. Or is the N/A choice sufficient?
 - (KvA) Chosen map structure forces coupling maps to be complex? At some point, discuss coupling maps more?

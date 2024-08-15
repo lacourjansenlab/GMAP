@@ -8,9 +8,10 @@ from traceback import TracebackException as TbEx
 
 # local imports
 import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.ColorSchemes as GM_CS
 import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.MathFunctions as GM_MF
-import GMAP.src.tools.Plotter as GM_Pl
+# import GMAP.src.tools.Plotter as GM_Pl
 
 
 class Printer(metaclass=GM_CT.Singleton):
@@ -65,7 +66,10 @@ class Printer(metaclass=GM_CT.Singleton):
         # 'demo' for when running in demo mode
         # 'running' for when running normally
         self.program_state = "startup"
-        self.color_mode = "white"  # in case some terminal cannot handle others
+        self.color_mode = "24bit"  # safe mode will overwrite this!
+        self.colors = GM_CS.StandInColors  # should be used by callers
+        self._colors = GM_CS.DarkModeColors  # default colors for early prints
+        self.line_length = 79
 
         self.Timer = Timer(start=Files.start)
 
@@ -76,7 +80,9 @@ class Printer(metaclass=GM_CT.Singleton):
         self.verbose = 3
         self.verbose_logfile = 4
 
-    def print(self, verbose_level, toprint, instruction="pf"):
+    def print(
+        self, verbose_level, toprint, instruction="pf", line_length=None
+    ):
         """Called when something needs to be printed.
 
         Parameters
@@ -90,17 +96,25 @@ class Printer(metaclass=GM_CT.Singleton):
             The message to print
         """
 
+        # This means that RunPars hasn't been completed yet, and many print
+        # settings are still unknown. So if we don't have to print, don't!
         if self.program_state == "startup":
-            self.backlog.append([verbose_level, toprint, instruction])
+            self.backlog.append(
+                [verbose_level, toprint, instruction, line_length])
             return
+
+        if line_length is None:
+            line_length = self.line_length
         toprint = str(toprint)
         if "p" in instruction and verbose_level <= self.verbose:
-            print(prettifier(change_color(toprint, self.color_mode)))
+            print(prettifier(
+                change_color(toprint, self.color_mode), line_length))
         if "f" in instruction and verbose_level <= self.verbose_logfile:
             with open(self.logfile, "a") as fhand:
-                # change color here so color codes/markers are not present in
-                # the log files
-                print(prettifier(change_color(toprint, "white")), file=fhand)
+                # change color to white here so color codes/markers are not
+                # present in the log files
+                print(prettifier(
+                    change_color(toprint, "24bit"), line_length), file=fhand)
 
     def quit_early(self):
         """Called when the program is quitted early
@@ -126,8 +140,8 @@ class Printer(metaclass=GM_CT.Singleton):
         with open(self.logfile, "w") as _:
             pass
 
-        for verbose_level, toprint, instruction in self.backlog:
-            self.print(verbose_level, toprint, instruction)
+        for print_instructions in self.backlog:
+            self.print(*print_instructions)
         self.backlog = []
 
     def warning(
@@ -188,8 +202,21 @@ class Printer(metaclass=GM_CT.Singleton):
                 self.print_backlog()
             raise GMAPerrclass(error_message, error_code, exception)
 
+    def setenv(self, safe_mode, dark_mode):
+        self.safe_mode = safe_mode
+        self.dark_mode = dark_mode
+
+        if safe_mode:
+            # in case some terminal cannot handle others
+            self.color_mode = "white"
+        if self.dark_mode:
+            self._colors = GM_CS.DarkModeColors
+        else:
+            self._colors = GM_CS.LightModeColors
+
     def set_state(
-        self, new_state, verbose, verbose_logfile, color_mode, new_logfile=None
+        self, new_state, verbose, verbose_logfile, color_mode, line_length,
+        new_logfile=None
     ):
         """Change the current state of Printer
 
@@ -211,7 +238,9 @@ class Printer(metaclass=GM_CT.Singleton):
         self.program_state = new_state
         self.verbose = verbose
         self.verbose_logfile = verbose_logfile
-        self.color_mode = color_mode
+        if not self.safe_mode:
+            self.color_mode = color_mode
+        self.line_length = line_length
         if new_logfile:
             self.logfile = new_logfile
             self.print_backlog()
@@ -298,14 +327,17 @@ class Timer:
 def color_test():  # run this one with prettifier to 150 (8 colors per row)
     def doprint(string):
         convstring = change_color(string, "4bit")
-        Printer().print(0, string + convstring)
+        Printer().print(0, string + convstring, line_length=130)
 
     step = 16
     range_ = [*range(0, 255, step)] + [255]
     for r in range_:
-        Printer().print(0, f"\nRed value: {r}", instruction="p")
-        Printer().print(0, " Blue -> " + "".join(
-            [f"{ix:<7}" for ix in range_]) + "\nGreen", instruction="p")
+        Printer().print(
+            0, f"\nRed value: {r}", instruction="p", line_length=130)
+        Printer().print(
+            0, " Blue -> " + "".join(
+                [f"{ix:<7}" for ix in range_])
+            + "\nGreen", instruction="p", line_length=130)
         for g in range_:
             string = f"{g:>4}   "
             # manual: either do (0, 127, 16), or (128, 255, 16)
@@ -314,12 +346,12 @@ def color_test():  # run this one with prettifier to 150 (8 colors per row)
                 string += shortstr
                 string += change_color(shortstr, "4bit")
                 string += " "
-            Printer().print(0, string, instruction="p")
+            Printer().print(0, string, instruction="p", line_length=130)
         if r == 128:
             break
 
 
-def prettifier(string, deslen=150):
+def prettifier(string, deslen=79):
     """Formats a given string to create soft-wrap-like behaviour.
 
     Parameters
@@ -369,8 +401,19 @@ def change_color(string, target_mode):
     """GMAP defaults to 24-bit color. Change this to 4-bit or white.
     """
 
-    # implemented to make the function easy to use, but the input will always
-    # be in 24bit format...
+    # The code should be able to choose colors last-minute, so there are
+    # internal codes, too! Here, we switch from internal to ANSI
+    # Even if there are no custom markers, don't quit, there might be ANSI
+    # markers still!
+    string_split = string.split("\033<")
+    if len(string_split) != 1:  # custom color marker!
+        string_list = [item.split(">", 1) for item in string_split]
+        newlist = [">".join(string_list[0])]
+        for item in string_list[1:]:
+            newlist.append(getattr(Printer()._colors, item[0]) + item[1])
+        string = "".join(newlist)
+
+    # If we want 24bit, we can stay with the current ANSI codes.
     if target_mode == "24bit":
         return string
 

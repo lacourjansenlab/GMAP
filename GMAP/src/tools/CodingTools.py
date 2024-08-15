@@ -65,4 +65,3 @@ class CustomClass:
     def __init__(self, **kwargs):
         for parname, val in kwargs.items():
             setattr(self, parname, val)
-        return
