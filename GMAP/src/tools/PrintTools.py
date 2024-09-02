@@ -158,12 +158,6 @@ class Printer(metaclass=GM_CT.Singleton):
 
         # might seem backwards, but we should report if the error wasn't
         # silenced.
-        # devprint(self.dont_report_error)
-        # devprint(type(self.dont_report_error[0]))
-        # devprint(GM_CT.ErrCode(error_code))
-        # devprint(self.program_state)
-        # devprint(message)
-        # devprint(exception)
         if GM_CT.ErrCode(error_code) not in self.dont_report_error:
             if exitbool:
                 printinstruct = "f"

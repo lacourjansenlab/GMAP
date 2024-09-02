@@ -95,11 +95,6 @@ class ErrCode(str):
         True
         """
 
-        dpr = GM_PT.devprint
-
-        dpr(self, type(self))
-        dpr(other, type(other))
-
         # type checking
         selfsplit = self.split("_")
         if len(selfsplit) != 3:
@@ -126,6 +121,11 @@ class ErrCode(str):
 
     @staticmethod
     def report_invalid_type(obj):
+        """Raises error about obj not being of the correct type.
+
+        The comparisons performed
+        """
+
         GM_PT.Printer().warning(
             f"\n{obj} is assumed to be an error code, but is not a string, "
             "so this method cannot be used. Please make sure to only "
@@ -135,9 +135,6 @@ class ErrCode(str):
 
     @staticmethod
     def report_invalid_length(obj):
-        # cf = inspect.currentframe().f_back.fback
-        # lineno = cf.f_lineno
-
         GM_PT.Printer().warning(
             f"\n{obj} is assumed to be an error code, but does not have 3 "
             "parts separated by underscores. Please make sure to only "
