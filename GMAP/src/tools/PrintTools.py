@@ -64,6 +64,9 @@ class Printer(metaclass=GM_CT.Singleton):
         # 'running' for when running normally
         self.program_state = "startup"
 
+        # error codes which shouldn't be printed by warning.
+        self.dont_report_error = []
+
         self.Timer = Timer(start=Files.start)
 
         Files.set_exec_os()
@@ -153,38 +156,41 @@ class Printer(metaclass=GM_CT.Singleton):
         if GMAPerrclass is None:
             GMAPerrclass = GM_Ex.GMAPexception
 
-        # if error_code[2:6] not in ["_MC_",]:
-        # if error_code == "MI_MC_9":
-        if exitbool:
-            printinstruct = "f"
-        else:
-            printinstruct = "pf"
+        # might seem backwards, but we should report if the error wasn't
+        # silenced.
+        if GM_CT.ErrCode(error_code) not in self.dont_report_error:
+            if exitbool:
+                printinstruct = "f"
+            else:
+                printinstruct = "pf"
 
-        error_message = message
-        self.print(0, message, printinstruct)
+            error_message = message
+            self.print(0, message, printinstruct)
 
-        # print the traceback in exactly the same way as it would be
-        # thrown into the command line.
-        if exception:
-            traceprint = TbEx.from_exception(exception).format()
-            self.print(4, "\n" + "".join(traceprint), printinstruct)
-            if self.verbose == 4:
-                error_message += "\n" + "".join(traceprint)
+            # print the traceback in exactly the same way as it would be
+            # thrown into the command line.
+            if exception:
+                traceprint = TbEx.from_exception(exception).format()
+                self.print(4, "\n" + "".join(traceprint), printinstruct)
+                if self.verbose == 4:
+                    error_message += "\n" + "".join(traceprint)
 
-        msg = (
-            "More information can be found in the documentation "
-            f"user pages using the following error code: {error_code}"
-        )
-        self.print(0, msg, printinstruct)
-        error_message += msg
+            msg = (
+                " More information can be found in the documentation "
+                f"user pages using the following error code: {error_code}"
+            )
+            self.print(0, msg, printinstruct)
+            error_message += msg
 
         if exitbool:
             if self.backlog:
                 self.print_backlog()
+            self.print(0, "", "p")  # We want an empty line before the error
             raise GMAPerrclass(error_message, error_code, exception)
 
     def set_state(
-        self, new_state, verbose, verbose_logfile, new_logfile=None
+        self, new_state, verbose, verbose_logfile, new_logfile=None,
+        new_dont_report_error=None
     ):
         """Change the current state of Printer
 
@@ -206,6 +212,8 @@ class Printer(metaclass=GM_CT.Singleton):
         self.program_state = new_state
         self.verbose = verbose
         self.verbose_logfile = verbose_logfile
+        if new_dont_report_error is not None:
+            self.dont_report_error = new_dont_report_error
         if new_logfile:
             self.logfile = new_logfile
             self.print_backlog()

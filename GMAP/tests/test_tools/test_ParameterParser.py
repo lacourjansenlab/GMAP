@@ -4,17 +4,17 @@ src/tools/ParameterParser.py.
 
 Missing tests:
 
-(@ August 2nd '24):
-370-371, 431, 1133, 1243, 1756-1757, 2130 (8 missed statements)
+(@ August 6th '24):
+371-372, 432, 1151, 1261, 1791-1792, 2165 (8 missed statements)
 
 (CUHTAT - currently unknown how to access this )
-- SU_FP_7 (CUHTAT)   (370-371)
-- RefPars parse choice - unknown dtype (CUHTAT)  (431)
-- RawPars verify choice - unknown dtype (CUHTAT)  (1133)
+- SU_FP_7 (CUHTAT)   (371-372)
+- RefPars parse choice - unknown dtype (CUHTAT)  (432)
+- RawPars verify choice - unknown dtype (CUHTAT)  (1151)
 - RawPars checkparexist - variable may occur multiple times, but is also
-  not expected in deffiles (N/A in refpars)  (1243)
-- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1756-1757)
-- RunPars framenums - empty source (CUHTAT)   (2130)
+  not expected in deffiles (N/A in refpars)  (1261)
+- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1791-1792)
+- RunPars framenums - empty source (CUHTAT)   (2165)
 """
 
 # standard library imports
@@ -98,6 +98,7 @@ class TestRefPars:
             "verbose": [2],
             "verbose_logfile": [2],
             "prevent_overwrite": [False],
+            "dont_report_error": ["none"],
             "output_format": ["bin"],
             "output_data": ["ham", "dip", "pos"],
             "neutral_charge_threshold": [0.0001],
@@ -305,6 +306,7 @@ class TestRefPars:
             "influencers_whitelist",
             "influencers_blacklist",
             "influencers_select_atoms",
+            "dont_report_error",
             "output_format",
             "output_data",
             "hamiltonian_units",
@@ -333,6 +335,7 @@ class TestRefPars:
             "influencers_whitelist",
             "influencers_blacklist",
             "influencers_select_atoms",
+            "dont_report_error",
             "output_format",
             "output_data",
             "str_test_free_list",
@@ -445,6 +448,11 @@ class TestRefPars:
             "SU_FP_7",
             GM_Ex.GmapValueError
         )
+        self.systest(
+            "tests/test_tools/Data/reference_parameters_SU_FP_7_3.ref",
+            "SU_FP_7",
+            GM_Ex.GmapFileSyntaxError
+        )
 
     def test_SU_FP_8(self):
         self.systest(
@@ -510,6 +518,7 @@ class TestRawPars:
             "verbose": [3],
             "verbose_logfile": [1],
             "prevent_overwrite": [False],
+            "dont_report_error": ["none"],
             "output_format": ["bin", "txt"],
             "output_data": ["ham", "dip", "pos"],
             "neutral_charge_threshold": [0.0001],
@@ -804,6 +813,9 @@ class TestRawPars:
             "int_test_free": ["apple"]
         }
         self.systest_pardict(pardict, "SU_WP_12", GM_Ex.GmapTypeError)
+
+        pardict = {"dont_report_error": ["unavail_unavail"]}
+        self.systest_pardict(pardict, "SU_WP_12", GM_Ex.GmapFileSyntaxError)
 
     def test_SU_WP_13(self):
         pardict = {
