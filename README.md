@@ -60,4 +60,5 @@ When you've made some choices to the code, and would like to rebuild the docs, n
 ### mac
 
 - open terminal
-- ```cc -fPIC -dynamiclib -o scriptname.dylib scriptname.cpp```
+- ```cc -fPIC -dynamiclib -o scriptname.dylib scriptname.cpp``` (worked fine with AIM)
+- ```cc -fPIC -dynamiclib -std=c++11 -o scriptname.dylib scriptname.cpp``` (needed on Sonoma 14.6.1 to avoid alias warnings)
