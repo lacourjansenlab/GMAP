@@ -35,6 +35,7 @@ dark_mode(dm)[bool]                               True
 command_line_color[str]                           white 4bit [24bit]
 command_line_length[int]                          79
 prevent_overwrite[bool]                           True
+dont_report_error[list_str]                       none
 output_format[list_str]                           [bin] txt
 output_data[list_str]                             [ham] [dip] ene [pos] dbp ram
 

@@ -27,6 +27,7 @@ influencers_select_atoms        segid *
 verbose 3
 verbose_logfile 4
 prevent_overwrite False
+dont_report_error                       none
 output_format                           bin txt
 output_data                             ham dip pos
 

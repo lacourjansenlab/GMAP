@@ -81,7 +81,7 @@ The given parameter requires a choice to be provided, but this did not happen. S
 
 SU_WP_5
 -------
-When specifying a choice for a parameter that can accept multiple choices, the last choice must always be appended by '\\;', without spaces between the last choice and the '\\;'. See :ref:`this page <UserGuide_page_specifying_parameters_commandline>` for more information on how to specify a parameter on the command line.
+When specifying a choice (on the command line) for a parameter that can accept multiple choices, the last choice must always be appended by '\\;', without spaces between the last choice and the '\\;'. See :ref:`this page <UserGuide_page_specifying_parameters_commandline>` for more information on how to specify a parameter on the command line.
 
 SU_WP_6
 -------
@@ -113,7 +113,7 @@ One of the parameters supplied in a parameter file (either input or default, see
 
 SU_WP_13
 --------
-Default parameter files must contain all parameters, but there is an exception. There is a subclass of parameters that are not allowed in the default parameter file, because it would simply not make sense. This parameter is one of them, and should be removed from the default parameter file. See :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how parameter files work.
+Default parameter files must contain all parameters, but there is an exception. There is a group of parameters that are not allowed in the default parameter file, because it would simply not make sense. This parameter is one of them, and should be removed from the default parameter file. See :ref:`this page <UserGuide_page_specifying_parameters_file>` for more information on how parameter files work.
 
 SU_WP_14
 --------
@@ -434,6 +434,15 @@ A file named maps_copy already exists in the directory that is being copied to.
 ***********
 Other codes
 ***********
+
+
+CT_EC_1
+=======
+Something was compared to an error code, but wasn't one itself. If the error persists without using any custom maps, please contact the GMAP developers. If not, please contact the respective map authors.
+
+CT_EC_2
+=======
+Something was compared to an error code, but had the wrong format. If the error persists without using any custom maps, please contact the GMAP developers. If not, please contact the respective map authors.
 
 howtogethere
 ============
