@@ -61,8 +61,14 @@ def get_prep_coupling():
 
 
 def get_str_osc():
-    def base_str_getter(Syst, Map, osc):
+    def base_str_getter(Map, Syst, osc):
         return f"living on residue number {Syst.resnums[osc.used_atoms[0]]}"
+    return base_str_getter
+
+
+def get_report_system():
+    def base_str_getter(Map, Syst):
+        return f"{Map.name: <20}: {len(Syst.oscillators_ordered[Map.name])}"
     return base_str_getter
 
 

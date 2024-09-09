@@ -46,6 +46,7 @@ class TestRefPars:
         assert RefPars.options == {
             "verbose": [0, 1, 2, 3, 4],
             "verbose_logfile": [0, 1, 2, 3, 4],
+            "command_line_color": ["white", "4bit", "24bit"],
             "output_format": ["bin", "txt"],
             "output_data": ["ham", "dip", "ene", "pos", "dbp", "ram"],
             "hamiltonian_units": ["cm-1", "eV"],
@@ -97,6 +98,10 @@ class TestRefPars:
             "influencers": [":All"],
             "verbose": [2],
             "verbose_logfile": [2],
+            "safe_mode": [False],
+            "dark_mode": [True],
+            "command_line_color": ["24bit"],
+            "command_line_length": [79],
             "prevent_overwrite": [False],
             "dont_report_error": ["none"],
             "output_format": ["bin"],
@@ -165,6 +170,8 @@ class TestRefPars:
             "opf": "output_positions_filename",
             "md": "map_directory",
             "um": "maps_to_use",
+            "safe": "safe_mode",
+            "dm": "dark_mode",
             "ts1": "str_test_free",
             "ts2": "str_test_choice",
             "ts3": "str_test_free_list",
@@ -265,6 +272,7 @@ class TestRefPars:
         assert RefPars.intpars == [
             "verbose",
             "verbose_logfile",
+            "command_line_length",
             "start_frame",
             "number_frames",
             "stop_frame",
@@ -294,6 +302,8 @@ class TestRefPars:
             "float_test_choice_list2"
         ]
         assert RefPars.boolpars == [
+            "safe_mode",
+            "dark_mode",
             "prevent_overwrite",
             "guess_bonds",
             "bool_test1",
@@ -306,6 +316,7 @@ class TestRefPars:
             "influencers_whitelist",
             "influencers_blacklist",
             "influencers_select_atoms",
+            "command_line_color",
             "dont_report_error",
             "output_format",
             "output_data",
@@ -517,6 +528,10 @@ class TestRawPars:
             "influencers": [":All"],
             "verbose": [3],
             "verbose_logfile": [1],
+            "safe_mode": [False],
+            "dark_mode": [True],
+            "command_line_color": ["24bit"],
+            "command_line_length": [79],
             "prevent_overwrite": [False],
             "dont_report_error": ["none"],
             "output_format": ["bin", "txt"],

@@ -5,6 +5,7 @@ import numpy as np
 
 # local imports
 import GMAP.src.tools.CLibLoader as GM_CL
+import GMAP.src.tools.PrintTools as GM_PT
 
 
 def calc_CoM(System, atomlist):
@@ -108,9 +109,12 @@ def calc_frame(RunPars, System, outputs):
     """
 
     VEGlib = GM_CL.VEG_CLib()
+    printer = GM_PT.Printer()
 
+    printer.add_time(4, "VEG-related properties:", "VEGprop", "ms")
     for oscix, oscillator in enumerate(System.oscillators):
         # Do we need the estatics?
+        printer.add_time(5, "", "VEGcalc")
         if any(data in RunPars.output_data for data in ("ham", "dip", "ene")):
             if oscillator.Map.Core.electrostatic_choice in ("V", "E", "G"):
                 # calculate VEG
@@ -120,6 +124,7 @@ def calc_frame(RunPars, System, outputs):
             if oscillator.Map.Core.electrostatic_choice in ("E", "G"):
                 oscillator.rotate_VEG()
 
+        printer.add_time(5, "", "VEGuse")
         # do we need dipoles?
         # we also need dipoles for the (full) hamiiltonian.
         if any(data in RunPars.output_data for data in ("ham", "dip")):
@@ -151,8 +156,10 @@ def calc_frame(RunPars, System, outputs):
 
     # calculate the couplings for the hamiltonian
     if "ham" in RunPars.output_data:
+        printer.add_time(4, "Preparing coupling:", "PrepCoup", "ms")
         prep_coupling(RunPars, System)
 
+        printer.add_time(4, "Calculating coupling:", "CalcCoup", "ms")
         calc_coupling(RunPars, System, outputs)
 
     return outputs

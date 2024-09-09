@@ -6,6 +6,7 @@ import MDAnalysis as MDA
 import numpy as np
 
 # local imports
+import GMAP.src.tools.DefaultMapFunctions as GM_DMF
 import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.ParameterParser as GM_PP
 import GMAP.src.tools.PhysicsFunctions as GM_PF
@@ -114,14 +115,27 @@ class System:
     """
 
     def __init__(self, Files, RunPars):
-        self.universe = gen_universe(RunPars)
-        self.set_properties()
-        self.basic_boxchecks(RunPars)
+        self.universe = gen_universe(RunPars)  # MDA universe creation
+        self.set_properties()  # Extract numpy arrays from MDA universe
+        self.basic_boxchecks(RunPars)  # see if box has correct size and charge
 
-        self.find_influencers(RunPars)
+        self.find_influencers(RunPars)  # Find all influencing atoms
 
+        # detect all valid oscillators and introduce them to the maps
         self.find_oscillators(Files, RunPars)
+
+        # sort all oscillators, make usable lookup-tables. Also, determine
+        # correct coupling map for each oscillator pair (and build tables
+        # for the pairs, too)
         self.order_oscillators(RunPars)
+
+        # It would make sense to, just as with influencers, also report all
+        # findings to the user (through printing to command line and log file).
+        # However, we're not going to do that, as maps might need to do
+        # more investigating on their oscillators to know what they are. So,
+        # we want to give maps the time to do that, and only report on the
+        # system once they're done! This means reporting happens after the
+        # post-init call to each map!
 
     def basic_boxchecks(self, RunPars):
         """Performs the first basic analyses on the provided universe.
@@ -756,18 +770,6 @@ class System:
                 self.oscillators_ordered[mapname].append(oscillator)
                 self.oscillators_ordered_ix[mapname].append(oscix)
 
-        # # build a new coupling_v_pair_dict; this one only contains the
-        # # maps we actually need for this system (what if a requested
-        # # oscillator is not present in the system? those are left out)
-        # self.coupling_v_pair_dict = {}
-        # for coupmap, pairs in RunPars.coupling_v_pair_dict.items():
-        #     for pair in pairs:
-        #         if all(item in self.oscillators_ordered for item in pair):
-        #             if coupmap in self.coupling_v_pair_dict:
-        #                 self.coupling_v_pair_dict[coupmap].append(pair)
-        #             else:
-        #                 self.coupling_v_pair_dict[coupmap] = [pair]
-
         # for each oscillator pair, determine which coupling map should
         # treat it. That coupling map has the chance to change it.
         coup_v_allpair = {}
@@ -821,8 +823,8 @@ class System:
             coupmap = RunPars.requested_pairmapdict[coupmapname]
             coupmap.allpairs = pairlist
 
-        # # for each coupling map, determine which oscillators are coupled
-        # # by that map (no coupled oscillators - not in the dict)
+        # for each coupling map, determine which oscillators are coupled
+        # by that map (no coupled oscillators - not in the dict)
         self.oscillators_ordered_coup = {}
         self.oscillators_ordered_coup_ix = {}
         for oscix, oscillator in enumerate(self.oscillators):
@@ -854,21 +856,34 @@ class System:
 
         printer = GM_PT.Printer()
 
-        printer.add_time(4, "positions:", "ms")
+        printer.add_time(4, "positions and box:", "PosBox", "ms")
         self.positions = self.universe.atoms.positions.astype('float32')
-        printer.add_time(4, "positions_c:", "ms")
         self.positions_c = np.ctypeslib.as_ctypes(np.ravel(self.positions))
-        printer.add_time(4, "box:", "ms")
         self.determine_box()
-        printer.add_time(4, "COM:", "ms")
+        printer.add_time(4, "Center of Mass:", "COM", "ms")
         self.residues.CoM = GM_PF.system_CoM(
             self.positions, self.masses, self.boxvects_inv,
             self.boxvects, self.residues.first_ix, self.residues.last_ix,
             self.nres
         )
-        printer.add_time(4, "COM_c:", "ms")
         self.residues.CoM_c = np.ctypeslib.as_ctypes(
             np.ravel(self.residues.CoM))
+
+    def print_system(self, RunPars):
+        # reporting the amount of oscillators per oscillator type
+        report_osctype = GM_DMF.get_report_system()  # generate function
+        toprint = [
+            report_osctype(map_, self)
+            for map_ in RunPars.requested_mapdict.values()]
+
+        # This should be printed if and only if verbose is set to 1.
+        GM_PT.Printer().print(1, "\n".join(toprint), detailed_instructions=[1])
+
+        # let each map decide how to report their oscillators.
+        for mapname in self.oscillators_ordered.keys():
+            map_ = RunPars.requested_mapdict[mapname]
+            toprint = map_.code.GM_report_system(map_, self)
+            GM_PT.Printer().print(2, toprint)
 
 
 class Residues:
@@ -1070,7 +1085,7 @@ class Oscillator:
     def __str__(self):
         return (
             f"{self.__class__.__name__} of type {self.Map.name} "
-            f"{self.Map.code.GM_str_osc(self.system, self.Map, self)}"
+            f"{self.Map.code.GM_str_osc(self.Map, self.system, self)}"
         )
 
     def rotate_VEG(self):

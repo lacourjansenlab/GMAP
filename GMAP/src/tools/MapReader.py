@@ -584,6 +584,7 @@ class SingleMap(Map):
         self.complete_code((
             "str_osc",
             "post_init",
+            "report_system",
             "pre_run",
             "pre_frame",
             "post_frame",

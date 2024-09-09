@@ -1,5 +1,6 @@
 
 # standard library imports
+import datetime
 import inspect
 import pathlib
 # import sys
@@ -84,7 +85,8 @@ class Printer(metaclass=GM_CT.Singleton):
         self.verbose_logfile = 4
 
     def print(
-        self, verbose_level, toprint, instruction="pf", line_length=None
+        self, verbose_level, toprint, instruction="pf", line_length=None,
+        detailed_instructions=None
     ):
         """Called when something needs to be printed.
 
@@ -97,22 +99,59 @@ class Printer(metaclass=GM_CT.Singleton):
             the message will be printed/logged.
         toprint : str
             The message to print
+        instruction : str, default="pf"
+            Where to print to. If the string contains a 'p', the message
+            will be printed to the terminal, if the string contains an
+            "f", the message will be written to the logfile.
+        line_length : int or None, default=None
+            At what length the program should wrap lines. Lines printed
+            to the terminal or logfile will not exceed this length. If
+            provided, RunPars.command_line_length will be ignored. If
+            the default None is provided, RunPars.command_line_length
+            will be used.
+        detailed instructions : list of int or None, default=None
+            Any extra instructions. If None, an empty list will be
+            assumed. Currently supported:
+            If any of the digits 0-4 are present in the list (each a
+            separate item), only at EXACTLY that verbose level the
+            message will be printed.
         """
 
         # This means that RunPars hasn't been completed yet, and many print
         # settings are still unknown. So if we don't have to print, don't!
         if self.program_state == "startup":
-            self.backlog.append(
-                [verbose_level, toprint, instruction, line_length])
+            self.backlog.append([
+                verbose_level, toprint, instruction, line_length,
+                detailed_instructions
+            ])
             return
 
         if line_length is None:
             line_length = self.line_length
+        if detailed_instructions is None:
+            detailed_instructions = []
         toprint = str(toprint)
-        if "p" in instruction and verbose_level <= self.verbose:
+        all_verbose = {0, 1, 2, 3, 4}
+
+        # print to command line
+        if (
+            "p" in instruction
+            and verbose_level <= self.verbose
+            and (  # no specific verbose instr, or our specific one is in there
+                (self.verbose in detailed_instructions)
+                is not all_verbose.isdisjoint(detailed_instructions))
+        ):
             print(prettifier(
                 change_color(toprint, self.color_mode), line_length))
-        if "f" in instruction and verbose_level <= self.verbose_logfile:
+
+        # print to file
+        if (
+            "f" in instruction
+            and verbose_level <= self.verbose_logfile
+            and (  # no specific verbose instr, or our specific one is in there
+                (self.verbose_logfile in detailed_instructions)
+                is not all_verbose.isdisjoint(detailed_instructions))
+        ):
             with open(self.logfile, "a") as fhand:
                 # change color to white here so color codes/markers are not
                 # present in the log files
@@ -254,7 +293,7 @@ class Printer(metaclass=GM_CT.Singleton):
         # color_test()
         # GM_Pl.plot_color_conv()
 
-    def add_time(self, verbose_level, msg, precision='s'):
+    def add_time(self, verbose_level, msg, label, precision='s'):
         """Adds a timestamp to the program output to track speed.
 
         Parameters
@@ -268,10 +307,12 @@ class Printer(metaclass=GM_CT.Singleton):
             To what precision the time should be reported.
         """
 
-        self.Timer.add_time(msg)
+        self.Timer.add_time(label)
+        now = datetime.datetime.now().strftime("%a %d %H:%M")
+        runtime = time_to_str(self.Timer.get_time(label), precision)
         self.print(
             verbose_level,
-            f"{msg} at: {time_to_str(self.Timer.get_time(msg), precision)}"
+            f"[{now}] {runtime}:  {msg}"
         )
 
 
@@ -295,6 +336,34 @@ class Timer:
         The different times that the timer was requested to save. The
         keys are the messages the times were accompanied by, the values
         are the actual (raw perf_counter_ns()) times.
+
+    Notes
+    -----
+    All labels in use (refers to what'll be done next)::
+        (start)
+        ParParse      (3)
+        AddMaps       (3)
+        MDinit        (2)
+        MapInit       (3)
+        ClibLoad      (3)
+        PrepLoop      (3)
+        StartLoop     (3)
+          FrameUpdate (4)
+            PosBox    (4)
+            COM       (4)
+          OscUpdate   (4)
+          StructInit  (4)
+          MapFInit    (4)
+          Calc        (4)
+            VEGprop   (4)
+            VEGcalc   (5)
+            VEGuse    (5)
+            PrepCoup  (4)
+            CalcCoup  (4)
+          MapFPost    (4)
+          FrameWrite  (4)
+          LoadFrame   (4)
+        MapPost       (3)
     """
 
     def __init__(self, start=None):
@@ -304,6 +373,8 @@ class Timer:
             self.zero = start
 
         self.times = {}
+        self.totals = {}
+        self.previous = ["start", self.zero]
 
     def add_time(self, msg):
         """Add another time to the dict.
@@ -314,7 +385,14 @@ class Timer:
             The key with which the time is stored.
         """
 
-        self.times[msg] = time.perf_counter_ns()
+        now = time.perf_counter_ns()
+
+        if self.previous[0] not in self.totals:
+            self.totals[self.previous[0]] = now - self.previous[1]
+        else:
+            self.totals[self.previous[0]] += now - self.previous[1]
+        self.times[msg] = now
+        self.previous = [msg, now]
 
     def get_time(self, msg):
         """Retrieve a time from the dict.
@@ -329,6 +407,40 @@ class Timer:
         """
 
         return self.times[msg] - self.zero
+
+    def get_total_ns(self, *args):
+        """Get sum of total calculation times.
+
+        Each label listed in args is retrieved from totals, which is
+        subsequently summed.
+
+        Parameters
+        ----------
+        *args : str
+            Each argument is a string and represents a label of which
+            the time should be retrieved.
+        """
+
+        total_time = 0
+        for label in args:
+            total_time += self.totals[label]
+        return total_time
+
+    def get_total_format(self, *args):
+        """Get a nicely formatted representation of total calculation times.
+
+        Each label listed in args is retrieved from totals, and they
+        are summed before conversion to a human-readable format.
+
+        Parameters
+        ----------
+        *args : str
+            Each argument is a string and represents a label of which
+            the time should be retrieved.
+        """
+
+        total_time = self.get_total_ns(*args)
+        return time_to_str(total_time)
 
 
 def color_test():  # run this one with prettifier to 150 (8 colors per row)
@@ -721,9 +833,9 @@ def time_to_str(ns_time, precision="s"):
         str_time += f".{ms:03d}"
 
     if precision in {"us", "ns"}:
-        str_time += f".{us:03d}"
+        str_time += f"{us:03d}"
 
     if precision == "ns":
-        str_time += f".{ns:03d}"
+        str_time += f"{ns:03d}"
 
     return str_time

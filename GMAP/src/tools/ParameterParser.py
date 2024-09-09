@@ -1689,12 +1689,12 @@ class RunPars:
 
         if self.is_main:
             self.resolve_errorcodes()
+            GM_PT.Printer().setenv(self.safe_mode, self.dark_mode)
             GM_PT.Printer().set_state(
                 "running", self.verbose, self.verbose_logfile,
                 self.command_line_color, self.command_line_length,
                 self.log_filename, self.dont_report_error
             )
-            GM_PT.Printer().setenv(self.safe_mode, self.dark_mode)
 
             # Resolve conflicts due to choices, change any settings that need
             # to be changed, due to parameters that interlock.
