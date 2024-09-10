@@ -16,6 +16,71 @@ Please note that when paths are supplied, they should either be absolute, or spe
 Some parameters store paths that can be relative to a directory stored in a different parameter. Where this is the case, this is denoted. Please note that when a file path and a directory path are given, the file path is assumed relative to the directory path. If only the file path is given, it is assumed relative to the source. If only the directory is given, file paths from lower-precedence sources are assumed relative to it.
 
 
+**********************
+Parameters for visuals
+**********************
+
+These change how GMAP looks in the command line.
+
+verbose
+=======
+| (no shorthand available)
+| (options: 0, 1, 2, 3, 4)
+| (used by: GEM, DEPICT)
+
+How verbose the prints to the command line should be. When 0 is chosen, nothing but errors will be reported. Different from the parameter verbose_logfile
+
+
+safe_mode
+=========
+| (shorthand: -safe)
+| (options: true, t, false, f)
+| (used by: GEM, DEPICT)
+
+Whether to run the program in safe mode. If weird errors occur, it might be wise to specify this **directly on the command line**. Currently only influences the color palette used.
+
+
+dark_mode
+=========
+| (shorthand: -dm)
+| (options: true, t, false, f)
+| (used by: GEM, DEPICT)
+
+Whether to run the program in dark mode. Dark mode means that the colors are chosen for good visibility on a dark background. When turned off, the colors are chosen for good visibility on a light background. Has no influence if the program is set to black-white only.
+
+
+command_line_color
+==================
+| (no shorthand available)
+| (options: white, 4bit, 24bit)
+| (used by: GEM, DEPICT)
+
+What color palette to use. White uses black or white letters (the opposite of the background of the command line). 4bit uses `the 4bit ANSI colors <https://en.wikipedia.org/wiki/ANSI_escape_code#Colors>`__, 24bit uses the full color spectrum.
+
+These colors will not be used for writing the log file.
+
+.. tip::
+    Do you have some vision issues (like limited color vision)? Then, 4bit colors will probably work better for you than 24bit ones, as the 4bit color usage has been designed with color blindness in mind.
+
+    We know vision issues are a spectrum, and many people experience them differently. We truly appreciate any feedback on the 4bit color usage! Please note that we cannot pick `the 16 colors used <https://en.wikipedia.org/wiki/ANSI_escape_code#Colors>`__, but we can choose which to use!
+
+.. tip::
+    You can still use colors while running an automated job on a high-performance cluster! Most likely, you will then not see the command line (for long jobs) directly, it will be written to an output file instead (like slurm.out). To open/view these files with colors active, use the following command::
+        less -R [filename]  (unix)
+        more -R [filename]  (windows)
+
+
+command_line_length
+===================
+| (no whorthand available)
+| (used by: GEM, DEPICT)
+
+How long lines are allowed to be. If a line turns out longer, the program will automatically attempt to wrap it at a whitespace. If a single 'word' (like file locations) is too long, it will not be cut off.
+
+Applies both to the command line output, as to the files written by the program.
+
+
+
 *************************
 parameters for file paths
 *************************
@@ -153,22 +218,13 @@ parameters for how to write files
 *********************************
 
 
-verbose
-=======
-| (no shorthand available)
-| (options: 0, 1, 2, 3, 4)
-| (used by: GEM, DEPICT)
-
-How verbose the prints to the command line should be. When 0 is chosen, nothing but errors will be reported.
-
-
 verbose_logfile
 ===============
 | (no shorthand available)
 | (options: 0, 1, 2, 3, 4)
 | (used by: GEM, DEPICT)
 
-How verbose the prints to the log file should be.
+How verbose the prints to the log file should be. Different from the parameter verbose.
 
 
 dont_report_error
@@ -198,6 +254,7 @@ In what format the output files should be created. Bin for binary format, txt fo
 
 
 .. _UserGuide_page_parameter_overview_output_data:
+
 output_data
 ===========
 | (no shorthand available)

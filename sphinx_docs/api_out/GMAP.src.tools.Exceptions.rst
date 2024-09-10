@@ -1,7 +1,7 @@
-GMAP.src.tools.PrintTools module
+GMAP.src.tools.Exceptions module
 ================================
 
-.. automodule:: GMAP.src.tools.PrintTools
+.. automodule:: GMAP.src.tools.Exceptions
    :members:
    :undoc-members:
    :show-inheritance:

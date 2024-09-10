@@ -357,7 +357,8 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
-  - "GMAP -nodm" on mac currently gives the error of unknown program choice
+  - "GMAP -nodm" currently gives the error of unknown program choice
+  - On some machines, an ANSI color flag only applies until the next newline character. Prettifier is in charge of inserting newlines where needed, but doesn't repeat colorcodes after inserted newlines :/
 - (KvA) TODO:
   - start on mapdev-checklist. What things should a mapmaker double check before starting the map (and, simultaneously, have map-testing feature do these checks where possible - at least, write down what it should test)
     - Indicate whether a VEG dependence file for calcfreq has been supplied or not (and similarly for dipoles etc)

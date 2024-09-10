@@ -1,7 +1,7 @@
-GMAP.src.tools.FileHandler module
+GMAP.src.tools.CodingTools module
 =================================
 
-.. automodule:: GMAP.src.tools.FileHandler
+.. automodule:: GMAP.src.tools.CodingTools
    :members:
    :undoc-members:
    :show-inheritance:

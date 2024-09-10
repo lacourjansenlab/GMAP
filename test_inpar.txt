@@ -26,8 +26,8 @@ output_format txt
 output_data dip ham
 prevent_overwrite False
 
-start_frame 2
-number_frames 10
+start_frame 0
+number_frames 100
 
 estatic_smooth_range 0
 neutral_charge_threshold 0.01

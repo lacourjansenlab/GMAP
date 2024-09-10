@@ -1,7 +1,7 @@
-GMAP.src.tools.SystemReader module
+GMAP.src.tools.ColorSchemes module
 ==================================
 
-.. automodule:: GMAP.src.tools.SystemReader
+.. automodule:: GMAP.src.tools.ColorSchemes
    :members:
    :undoc-members:
    :show-inheritance:

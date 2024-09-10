@@ -8,7 +8,9 @@ Submodules
    :maxdepth: 4
 
    GMAP.src.programs.AIM
+   GMAP.src.programs.DEPICT
    GMAP.src.programs.GEM
+   GMAP.src.programs.Setup
 
 Module contents
 ---------------
@@ -17,3 +19,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

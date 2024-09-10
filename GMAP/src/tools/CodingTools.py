@@ -153,3 +153,11 @@ class CustomClass:
     def __init__(self, **kwargs):
         for parname, val in kwargs.items():
             setattr(self, parname, val)
+
+
+def return_first(*args):
+    return args[0]
+
+
+def return_list(*args):
+    return [*args]

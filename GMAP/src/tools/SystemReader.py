@@ -296,8 +296,16 @@ class System:
                     group_def, groupdict, map_.corepath
                 )
 
+        cb = GM_PT.Printer().colors.green_lc
+        ct = GM_PT.Printer().colors.clear
+        line = f"{cb}════{ct}"
         GM_PT.Printer().print(
-            1, f"\n{GM_PT.make_header('Influencers', '-')}\n\n")
+            1, f"\n{line} Influencers {line}", detailed_instructions=[1])
+        GM_PT.header(2, "Influencers", "doublebox")
+        # head = GM_PT._make_header(
+        #     "Influencers", " ", "oulrc", 1)
+        # GM_PT.Printer().print(1, f"\n\n{head}\n |")
+        # GM_PT.Printer().preline = " | "
 
         # names of residues or residue groups are given to specify infl.
         if isinstance(RunPars.influencers, list):
@@ -308,6 +316,8 @@ class System:
             )
             self.influencers_atix = self.residues.manage_influencers(choice)
             influencers_not_included = groupdict["All"] - choice
+            if len(influencers_not_included) == 0:
+                influencers_not_included.add("None")
             GM_PT.Printer().print(
                 1,
                 "Residue names included in influencers:\n"
@@ -322,7 +332,7 @@ class System:
                 atgroup = self.universe.select_atoms(RunPars.influencers)
             except Exception as ex:
                 GM_PT.Printer().warning(
-                    "Some problem occured while selecting atoms for the "
+                    "\nSome problem occured while selecting atoms for the "
                     "influencers",
                     "SU_NP_6", True, exception=ex
                 )
@@ -337,13 +347,15 @@ class System:
                 choice = choice["choice"]
             else:
                 GM_PT.Printer().warning(
-                    "When using a file to specify influencers, the final "
+                    "\nWhen using a file to specify influencers, the final "
                     "choice of influencers must be given using the group "
                     "'choice'.",
                     "SU_NP_5", True, GMAPerrclass=GM_Ex.GmapFileSyntaxError
                 )
             self.influencers_atix = self.residues.manage_influencers(choice)
             influencers_not_included = groupdict["All"] - choice
+            if len(influencers_not_included) == 0:
+                influencers_not_included.add("None")
             GM_PT.Printer().print(
                 1,
                 "Residue names included in influencers:\n"
@@ -356,13 +368,18 @@ class System:
         atixprint = GM_PT.intlist_to_rangelist(
             self.influencers_atix, self.natoms
         )
+        if len(atixprint[1]) == 0:
+            atixprint[1].append("None")
         GM_PT.Printer().print(
             3,
-            "Atoms included in influencers:\n"
+            "\nAtoms included in influencers:\n"
             + ", ".join(atixprint[0]) +
             "\n\nAtoms NOT included in influencers:\n"
             + ", ".join(atixprint[1])
         )
+        # GM_PT.Printer().preline = ""
+        # GM_PT.Printer().print(1, " |\n-┴--- End of influencers -----\n")
+        GM_PT.footer(2, "influencers", "doublebox")
         self.influencers_atix = np.asarray(
             self.influencers_atix, dtype=np.int32
         )
@@ -870,6 +887,23 @@ class System:
             np.ravel(self.residues.CoM))
 
     def print_system(self, RunPars):
+
+        # head = GM_PT._make_header(
+        #     "MD system analysis", " ", "oulrc", 1,
+        #     overline_char="═", underline_char="═", left_char="║",
+        #     right_char="║", corner_char="╔╗╚╝", special={
+        #         "u": {"replace": {"╦": [[1]]}}
+        #     })
+        # GM_PT.Printer().print(1, f"\n\n{head}\n ║")
+        # GM_PT.Printer().preline = " ║ "
+        cb = GM_PT.Printer().colors.green_lc
+        ct = GM_PT.Printer().colors.clear
+        line = f"{cb}════{ct}"
+        GM_PT.Printer().print(
+            1, f"\n{line} MD system analysis {line}",
+            detailed_instructions=[1])
+        GM_PT.header(2, "MD system analysis", "doublebox")
+
         # reporting the amount of oscillators per oscillator type
         report_osctype = GM_DMF.get_report_system()  # generate function
         toprint = [
@@ -884,6 +918,11 @@ class System:
             map_ = RunPars.requested_mapdict[mapname]
             toprint = map_.code.GM_report_system(map_, self)
             GM_PT.Printer().print(2, toprint)
+
+        # GM_PT.Printer().preline = ""
+        # GM_PT.Printer().print(
+        #     1, " ║\n ╚═══ End of MD system analysis ═════\n")
+        GM_PT.footer(2, "MD system analysis", "doublebox")
 
 
 class Residues:

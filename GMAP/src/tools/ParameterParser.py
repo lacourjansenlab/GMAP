@@ -142,14 +142,17 @@ class RefPars:
     @classmethod
     def add_reffile(cls, fname, base_RefPars):
         """
-        When the default parameter file given by the user is of .ref format
-        instead of .txt, it ends up here. How are .ref files treated different?
+        When the default parameter file given by the user is of .ref
+        format instead of .txt, it ends up here. How are .ref files
+        treated different? ::
+
             - most importantly: format! A .ref file is formatted differently
               from a .txt.
             - While a .txt only stores the choice for each parameter, the .ref
               also stores the allowed options. This would allow users to impose
               stricter limits. Is this actually useful???
         """
+
         GM_PT.Printer().warning(
             "\nNot implemented yet!",
             "SU_FP_1", True, GMAPerrclass=GM_Ex.GmapNotImplementedError
@@ -2485,7 +2488,7 @@ def get_parameters(Files, in_parfile, argslist):
         DefPars = RefPars.add_reffile(def_parfile, RefPars_)
     else:
         GM_PT.Printer().warning(
-            f"The requested default parameter file {def_parfile} is of the "
+            f"\nThe requested default parameter file {def_parfile} is of the "
             "wrong file format. "
             "Please refer to the manual to see what file types are supported.",
             "SU_GEM_1", True, GMAPerrclass=GM_Ex.GmapFileSyntaxError
@@ -2531,6 +2534,9 @@ def get_parameters(Files, in_parfile, argslist):
 
     for map_ in all_mapdict.values():
         map_.find_runpars(Files, RunPars_)
+
+    Files.defparfilename = DefPars.fname
+    Files.inparfilename = InPars.fname
 
     return (
         RunPars_, singles_mapdict, pairs_mapdict, CmdPars, InPars, DefPars,
@@ -2982,7 +2988,7 @@ def parse_influencerfile_line(line, groupdict, fname):
 
     if problem_chars:
         GM_PT.Printer().warning(
-            f"The influencers file {fname} contains one or more invalid "
+            f"\nThe influencers file {fname} contains one or more invalid "
             "characters. Make sure the following characters are not present: "
             f"{''.join(problem_chars)}.",
             "SU_NP_4", True, GMAPerrclass=GM_Ex.GmapFileSyntaxError

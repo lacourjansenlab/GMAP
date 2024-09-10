@@ -83,10 +83,11 @@ class Printer(metaclass=GM_CT.Singleton):
         # choices are known.
         self.verbose = 3
         self.verbose_logfile = 4
+        self.preline = []
 
     def print(
-        self, verbose_level, toprint, instruction="pf", line_length=None,
-        detailed_instructions=None
+        self, verbose_level, *toprint, instruction="pf", line_length=None,
+        detailed_instructions=None, sep=" ", **kwargs
     ):
         """Called when something needs to be printed.
 
@@ -97,8 +98,9 @@ class Printer(metaclass=GM_CT.Singleton):
             the requested verbose levels for printing - if `verbose_level` is
             smaller than or equal to the value set by the verbose parameters,
             the message will be printed/logged.
-        toprint : str
-            The message to print
+        *toprint : str
+            The message to print. Can be multiple arguments, like with
+            python print
         instruction : str, default="pf"
             Where to print to. If the string contains a 'p', the message
             will be printed to the terminal, if the string contains an
@@ -111,18 +113,22 @@ class Printer(metaclass=GM_CT.Singleton):
             will be used.
         detailed instructions : list of int or None, default=None
             Any extra instructions. If None, an empty list will be
-            assumed. Currently supported:
-            If any of the digits 0-4 are present in the list (each a
-            separate item), only at EXACTLY that verbose level the
-            message will be printed.
+            assumed. Currently supported::
+
+                If any of the digits 0-4 are present in the list (each a
+                separate item), only at EXACTLY that verbose level the
+                message will be printed.
         """
 
         # This means that RunPars hasn't been completed yet, and many print
         # settings are still unknown. So if we don't have to print, don't!
         if self.program_state == "startup":
             self.backlog.append([
-                verbose_level, toprint, instruction, line_length,
-                detailed_instructions
+                verbose_level, toprint, kwargs | {
+                    "instruction": instruction,
+                    "line_length": line_length,
+                    "detailed_instructions": detailed_instructions,
+                    "sep": sep}
             ])
             return
 
@@ -130,7 +136,8 @@ class Printer(metaclass=GM_CT.Singleton):
             line_length = self.line_length
         if detailed_instructions is None:
             detailed_instructions = []
-        toprint = str(toprint)
+        toprint = [str(item) for item in toprint]
+        toprint = sep.join(toprint)
         all_verbose = {0, 1, 2, 3, 4}
 
         # print to command line
@@ -141,8 +148,15 @@ class Printer(metaclass=GM_CT.Singleton):
                 (self.verbose in detailed_instructions)
                 is not all_verbose.isdisjoint(detailed_instructions))
         ):
-            print(prettifier(
-                change_color(toprint, self.color_mode), line_length))
+            printpreline = "".join(
+                [item[1] for item in self.preline if self.verbose in item[0]])
+            printpreline = change_color(printpreline, self.color_mode)
+            prelinelen = len(change_color(printpreline, "white"))
+            out = prettifier(
+                change_color(toprint, self.color_mode), line_length-prelinelen)
+            print(
+                printpreline + out.replace("\n", f"\n{printpreline}"),
+                **kwargs)
 
         # print to file
         if (
@@ -152,11 +166,19 @@ class Printer(metaclass=GM_CT.Singleton):
                 (self.verbose_logfile in detailed_instructions)
                 is not all_verbose.isdisjoint(detailed_instructions))
         ):
-            with open(self.logfile, "a") as fhand:
+            with open(self.logfile, "a", encoding="utf-8") as fhand:
                 # change color to white here so color codes/markers are not
                 # present in the log files
-                print(prettifier(
-                    change_color(toprint, "24bit"), line_length), file=fhand)
+                printpreline = "".join([
+                    item[1] for item in self.preline
+                    if self.verbose_logfile in item[0]])
+                printpreline = change_color(printpreline, "white")
+                prelinelen = len(printpreline)
+                out = prettifier(
+                    change_color(toprint, "white"), line_length-prelinelen)
+                print(
+                    printpreline + out.replace("\n", f"\n{printpreline}"),
+                    file=fhand, **kwargs)
 
     def quit_early(self):
         """Called when the program is quitted early
@@ -183,7 +205,8 @@ class Printer(metaclass=GM_CT.Singleton):
             pass
 
         for print_instructions in self.backlog:
-            self.print(*print_instructions)
+            args = (print_instructions[0],) + print_instructions[1]
+            self.print(*args, **print_instructions[2])
         self.backlog = []
 
     def warning(
@@ -214,36 +237,51 @@ class Printer(metaclass=GM_CT.Singleton):
         if GMAPerrclass is None:
             GMAPerrclass = GM_Ex.GMAPexception
 
+        if not message.startswith("\n"):
+            message = "\n" + message
+
         # might seem backwards, but we should report if the error wasn't
         # silenced.
         if GM_CT.ErrCode(error_code) not in self.dont_report_error:
             if exitbool:
                 printinstruct = "f"
             else:
+                message = (
+                    f"\n{self.colors.red_hc}WARNING:" + self.colors.red_todef
+                    + message + self.colors.clear)
                 printinstruct = "pf"
 
             error_message = message
-            self.print(0, message, printinstruct)
+            self.print(0, message, instruction=printinstruct)
 
             # print the traceback in exactly the same way as it would be
             # thrown into the command line.
             if exception:
                 traceprint = TbEx.from_exception(exception).format()
-                self.print(4, "\n" + "".join(traceprint), printinstruct)
+                msg = (
+                    "\n" + self.colors.red_todef + "".join(traceprint)
+                    + self.colors.clear)
+                self.print(4, msg, instruction=printinstruct)
                 if self.verbose == 4:
-                    error_message += "\n" + "".join(traceprint)
+                    error_message += msg
 
             msg = (
                 " More information can be found in the documentation "
                 f"user pages using the following error code: {error_code}"
             )
-            self.print(0, msg, printinstruct)
+            self.print(
+                0, self.colors.red_todef + msg + self.colors.clear,
+                instruction=printinstruct)
             error_message += msg
 
         if exitbool:
             if self.backlog:
                 self.print_backlog()
-            self.print(0, "", "p")  # We want an empty line before the error
+            # We want an empty line before the error
+            self.print(0, f"\n{self.colors.red_hc}", instruction="p", end="")
+            error_message = change_color(
+                self.colors.red_todef + error_message + self.colors.clear,
+                self.color_mode)
             raise GMAPerrclass(error_message, error_code, exception)
 
     def setenv(self, safe_mode, dark_mode):
@@ -312,7 +350,8 @@ class Printer(metaclass=GM_CT.Singleton):
         runtime = time_to_str(self.Timer.get_time(label), precision)
         self.print(
             verbose_level,
-            f"[{now}] {runtime}:  {msg}"
+            f"{self.colors.blue_hc}[{now}] {self.colors.clear}{runtime}:  "
+            f"{msg}"
         )
 
 
@@ -340,6 +379,7 @@ class Timer:
     Notes
     -----
     All labels in use (refers to what'll be done next)::
+
         (start)
         ParParse      (3)
         AddMaps       (3)
@@ -506,7 +546,10 @@ def prettifier(string, deslen=79):
                     buildstr = subitem
                 else:
                     if blen == 0:
-                        buildstr = subitem
+                        if len(buildstr) == 0:  # stripping whitespaces
+                            buildstr = subitem
+                        else:  # There's nothing but color marker -> preserve
+                            buildstr += subitem
                     else:
                         buildstr += " " + subitem
             endlst.append(buildstr)
@@ -634,8 +677,153 @@ def devprint(*args, **kwargs):
     )
 
 
-def make_header(
-    title, buffer_char, overline=True, underline=True, padding=0
+def header(
+    verbose, title, preset, preline=None, newlines=None, **kwargs
+):
+    """Create a header from the given text.
+
+    Parameters
+    ----------
+    verbose : int
+        The verbose level on which the header should be printed. Is
+        directly passed to the :func:`Printer.print` call.
+    tile : str
+        The text that should be within the header
+    preset : str
+        What style header should be used. Current options:
+
+        custom :
+            The caller fully decides. Any additional kwargs to this
+            function are passed to :func:`_make_header`. See the
+            documentation of that function for available kwargs.
+            newlines default = (0, 0)
+        nohead :
+            No special header is made - title is taken as-is.
+        doublebox :
+            The header receives a border of the ascii double-line box
+            character set, with a double-line dropping down to mark all
+            output belonging to the section::
+                ╔═════════════╗
+                ║ input_title ║
+                ╚╦════════════╝
+                 ║ text with the new set preline
+
+            The matching footer should be used too.
+            Newlines default = (2, 1)
+
+        doublebox_bare :
+            The header receives a border of the ascii double-line box
+            character set. There is no line dropped::
+                ╔═════════════╗
+                ║ input_title ║
+                ╚═════════════╝
+                text will be printed with no set preline
+
+            No footer is required.
+            Newlines default = (2, 1)
+    preline : str, default=None
+        Only used if preset set to "custom" or "nohead". If the text
+        following the header should have a preline, this will be
+        arranged.
+    newlines : tuple of two ints, default=None
+        The amount of empty lines that should be printed before and
+        after the header, respectively. If set to None, the
+        preset-specific default will be used.
+    **kwargs : any
+        Any kwargs that should be passed to either
+        :func:`Printer.print` or :func:`_make_header`.
+    """
+
+    if "color_border" not in kwargs or kwargs["color_border"] is None:
+        cb = Printer().colors.green_lc
+
+    if "color_text" not in kwargs or kwargs["color_text"] is None:
+        _ = Printer().colors.clear
+
+    cc = Printer().colors.clear
+
+    if newlines is None:
+        match preset:
+            case "nohead" | "custom":
+                newlines = (0, 0)
+            case "doublebox" | "doublebox_bare":
+                newlines = (2, 1)
+
+    head = "\n" * newlines[0]
+    match preset:
+        case "nohead" | "custom":
+            if preset == "custom":
+                title = _make_header(title, **kwargs)
+            head += title
+            Printer().print(verbose, head, **kwargs)
+            if preline is not None:
+                Printer().preline.append(preline)
+        case "doublebox" | "doublebox_bare":
+            if preset == "doublebox":
+                special = {"u": {"replace": {"╦": [[1]]}}}
+            else:
+                special = None
+            head += _make_header(
+                title, linemode="oulrc", padding=1, overline_char="═",
+                underline_char="═", left_char="║", right_char="║",
+                corner_char="╔╗╚╝", special=special
+            )
+            Printer().print(verbose, head, **kwargs)
+            if preset != "doublebox_bare":
+                Printer().preline.append([
+                    [*range(verbose, 5)], cb + " ║ " + cc])
+    if newlines[1] > 0:
+        Printer().print(verbose, "\n" * (newlines[1] - 1), **kwargs)
+
+
+def footer(
+    verbose, title, preset, preline=None, newlines=None, **kwargs
+):
+    """Create a footer from the given text
+    """
+
+    if "color_border" not in kwargs or kwargs["color_border"] is None:
+        cb = Printer().colors.green_lc
+
+    if "color_text" not in kwargs or kwargs["color_text"] is None:
+        ct = Printer().colors.clear
+
+    cc = Printer().colors.clear
+
+    if newlines is None:
+        match preset:
+            case "nohead" | "custom" | "doublebox_bare":
+                newlines = (0, 0)
+            case "doublebox":
+                newlines = (1, 1)
+
+    foot = "\n" * (newlines[0]-1)
+    match preset:
+        case "nohead" | "custom":
+            if preset == "custom":
+                title = _make_header(title, **kwargs)
+            Printer().print(verbose, foot, **kwargs)
+            if preline is not None:
+                if Printer().preline[-1][1] == preline:
+                    _ = Printer().preline.pop()
+        case "doublebox_bare":
+            Printer().print(verbose, foot, **kwargs)
+            title = ""
+        case "doublebox":
+            title = f" {cb}╚═══{ct} End of {title} {cb}═════{cc}"
+            Printer().print(verbose, foot, **kwargs)
+            if preset != "doublebox_bare":
+                if Printer().preline[-1][1] == cb + " ║ " + cc:
+                    _ = Printer().preline.pop()
+    if newlines[1] > 0:
+        Printer().print(verbose, title + "\n" * (newlines[1]), **kwargs)
+
+
+def _make_header(
+    title, padding_char=" ", linemode="ou", padding=0,
+    overline_char="-", underline_char="-", left_char="|", right_char="|",
+    corner_char="+", alignment="centered", maxwidth=79,
+    color_border=None, color_text=None, special=None
 ):
     """Returns a pretty header for distinguishing prints
 
@@ -647,14 +835,61 @@ def make_header(
     ----------
     title : str
         The text that should be within the header.
-    buffer_char : str
-        The character that should be used for the over/underline.
-    overline, underline : bool, default=True
-        Whether there should be an over-, and/or underline.
+    padding_char : str
+        The character that should be used for padding around the title
+    linemode : str, default="ou"
+        which lines should(n't) be displayed. Add the letters for the
+        elements you do want to display::
+
+            o: A line above the text
+            u: A line below the text
+            l: A line left of the text
+            r: A line right of the text
+            c: Corners
+
     padding : int, default=0
         How much extra space there should be. Over and underlines will
         get longer by twice this amount, the title itself gets this
         amount of whitespaces before and after the text.
+    overline_char, underline_car, left_char, right_char : str, \
+    default="-"
+        The character that should be used for the respective segment
+    corner_char : str, default="+"
+        The character that should be used for the corners. If a single
+        character is provided, all corners get that character. If
+        different characters are desired, there must be 4 characters
+        in the string: one for the upleft, upright, downleft, downright
+        corner respectively.
+    alignment : str, default="centered"
+        If the title text consists of multiple lines of unequal length,
+        decide how these should be aligned. Regardless of choice, the
+        character specified using padding_char will be used to increase
+        the lengths of shorter lines. The amount of characters specified
+        using padding will be added to the lines after they are made of
+        equal length.
+        "centered" aligns their midpoints, "leftadj" will align their
+        left edges, and "rightadj" will align their right ones.
+    maxwidth : int, default=79
+        How wide the end result is allowed to be, max. If the title
+        text is too wide to fit the requirements, it is line-wrapped to
+        fit.
+    special : dict, default={}
+        Any special rules to apply after the header has been generated.
+        Thakes the form of a nested dictionary structure:
+        special={"u": {"command": {"|": [[2]]}}}
+
+        - The outermost dict has as the key a string indicating what
+          line should be altered. Same shorthands as linemode. The value
+          of the dictionary is what should be changed about the line
+          (here referred to as the 'rules')
+        - The rules dict has the commands as keys, and specific
+          instructions (another dict) as the values:
+
+          - replace will put the character saved as key in the
+            instructions dict at the positions saved in its values:
+            if the line is "abcdefg", {"replace": ["V", [[3]]]} will
+            result in "abcVefg". Similarly, {"replace": ["VR",
+            [[1, 2], [4, 5]]]} will turn "abcdefg" into "aVRdVRg"
 
     Returns
     -------
@@ -662,13 +897,138 @@ def make_header(
         The header, ready for printing.
     """
 
-    length = len(title)
+    if color_border is None:
+        color_border = Printer().colors.green_lc
 
-    header = buffer_char * (length + padding*2)
-    header += "\n" + padding*" " + title + padding*" " + "\n"
-    header += buffer_char * (length + padding*2)
+    if color_text is None:
+        color_text = Printer().colors.clear
+
+    # -----------  Inside text:  ----------------------
+
+    # line wrapping at the correct places.
+    title_width = maxwidth - 2 - (padding * 2)  # leave space for header
+    title = prettifier(title, title_width)
+    title, longest_length = _header_textwrap(title, alignment, padding_char)
+    n_lines = len(title)
+
+    # -----------  Outside border:  ----------------------
+
+    ou_length = longest_length + padding * 2
+    corner_char = corner_char * 4  # automatically solves all!
+    lines = {}
+
+    # overline
+    lines["over"] = _header_overunder(
+        overline_char, corner_char[:2], linemode, ou_length, "o")
+
+    # sidelines
+    lines["left"] = _header_sideline(left_char, linemode, n_lines, "l")
+    lines["right"] = _header_sideline(left_char, linemode, n_lines, "r")
+
+    # underline
+    lines["under"] = _header_overunder(
+        underline_char, corner_char[2:4], linemode, ou_length, "u")
+
+    # -----------  Special instructions:  ----------------------
+
+    if special is None:
+        special = {}
+    lines = _header_specials(special, lines)
+
+    # -----------  Building the final product  ----------------------
+
+    # overline
+    header = ""
+    over = lines["over"]
+    if len(over) != 0:  # If we have an upper line, add a line break, too
+        over += "\n"
+    header += color_border + over
+
+    # sidelines
+    pad = padding_char[0] * padding
+    for lft, txt, rght in zip(lines["left"], title, lines["right"]):
+        header += (
+            color_border + lft +
+            color_text + pad + txt + pad +
+            color_border + rght + "\n")
+
+    # underline
+    header += color_border + lines["under"] + Printer().colors.clear
 
     return header
+
+
+def _header_overunder(line_char, corner_chars, linemode, length, dir):
+    # Get middle portion (if no overline, but corners, we need whitespace)
+    if dir in linemode:
+        upper = line_char * length
+    elif "c" in linemode:
+        upper = " " * length
+    else:
+        upper = ""
+
+    # add corners!
+    if "c" in linemode:
+        upper = corner_chars[0] + upper + corner_chars[1]
+
+    return upper
+
+
+def _header_sideline(line_char, linemode, length, dir):
+    if dir in linemode:
+        left = [line_char[0]] * length
+    elif "c" in linemode:
+        left = [" "] * length
+    else:
+        left = [""] * length
+    return left
+
+
+def _header_specials(special, lines):
+    shorts = {"o": "over", "u": "under", "l": "left", "r": "right"}
+
+    for lineshort, rules in special.items():
+        line = lines[shorts[lineshort]]
+        for command, instructions in rules.items():
+            if command == "replace":
+                if lineshort in "ou":
+                    conv = GM_CT.return_first
+                elif lineshort in "lr":
+                    conv = GM_CT.return_list
+                for char, positions in instructions.items():
+                    char = conv(char)
+                    for pos in positions:
+                        line = line[:pos[0]] + char + line[pos[-1]+1:]
+        lines[shorts[lineshort]] = line
+    return lines
+
+
+def _header_textwrap(title, alignment, padding_char):
+    # padding and adjusting the lines
+    title = title.split("\n")
+    n_lines = len(title)
+    if n_lines == 1:
+        longest_length = len(change_color(title[0], "white"))
+    else:
+        longest_length = max([
+            len(change_color(item, "white")) for item in title])
+        new_title = []
+        for line in title:
+            linelength = len(change_color(line, "white"))
+            diff = longest_length - linelength
+            match alignment:
+                case "centered":
+                    pre = diff // 2
+                    post = diff - pre
+                case "leftadj":
+                    pre = 0
+                    post = diff
+                case "rightadj":
+                    pre = diff
+                    post = 0
+            new_title.append(pre * padding_char + line + post * padding_char)
+        title = new_title
+    return title, longest_length
 
 
 def intlist_to_rangelist(intlist, n_int, make_shadow=True):

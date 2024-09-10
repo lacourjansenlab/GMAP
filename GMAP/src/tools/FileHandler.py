@@ -81,6 +81,9 @@ class FileLocations:
 
         self.exec_os = find_exec_os()
 
+    def save_callcommand(self, callcommand):
+        self.callcommand = " ".join(callcommand)
+
 
 def find_exec_os():
     """Determines which os the system is running on.

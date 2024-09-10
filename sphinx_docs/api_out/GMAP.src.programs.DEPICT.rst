@@ -1,7 +1,7 @@
-GMAP.src.tools.MapReader module
+GMAP.src.programs.DEPICT module
 ===============================
 
-.. automodule:: GMAP.src.tools.MapReader
+.. automodule:: GMAP.src.programs.DEPICT
    :members:
    :undoc-members:
    :show-inheritance:

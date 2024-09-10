@@ -1,7 +1,7 @@
-GMAP.src.tools.SystemReader module
+GMAP.src.tools.CmdInterface module
 ==================================
 
-.. automodule:: GMAP.src.tools.SystemReader
+.. automodule:: GMAP.src.tools.CmdInterface
    :members:
    :undoc-members:
    :show-inheritance:

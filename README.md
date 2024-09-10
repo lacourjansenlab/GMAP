@@ -24,7 +24,11 @@ Assuming generating from scratch, and inside a venv (see above, always a good ha
   * just below this, there are definitions for templates_path and exclude_patterns. Just below there, add the following line: ```sys.path.append(str((Path(__file__).parent).resolve()))```
   * **if** you installed the pydata theme earlier, replace the line ```html_theme = 'alabaster'``` line further down in the document with ```html_theme = 'pydata_sphinx_theme'```
 5. Within the sphinx output directory, create another directory for the api output using ```mkdir api_out```
-6. **Without** changing directories, run ```sphinx-apidoc -e -f -o api_out ../GMAP```. When building for a different project, make sure to point to the base folder of the **code** part of your project.
+6. **Without** changing directories, run ```sphinx-apidoc -efP -o api_out ../GMAP```. When building for a different project, make sure to point to the base folder of the **code** part of your project. Meaning of flags:
+  * -e means that each module will get its own page
+  * -f means that files will be overwritten when/where needed
+  * -P means that private methods/classes/functions will be documented, too
+  * -o is the marker that the named directory is the intended output directory.
 7. Make the following changes to index.rst (you know, that file created in step 3):
   * replace ```:maxdepth: 2``` with ```:maxdepth: 4``` in case your project is very nested like GMAP
   * right below this line, add the line ```:glob:``` - make sure to match the indentation of the lines above!

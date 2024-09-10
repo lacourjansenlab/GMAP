@@ -6,8 +6,8 @@ Usage:
 Prints this help.
 
     GMAP GEM demo
-Launches GEM in demo-mode. Performs a basic calculation to demonstrate basic
-use and to verify the program is installed correctly.
+Launches GEM in demo-mode. Performs a basic calculation to demonstrate
+basic use and to verify the program is installed correctly.
 
     GMAP GEM run [name of input file] [optional parameters]
 Performs a run of GEM using the parameters specified in the included file.
@@ -15,10 +15,10 @@ Performs a run of GEM using the parameters specified in the included file.
 
 Groningen Electrostatic Maps
 
-The purpose of GEM is to take an MD trajectory and compute the time-dependent
-Hamiltonian to be used in electronic spectral calculations. Instructions on how
-to deal with specific chromophores have to be included in the corresponding
-.emap file.
+The purpose of GEM is to take an MD trajectory and compute the
+time-dependent Hamiltonian to be used in electronic spectral calculations.
+Instructions on how to deal with specific chromophores have to be included
+in the corresponding .emap file.
 
 For more information, check the manual on N/A.
 """
@@ -33,6 +33,7 @@ import sys
 
 # local imports
 import GMAP.src.tools.CLibLoader as GM_CL
+import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.FileHandler as GM_FH
 # import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.MapReader as GM_MR
@@ -75,8 +76,9 @@ def manage_frame(frame, RunPars):
     # sure that the resulting set is never empty (frames 1 through 9)
     if relframenum == 0 or set(str(relframenum * 10)[1:]) == set("0"):
         # if framenum has form 10^n with n=int
-        if str(relframenum)[0] == "1" and relframenum != 1:
-            GM_PT.Printer().print(2, "")
+        if str(relframenum)[0] == "1":
+            if relframenum != 1:
+                GM_PT.Printer().print(2, "")
             verbose_level = 1
         else:
             verbose_level = 2
@@ -107,27 +109,30 @@ def print_frame_ETA(verbose, framenum, startframe, endframe):
     Current time | current frame | time elapsed | time to go   | end time
     Fri 13 HH:MM | xxxyyyzzz     | xxx-xx:xx:xx | xxx-xx:xx:xx | Fri 13 HH:MM
 
-    .. important :: These estimates will improve when more frames have
-    already been treated. For small systems (proteins, a speed of frames
-    per second) any estimate below 10 frames is worthless, after 100
-    frames they get usable. For large systems (assemblies, a speed of
-    minutes per frame), this estimate will most likely converge much
-    faster, but testing is required to know how fast.
+    .. important ::
+        These estimates will improve when more frames have already been
+        treated. For small systems (proteins, a speed of frames per
+        second) any estimate below 10 frames is worthless, after 100
+        frames they get usable. For large systems (assemblies, a speed
+        of minutes per frame), this estimate will most likely converge
+        much faster, but testing is required to know how fast.
 
-    This difference is caused by the contribution of numba jitting. This
-    usually takes a few seconds, which is a significant amount of time
-    for small systems, but not for larger ones.
+        This difference is caused by the contribution of numba jitting.
+        This usually takes a few seconds, which is a significant amount
+        of time for small systems, but not for larger ones.
 
-    .. note :: The weekdays will be reported in the
-    installation(? System?) language of the user. As different languages
-    have a shorthand for weekdays of a different amount of characters,
-    the program has 14 characters reserved (so a few spaces are missing
-    in the example above).
+    .. note ::
+        The weekdays will be reported in the installation(? System?)
+        language of the user. As different languages have a shorthand
+        for weekdays of a different amount of characters, the program
+        has 14 characters reserved (so a few spaces are missing in the
+        example above).
 
-    .. note :: The estimated time to go (and end time) are based on how
-    long earlier frames took. That means that during the first frame
-    treated, no estimate can be provided, and wont. The last two columns
-    will not be used/filled in on the first frame.
+    .. note ::
+        The estimated time to go (and end time) are based on how long
+        earlier frames took. That means that during the first frame
+        treated, no estimate can be provided, and wont. The last two
+        columns will not be used/filled in on the first frame.
 
     Parameters
     ----------
@@ -209,6 +214,17 @@ def trj_loop(RunPars, System):
     if RunPars.stop_frame >= len(System.universe.trajectory):
         RunPars.stop_frame = len(System.universe.trajectory)
 
+    # Confirm start_frame is still smaller than stop, after the change
+    if RunPars.start_frame > RunPars.stop_frame:
+        GM_PT.Printer().warning(
+            "Encountered an issue with the parameter start_frame. The frame "
+            "doesn't exist, as the provided trajectory is too short. In the "
+            "current way, there is nothing to do. Please either change the "
+            "parameter start_frame to a smaller value, or use a different "
+            "trajectory.",
+            "SU_WP_17", True, GMAPerrclass=GM_Ex.GmapParameterError
+        )
+
     # let maps prepare for the calculation
     for mapname in System.oscillators_ordered.keys():  # singles
         map_ = RunPars.requested_mapdict[mapname]
@@ -229,6 +245,13 @@ def trj_loop(RunPars, System):
     # In case MDA needs a long time to start the loop.
     GM_PT.Printer().add_time(
         3, "Starting loop over frames", "StartLoop", "ms")
+
+    cb = GM_PT.Printer().colors.green_lc
+    ct = GM_PT.Printer().colors.clear
+    line = f"{cb}════{ct}"
+    GM_PT.Printer().print(
+        1, f"\n{line} Processing frames {line}", detailed_instructions=[1])
+    GM_PT.header(2, "Processing frames", "doublebox_bare")
 
     # print header for the ETA table (print lvl 4 has header per frame)
     GM_PT.Printer().print(
@@ -296,6 +319,11 @@ def trj_loop(RunPars, System):
         GM_PT.Printer().add_time(
             4, "Frame completed. Loading next frame\n", "LoadFrame", "ms")
 
+    cb = GM_PT.Printer().colors.green_lc
+    ct = GM_PT.Printer().colors.clear
+    GM_PT.Printer().print(
+        2, f"\n{cb}====={ct} End of processing frames {cb}====={ct}\n")
+
     GM_PT.Printer().add_time(
         3, "Frames Completed. Finishing up.", "MapPost", "ms")
 
@@ -311,7 +339,7 @@ def trj_loop(RunPars, System):
     # (profiler?)
 
 
-def print_calculation_summary(RunPars):
+def print_calculation_summary(Files, RunPars, System):
 
     def sumavg(*args):
         total_time = pr.Timer.get_total_ns(*args)
@@ -320,6 +348,18 @@ def print_calculation_summary(RunPars):
         avg_str = GM_PT.time_to_str(avg_time, "ms")
         return f"{tot_str: >12}  --> {avg_str[-12:]} / frame"
 
+    def report_files(RunPars, shorthand, printfname, txtverb, binverb):
+        if shorthand in RunPars.output_data:
+            fname = getattr(RunPars, f"output_{printfname.lower()}_filename")
+            if "txt" in RunPars.output_format:
+                temp = fname.parent / f"{fname.name}.txt"
+                text = f"{printfname} text file:"
+                pr.print(txtverb, f"{text: <28}{temp}")
+            if "bin" in RunPars.output_format:
+                temp = fname.parent / f"{fname.name}.bin"
+                text = f"{printfname} binary file:"
+                pr.print(binverb, f"{text: <28}{temp}")
+
     pr = GM_PT.Printer()
     sum_ = pr.Timer.get_total_format
     nframes = RunPars.stop_frame - RunPars.start_frame
@@ -327,9 +367,13 @@ def print_calculation_summary(RunPars):
     # making sure the last 'split' is saved in timer.totals()
     pr.add_time(5, "", "end")
 
-    pr.print(1, "\n\nCalculation Finished. Summary:")
+    GM_PT.header(
+        1, "Calculation\nsummary", "doublebox_bare", detailed_instructions=[1])
+    GM_PT.header(2, "\n  Calculation  \nsummary\n", "doublebox_bare")
 
-    # print all time splits
+    # ---- print all time splits --------
+
+    GM_PT.header(2, "Time spent", "doublebox_bare", newlines=(1, 1))
     init_labels = [
         "ParParse", "AddMaps", "MDinit", "MapInit", "ClibLoad", "PrepLoop"]
     f_load = ["StartLoop", "LoadFrame"]
@@ -365,11 +409,58 @@ def print_calculation_summary(RunPars):
     pr.print(4, f"      Map finalization:       {sumavg('MapFPost')}")
     pr.print(4, f"      Writing frames:         {sumavg('FrameWrite')}")
     pr.print(2, f"  Calculation finalization:   {sum_(*post_labels): >12}")
-    pr.print(1, "x"*79)
 
-    # treated + avail frames
+    # ---- print treated + avail frames --------
+    GM_PT.header(2, "MD frames", "doublebox_bare")
+    msg = "Frames treated:     " + " " * 12
+    pr.print(1, f"{msg}{RunPars.start_frame}-{RunPars.stop_frame}")
+    msg = "Frames requested:   " + " " * 12
+    pr.print(2, f"{msg}{RunPars.start_frame}-{RunPars.stop_frame}")
+    msg = "Frames available:   " + " " * 12
+    pr.print(3, f"{msg}{0}-{len(System.universe.trajectory)}")
 
-    # (in/?)output filenames + sizes
+    # ---- print in-/output filenames (+ sizes?) --------
+    GM_PT.header(2, "Files used", "doublebox_bare")
+    cb = GM_PT.Printer().colors.green_lc
+    ct = GM_PT.Printer().colors.clear
+    line = f"{cb}════{ct}"
+    GM_PT.Printer().print(
+        1, f"\n{line} Files used {line}", detailed_instructions=[1])
+    line = f"{cb}========{ct}"
+    pr.print(3, f"{line}  Program files and information {line}")
+    pr.print(3, f"Python installation used:   {sys.executable}")
+    pr.print(3, f"GMAP installation used:     {Files.script_dir}")
+    pr.print(3, f"Working directory:          {Files.cwd}")
+    pr.print(3, f"Program started at:         {Files.now_str}")
+
+    pr.print(2, f"\n{line}  Input files {line}")
+    pr.print(1, f"Command issued:             {Files.callcommand}")
+    pr.print(2, f"Default parameter file:     {Files.defparfilename}")
+    pr.print(2, f"Input parameter file:       {Files.inparfilename}")
+    pr.print(1, f"Topology file analyzed:     {RunPars.topology_file}")
+    pr.print(1, f"Trajectory file analyzed:   {RunPars.trajectory_file}")
+    mapdirs = ", ".join([str(direc) for direc in RunPars.map_directory])
+    pr.print(2, f"Map directories used:       {mapdirs}")
+    pr.print(2, f"VEG-library file used:      {RunPars.VEG_clib_file}")
+
+    pr.print(2, f"\n{line}  Output files {line}")
+    pr.print(1, f"Logfile generated:          {RunPars.log_filename}")
+    fname = RunPars.output_legend_filename
+    pr.print(2, f"Legend file generated:      {fname}")
+    if "ham" in RunPars.output_data:
+        fname = RunPars.output_couplingvis_filename
+        pr.print(2, f"Coupling visualization:     {fname}")
+    report_files(RunPars, "ham", "Hamiltonian", 2, 2)
+    report_files(RunPars, "ene", "Energies", 2, 2)
+    report_files(RunPars, "dip", "Dipole", 2, 2)
+    report_files(RunPars, "ram", "Raman", 2, 2)
+    report_files(RunPars, "pos", "Positions", 2, 2)
+    report_files(RunPars, "dbp", "Doublepos", 2, 2)
+
+    end = " ██▓▓▒▒░░"
+    start = end[::-1]
+    msg = "That was all for today, folks. Thank you, and good night!"
+    pr.print(1, f"\n  {start}{msg}{end}")
 
 
 # still a placeholder - this function still has to grow. Should in the
@@ -435,7 +526,7 @@ def GEM(callcommand, Files):
     # calculate all (requested) frames
     trj_loop(RunPars, System)
 
-    print_calculation_summary(RunPars)
+    print_calculation_summary(Files, RunPars, System)
 
 
 # The jobs that GEM can currently execute.
