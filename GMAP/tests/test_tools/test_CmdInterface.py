@@ -23,28 +23,28 @@ import GMAP.src.tools.PrintTools as GM_PT
 
 def test_cmd_interface(capsys):
     callcommand = ["GMAP", "nothing", "nothing"]
-    with pytest.raises(GmapAttributeError, match="SU_GM_1$"):
+    with pytest.raises(GmapAttributeError, match="SU_GM_1"):
         GM_CI.cmd_interface(callcommand)
 
     callcommand = ["GMAP"]  # == GMAP help help
     GM_CI.cmd_interface(callcommand)
     captured = capsys.readouterr()
-    assert captured.out.endswith(GM_PT.prettifier(GMAP.__doc__) + "\n")
+    assert captured.out.endswith(GM_PT.word_wrap(GMAP.__doc__) + "\n")
 
     callcommand = ["GMAP", "HeLp"]  # == GMAP help help
     GM_CI.cmd_interface(callcommand)
     captured = capsys.readouterr()
-    assert captured.out.endswith(GM_PT.prettifier(GMAP.__doc__) + "\n")
+    assert captured.out.endswith(GM_PT.word_wrap(GMAP.__doc__) + "\n")
 
     callcommand = ["GMAP", "GEM"]  # == GMAP GEM help
     GM_CI.cmd_interface(callcommand)
     captured = capsys.readouterr()
-    assert captured.out.endswith(GM_PT.prettifier(GMAP.GEM.__doc__) + "\n")
+    assert captured.out.endswith(GM_PT.word_wrap(GMAP.GEM.__doc__) + "\n")
 
     callcommand = ["GMAP", "help", "GEM"]
     GM_CI.cmd_interface(callcommand)
     captured = capsys.readouterr()
-    assert captured.out.endswith(GM_PT.prettifier(GMAP.GEM.__doc__) + "\n")
+    assert captured.out.endswith(GM_PT.word_wrap(GMAP.GEM.__doc__) + "\n")
 
     callcommand = ["GMAP", "help", "nothing"]
     with pytest.raises(GmapAttributeError, match="SU_GM_1$"):
@@ -58,6 +58,6 @@ def test_main():
 
     callcommand = ["GMAP"]  # == GMAP help help
     captured = subprocess.run(callcommand, capture_output=True)
-    outbytes = (GM_PT.prettifier(GMAP.__doc__) + "\n").replace(
+    outbytes = (GM_PT.word_wrap(GMAP.__doc__) + "\n").replace(
         "\n", "\r\n").encode('utf-8')
     assert captured.stdout.endswith(outbytes)

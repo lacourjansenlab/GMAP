@@ -357,8 +357,11 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
-  - "GMAP -nodm" currently gives the error of unknown program choice
-  - On some machines, an ANSI color flag only applies until the next newline character. Prettifier is in charge of inserting newlines where needed, but doesn't repeat colorcodes after inserted newlines :/
+  - clean up code (lots of commented out statements as of writing this)
+  - test/fix the new header functions (quite sure they're buggy still)
+  - add proper erros? to header functions?
+  - add tests for new code?
+  - add note somewhere: GMAP will auto-carry colors over newline. In the terminal, once a color command is issued, the color will remain. any following lines will be run with that color. However, 'less -R' assumes a color reset every newline.
 - (KvA) TODO:
   - start on mapdev-checklist. What things should a mapmaker double check before starting the map (and, simultaneously, have map-testing feature do these checks where possible - at least, write down what it should test)
     - Indicate whether a VEG dependence file for calcfreq has been supplied or not (and similarly for dipoles etc)

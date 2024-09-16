@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 # local imports
-import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.StringClasses as GM_SC
 import GMAP.src.tools.constants as GM_con
 import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.FileHandler as GM_FH
@@ -2283,7 +2283,7 @@ class RunPars:
         # either are 'none', or a true code. Remove the none's, and change
         # data type for valid comparisons later.
         self.dont_report_error = [
-            GM_CT.ErrCode(error) for error in self.dont_report_error
+            GM_SC.ErrCode(error) for error in self.dont_report_error
             if error.lower() != "none"
         ]
 

@@ -9,22 +9,36 @@ tests missing:
 
 
 # local imports
+import GMAP.src.tools.FileHandler as GM_FH
 import GMAP.src.tools.PrintTools as GM_PT
+
+
+# Leave this here (out of order!) so the line number doesn't have to be
+# changed so often!
+def test_devprint(capsys):
+    GM_PT.devprint("this is a test")
+    captured = capsys.readouterr()
+    assert captured.out == (
+        "(line   19) this is a test (from test_devprint in test_PrintTools.py)"
+        "\n"
+    )
+
+
+class TestPrinter:
+    def test_warning(self, capsys):
+        _ = GM_FH.FileLocations()  # initializes printer also
+        pr = GM_PT.Printer()
+        pr.setenv(False, True)
+        pr.set_state("running", 2, 3, "white", 79)
+        pr.warning("this is a test", "AA_BB_33")
+        captured = capsys.readouterr()
+        assert captured.out.startswith("\nWARNING:\nthis is a test")
 
 
 class TestTimer:
     def test_init(self):
         timer = GM_PT.Timer()
         assert isinstance(timer.zero, int)
-
-
-def test_devprint(capsys):
-    GM_PT.devprint("this is a test")
-    captured = capsys.readouterr()
-    assert captured.out == (
-        "(line   22) this is a test (from test_devprint in test_PrintTools.py)"
-        "\n"
-    )
 
 
 def test_intlist_to_rangelist():
@@ -49,9 +63,9 @@ def test_time_to_str():
     # ((2 * 24 + 3) * 60 + 4) * 60 + 5 seconds =
     # 183845 seconds.
     assert GM_PT.time_to_str(
-        183845300200100, precision="ns") == "2-03:04:05.300.200.100"
+        183845300200100, precision="ns") == "2-03:04:05.300200100"
     assert GM_PT.time_to_str(
-        183845300200100, precision="us") == "2-03:04:05.300.200"
+        183845300200100, precision="us") == "2-03:04:05.300200"
     assert GM_PT.time_to_str(
         183845300200100, precision="ms") == "2-03:04:05.300"
     assert GM_PT.time_to_str(
@@ -61,6 +75,6 @@ def test_time_to_str():
     # ((200 * 24 + 20) * 60 + 15) * 60 + 43 =
     # 17352943 seconds.
     assert GM_PT.time_to_str(
-        17352943030020010, precision="ns") == "200-20:15:43.030.020.010"
+        17352943030020010, precision="ns") == "200-20:15:43.030020010"
     assert GM_PT.time_to_str(
-        17352943003002001, precision="ns") == "200-20:15:43.003.002.001"
+        17352943003002001, precision="ns") == "200-20:15:43.003002001"

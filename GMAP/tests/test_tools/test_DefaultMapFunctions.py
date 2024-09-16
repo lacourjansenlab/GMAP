@@ -75,8 +75,8 @@ def test_get_str_osc():
     osc1 = GM_CT.CustomClass(**{"used_atoms": [0, 1, 2]})
     osc2 = GM_CT.CustomClass(**{"used_atoms": [3, 4, 5]})
     Syst = GM_CT.CustomClass(**{"resnums": [0, 0, 0, 1, 1, 1]})
-    assert newfunc(Syst, None, osc1) == "living on residue number 0"
-    assert newfunc(Syst, None, osc2) == "living on residue number 1"
+    assert newfunc(None, Syst, osc1) == "living on residue number 0"
+    assert newfunc(None, Syst, osc2) == "living on residue number 1"
 
 
 def test_get_get_VEG_ref():

@@ -11,8 +11,8 @@ from traceback import TracebackException as TbEx
 import GMAP.src.tools.CodingTools as GM_CT
 import GMAP.src.tools.ColorSchemes as GM_CS
 import GMAP.src.tools.Exceptions as GM_Ex
-import GMAP.src.tools.MathFunctions as GM_MF
 # import GMAP.src.tools.Plotter as GM_Pl
+import GMAP.src.tools.StringClasses as GM_SC
 
 
 class Printer(metaclass=GM_CT.Singleton):
@@ -38,17 +38,40 @@ class Printer(metaclass=GM_CT.Singleton):
     logfile : `pathlib.path`
         The path to the logfile
     backlog : list
-        Initally, the user-specified log file path is not yet known. Until
-        it is, all that should be printed is instead put into the backlog.
-        In case the program quits before the log file is known, the backlog
-        is printed to the crash file (and terminal).
+        Initally, the user-specified log file path is not yet known.
+        Until it is, all that should be printed is instead put into the
+        backlog. In case the program quits before the log file is known,
+        the backlog is printed to the crash file (and terminal).
     program_state : str
-        In what phase/mode the program currently exists. This state influences
-        the desired printing behaviour.
+        In what phase/mode the program currently exists. This state
+        influences the desired printing behaviour.
+    color_mode : str
+        How colors should be printed. 24bit, 4bit, or white.
+    colors : :class:`~GMAP.src.tools.ColorSchemes.PrinterColors`
+        Colors to be used/sampled by other functions. Contains unique
+        color names.
+    _colors : :class:`~GMAP.src.tools.ColorSchemes.PrinterColors`
+        The actual colors to be used. Contains a dict to translate the
+        unique color names of self.colors to ANSI escape codes.
+    line_length : int
+        The desired line length for both the command line and log files.
+    dont_report_error : list of \
+    :class:`~GMAP.src.tools.StringClasses.ErrCode`
+        Any error codes in this list will not be reported on when
+        encountered. Silenced fatal errors will still quit the program.
+    Timer : :class:`~Timer`
+        The timer that keeps track of calculation times.
     verbose : int
         How verbose the prints to the command line should be.
     verbose_logfile : int
         How verbose the prints to the log file should be.
+    preline : list of (list of int, str pairs) or list of (list of int,\
+     :class: `~GMAP.src.tools.StringClasses.ColStr` pairs)
+        Short bits that should be printed at the beginning of every
+        output line. The ints represent the verbose levels at which the
+        companion string should be printed. These (short!) strings can
+        either be lines/marks for pretty makeup of output, or a marker
+        like those used for demo mode.
     """
 
     def __init__(self, Files):
@@ -118,6 +141,12 @@ class Printer(metaclass=GM_CT.Singleton):
                 If any of the digits 0-4 are present in the list (each a
                 separate item), only at EXACTLY that verbose level the
                 message will be printed.
+        sep : str
+            The character that should be used to separate items in
+            *toprint. See the argument 'sep' of the python function
+            print for more information.
+        **kwargs : any
+            These kwargs are forwarded to the call to python's print.
         """
 
         # This means that RunPars hasn't been completed yet, and many print
@@ -148,15 +177,9 @@ class Printer(metaclass=GM_CT.Singleton):
                 (self.verbose in detailed_instructions)
                 is not all_verbose.isdisjoint(detailed_instructions))
         ):
-            printpreline = "".join(
-                [item[1] for item in self.preline if self.verbose in item[0]])
-            printpreline = change_color(printpreline, self.color_mode)
-            prelinelen = len(change_color(printpreline, "white"))
-            out = prettifier(
-                change_color(toprint, self.color_mode), line_length-prelinelen)
-            print(
-                printpreline + out.replace("\n", f"\n{printpreline}"),
-                **kwargs)
+            message = self._print_preparation(
+                self.verbose, toprint, line_length, self.color_mode)
+            print(message, **kwargs)
 
         # print to file
         if (
@@ -169,16 +192,69 @@ class Printer(metaclass=GM_CT.Singleton):
             with open(self.logfile, "a", encoding="utf-8") as fhand:
                 # change color to white here so color codes/markers are not
                 # present in the log files
-                printpreline = "".join([
-                    item[1] for item in self.preline
-                    if self.verbose_logfile in item[0]])
-                printpreline = change_color(printpreline, "white")
-                prelinelen = len(printpreline)
-                out = prettifier(
-                    change_color(toprint, "white"), line_length-prelinelen)
-                print(
-                    printpreline + out.replace("\n", f"\n{printpreline}"),
-                    file=fhand, **kwargs)
+                message = self._print_preparation(
+                    self.verbose_logfile, toprint, line_length, "white")
+                print(message, file=fhand, **kwargs)
+
+    def _print_preparation(self, verbose, message, line_length, color_mode):
+        """Format prints so they can be shown.
+
+        After self.print() has decided that something should indeed be
+        printed, this function is called. It does all the formatting
+        and makeup of the information that should be printed:
+
+        - First, see if anything should (by default) come before the
+          message to print (the preline). This could be a border,
+          or demo-mode marker.
+        - If so, figure out the length of this preline, and change its
+          color to the desired print color ((2)4bit, or white)
+        - Word wrap the message that should be printed, with the desired
+          wrap distance adjusted for len(preline).
+        - change the color of the message
+        - make sure any color markers in the message are repeated (less
+          and more automatically reset the color at linebreaks...)
+        - add the preline to the front of each message line
+        - return the finalized message.
+
+        Parameters
+        ----------
+        verbose : int
+            The verbose level at which the message will be printed
+        message : str or :class:`GMAP.src.tools.StringClasses.ColStr`
+            The message to format for printing
+        line_length : int
+            How many characters can at most be on a line.
+        color_mode : str
+            What color palette should be used. Can be '24bit', '4bit' or
+            'white' (colorless).
+
+        Returns
+        -------
+        outmessage : same type as message
+            The input message, fully formatted.
+        """
+
+        # The color-repeat tool is much, much easier to write/create if the
+        # input color format is fixed! So, that's why that step is earlier in
+        # the process.
+
+        # Figure out (the length of) printpreline, and change its color to
+        # the desired color (so they can be returned directly).
+        printpreline = GM_SC.ColStr("").join(
+            item[1] for item in self.preline if verbose in item[0])
+        printpreline = printpreline.change_color(color_mode)
+        prelinelen = len(printpreline)
+
+        # wordwrap the message to be printed (adjusted length for preline)
+        message = GM_SC.ColStr(message).wrap(line_length - prelinelen)
+        # change the message color (so color_repeater knows what to expect)
+        # make sure color markers/codes are repeated after a line break
+        message = message.change_color(color_mode).repeat_color()
+
+        # add prelines
+        message = printpreline + message.replace("\n", f"\n{printpreline}")
+
+        return message
 
     def quit_early(self):
         """Called when the program is quitted early
@@ -228,6 +304,9 @@ class Printer(metaclass=GM_CT.Singleton):
         exception : BaseException, default=None
             If the warning corresponds to a 'basic' python error,
             that error can be caught and fed into this function.
+        GMAPerrclass : BaseException, default=None
+            The exact exception that should be raised if the error is
+            fatal. One should pick one from GMAP.src.tools.Exceptions.
         """
 
         # if this default is set directly in the function signature, a circular
@@ -242,7 +321,7 @@ class Printer(metaclass=GM_CT.Singleton):
 
         # might seem backwards, but we should report if the error wasn't
         # silenced.
-        if GM_CT.ErrCode(error_code) not in self.dont_report_error:
+        if GM_SC.ErrCode(error_code) not in self.dont_report_error:
             if exitbool:
                 printinstruct = "f"
             else:
@@ -267,10 +346,11 @@ class Printer(metaclass=GM_CT.Singleton):
 
             msg = (
                 " More information can be found in the documentation "
-                f"user pages using the following error code: {error_code}"
+                "user pages using the following error "
+                f"code: {self.colors.clear} {error_code}"
             )
             self.print(
-                0, self.colors.red_todef + msg + self.colors.clear,
+                0, self.colors.red_todef + msg,
                 instruction=printinstruct)
             error_message += msg
 
@@ -279,17 +359,34 @@ class Printer(metaclass=GM_CT.Singleton):
                 self.print_backlog()
             # We want an empty line before the error
             self.print(0, f"\n{self.colors.red_hc}", instruction="p", end="")
-            error_message = change_color(
-                self.colors.red_todef + error_message + self.colors.clear,
-                self.color_mode)
+            error_message = (
+                self.colors.red_todef + error_message
+            ).change_color(self.color_mode)
             raise GMAPerrclass(error_message, error_code, exception)
 
     def setenv(self, safe_mode, dark_mode):
+        """Similar to set_state, set safe_mode and dark_mode
+
+        The provided choices for safe mode and dark mode are stored in
+        the Printer object for later use. These two have to be treated
+        separate from those in self.set_state, as they have to be set
+        at the very beginning of the program, so errors can be printed
+        accordingly.
+
+        Parameters
+        ----------
+        safe_mode : bool
+            Whether the program should be run in safe mode.
+        dark_mode : bool
+            Whether the program should be run in dark mode, or light
+            mode. Influences the color palette used.
+        """
+
         self.safe_mode = safe_mode
         self.dark_mode = dark_mode
 
         if safe_mode:
-            # in case some terminal cannot handle others
+            # in case some terminal cannot handle other colors
             self.color_mode = "white"
         if self.dark_mode:
             self._colors = GM_CS.DarkModeColors
@@ -315,6 +412,14 @@ class Printer(metaclass=GM_CT.Singleton):
             The new value for the attribute `verbose`
         verbose_logfile : int
             The new value for the attribute `verbose_logfile`
+        color_mode : str
+            The desired color palette. 24bit, 4bit, or no colors (white)
+        line_length : int
+            How many characters lines may contain at most.
+        new_logfile : str, default=None
+            The name of a different logfile to start to use.
+        new_dont_report_error : list of ErrCodes, default=None
+            These error codes shouldn't be reported on in the future.
         """
 
         self.program_state = new_state
@@ -341,6 +446,9 @@ class Printer(metaclass=GM_CT.Singleton):
             message should be reported.
         msg : str
             The text that should be reported along with the timestamp.
+        label : str
+            The label used for storing the timestamp in the Timer class.
+            It is also used for retrieving information later.
         precision : str, default="s"
             To what precision the time should be reported.
         """
@@ -371,10 +479,17 @@ class Timer:
     ----------
     zero : int
         The reference point to which all times should be compared.
-    times : dict of str: int pairs.
+    times : dict of str: int pairs
         The different times that the timer was requested to save. The
         keys are the messages the times were accompanied by, the values
         are the actual (raw perf_counter_ns()) times.
+    totals : dict of str: int pairs
+        The cumulative times the timer was requested to save. Allow to
+        see (over many frames) how long the program spent where.
+    previous : list of str, int
+        What the previous time stamp was. If we call the current, only
+        then do we know how long we spent in the previous step (and we
+        can save it to totals).
 
     Notes
     -----
@@ -483,10 +598,27 @@ class Timer:
         return time_to_str(total_time)
 
 
-def color_test():  # run this one with prettifier to 150 (8 colors per row)
-    def doprint(string):
-        convstring = change_color(string, "4bit")
-        Printer().print(0, string + convstring, line_length=130)
+def color_test():  # run this one with word_wrap to 150 (8 colors per row)
+    """Prints the color array to display a number of 24bit colors along
+    with their 4bit counteparts.
+
+    .. important::
+        This function is no longer used, and just here for testing/
+        development purposes. There is now a more fancy version:
+        :func: `GMAP.src.tools.Plotter.plot_color_conv`.
+
+        Only when pandas is an issue, or when the commandline
+        specifically is desired to generate the output, this function
+        should still be used.
+
+    Due to the windows command line only going back so many lines, I
+    used this function in a very manual way. There are two modii, one
+    from 0 to 128, and one from 128 to 255. To run the first, make sure
+    that 'range_' is defined starting at 0, and the loop ends with
+    'if r == 128: break'. For the latter, expand that value (or comment
+    those last lines), and adjust the 'range_' definition to start at
+    128.
+    """
 
     step = 16
     range_ = [*range(0, 255, step)] + [255]
@@ -501,149 +633,62 @@ def color_test():  # run this one with prettifier to 150 (8 colors per row)
             string = f"{g:>4}   "
             # manual: either do (0, 127, 16), or (128, 255, 16)
             for b in range_:
-                shortstr = f"\033[38;2;{r};{g};{b}m███\033[0m"
+                shortstr = GM_SC.ColStr(f"\033[38;2;{r};{g};{b}m███\033[0m")
                 string += shortstr
-                string += change_color(shortstr, "4bit")
+                string += shortstr.change_color("4bit")
                 string += " "
             Printer().print(0, string, instruction="p", line_length=130)
         if r == 128:
             break
 
 
-def prettifier(string, deslen=79):
+def word_wrap(string, deslen=79):
     """Formats a given string to create soft-wrap-like behaviour.
 
     Parameters
     ----------
-    string : str
+    string : str or :class:`~GMAP.src.tools.StringClasses.ColStr`
         The string to format.
     deslen : int, default=79
         The maximum amount of characters per line.
 
     Returns
     -------
-    new_string : str
+    new_string : str or :class:`~GMAP.src.tools.StringClasses.ColStr`
         The original input `string`, but with newline characters added where
-        necessary.
+        necessary. Retains input type
     """
-    startlst = string.split("\n")
+
+    intype = type(string)
+    colstr = GM_SC.ColStr(string)
+    startlst = colstr.split("\n")
     endlst = []
 
     # We always take the length of the 'white' string, not the original;
     # color swaps don't take up space in the command line, but here they do
     # represent a length of up to 16!
 
-    for item in startlst:
-        ilen = len(change_color(item, "white"))
+    for item in startlst:  # each item is of type ColStr
+        ilen = len(item)  # ColStrs take their colors into account for length
         if ilen > deslen:
             itemlst = item.split(" ")
             buildstr = ""
             for subitem in itemlst:
-                slen = len(change_color(subitem, "white"))
-                blen = len(change_color(buildstr, "white"))
+                slen = len(subitem)
+                blen = len(buildstr)
                 if blen + slen >= deslen:
                     endlst.append(buildstr)
                     buildstr = subitem
                 else:
                     if blen == 0:
-                        if len(buildstr) == 0:  # stripping whitespaces
-                            buildstr = subitem
-                        else:  # There's nothing but color marker -> preserve
-                            buildstr += subitem
+                        buildstr += subitem
                     else:
                         buildstr += " " + subitem
             endlst.append(buildstr)
         else:
             endlst.append(item)
 
-    return "\n".join(endlst)
-
-
-def change_color(string, target_mode):
-    """GMAP defaults to 24-bit color. Change this to 4-bit or white.
-    """
-
-    # The code should be able to choose colors last-minute, so there are
-    # internal codes, too! Here, we switch from internal to ANSI
-    # Even if there are no custom markers, don't quit, there might be ANSI
-    # markers still!
-    string_split = string.split("\033<")
-    if len(string_split) != 1:  # custom color marker!
-        string_list = [item.split(">", 1) for item in string_split]
-        newlist = [">".join(string_list[0])]
-        for item in string_list[1:]:
-            newlist.append(getattr(Printer()._colors, item[0]) + item[1])
-        string = "".join(newlist)
-
-    # If we want 24bit, we can stay with the current ANSI codes.
-    if target_mode == "24bit":
-        return string
-
-    # make sure the beginning text has a color, too (just for code
-    # simplification, not actually in output)
-    string_split = string.split("\033[")
-    if len(string_split) == 1:  # no color marker!
-        return string
-
-    # prepare the string - split it up into a list in which each item
-    # represents a monocolor segment. The item is a list of length 2, first
-    # the ansi color string, then the actual string.
-    newstr = "0m" + string
-    string_split = newstr.split("\033[")
-    # cut only at first m as thats the end of the color marker
-    string_list = [item.split("m", 1) for item in string_split]
-
-    # now, change the color of each monocolor substring
-    if target_mode == "4bit":  # 8 colors + their bright varieties
-        for item in string_list:
-            item[0] = ANSI24_to_ANSI4(item[0])
-        outputlist = [string_list[0][1]]  # don't keep color of first item
-        outputlist += [f"\033[{item[0]}m{item[1]}" for item in string_list[1:]]
-        return "".join(outputlist)
-    else:
-        # just delete any color markers
-        output = "".join([item[1] for item in string_list])
-        return output
-
-
-def ANSI24_to_ANSI4(colorstr):
-    """input colorstr in ANSI format (e.g. 38;2;45;61;32)"""
-
-    warning_msg = "\nInvalid color specification."
-
-    color_split = colorstr.split(";")  # get all useful values
-    color_new = []
-    while len(color_split) > 0:
-        match color_split[0]:
-            case "0":  # reset command - no extra's expected
-                color_new.append("0")
-                color_split = color_split[1:]
-
-            case "38":  # foreground - 5 items including this one
-                curr_color = color_split[:5]
-                if len(curr_color) != 5:  # premature end of list
-                    Printer().warning(warning_msg, "PT_CC_1", True)
-
-                new_col, bright = GM_MF.convert_color_24_4(*curr_color[2:])
-                if bright:
-                    color_new.append("1")
-                color_new.append(str(30 + new_col))
-                color_split = color_split[5:]
-
-            case "48":  # background - 5 items including this one
-                curr_color = color_split[:5]
-                if len(curr_color) != 5:  # premature end of list
-                    Printer().warning(warning_msg, "PT_CC_1", True)
-
-                # no bright - a bright background is not possible
-                new_col = GM_MF.convert_color_24_4(*curr_color[2:])[0]
-                color_new.append(str(40 + new_col))
-                color_split = color_split[5:]
-
-            case _:
-                Printer().warning(warning_msg, "PT_CC_1", True)
-
-    return ";".join(color_new)
+    return intype("\n").join(endlst)
 
 
 def devprint(*args, **kwargs):
@@ -681,6 +726,10 @@ def header(
     verbose, title, preset, preline=None, newlines=None, **kwargs
 ):
     """Create a header from the given text.
+
+    A call to footer with the exact same parameters will generate the
+    corresponding closing structure. The header is directly printed,
+    not returned.
 
     Parameters
     ----------
@@ -753,7 +802,7 @@ def header(
     match preset:
         case "nohead" | "custom":
             if preset == "custom":
-                title = _make_header(title, **kwargs)
+                title = GM_SC.Header(title, **kwargs).s
             head += title
             Printer().print(verbose, head, **kwargs)
             if preline is not None:
@@ -763,11 +812,11 @@ def header(
                 special = {"u": {"replace": {"╦": [[1]]}}}
             else:
                 special = None
-            head += _make_header(
+            head += GM_SC.Header(
                 title, linemode="oulrc", padding=1, overline_char="═",
                 underline_char="═", left_char="║", right_char="║",
                 corner_char="╔╗╚╝", special=special
-            )
+            ).s
             Printer().print(verbose, head, **kwargs)
             if preset != "doublebox_bare":
                 Printer().preline.append([
@@ -779,7 +828,51 @@ def header(
 def footer(
     verbose, title, preset, preline=None, newlines=None, **kwargs
 ):
-    """Create a footer from the given text
+    """Create a footer from the given text.
+
+    A call to header with the exact same parameters will generate the
+    corresponding opening structure. The footer is directly printed,
+    not returned.
+
+    Parameters
+    ----------
+    verbose : int
+        The verbose level on which the header should be printed. Is
+        directly passed to the :func:`Printer.print` call.
+    tile : str
+        The text that should be within the header
+    preset : str
+        What style header should be used. Current options:
+
+        custom :
+            The caller fully decides. Any additional kwargs to this
+            function are passed to :func:`_make_header`. See the
+            documentation of that function for available kwargs.
+            newlines default = (0, 0)
+        nohead :
+            No special header is made - title is taken as-is.
+        doublebox :
+            The footer closes the dropped double line::
+                 ╚═══ End of Section═══
+
+            The matching header should be used too.
+            Newlines default = (1, 1)
+
+        doublebox_bare :
+            No footer is required for this one, will just print the
+            requested newlines.
+            Newlines default = (0, 0)
+    preline : str, default=None
+        Only used if preset set to "custom" or "nohead". If the text
+        following the header should have a preline, this will be
+        arranged.
+    newlines : tuple of two ints, default=None
+        The amount of empty lines that should be printed before and
+        after the header, respectively. If set to None, the
+        preset-specific default will be used.
+    **kwargs : any
+        Any kwargs that should be passed to either
+        :func:`Printer.print` or :func:`_make_header`.
     """
 
     if "color_border" not in kwargs or kwargs["color_border"] is None:
@@ -801,7 +894,7 @@ def footer(
     match preset:
         case "nohead" | "custom":
             if preset == "custom":
-                title = _make_header(title, **kwargs)
+                title = GM_SC.Header(title, **kwargs).s
             Printer().print(verbose, foot, **kwargs)
             if preline is not None:
                 if Printer().preline[-1][1] == preline:
@@ -817,218 +910,6 @@ def footer(
                     _ = Printer().preline.pop()
     if newlines[1] > 0:
         Printer().print(verbose, title + "\n" * (newlines[1]), **kwargs)
-
-
-def _make_header(
-    title, padding_char=" ", linemode="ou", padding=0,
-    overline_char="-", underline_char="-", left_char="|", right_char="|",
-    corner_char="+", alignment="centered", maxwidth=79,
-    color_border=None, color_text=None, special=None
-):
-    """Returns a pretty header for distinguishing prints
-
-    The header will be under and/or overlined with the character
-    buffer_char. These lines will have the same length as the title,
-    plus extra padding if requested.
-
-    Parameters
-    ----------
-    title : str
-        The text that should be within the header.
-    padding_char : str
-        The character that should be used for padding around the title
-    linemode : str, default="ou"
-        which lines should(n't) be displayed. Add the letters for the
-        elements you do want to display::
-
-            o: A line above the text
-            u: A line below the text
-            l: A line left of the text
-            r: A line right of the text
-            c: Corners
-
-    padding : int, default=0
-        How much extra space there should be. Over and underlines will
-        get longer by twice this amount, the title itself gets this
-        amount of whitespaces before and after the text.
-    overline_char, underline_car, left_char, right_char : str, \
-    default="-"
-        The character that should be used for the respective segment
-    corner_char : str, default="+"
-        The character that should be used for the corners. If a single
-        character is provided, all corners get that character. If
-        different characters are desired, there must be 4 characters
-        in the string: one for the upleft, upright, downleft, downright
-        corner respectively.
-    alignment : str, default="centered"
-        If the title text consists of multiple lines of unequal length,
-        decide how these should be aligned. Regardless of choice, the
-        character specified using padding_char will be used to increase
-        the lengths of shorter lines. The amount of characters specified
-        using padding will be added to the lines after they are made of
-        equal length.
-        "centered" aligns their midpoints, "leftadj" will align their
-        left edges, and "rightadj" will align their right ones.
-    maxwidth : int, default=79
-        How wide the end result is allowed to be, max. If the title
-        text is too wide to fit the requirements, it is line-wrapped to
-        fit.
-    special : dict, default={}
-        Any special rules to apply after the header has been generated.
-        Thakes the form of a nested dictionary structure:
-        special={"u": {"command": {"|": [[2]]}}}
-
-        - The outermost dict has as the key a string indicating what
-          line should be altered. Same shorthands as linemode. The value
-          of the dictionary is what should be changed about the line
-          (here referred to as the 'rules')
-        - The rules dict has the commands as keys, and specific
-          instructions (another dict) as the values:
-
-          - replace will put the character saved as key in the
-            instructions dict at the positions saved in its values:
-            if the line is "abcdefg", {"replace": ["V", [[3]]]} will
-            result in "abcVefg". Similarly, {"replace": ["VR",
-            [[1, 2], [4, 5]]]} will turn "abcdefg" into "aVRdVRg"
-
-    Returns
-    -------
-    header : str
-        The header, ready for printing.
-    """
-
-    if color_border is None:
-        color_border = Printer().colors.green_lc
-
-    if color_text is None:
-        color_text = Printer().colors.clear
-
-    # -----------  Inside text:  ----------------------
-
-    # line wrapping at the correct places.
-    title_width = maxwidth - 2 - (padding * 2)  # leave space for header
-    title = prettifier(title, title_width)
-    title, longest_length = _header_textwrap(title, alignment, padding_char)
-    n_lines = len(title)
-
-    # -----------  Outside border:  ----------------------
-
-    ou_length = longest_length + padding * 2
-    corner_char = corner_char * 4  # automatically solves all!
-    lines = {}
-
-    # overline
-    lines["over"] = _header_overunder(
-        overline_char, corner_char[:2], linemode, ou_length, "o")
-
-    # sidelines
-    lines["left"] = _header_sideline(left_char, linemode, n_lines, "l")
-    lines["right"] = _header_sideline(left_char, linemode, n_lines, "r")
-
-    # underline
-    lines["under"] = _header_overunder(
-        underline_char, corner_char[2:4], linemode, ou_length, "u")
-
-    # -----------  Special instructions:  ----------------------
-
-    if special is None:
-        special = {}
-    lines = _header_specials(special, lines)
-
-    # -----------  Building the final product  ----------------------
-
-    # overline
-    header = ""
-    over = lines["over"]
-    if len(over) != 0:  # If we have an upper line, add a line break, too
-        over += "\n"
-    header += color_border + over
-
-    # sidelines
-    pad = padding_char[0] * padding
-    for lft, txt, rght in zip(lines["left"], title, lines["right"]):
-        header += (
-            color_border + lft +
-            color_text + pad + txt + pad +
-            color_border + rght + "\n")
-
-    # underline
-    header += color_border + lines["under"] + Printer().colors.clear
-
-    return header
-
-
-def _header_overunder(line_char, corner_chars, linemode, length, dir):
-    # Get middle portion (if no overline, but corners, we need whitespace)
-    if dir in linemode:
-        upper = line_char * length
-    elif "c" in linemode:
-        upper = " " * length
-    else:
-        upper = ""
-
-    # add corners!
-    if "c" in linemode:
-        upper = corner_chars[0] + upper + corner_chars[1]
-
-    return upper
-
-
-def _header_sideline(line_char, linemode, length, dir):
-    if dir in linemode:
-        left = [line_char[0]] * length
-    elif "c" in linemode:
-        left = [" "] * length
-    else:
-        left = [""] * length
-    return left
-
-
-def _header_specials(special, lines):
-    shorts = {"o": "over", "u": "under", "l": "left", "r": "right"}
-
-    for lineshort, rules in special.items():
-        line = lines[shorts[lineshort]]
-        for command, instructions in rules.items():
-            if command == "replace":
-                if lineshort in "ou":
-                    conv = GM_CT.return_first
-                elif lineshort in "lr":
-                    conv = GM_CT.return_list
-                for char, positions in instructions.items():
-                    char = conv(char)
-                    for pos in positions:
-                        line = line[:pos[0]] + char + line[pos[-1]+1:]
-        lines[shorts[lineshort]] = line
-    return lines
-
-
-def _header_textwrap(title, alignment, padding_char):
-    # padding and adjusting the lines
-    title = title.split("\n")
-    n_lines = len(title)
-    if n_lines == 1:
-        longest_length = len(change_color(title[0], "white"))
-    else:
-        longest_length = max([
-            len(change_color(item, "white")) for item in title])
-        new_title = []
-        for line in title:
-            linelength = len(change_color(line, "white"))
-            diff = longest_length - linelength
-            match alignment:
-                case "centered":
-                    pre = diff // 2
-                    post = diff - pre
-                case "leftadj":
-                    pre = 0
-                    post = diff
-                case "rightadj":
-                    pre = diff
-                    post = 0
-            new_title.append(pre * padding_char + line + post * padding_char)
-        title = new_title
-    return title, longest_length
 
 
 def intlist_to_rangelist(intlist, n_int, make_shadow=True):

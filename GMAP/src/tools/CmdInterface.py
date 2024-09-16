@@ -40,21 +40,50 @@ def cmd_interface(callcommand):
     Files.save_callcommand(callcommand)
 
     # Deduce whether we should be running in safe mode / dark mode.
-    final_callcommand = []
-    safe_mode = False
-    dark_mode = True
-    for item in callcommand:
-        match item.lower():
-            case "-safe" | "--safe_mode":
-                safe_mode = True
-            case "-nodm" | "--nodark_mode":
-                dark_mode = False
-            case "-dm" | "--dark_mode":
-                dark_mode = True
-            case _:
-                pass
-        final_callcommand.append(item)
-    callcommand = final_callcommand
+    # These 'special' flags should be caught separately to avoid issues like
+    # 'GMAP -nodm' throwing an error.
+    # First, split args into dict. Here, the parameter name becomes the key
+    # (except for the first one, that's program name, but dicts are ordered!)
+    # and it's choice(s) become the value.
+    current_arg = [callcommand[0]]
+    all_args = {}
+    for item in callcommand[1:]:
+        if item.startswith("-"):
+            # lets hope that doubles will never appear (they shouldn't, AFAIK)
+            all_args[current_arg[0]] = current_arg[1:]
+            current_arg = [item]
+        else:
+            current_arg.append(item)
+    else:
+        all_args[current_arg[0]] = current_arg[1:]
+
+    # See if any urgent print-related settings are given.
+    for parameter, choice in all_args.items():
+        choice_lower = [item.lower() for item in choice]
+
+        # If the user requests to run in safe mode
+        if (  # asks safe mode, and doesn't explicitly turn it off
+            parameter.lower() in ("-safe", "--safe_mode")
+            and not any(item in choice_lower for item in ("f", "false"))
+        ):
+            safe_mode = True
+        else:
+            safe_mode = False
+
+        # if the user asks to NOT use dark mode
+        if (
+            (  # asks nodark, and doesn't explicity turn nodark off
+                parameter.lower() in ("-nodm", "--nodark_mode")
+                and not (any(item in choice_lower for item in ("f", "false")))
+            ) or (  # asks dark, but explicitly turns dark off
+                parameter.lower() in ("-dm", "--dark_mode")
+                and (any(item in choice_lower for item in ("f", "false")))
+            )
+        ):
+            dark_mode = False
+        else:
+            dark_mode = True
+
     Printer().setenv(safe_mode, dark_mode)
     colors = Printer().colors
 
@@ -63,10 +92,6 @@ def cmd_interface(callcommand):
         logostr = lfile.read()
 
     # convert abbr to actual color markers
-    # logostr = logostr.replace("P", "\033[38;2;229;140;140m")
-    # logostr = logostr.replace("G", "\033[38;2;140;229;140m")
-    # logostr = logostr.replace("P", "\033[38;2;240;96;112m")
-    # logostr = logostr.replace("G", "\033[38;2;128;240;112m")
     logostr = logostr.replace("P", colors.pink_hc)
     logostr = logostr.replace("G", colors.green_hc)
     logostr += colors.clear
@@ -79,14 +104,18 @@ def cmd_interface(callcommand):
         "kind of feedback, go to github.com/Kimvana/GMAP\n"
     )
 
-    allhelps = ["help", "h", "-h"]
-    if len(callcommand) == 1:
-        callcommand.append(allhelps[0])
-    if len(callcommand) == 2:
-        callcommand.append(allhelps[0])
+    # get first entry form args dict -> the GMAP call (before first parameter)
+    gmapcall, extras = next(iter(all_args.items()))
+    call = [gmapcall] + extras
 
-    choice = callcommand[1]
-    subch = callcommand[2]
+    allhelps = ["help", "h", "-h"]
+    if len(call) == 1:
+        call.append(allhelps[0])
+    if len(call) == 2:
+        call.append(allhelps[0])
+
+    choice = call[1]
+    subch = call[2]
 
     if choice.lower() in allhelps:
         cmd_to_help(allhelps, subch)

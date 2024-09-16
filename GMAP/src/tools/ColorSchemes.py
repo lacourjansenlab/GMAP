@@ -31,6 +31,7 @@ from matplotlib import colormaps
 
 # local imports
 import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.StringClasses as GM_SC
 
 
 class PrinterColors(GM_CT.CustomClass):
@@ -42,38 +43,42 @@ class PrinterColors(GM_CT.CustomClass):
 
 
 StandInColors = PrinterColors(**{
-    col: f"\033<{col}>" for col in (
+    col: GM_SC.ColStr(f"\033<{col}>") for col in (
         "clear", "pink_hc", "green_hc", "blue_hc", "red_hc", "red_todef",
         "green_lc")
 })
 
 DarkModeColors = PrinterColors(**{
-    "clear": "\033[0m",  # reset the colors
+    name: GM_SC.ColStr(code) for name, code in {
+        "clear": "\033[0m",  # reset the colors
 
-    # High contrast colors (bright on dark background)
-    "pink_hc": "\033[38;2;240;96;112m",  # 4bit = bright red
-    "green_hc": "\033[38;2;128;240;112m",  # 4bit = bright green
-    "blue_hc": "\033[38;2;128;192;240m",  # light skyblue, 4bit = bright cyan
-    "red_hc": "\033[38;2;255;0;0m",  # errors, 4bit = bright red
-    "red_todef": "\033[38;2;255;160;176m",  # error text, 4bit = white
+        # High contrast colors (bright on dark background)
+        "pink_hc": "\033[38;2;240;96;112m",  # 4bit = bright red
+        "green_hc": "\033[38;2;128;240;112m",  # 4bit = bright green
+        "blue_hc": "\033[38;2;128;192;240m",  # light skyblue, 4bit=bright cyan
+        "red_hc": "\033[38;2;255;0;0m",  # errors, 4bit = bright red
+        "red_todef": "\033[38;2;255;160;176m",  # error text, 4bit = white
 
-    # Low contrast colors (dark(er) on dark background)
-    "green_lc": "\033[38;2;16;96;48m",  # 4bit = dark green
+        # Low contrast colors (dark(er) on dark background)
+        "green_lc": "\033[38;2;16;96;48m",  # 4bit = dark green
+    }.items()
 })
 
 
 LightModeColors = PrinterColors(**{
-    "clear": "\033[0m",  # reset the color
+    name: GM_SC.ColStr(code) for name, code in {
+        "clear": "\033[0m",  # reset the color
 
-    # High contrast colors (dark on light background)
-    "pink_hc": "\033[38;2;188;64;64m",  # 4bit = dark red
-    "green_hc": "\033[38;2;55;102;47m",  # 4bit = dark green
-    "blue_hc": "\033[38;2;64;48;144m",  # night skyblue, 4bit = dark blue
-    "red_hc": "\033[38;2;192;0;0m",  # errors, 4bit = dark red
-    "red_todef": "\033[38;2;64;0;0m",  # error text, 4bit = black
+        # High contrast colors (dark on light background)
+        "pink_hc": "\033[38;2;188;64;64m",  # 4bit = dark red
+        "green_hc": "\033[38;2;55;102;47m",  # 4bit = dark green
+        "blue_hc": "\033[38;2;64;48;144m",  # night skyblue, 4bit = dark blue
+        "red_hc": "\033[38;2;192;0;0m",  # errors, 4bit = dark red
+        "red_todef": "\033[38;2;64;0;0m",  # error text, 4bit = black
 
-    # Low contrast colors (light(er) on light background)
-    "green_lc": "\033[38;2;48;208;64m",  # 4bit = bright green
+        # Low contrast colors (light(er) on light background)
+        "green_lc": "\033[38;2;48;208;64m",  # 4bit = bright green
+    }.items()
 })
 
 

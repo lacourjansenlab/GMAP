@@ -18,7 +18,7 @@ In the commmand line
 When specifying parameters on the command line, whitespaces are used to separate both a parameter from its choices, the multiple different choices for a parameter, and between parameters. Therefore, the following rules are used to ensure proper identification:
 
 A parameter name must be preceeded by two hyphens (--). So, if you want to specify the verbosity of the program, you use --verbose.
-Some parameter names are long, and a shorthand is available instead. When using the shorthand, use only a single hyphen (-). 
+Some parameter names are long, and a shorthand is available as well. When using the shorthand, use only a single hyphen (-). 
 
 | Boolean parameters (those accepting only True or False) can get the option ``True`` or ``False`` specified, but the choice can also be implicit. For example, both ``--prevent_overwrite True`` and ``--prevent_overwrite`` do the same. If you want to set one of these to False, this can again be done two ways - both ``--prevent_overwrite False`` and ``--noprevent_overwrite`` are treated the same. Just add ``no`` to the parameter name. This notation using ``no`` is referred to here as the nobool format.
 | When using a shorthand, bp for example, ``-bp False`` and ``-nobp`` again do the same. In other words, the ``no`` prefix can be used with shorthands, too.
