@@ -1,0 +1,18 @@
+# first attempt at the core.txt file for the bchlc map in GMAP
+functional_group_file    bchla_functional_group.txt
+
+# all specified
+used_atoms 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 
+
+# probably at least the magnesium atom, which is 26, zero based
+electrostatic_atoms 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 
+electrostatic_choice V   # V E or G?
+
+local_atoms 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45
+
+r_vec     16-32 # this NB to ND
+r_pos     0
+
+VEG_reference  CoM  #0 position of Mg
+VEG_reference position 0
+VEG_reference residues 0
