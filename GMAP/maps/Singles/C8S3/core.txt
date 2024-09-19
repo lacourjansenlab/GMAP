@@ -1,4 +1,6 @@
 
+can_output         ham dip # ene pos #dbp ram # do we need this?
+
 # does not cover prepros
 # functional_group [LIG] 
 

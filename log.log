@@ -10,8 +10,8 @@
   \        /              |  |      |  |\ (_ o _) /   )
    `'-...-'               '--'      '--' '.(_,_).'`---'
 
-Parsed GMAP parameters at: 0-00:00:00.006
-Added all maps at: 0-00:00:00.016
+Parsed GMAP parameters at: 0-00:00:00.008
+Added all maps at: 0-00:00:00.018
 
 -----------
 Influencers
@@ -19,7 +19,7 @@ Influencers
 
 
 Residue names included in influencers:
-NA, SOL, LIG
+LIG, NA, SOL
 
 Residue names NOT included in influencers:
 
@@ -28,8 +28,8 @@ Atoms included in influencers:
 
 Atoms NOT included in influencers:
 
-Initialized MD system at: 0-00:00:00.739
-Initialization complete at: 0-00:00:00.739
+Initialized MD system at: 0-00:00:01.202
+Initialization complete at: 0-00:00:01.202
 
 The file
 /Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib
@@ -42,7 +42,7 @@ line 53, in __init__
     self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 File
-"/usr/local/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/ctypes/__init__.py",
+"/usr/local/Cellar/python@3.12/3.12.6/Frameworks/Python.framework/Versions/3.12/lib/python3.12/ctypes/__init__.py",
 line 379, in __init__
     self._handle = _dlopen(self._name, mode)
                    ^^^^^^^^^^^^^^^^^^^^^^^^^
