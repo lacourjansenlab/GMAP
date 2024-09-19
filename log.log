@@ -10,6 +10,7 @@
   \        /              |  |      |  |\ (_ o _) /   )
    `'-...-'               '--'      '--' '.(_,_).'`---'
 
+<<<<<<< Updated upstream
 Parsed GMAP parameters at: 0-00:00:00.008
 Added all maps at: 0-00:00:00.018
 
@@ -57,6 +58,28 @@ dlopen(/Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/sourc
 '/Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib'
 (mach-o file, but is an incompatible architecture (have 'arm64', need
 'x86_64'))
+=======
+Parsed GMAP parameters at: 0-00:00:00.013
+>>>>>>> Stashed changes
 
+The parameter VEG_reference appeared more than once in the file
+/Users/monicakarem/Dropbox/My Mac (Mónica’s
+iMac)/Documents/GitHub/GMAP/GMAP/maps/Singles/Chl-a/core.txt. It may only occur
+once. This issue must be fixed before this map can be used.
 More information can be found in the documentation user pages using the
-following error code: CL_VG_1
+following error code: MI_MR_4
+
+Could not find the parameter 'can_output' in the file
+/Users/monicakarem/Dropbox/My Mac (Mónica’s
+iMac)/Documents/GitHub/GMAP/GMAP/maps/Singles/BChl-c/core.txt. Without it, the
+map cannot function. Please make sure it is present.
+More information can be found in the documentation user pages using the
+following error code: MI_MC_6
+
+Could not find the file /Users/monicakarem/Dropbox/My Mac (Mónica’s
+iMac)/Documents/GitHub/GMAP/GMAP/maps/Singles/Chl-b/core.txt. This file is
+required for the map to function. Please consult the information of this map,
+or contact the developer of this map.
+More information can be found in the documentation user pages using the
+following error code: MI_MR_2
+Added all maps at: 0-00:00:00.053

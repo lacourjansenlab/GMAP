@@ -34,3 +34,7 @@ dipole_gas_phase       11.4
 
 frequency_gas_phase    19420
 # frequency_data_file_linear    
+
+position       0  # carbon atom # should be C12
+#doublepos_0    0  # carbon atom # should be C10 
+#doublepos_1    3  # nitrogen atom # should be C14
