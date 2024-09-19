@@ -1,0 +1,34 @@
+# verbose 4
+# verbose_logfile 4
+# #map_directory GMAP/maps/Singles
+# 
+# maps_to_use   AmideSC AmideBB CystBridge
+
+
+
+# topology_file  D:\Data\PhD\Tutorials\VesnaTube\mix_nvt_new.tpr
+# trajectory_file  D:\Data\PhD\Tutorials\VesnaTube\traj_comp_5_frames.xtc
+
+# topology_file  D:\Data\PhD\Tutorials\2N0A\md_0_1.tpr
+# trajectory_file  D:\Data\PhD\Tutorials\2N0A\md_0_1.xtc
+
+topology_file /Users/monicakarem/Dropbox/TCM/Jobs/2-C8S3/MD/H2O_isotropic/MD_1ns_xtc2fs/md_prod_300_xtc2fs_1ns.tpr
+trajectory_file /Users/monicakarem/Dropbox/TCM/Jobs/2-C8S3/MD/H2O_isotropic/MD_1ns_xtc2fs/md_prod_300_xtc2fs_1ns.xtc
+ 
+# topology_file ../../../Jobs/2-C8S3/MD/H2O_isotropic/MD_1ns_xtc2fs/md_prod_300_xtc2fs_1ns.tpr
+# trajectory_file ../../../Jobs/2-C8S3/MD/H2O_isotropic/MD_1ns_xtc2fs/md_prod_300_xtc2fs_1ns.xtc
+
+verbose 4
+verbose_logfile 4
+maps_to_use   C8S3
+couplings_to_use  None   :All
+#couplings_to_use  DipDip  AmideSC:AmideSC
+
+output_format txt
+output_data dip ham
+prevent_overwrite False
+
+number_frames 2
+
+estatic_smooth_range 0
+neutral_charge_threshold 0.01

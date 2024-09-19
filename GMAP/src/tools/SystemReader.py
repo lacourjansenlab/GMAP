@@ -1203,8 +1203,10 @@ def gen_universe(RunPars):
 
     try:
         universe = MDA.Universe(
-            RunPars.topology_file, RunPars.trajectory_file,
+            RunPars.topology_file.resolve(), RunPars.trajectory_file.resolve(),
             guess_bonds=RunPars.guess_bonds
+            # RunPars.topology_file, RunPars.trajectory_file,
+            # guess_bonds=RunPars.guess_bonds
         )
     except FileNotFoundError as ex:
         GM_PT.Printer().warning(

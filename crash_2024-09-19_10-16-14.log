@@ -1,0 +1,36 @@
+
+
+  .-_'''-.                ,---.    ,---.   ____   .-------.
+ '_( )_   \               |    \  /    | .'  __ `.\  _(`)_ \
+|(_ o _)|  '              |  ,  \/  ,  |/   '  \  \ (_ o._)|
+. (_,_)/___|   _ _    _ _ |  |\_   /|  ||___|  /  |  (_,_) /
+|  |  .-----. ( ' )--( ' )|  _( )_/ |  |   _.-`   |   '-.-'
+'  \  '-   .'(_{;}_)(_{;}_) (_ o _) |  |.'   _    |   |
+ \  `-'`   |  (_,_)--(_,_)|  (_,_)  |  ||  _( )_  |   |
+  \        /              |  |      |  |\ (_ o _) /   )
+   `'-...-'               '--'      '--' '.(_,_).'`---'
+
+
+Usage:
+
+    GMAP GEM
+    GMAP GEM help
+Prints this help.
+
+    GMAP GEM demo
+Launches GEM in demo-mode. Performs a basic calculation to demonstrate basic
+use and to verify the program is installed correctly.
+
+    GMAP GEM run [name of input file] [optional parameters]
+Performs a run of GEM using the parameters specified in the included file.
+
+
+Groningen Electrostatic Maps
+
+The purpose of GEM is to take an MD trajectory and compute the time-dependent
+Hamiltonian to be used in electronic spectral calculations. Instructions on how
+to deal with specific chromophores have to be included in the corresponding
+.emap file.
+
+For more information, check the manual on N/A.
+
