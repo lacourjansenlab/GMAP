@@ -241,7 +241,7 @@ class Printer(metaclass=GM_CT.Singleton):
         # Figure out (the length of) printpreline, and change its color to
         # the desired color (so they can be returned directly).
         printpreline = GM_SC.ColStr("").join(
-            item[1] for item in self.preline if verbose in item[0])
+            [item[1] for item in self.preline if verbose in item[0]])
         printpreline = printpreline.change_color(color_mode)
         prelinelen = len(printpreline)
 
@@ -394,8 +394,8 @@ class Printer(metaclass=GM_CT.Singleton):
             self._colors = GM_CS.LightModeColors
 
     def set_state(
-        self, new_state, verbose, verbose_logfile, color_mode, line_length,
-        new_logfile=None, new_dont_report_error=None
+        self, new_state, verbose=None, verbose_logfile=None, color_mode=None,
+        line_length=None, new_logfile=None, new_dont_report_error=None
     ):
         """Change the current state of Printer
 
@@ -404,17 +404,20 @@ class Printer(metaclass=GM_CT.Singleton):
         to re-chose those three values, allowing 'importing' them after
         :class:`~GMAP.src.tools.ParameterParser.RunPars` finds them.
 
+        If a parameter is not given, or explicitly given as None, then
+        the existing value is kept.
+
         Parameters
         ----------
         new_state : str
             The new value for the attribute `program_state`.
-        verbose : int
+        verbose : int, default=None
             The new value for the attribute `verbose`
-        verbose_logfile : int
+        verbose_logfile : int, default=None
             The new value for the attribute `verbose_logfile`
-        color_mode : str
+        color_mode : str, default=None
             The desired color palette. 24bit, 4bit, or no colors (white)
-        line_length : int
+        line_length : int, default=None
             How many characters lines may contain at most.
         new_logfile : str, default=None
             The name of a different logfile to start to use.
@@ -423,14 +426,17 @@ class Printer(metaclass=GM_CT.Singleton):
         """
 
         self.program_state = new_state
-        self.verbose = verbose
-        self.verbose_logfile = verbose_logfile
-        if not self.safe_mode:
+        if verbose is not None:
+            self.verbose = verbose
+        if verbose_logfile is not None:
+            self.verbose_logfile = verbose_logfile
+        if (color_mode is not None) and (not self.safe_mode):
             self.color_mode = color_mode
-        self.line_length = line_length
+        if line_length is not None:
+            self.line_length = line_length
         if new_dont_report_error is not None:
             self.dont_report_error = new_dont_report_error
-        if new_logfile:
+        if new_logfile is not None:
             self.logfile = new_logfile
             self.print_backlog()
         # color_test()
@@ -655,8 +661,8 @@ def word_wrap(string, deslen=79):
     Returns
     -------
     new_string : str or :class:`~GMAP.src.tools.StringClasses.ColStr`
-        The original input `string`, but with newline characters added where
-        necessary. Retains input type
+        The original input `string`, but with newline characters added
+        where necessary. Retains input type.
     """
 
     intype = type(string)
@@ -694,12 +700,14 @@ def word_wrap(string, deslen=79):
 def devprint(*args, **kwargs):
     """python print for developers
 
-    Developers should use this function to print instead of the python print
-    function - it also prints where it was evoked, so any random prints can
-    be easily retraced and removed after they're no longer useful.
+    Developers should use this function to print instead of the python
+    print function - it also prints where it was evoked, so any random
+    prints can be easily retraced and removed after they're no longer
+    useful.
 
     .. note::
-        Calling this function goes **exactly** like the print from python
+        Calling this function goes **exactly** like the print from
+        python
 
     Parameters
     ----------
@@ -806,7 +814,7 @@ def header(
             head += title
             Printer().print(verbose, head, **kwargs)
             if preline is not None:
-                Printer().preline.append(preline)
+                Printer().preline.append([[*range(verbose, 5)], preline])
         case "doublebox" | "doublebox_bare":
             if preset == "doublebox":
                 special = {"u": {"replace": {"╦": [[1]]}}}
@@ -890,26 +898,29 @@ def footer(
             case "doublebox":
                 newlines = (1, 1)
 
-    foot = "\n" * (newlines[0]-1)
+    if newlines[0] > 0:
+        foot = "\n" * (newlines[0] - 1)
+        Printer().print(verbose, foot, **kwargs)
     match preset:
         case "nohead" | "custom":
             if preset == "custom":
                 title = GM_SC.Header(title, **kwargs).s
-            Printer().print(verbose, foot, **kwargs)
+            else:
+                title = ""
             if preline is not None:
                 if Printer().preline[-1][1] == preline:
                     _ = Printer().preline.pop()
         case "doublebox_bare":
-            Printer().print(verbose, foot, **kwargs)
             title = ""
         case "doublebox":
             title = f" {cb}╚═══{ct} End of {title} {cb}═════{cc}"
-            Printer().print(verbose, foot, **kwargs)
             if preset != "doublebox_bare":
                 if Printer().preline[-1][1] == cb + " ║ " + cc:
                     _ = Printer().preline.pop()
     if newlines[1] > 0:
-        Printer().print(verbose, title + "\n" * (newlines[1]), **kwargs)
+        title += "\n" * (newlines[1])
+    if title != "":
+        Printer().print(verbose, title, **kwargs)
 
 
 def intlist_to_rangelist(intlist, n_int, make_shadow=True):
@@ -920,11 +931,11 @@ def intlist_to_rangelist(intlist, n_int, make_shadow=True):
     intlist : list of int
         The list of integers to be packed.
     n_int : int
-        The amount of integers that can at most be there. (The provided value
-        itself will never appear!)
+        The amount of integers that can at most be there. (The provided
+        value itself will never appear!)
     make_shadow : bool, default=True
-        Whether the opposite should also be built - a list of all indices
-        that weren't in the intlist
+        Whether the opposite should also be built - a list of all
+        indices that weren't in the intlist
 
     Returns
     -------
@@ -987,7 +998,8 @@ def intlist_to_rangelist(intlist, n_int, make_shadow=True):
 
 
 def rangestrlist(start, stop):
-    """Given a start and stop, return separate items or range. Inclusive.
+    """Given a start and stop, return separate items or range.
+    Inclusive.
 
     Meant as a helper function for :func"`intlist_to_rangelist`, not
     intended for separate use.

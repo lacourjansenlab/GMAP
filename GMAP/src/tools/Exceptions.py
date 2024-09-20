@@ -31,7 +31,7 @@ class GMAPexception(Exception):
     cause : , default=None
     """
 
-    def __init__(self, message, error_code="", cause=None):
+    def __init__(self, message=" ", error_code="", cause=None):
         if GM_PT.Printer().verbose != 4:
             sys.tracebacklimit = 0
         self.message = message
@@ -99,7 +99,8 @@ class GmapNotADirectoryError(GMAPexception, NotADirectoryError):
 
 
 class GmapNotImplementedError(GMAPexception, NotImplementedError):
-    """When the user wants something from GMAP that isn't implemented yet"""
+    """When the user wants something from GMAP that isn't implemented
+    yet"""
 
 
 class GmapOSError(GMAPexception, OSError):

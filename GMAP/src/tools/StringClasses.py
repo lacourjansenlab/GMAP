@@ -6,6 +6,13 @@ import GMAP.src.tools.PrintTools as GM_PT
 
 
 class ErrCode(str):
+    """Allows for easy comparion of error codes.
+
+    Each warning/error has its own error code. The goal of this class is
+    to make it easy to compare them: we want to be able to equate codes
+    with wildcards!
+    """
+
     def __eq__(self, other):
         """This is used to see if two error codes equal each other.
 
@@ -81,10 +88,39 @@ class ColStr(str):
     """Just like normal strings, but additional methods for colors.
 
     If any string is added to this class (either from the left or from
-    the right), the result will be of this class.
+    the right), the result will be of this class. Similarly, many other
+    str operations are possible with this class. When properly
+    supported, they will return a ColStr, not 'normal' str.
+
+    So, what's the difference? Consider the following string:
+    ``Hello \033[35;1m pretty \033[0m world``
+    It contains two ANSI sequences. In this case, they indicate that the
+    word 'pretty' should be printed in bright magenta, whereas 'Hello'
+    and 'world' should be printed in 'default' colors. As a normal
+    python string, it contains 31 characters: all the letters, and all
+    the characters of the ANSI codes (the 033 thing is a single
+    character). So, its length is 31, and the for-loop iterating through
+    it will have 31 iterations. However, when printed to the command
+    line, it will only take up 20 characters.
+
+    When dealing with prints, it is very nice to deal with the length
+    of the string as observed in the command line. All the functions
+    of this class work that way, or are designed to return an instance
+    of ColStr, instead of str.
+
+    Currently supported methods:
+        __add__, __radd__, __getitem__ (slicing/indexing), __iter__ (for
+        item in, list(ColStr)), __len__, __mul__, __rmul__, join,
+        replace, split
 
     .. warning ::
         str.join([ColStr]) will result in a str object, not ColStr!
+
+    .. warning ::
+        The color markers are 'attached' to the following character (if
+        there is any). If that character is sliced out, the color will
+        disappear. If this behaviour poses an issue, open an issue for
+        it on github!
     """
 
     def __add__(self, other):
@@ -126,9 +162,35 @@ class ColStr(str):
         return ColStr(super().__mul__(other))
 
     def __rmul__(self, other):
-        return ColStr(other) * self
+        return ColStr(super().__mul__(other))
 
     def _forwards_generator(self, key):
+        """A generator in the forwards direction.
+
+        This is the backbone of __iter__ and __getitem__ -> this is the
+        actual mechanism of stepping through the string. Due to the
+        logic of recognizing color markers, this exact function only
+        works forwards, not backwards. See comments of the __getitem__
+        method for more info on backwards.
+
+        Parameters
+        ----------
+        key : tuple
+            This tuple contains three integers: start, stop (exclusive)
+            and step. Due to the creation of key, start and stop are
+            always positive integers. If a negative-based slice was
+            requested, the form was already changed to positive integers
+            before being fed here.
+
+        Returns
+        -------
+        char : `ColStr`
+            The next character in the sequence. When printed to the
+            terminal, it will appear to have a length of 1 (could also
+            be a newline character), but len(str(char)) might not be 1:
+            it could contain an ANSI color marker!
+        """
+
         col_ix = 0
         within_col = False
         col_end = ""
@@ -171,19 +233,92 @@ class ColStr(str):
             col_ix += 1
 
     def join(self, iterable):
+        """A replacement for str.join().
+
+        Uses the super() method, but changes the result back to a ColStr
+        object.
+        """
+
         return ColStr(super().join(iterable))
 
     def replace(self, *args, **kwargs):
+        """A replacement for str.replace().
+
+        Uses the super() method, but changes the result back to a ColStr
+        object.
+        """
+
         return ColStr(super().replace(*args, **kwargs))
 
     def split(self, *args, **kwargs):
+        """A replacement for str.split().
+
+        Uses the super() method, but changes the result back to a ColStr
+        object.
+        """
+
         return [ColStr(item) for item in super().split(*args, **kwargs)]
 
     def wrap(self, deslen):
+        """A shortcut to :func:`~GMAP.src.tools.PrintTools.word_wrap`
+
+        Applies the word_wrap function to itself and returns the result.
+
+        Parameters
+        ----------
+        deslen : int
+            The desired length of the string. Using a greedy algorithm,
+            line breaks are inserted to maintain the maximum line
+            length.
+
+        Returns
+        -------
+        wrapped : ColStr
+            The same as the input string, but with newlines inserted to
+            maintain the maximum line length.
+        """
+
         # word wrap retains type
         return GM_PT.word_wrap(self, deslen=deslen)
 
     def change_color(self, target_mode):
+        """Changes its own color, returns a copy with changed color
+
+        There are different types of colors: internal colors, ANSI
+        24bit, ANSI 4bit, and omitting all color. When this function is
+        called, any internals present are first converted to 24bit.
+        Then, all colors are converted to target_mode.
+
+        Internal colors: We want to be able to give all prints from the
+        program a color, even the first. However, at that point in the
+        program, we don't yet know whether to print in dark, or light
+        mode. Internal colors work with color names which are converted
+        to actual ANSI strings when this function runs.
+
+        24bit colors: each color has a rgb code. This is the default of
+        the program (all colors are defined that way), and allows for
+        the prettiest output.
+
+        4bit colors: These are so old, any hardware imaginable should
+        support them. Their larger contrast (as there are so few) should
+        also help vision-impaired folks.
+
+        no color: all color markers are removed. Quite useful for when
+        writing to the log file.
+
+        Parameters
+        ----------
+        target_mode : str
+            Either '24bit', '4bit' or 'white'. The kind of colors you
+            want to see.
+
+        Returns
+        -------
+        output : str
+            The same string as the input one, but with the color markers
+            changed to the desired output, or removed altogether.
+        """
+
         # The code should be able to choose the color scheme last-minute, so
         # there are internal codes, too! Here, we switch from internal to ANSI
         # Even if there are no custom markers, don't quit, there might be ANSI
@@ -218,7 +353,7 @@ class ColStr(str):
 
         # now, change the color of each monocolor substring
         if target_mode == "4bit":  # 8 colors + their bright varieties
-            output = string_list[0][1]  # don't keep color of first item
+            output = colstr_list[0][1]  # don't keep color of first item
             for item in colstr_list[1:]:
                 col = self.ANSI24_to_ANSI4(item[0])
                 output += f"\033[{col}m{item[1]}"
@@ -229,8 +364,14 @@ class ColStr(str):
             output = ColStr("").join([item[1] for item in colstr_list])
         return output
 
-    def ANSI24_to_ANSI4(colorstr):  # used by change_color
-        """input colorstr in ANSI format (e.g. 38;2;45;61;32)"""
+    def ANSI24_to_ANSI4(self, colorstr):  # used by change_color
+        """Change a ANSI-24bit color code to the closest 4bit version.
+
+        Input colorstr in ANSI format (e.g. 38;2;45;61;32). Both
+        background and foreground colors are treated. For backgrounds,
+        the 'bright' bit is never activated (not all terminals support
+        it), but it is for foreground.
+        """
 
         warning_msg = "\nInvalid color specification."
 
@@ -248,9 +389,9 @@ class ColStr(str):
                         GM_PT.Printer().warning(warning_msg, "PT_CC_1", True)
 
                     new_col, bright = GM_MF.convert_color_24_4(*curr_color[2:])
+                    color_new.append(str(30 + new_col))
                     if bright:
                         color_new.append("1")
-                    color_new.append(str(30 + new_col))
                     color_split = color_split[5:]
 
                 case "48":  # background - 5 items including this one
@@ -258,9 +399,9 @@ class ColStr(str):
                     if len(curr_color) != 5:  # premature end of list
                         GM_PT.Printer().warning(warning_msg, "PT_CC_1", True)
 
-                    # no bright - a bright background is not possible
                     new_col = GM_MF.convert_color_24_4(*curr_color[2:])[0]
                     color_new.append(str(40 + new_col))
+                    # no bright - a bright background is not possible
                     color_split = color_split[5:]
 
                 case _:
@@ -271,7 +412,8 @@ class ColStr(str):
     def repeat_color(self):
         """Makes sure to repeat earlier color codes after line breaks.
 
-        Input strings MUST contain ANSI sequences, any others are ignored.
+        Input strings MUST contain ANSI sequences, any others are
+        ignored.
         """
 
         # If there is no line break, no need to repeat colors
@@ -370,6 +512,33 @@ class Header():
     -------
     header : str
         The header, ready for printing.
+
+    Attributes
+    ----------
+    title : `ColStr` or list of `ColStr`
+        The text to be displayed in the header. At the start of __init__
+        this is a ColStr, and gets converted to a list of ColStr during
+        execution of __init__.
+    header : `ColStr`
+        The complete header, including all requested features. This is
+        the actual string that the caller most likely will want to
+        print.
+    s : str
+        The output of str(self)
+    title_lines : int
+        The amount of lines the tile spans
+    longest_length : int
+        The amount of characters the longest line of the title spans.
+    over : `ColStr`
+        The overline to put in the header (also contains two upper
+        corners if corners have been requested)
+    under : `ColStr`
+        The underline to put in the header (also contains two lower
+        corners if corners have been requested)
+    left : list of `ColStr`
+        The left border line to put in the header
+    right : list of `ColStr`
+        The right border line to put in the header
     """
 
     def __init__(
@@ -405,13 +574,47 @@ class Header():
     def __str__(self):
         return str(self.header)
 
-    def format_title(self, maxwidth, padding):
+    def format_title(self, maxwidth, n_padding):
+        """Prepare the title text for the header
+
+        Provided with the maximum width of the entire header, figures
+        out the maximum line length for the text within, and adjusts
+        self.title to match. Also saves how many lines it created/found.
+
+        Parameters
+        ----------
+        maxwidth : int
+            How wide the end result is allowed to be, max. If the title
+            text is too wide to fit the requirements, it is line-wrapped
+            to fit.
+        n_padding : int
+            How much extra space there should be. Over and underlines
+            will get longer by twice this amount, the title itself gets
+            this amount of whitespaces before and after the text.
+        """
+
         # line wrapping at the correct places.
-        title_width = maxwidth - 2 - (padding * 2)  # leave space for header
+        title_width = maxwidth - 2 - (n_padding * 2)  # leave space for header
         self.title = self.title.wrap(title_width)
         self.title_lines = len(self.title.split("\n"))
 
     def align_title(self, alignment, padding_char):
+        """Adds whitespaces to all title lines to make them equal length
+
+        When adding these whitespaces, for each line, it must be decided
+        whether to add them to the beginning, end, or both. This
+        function can either centre all lines, or left- or right adjust
+        them.
+
+        Parameters
+        ----------
+        alignment : str
+            How to vertically align the lines. Can be 'leftadj',
+            'rightadj' or 'centered'.
+        padding_char : str or `ColStr`
+            The character used to make the shortest lines longer.
+        """
+
         # padding and adjusting the lines
         title = self.title.split("\n")
         self.longest_length = max([len(item) for item in title])
@@ -442,6 +645,33 @@ class Header():
         self, linemode, n_padding, overline_char="-", underline_char="-",
         left_char="|", right_char="|", corner_char="+"
     ):
+        """Creates the lines making up the border.
+
+        Parameters
+        ----------
+        linemode : str, default="ou"
+            which lines should(n't) be displayed. Add the letters for
+            the elements you do want to display::
+
+                o: A line above the text
+                u: A line below the text
+                l: A line left of the text
+                r: A line right of the text
+                c: Corners
+        padding : int, default=0
+            How much extra space there should be. Over and underlines
+            will get longer by twice this amount, the title itself gets
+            this amount of whitespaces before and after the text.
+        overline_char, underline_car, left_char, right_char : str, \
+        default="-"
+            The character that should be used for the respective segment
+        corner_char : str, default="+"
+            The character that should be used for the corners. If a
+            single character is provided, all corners get that
+            character. If different characters are desired, there must
+            be 4 characters in the string: one for the upleft, upright,
+            downleft, downright corner respectively.
+        """
 
         ou_length = self.longest_length + n_padding * 2
         corner_char = corner_char * 4  # automatically solves all!
@@ -460,6 +690,36 @@ class Header():
             underline_char, corner_char[2:4], linemode, ou_length, "u")
 
     def line_overunder(self, line_char, corner_chars, linemode, length, dir):
+        """The logic for creating over and underlines.
+
+        Parameters
+        ----------
+        line_char : str
+            The character that should be used to create the line
+        corner_chars : str of length 2
+            The two corners that should go at the beginning and end of
+            the line, if requested.
+        linemode : str
+            which lines should(n't) be displayed. Add the letters for
+            the elements you do want to display::
+
+                o: A line above the text
+                u: A line below the text
+                l: A line left of the text
+                r: A line right of the text
+                c: Corners
+        length : int
+            How long the line-part of the segment should be.
+        dir : str
+            What direction the line is being made for. Can be 'o' or
+            'u', using the same codes as linemode.
+
+        Returns
+        -------
+        line : `ColStr`
+            The line as should be put above/below the header.
+        """
+
         # Get middle portion (if no overline, but corners, we need whitespace)
         if dir in linemode:
             line = line_char * length
@@ -471,6 +731,8 @@ class Header():
         # add corners!
         if "c" in linemode:
             line = corner_chars[0] + line + corner_chars[1]
+        elif dir not in linemode:
+            pass  # if the entire line is empty, no need to add vertical spacer
         elif "l" in linemode or "r" in linemode:
             if "l" in linemode:
                 line = " " + line
@@ -480,6 +742,37 @@ class Header():
         return ColStr(line)
 
     def line_sides(self, line_char, linemode, length, dir):
+        """The logic for creating left and right lines.
+
+        Parameters
+        ----------
+        line_char : str
+            The character that should be used to create the line
+        linemode : str
+            which lines should(n't) be displayed. Add the letters for
+            the elements you do want to display::
+
+                o: A line above the text
+                u: A line below the text
+                l: A line left of the text
+                r: A line right of the text
+                c: Corners
+        length : int
+            How long the line-part of the segment should be.
+        dir : str
+            What direction the line is being made for. Can be 'l' or
+            'r', using the same codes as linemode.
+
+        Returns
+        -------
+        line : list of `ColStr` or list of str
+            The line as should be put above/below the header. Each item
+            in the list is what should go on a separate line. Lists
+            are needed in the case a line (and the corners) are not
+            requested - then we need to have an empty string for that
+            line.
+        """
+
         if dir in linemode:
             line = [line_char[0]] * length
         elif "c" in linemode:
@@ -489,6 +782,31 @@ class Header():
         return line
 
     def do_specials(self, special):
+        """Apply the requested specials to the created lines.
+
+        This allows to make small edits to the given lines.
+
+        Parameters
+        ----------
+        special : dict, default={}
+            Any special rules to apply after the header has been
+            generated. Thakes the form of a nested dictionary structure:
+            special={"u": {"command": {"|": [[2]]}}}
+
+            - The outermost dict has as the key a string indicating what
+              line should be altered. Same shorthands as linemode. The
+              value of the dictionary is what should be changed about
+              the line (here referred to as the 'rules')
+            - The rules dict has the commands as keys, and specific
+              instructions (another dict) as the values:
+
+            - replace will put the character saved as key in the
+              instructions dict at the positions saved in its values:
+              if the line is "abcdefg", {"replace": ["V", [[3]]]} will
+              result in "abcVefg". Similarly, {"replace": ["VR",
+              [[1, 3], [4, 6]]]} will turn "abcdefg" into "aVRdVRg"
+        """
+
         shorts = {"o": "over", "u": "under", "l": "left", "r": "right"}
 
         for lineshort, rules in special.items():
@@ -496,12 +814,30 @@ class Header():
             for command, instructions in rules.items():
                 if command == "replace":
                     line = self.specials_replace(
-                        lineshort, command, instructions, line)
+                        lineshort, instructions, line)
             setattr(self, shorts[lineshort], line)
 
-    def specials_replace(self, lineshort, command, instructions, line):
+    def specials_replace(self, lineshort, instructions, line):
+        """Executes the specials option 'replace'
 
-        line = ColStr(line)
+        Parameters
+        ----------
+        lineshort : str
+            The shorthand representing what line is currently fed to
+            the function - 'o', 'u', 'l', or 'r'
+        instructions : dict
+            The dict saved in specials for the key 'replace'
+        line : str or `ColStr` or list of str
+            The line to make edits on.
+
+        Returns
+        -------
+        line : str or `ColStr` or list of str
+            The input line, but with all requested changes made.
+        """
+
+        # in case of over/under, type(line) == ColStr.
+        # in case of left/right, type(line) == list
         linelen = len(line)
         for char, positions in instructions.items():
             char = ColStr(char)
@@ -529,6 +865,22 @@ class Header():
         return line
 
     def finalize(self, color_border, color_text, padding_char, n_padding):
+        """Brings all created elements together to form the end result
+
+        Parameters
+        ----------
+        color_border : `ColStr`
+            The color that the border should have
+        color_text : `ColStr`
+            The color that the text should have
+        padding_char : str or `ColStr`
+            The character used to add some space between the title
+            text and border
+        n_padding : int
+            How much space should be kept (horizontally) between the
+            text and the border
+        """
+
         header = ColStr("")
 
         # overline

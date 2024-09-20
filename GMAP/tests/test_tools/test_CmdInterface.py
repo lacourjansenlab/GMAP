@@ -1,13 +1,19 @@
 """
 Tests all the functions/classes/methods in the file:
-src/tools/CLibLoader.py.
+src/tools/CmdInterface.py.
 
 Missing tests:
 
-(@ August 2nd '24):
-  113  (1 missed statements)
+(@ Sept 20th '24):
+  (0 missed statements)
 
-- We don't actually invoke a program here (test_GEM does do that) (113)
+- None!
+
+To hide this file from the overview, incomplete tests were added for the
+following:
+- the actual call to the requested program - the program's function is
+  tested by its own test file, but triggered GEMs SU_PP_1 here (thats
+  the fastest way to fail within a program invoked by this script)
 """
 
 # Standard library imports
@@ -16,7 +22,7 @@ import subprocess
 
 # Local imports
 import GMAP
-from GMAP.src.tools.Exceptions import GmapAttributeError
+from GMAP.src.tools.Exceptions import GmapAttributeError, GmapKeyError
 import GMAP.src.tools.CmdInterface as GM_CI
 import GMAP.src.tools.PrintTools as GM_PT
 
@@ -49,6 +55,41 @@ def test_cmd_interface(capsys):
     callcommand = ["GMAP", "help", "nothing"]
     with pytest.raises(GmapAttributeError, match="SU_GM_1$"):
         GM_CI.cmd_interface(callcommand)
+
+    # test program invokke
+    callcommand = ["GMAP", "GEM", "doesntexist"]
+    with pytest.raises(GmapKeyError, match="SU_PP_1"):
+        GM_CI.cmd_interface(callcommand)
+
+
+def test_calldict():
+    callcommand = ["GMAP", "GEM", "run", "inpfile", "--safe_mode", "-v", "4"]
+    all_args = GM_CI.calldict(callcommand)
+    assert all_args == {
+        "GMAP": ["GEM", "run", "inpfile"],
+        "--safe_mode": [],
+        "-v": ["4"]
+    }
+
+
+def test_get_safe_dark():
+    callcommand = ["GMAP", "GEM", "run", "inpfile", "--safe_mode", "-v", "4"]
+    all_args = GM_CI.calldict(callcommand)
+    safe, dark = GM_CI.get_safe_dark(all_args)
+    assert (safe, dark) == (True, True)
+
+    callcommand = [
+        "GMAP", "GEM", "run", "inpfile", "--safe_mode", "-v", "4", "-nodm"]
+    all_args = GM_CI.calldict(callcommand)
+    safe, dark = GM_CI.get_safe_dark(all_args)
+    assert (safe, dark) == (True, False)
+
+    callcommand = [
+        "GMAP", "GEM", "run", "inpfile", "--safe_mode", "false", "-v", "4",
+        "-dm"]
+    all_args = GM_CI.calldict(callcommand)
+    safe, dark = GM_CI.get_safe_dark(all_args)
+    assert (safe, dark) == (False, True)
 
 
 def test_main():

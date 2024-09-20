@@ -20,7 +20,8 @@ import GMAP.src.tools.MathFunctions as GM_MF
 # ========== Functions for users ==========
 
 def plot_coupling_choices(RunPars, System):
-    """Creates the plot showing what coupling method is picked for each entry.
+    """Creates the plot showing what coupling method is picked for each
+    entry.
 
     The plot has a maximum of 28 colors (different coupling methods) it
     can display at a time. Colors are picked automatically to have the
@@ -29,8 +30,8 @@ def plot_coupling_choices(RunPars, System):
     Parameters
     ----------
      RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
@@ -89,9 +90,26 @@ def plot_coupling_choices(RunPars, System):
     return fig, ax  # Should not be caught in program, just for testing.
 
 
-# ========== Functions for developers (go to manual) ==========
+# ========== Functions for developers (outputs should go to manual) ==========
 
 def val_to_color(val):
+    """Create a pandas dataframe style - compatible color string for the
+    input color
+
+    Parameters
+    ----------
+    val : iterable of length 3
+        Contains the the R, G and B values for the color to convert.
+        The type of the values is free, but must convertable to ints,
+        and int(val) must result in an integer in the interval [0, 255]
+
+    Returns
+    -------
+    df_str : str
+        A string containing the input value in a form that can interact
+        with pandas data frame styles.
+    """
+
     hex = mplC.to_hex([int(num)/255 for num in val])
     return (
         f"background-color:{hex};"  # color the background according to value
@@ -102,6 +120,15 @@ def val_to_color(val):
 
 
 def plot_color_conv():
+    """Create the plots showing 24bit colors and their 4bit version.
+
+    These plots are intended to aid choosing colors in the program - you
+    can quickly see what colors they will be converted to, and from a
+    subset of colors with the same target, pick the right one.
+
+    There is no return value, the plots are just written to file.
+    """
+
     step = 16
     data_points = [*range(0, 255, step)] + [255]
 

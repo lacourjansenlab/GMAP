@@ -30,7 +30,7 @@ influencers_select_atoms[list_str]                segid *
 
 verbose[int]                                      0 1 [2] 3 4
 verbose_logfile[int]                              0 1 [2] 3 4
-safe_mode(safe)[bool]                             False
+safe_mode(safe)[bool]                             True
 dark_mode(dm)[bool]                               True
 command_line_color[str]                           white 4bit [24bit]
 command_line_length[int]                          79

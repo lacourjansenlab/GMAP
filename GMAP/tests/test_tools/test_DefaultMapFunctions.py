@@ -79,6 +79,14 @@ def test_get_str_osc():
     assert newfunc(None, Syst, osc2) == "living on residue number 1"
 
 
+def test_report_system():
+    newfunc = GM_DMF.get_report_system()
+    map_ = GM_CT.CustomClass(**{"name": "A map for testing"})
+    syst = GM_CT.CustomClass(**{"oscillators_ordered": {
+        "A map for testing": [3, 5, 1, 8, 9]}})
+    assert newfunc(map_, syst) == "A map for testing:       5"
+
+
 def test_get_get_VEG_ref():
     VEGref_res = ["residues", "0", "2"]
     map_ = GM_CT.CustomClass(**{

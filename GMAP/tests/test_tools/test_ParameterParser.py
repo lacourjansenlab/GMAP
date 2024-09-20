@@ -4,17 +4,17 @@ src/tools/ParameterParser.py.
 
 Missing tests:
 
-(@ August 6th '24):
-371-372, 432, 1151, 1261, 1791-1792, 2165 (8 missed statements)
+(@ September 20th '24):
+376-377, 438, 1182, 1295, 1843-1844, 2221 (8 missed statements)
 
 (CUHTAT - currently unknown how to access this )
-- SU_FP_7 (CUHTAT)   (371-372)
-- RefPars parse choice - unknown dtype (CUHTAT)  (432)
-- RawPars verify choice - unknown dtype (CUHTAT)  (1151)
+- SU_FP_7 (CUHTAT)   (376-377)
+- RefPars parse choice - unknown dtype (CUHTAT)  (438)
+- RawPars verify choice - unknown dtype (CUHTAT)  (1182)
 - RawPars checkparexist - variable may occur multiple times, but is also
-  not expected in deffiles (N/A in refpars)  (1261)
-- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1791-1792)
-- RunPars framenums - empty source (CUHTAT)   (2165)
+  not expected in deffiles (N/A in refpars)  (1295)
+- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1843-1844)
+- RunPars framenums - empty source (CUHTAT)   (2221)
 """
 
 # standard library imports
@@ -374,6 +374,8 @@ class TestRefPars:
         assert RefPars.choices["influencers"] == [
             ":All", "-", "(", ":None", ")"]
 
+        assert RefPars.choices["command_line_color"] == ["white"]
+
     def test_SU_FP_1(self):
         _ = GM_FH.FileLocations()  # still needed for initialization
         RefPars = GM_PP.RefPars(
@@ -721,6 +723,7 @@ class TestRawPars:
             "raman_units": ["Ang3"],
             "positions_units": ["Ang"],
             "doublepos_units": ["Ang"],
+            "safe_mode": ["True"],
             # "nobool_test1": [],
             # "nobool_test2": ["false"],
             # "int_test_free_list": ["88", "44"],
@@ -741,6 +744,8 @@ class TestRawPars:
             "positions_multiplier": [1],
             "doublepos_units": ["Ang"],
             "doublepos_multiplier": [1],
+            "safe_mode": [True],
+            "command_line_color": ["white"],
             # "bool_test1": [False],
             # "bool_test2": [True],
             # "int_test_free_list": [88, 44],

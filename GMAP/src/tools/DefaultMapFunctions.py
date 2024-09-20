@@ -6,7 +6,6 @@ import numpy as np
 import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.PhysicsFunctions as GM_PF
 import GMAP.src.tools.PrintTools as GM_PT
-# from GMAP.src.tools.PrintTools import devprint as dpr
 
 
 class NewModule:
@@ -68,7 +67,9 @@ def get_str_osc():
 
 def get_report_system():
     def base_str_getter(Map, Syst):
-        return f"{Map.name: <20}: {len(Syst.oscillators_ordered[Map.name])}"
+        name = Map.name + ":"
+        amount = len(Syst.oscillators_ordered[Map.name])
+        return f"{name: <21} {amount: >4}"
     return base_str_getter
 
 
@@ -272,7 +273,8 @@ def get_get_dipole_mag():
     returns
     -------
     GM_get_dipole_mag : function
-        The function that can be used to get the magnitude of a dipole moment.
+        The function that can be used to get the magnitude of a dipole
+        moment.
     """
 
     def GM_get_dipole_mag(Map, Syst, osc):
@@ -299,7 +301,8 @@ def get_get_rotation_matrix(map_):
     returns
     -------
     GM_get_rotation_matrix : function
-        The function that every oscillator will call to get its rotaion matrix
+        The function that every oscillator will call to get its rotaion
+        matrix
     """
 
     allparnames = ("x_uvec", "y_uvec", "z_uvec")
@@ -429,7 +432,8 @@ def get_calculate_frequency(map_):
     returns
     -------
     GM_calculate_frequency : function
-        The function that every oscillator will call to get its frequency
+        The function that every oscillator will call to get its
+        frequency
     """
 
     def GM_calculate_freq_base(Map, Syst, osc):
@@ -488,7 +492,8 @@ def get_get_doublepos(map_):
     """Default for obtaining the double positions.
 
     By default, the author of a map uses the oscillator-indices to
-    indicate what positions (e.g. just an atom index) should be returned.
+    indicate what positions (e.g. just an atom index) should be
+    returned.
     Those instructions are interpreted here and converted to a function
     that can be used during runs.
     """
@@ -537,7 +542,8 @@ def uses_maps(gas_freq, VEGs, mapconsts_list):
 
 
 def envelop_int(string, pre, post):
-    """Envelops any integer (but not float) found in string with pre and post.
+    """Envelops any integer (but not float) found in string with pre and
+    post.
 
     Currently, python built-in and numpy functions are supported.
 

@@ -23,37 +23,42 @@ class FileLocations:
 
     .. seealso::
         :class:`~GMAP.src.tools.PrintTools.Printer`
-            The class involved in printing (copies the print-related paths
-            from here).
+            The class involved in printing (copies the print-related
+            paths from here).
         :class:`~GMAP.src.tools.ParameterParser.RunPars`
-            The class involved in storing other run-based information than
-            paths.
+            The class involved in storing other run-based information
+            than paths.
 
     Attributes
     ----------
     script_dir : `pathlib.Path`
-        The location where GMAP is installed. (The parent of GMAP.__file__).
+        The location where GMAP is installed. (The parent of
+        GMAP.__file__).
     cwd : `pathlib.Path`
-        The location from where the program was invoked (the current working
-        directory of the terminal/command prompt at submitting command).
+        The location from where the program was invoked (the current
+        working directory of the terminal/command prompt at submitting
+        command).
     now : datetime.datetime
-        The moment at which the program was invoked, in original datetime
-        format.
+        The moment at which the program was invoked, in original
+        datetime format.
     now_str : str
-        The moment at which the program was invoked, as a formatted string of
-        the form year-month-day_hour-minute-second.
+        The moment at which the program was invoked, as a formatted
+        string of the form year-month-day_hour-minute-second.
     sourcedir_hc : `pathlib.Path`
-        The hardcoded sourcefiles directory. While the aim of the program is
-        to have as few hardcoded things as possible, we need a standard place
-        to look for the reference parameter file, where we can store the rest
-        of the information
+        The hardcoded sourcefiles directory. While the aim of the
+        program is to have as few hardcoded things as possible, we need
+        a standard place to look for the reference parameter file, where
+        we can store the rest of the information
     mapdir_hc : `pathlib.Path`
-        Same as with `sourcedir_hc` - some defaults are still hard coded.
+        Same as with `sourcedir_hc` - some defaults are still hard
+        coded.
     refparfilename_hc : str
         The name of the hardcoded reference parameter file.
     exec_os : str
-        The platform on which the program runs. Might be 32- or 64 bit Windows,
-        Linux, or MacOS.
+        The platform on which the program runs. Might be 32- or 64 bit
+        Windows, Linux, or MacOS.
+    callcommand : str
+        The command used to invoke the program.
     """
 
     def __init__(self) -> None:
@@ -82,6 +87,13 @@ class FileLocations:
         self.exec_os = find_exec_os()
 
     def save_callcommand(self, callcommand):
+        """Set the provided callcommand as the attribute callcommand.
+
+        Parameters
+        ----------
+        callcommand : list of str
+            The command used to invoke the program.
+        """
         self.callcommand = " ".join(callcommand)
 
 
@@ -131,18 +143,19 @@ def get_file(
 ):
     """Determine the path to a file given all input sources
 
-    As there are 4 places that might store information regarding the file's
-    path, each of which can contain 2 bits of information, which don't both
-    have to be there, the dicision tree is somewhat complex, see the
-    devnotes file for a table on what parameters are used in which case.
+    As there are 4 places that might store information regarding the
+    file's path, each of which can contain 2 bits of information, which
+    don't both have to be there, the dicision tree is somewhat complex,
+    see the devnotes file for a table on what parameters are used in
+    which case.
 
     The naively found path is returned, but not checked for existence or
     validity. That is a separate step the caller should invoke.
 
     .. seealso::
         :func:`get_bare_file`
-            Does the same, but for files which are not assumed relative to
-            a path stored in another parameter.
+            Does the same, but for files which are not assumed relative
+            to a path stored in another parameter.
         :func:`try_file`
             Checks the existence and file-ness of a given path.
         :func:`check_file_readability`
@@ -151,27 +164,28 @@ def get_file(
     Parameters
     ----------
     Files : :class:`FileLocations`
-        Contains all currently known paths and other file-related properties.
+        Contains all currently known paths and other file-related
+        properties.
     dir_parname : str
-        The name of the parameter storing the directory path to which the
-        desired parameter path is assumed relative to.
+        The name of the parameter storing the directory path to which
+        the desired parameter path is assumed relative to.
     file_parname : str
         The name of the parameter storing the path of the desired file.
     dir_hc : `pathlib.Path`
-        In case the parameter in `dir_parname` does not exist in any of the
-        given inputs, use this one.
+        In case the parameter in `dir_parname` does not exist in any of
+        the given inputs, use this one.
     files_hc : list of `pathlib.Path`
-        In case the parameter in `file_parname` does not exist in any of the
-        given inputs, use this one.
+        In case the parameter in `file_parname` does not exist in any of
+        the given inputs, use this one.
     cmd_pardict : dict
         The dict storing all parameter choices from the command line.
     pardicts : list of dicts, default=[]
-        All dicts storing parameter choices, ordered by importance - if a
-        parameter is found in a dict earlier in the list, don't use any
-        occurences later in the list.
+        All dicts storing parameter choices, ordered by importance - if
+        a parameter is found in a dict earlier in the list, don't use
+        any occurences later in the list.
     parfilelocs : list of `pathlib.Path`, default=[]
-        The paths to the files whose contents are in the pardicts list, in the
-        same order.
+        The paths to the files whose contents are in the pardicts list,
+        in the same order.
 
     Returns
     -------
@@ -220,16 +234,16 @@ def get_bare_file(
 ):
     """Determine the path to a file given all input sources
 
-    There are 4 places that might store information regarding the file's path,
-    which should be considered in a set order.
+    There are 4 places that might store information regarding the file's
+    path, which should be considered in a set order.
 
     The naively found path is returned, but not checked for existence or
     validity. That is a separate step the caller should invoke.
 
     .. seealso::
         :func:`get_file`
-            Does the same, but for files which are assumed relative to a path
-            stored in another parameter.
+            Does the same, but for files which are assumed relative to a
+            path stored in another parameter.
         :func:`try_file`
             Checks the existence and file-ness of a given path.
         :func:`check_file_readability`
@@ -238,23 +252,24 @@ def get_bare_file(
     Parameters
     ----------
     Files : :class:`FileLocations`
-        Contains all currently known paths and other file-related properties.
+        Contains all currently known paths and other file-related
+        properties.
     file_parname : str
         The name of the parameter storing the path of the desired file.
     file_hc : list of `pathlib.Path`
-        In case the parameter in `file_parname` does not exist in any of the
-        given inputs, use this one.
+        In case the parameter in `file_parname` does not exist in any of
+        the given inputs, use this one.
     floc_hc : `pathlib.Path`
         The base location from where the paths should be taken.
     cmd_pardict : dict
         The dict storing all parameter choices from the command line.
     pardicts : list of dicts, default=[]
-        All dicts storing parameter choices, ordered by importance - if a
-        parameter is found in a dict earlier in the list, don't use any
-        occurences later in the list.
+        All dicts storing parameter choices, ordered by importance - if
+        a parameter is found in a dict earlier in the list, don't use
+        any occurences later in the list.
     parfilelocs : list of `pathlib.Path`, default=[]
-        The paths to the files whose contents are in the pardicts list, in the
-        same order.
+        The paths to the files whose contents are in the pardicts list,
+        in the same order.
 
     Returns
     -------
@@ -289,18 +304,20 @@ def get_def_parfile(
     Files, cmd_pardict, in_parfile=None, in_pardict=None
 ):
     """
-    Given the parameter information on the command line, a new Files instance,
-    and, optionally, an input parameters file and its contents, finds out
-    the location of the default parameters file.
+    Given the parameter information on the command line, a new Files
+    instance, and, optionally, an input parameters file and its
+    contents, finds out the location of the default parameters file.
 
-    If the user specified anything (either the sourcedir or the name of the
-    default parameter file), the program checks that. If nothing is present
-    there or if it isn't a file, an error is raised, and the program quits.
+    If the user specified anything (either the sourcedir or the name of
+    the default parameter file), the program checks that. If nothing is
+    present there or if it isn't a file, an error is raised, and the
+    program quits.
 
     Parameters
     ----------
     Files : :class:`FileLocations`
-        Contains all currently known paths and other file-related properties.
+        Contains all currently known paths and other file-related
+        properties.
     cmd_pardict : dict
         The dict storing the parameter choices from the command line.
     in_parfile : `pathlib.Path` or NoneType, default=None
@@ -349,8 +366,8 @@ def get_def_parfile(
 def try_file(fname):
     """Checks if the given location exists, and is a file.
 
-    If so, returns pathlib.Path.resolve(location), otherwise, returns None.
-    Does not check whether the file is of a readable format.
+    If so, returns pathlib.Path.resolve(location), otherwise, returns
+    None. Does not check whether the file is of a readable format.
 
     .. seealso::
         :func:`check_file_readability`
@@ -422,8 +439,8 @@ def write_output(RunPars, framenum, outputs):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     framenum : int
         The number of the frame currently being written
     outputs : dict of str: `np.ndarray` pairs
@@ -495,8 +512,8 @@ def write_single(RunPars, framenum, framenum_arr, fname, data):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     framenum : int
         The number of the frame currently being written
     framenum_arr : `np.ndarray`
@@ -535,8 +552,8 @@ def clear_output(RunPars):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     """
 
     if "ham" in RunPars.output_data:
@@ -561,8 +578,8 @@ def clear_single(RunPars, fname):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     fname : `pathlib.Path`
         The name + location of the file to which to write. This filename
         should not include the extension!
@@ -591,8 +608,8 @@ def write_legend(RunPars, System):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The class containing all the information on the system of the
         MD trajectory.

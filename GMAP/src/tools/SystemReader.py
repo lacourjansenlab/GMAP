@@ -23,8 +23,8 @@ class System:
         properties.
         Has to be updated after RunPars is finalized.
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
 
     Attributes
     ----------
@@ -146,8 +146,8 @@ class System:
         Parameters
         ----------
         RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-            The 'main' RunPars instance containing all the basic run-defining
-            parameters.
+            The 'main' RunPars instance containing all the basic
+            run-defining parameters.
         """
 
         self.rightangled = check_box_rightangled(self.universe)
@@ -279,8 +279,8 @@ class System:
         Parameters
         ----------
         RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-            The 'main' RunPars instance containing all the basic run-defining
-            parameters.
+            The 'main' RunPars instance containing all the basic
+            run-defining parameters.
         """
 
         groupdict = {}
@@ -302,10 +302,6 @@ class System:
         GM_PT.Printer().print(
             1, f"\n{line} Influencers {line}", detailed_instructions=[1])
         GM_PT.header(2, "Influencers", "doublebox")
-        # head = GM_PT._make_header(
-        #     "Influencers", " ", "oulrc", 1)
-        # GM_PT.Printer().print(1, f"\n\n{head}\n |")
-        # GM_PT.Printer().preline = " | "
 
         # names of residues or residue groups are given to specify infl.
         if isinstance(RunPars.influencers, list):
@@ -377,8 +373,6 @@ class System:
             "\n\nAtoms NOT included in influencers:\n"
             + ", ".join(atixprint[1])
         )
-        # GM_PT.Printer().preline = ""
-        # GM_PT.Printer().print(1, " |\n-┴--- End of influencers -----\n")
         GM_PT.footer(2, "influencers", "doublebox")
         self.influencers_atix = np.asarray(
             self.influencers_atix, dtype=np.int32
@@ -408,8 +402,8 @@ class System:
             properties.
             Has to be updated after RunPars is finalized.
         RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-            The 'main' RunPars instance containing all the basic run-defining
-            parameters.
+            The 'main' RunPars instance containing all the basic
+            run-defining parameters.
         """
 
         # If only single-residue oscillators:
@@ -466,7 +460,8 @@ class System:
         -------
         all_oscillators : list of \
             :class:`~GMAP.src.tools.SystemReader.Oscillator`
-            All oscillators that were found matching the given structure.
+            All oscillators that were found matching the given
+            structure.
         """
 
         if len(struct.residues) == 1:
@@ -769,8 +764,8 @@ class System:
         Parameters
         ----------
         RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-            The 'main' RunPars instance containing all the basic run-defining
-            parameters.
+            The 'main' RunPars instance containing all the basic
+            run-defining parameters.
         """
 
         # for each singles map, determine which oscillators are treated
@@ -868,7 +863,8 @@ class System:
         """Reloads the frame-dependent properties of the system.
 
         This function is supposed to be called at the beginning of every
-        frame to ensure that the properties stored inside are up to date.
+        frame to ensure that the properties stored inside are up to
+        date.
         """
 
         printer = GM_PT.Printer()
@@ -887,15 +883,16 @@ class System:
             np.ravel(self.residues.CoM))
 
     def print_system(self, RunPars):
+        """Reports what the MD system looks like - what oscillators were
+        found
 
-        # head = GM_PT._make_header(
-        #     "MD system analysis", " ", "oulrc", 1,
-        #     overline_char="═", underline_char="═", left_char="║",
-        #     right_char="║", corner_char="╔╗╚╝", special={
-        #         "u": {"replace": {"╦": [[1]]}}
-        #     })
-        # GM_PT.Printer().print(1, f"\n\n{head}\n ║")
-        # GM_PT.Printer().preline = " ║ "
+        Parameters
+        ----------
+        RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+            The 'main' RunPars instance containing all the basic
+            run-defining parameters.
+        """
+
         cb = GM_PT.Printer().colors.green_lc
         ct = GM_PT.Printer().colors.clear
         line = f"{cb}════{ct}"
@@ -919,14 +916,12 @@ class System:
             toprint = map_.code.GM_report_system(map_, self)
             GM_PT.Printer().print(2, toprint)
 
-        # GM_PT.Printer().preline = ""
-        # GM_PT.Printer().print(
-        #     1, " ║\n ╚═══ End of MD system analysis ═════\n")
         GM_PT.footer(2, "MD system analysis", "doublebox")
 
 
 class Residues:
-    """Creates and stores information on the system on a per-residue basis
+    """Creates and stores information on the system on a per-residue
+    basis
 
     The System class has a lot of information on a per-atom basis, this
     class has it on a per residue.
@@ -940,13 +935,13 @@ class Residues:
     Attributes
     ----------
     first_ix : np.ndarray
-        An array as long as there are residues in the MD system, with dtype
-        np.int32. For each
-        residue, it stores the index of the first atom.
+        An array as long as there are residues in the MD system, with
+        dtype np.int32. For each residue, it stores the index of the
+        first atom.
     last_ix : np.ndarray
-        An array as long as there are residues in the MD system, with dtype
-        np.int32. For each
-        residue, it stores the index of the last atom.
+        An array as long as there are residues in the MD system, with
+        dtype np.int32. For each residue, it stores the index of the
+        last atom.
     resnames : list of str
         A list as long as there are residues in the MD system. For each
         residue, it stores its residue name.
@@ -955,15 +950,16 @@ class Residues:
     influencer_ix : list of int
         The indices of all residues that are influencers.
     CoM : np.ndarray
-        An array as long as there are residues in the MD system. For each
-        residue, it stores its center of mass.
+        An array as long as there are residues in the MD system. For
+        each residue, it stores its center of mass.
     """
 
     def __init__(self, syst):
         self.find_markers(syst)
 
     def find_markers(self, syst):
-        """Make lookup tables (len=nres) for basic residue-based properties.
+        """Make lookup tables (len=nres) for basic residue-based
+        properties.
 
         1D arrays are built with a length equal to the amount of
         residues in the system. For each residue, we save the index
@@ -978,6 +974,7 @@ class Residues:
             This object stores all important information about the MD
             system that will be analyzed.
         """
+
         self.first_ix = []
         self.resnames = []
         self.last_ix = []
@@ -1220,8 +1217,8 @@ class Oscillator:
         Parameters
         ----------
         System : :class:`~GMAP.src.tools.SystemReader.System`
-            The class containing all the information on the system of the
-            MD trajectory.
+            The class containing all the information on the system of
+            the MD trajectory.
 
         Returns
         -------
@@ -1241,13 +1238,14 @@ class Oscillator:
 
 
 def gen_universe(RunPars):
-    """Calls MDAanalysis.Universe on the supplied files and catches errors.
+    """Calls MDAanalysis.Universe on the supplied files and catches
+    errors.
 
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
 
     Returns
     -------
@@ -1317,8 +1315,8 @@ def check_box_charge(RunPars, charges):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     charges : np.ndarray
         The charges of all atoms in the system. Array is 1-dimensional,
         with a length equal to the amount of atoms in the MD simulation.

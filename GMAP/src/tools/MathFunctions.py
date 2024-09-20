@@ -141,8 +141,9 @@ def PBC_back2box(vect, boxvects):
 def crossprod(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
     """Calculates the cross product between two vectors of size 3.
 
-    This is faster than the dedicated np method, as there are no checks for the
-    correctness of the provided vectors. The method is njitted for added speed.
+    This is faster than the dedicated np method, as there are no checks
+    for the correctness of the provided vectors. The method is njitted
+    for added speed.
 
     Parameters
     ----------
@@ -167,8 +168,9 @@ def crossprod(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
 def dotprod(vect1: np.ndarray, vect2: np.ndarray) -> float:
     """Calculates the dot product between two vectors of size 3.
 
-    This is faster than the dedicated np method, as there are no checks for the
-    correctness of the provided vectors. The method is njitted for added speed.
+    This is faster than the dedicated np method, as there are no checks
+    for the correctness of the provided vectors. The method is njitted
+    for added speed.
 
     Parameters
     ----------
@@ -189,8 +191,9 @@ def vec3_len(vect: np.ndarray) -> float:  # replacement for np.linalg.norm
     """Calculates the norm (length) of a vector of size 3.
 
     This is a replacement for the function `np.linalg.norm`.
-    This is faster than the dedicated np method, as there are no checks for the
-    correctness of the provided vectors. The method is njitted for added speed.
+    This is faster than the dedicated np method, as there are no checks
+    for the correctness of the provided vectors. The method is njitted
+    for added speed.
 
     Parameters
     ----------
@@ -210,11 +213,11 @@ def vec3_len(vect: np.ndarray) -> float:  # replacement for np.linalg.norm
 def project(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
     """ Calculates the orthogonal part of `vect2` to `vect1`.
 
-    Calculates the part of vector `vect2` that is orthogonal to the vector
-    `vect1` (i.e. it subtracts from `vect2` the part that is along `vect1`,
-    and returns the result).
-    Be aware that because of how numba works, both `vect1` and `vect2` should
-    have float32 as the dtype.
+    Calculates the part of vector `vect2` that is orthogonal to the
+    vector `vect1` (i.e. it subtracts from `vect2` the part that is
+    along `vect1`, and returns the result).
+    Be aware that because of how numba works, both `vect1` and `vect2`
+    should have float32 as the dtype.
 
     Parameters
     ----------
@@ -235,6 +238,27 @@ def project(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
 
 
 def calc_color_dist(r1, g1, b1, r2, g2, b2):
+    """Calculates the distance between the two provided colors.
+
+    The distance is calculated using the
+    `redmean method <https://en.wikipedia.org/wiki/Color_difference>`__
+
+    Parameters
+    ----------
+    r1, g1, b1 : int
+        The rgb values of the first color, ints in the interval [0, 255]
+    r1, g1, b1 : int
+        The rgb values of the second color, ints in the interval
+        [0, 255]
+
+    Returns
+    -------
+    delC : float
+        The distance between the two colors. A smaller number means they
+        are more similar. Does not depend on the order of the two
+        colors.
+    """
+
     # redmean method: https://en.wikipedia.org/wiki/Color_difference
     r_bar = 0.5 * (r1 + r2)
     delC = math.sqrt(
@@ -246,6 +270,27 @@ def calc_color_dist(r1, g1, b1, r2, g2, b2):
 
 
 def convert_color_24_4(r, g, b, lookup={}):
+    """Converts a given 24bit color to the closest 4bit one.
+
+    Calculates the distance of the provided color to each of the 4bit
+    colors, and returns the closest one.
+
+    If a specific 24bit color has been converted, it is saved in the
+    lookup dict for quick reuse.
+
+    Parameters
+    ----------
+    r, g, b : int
+        The rgb values of the color to convert, ints in the interval
+        [0, 255]
+
+    Returns
+    -------
+    outcolor : tuple
+        A tuple of two items, an int and a bool. The integer represents
+        the color (values 0-7), the bool whether it should be bright.
+    """
+
     rgb = (int(r), int(g), int(b))
 
     if rgb in lookup:
@@ -263,65 +308,3 @@ def convert_color_24_4(r, g, b, lookup={}):
 
     lookup[rgb] = outcolor
     return outcolor
-
-
-def convert_color_24_4_first(r, g, b):
-    r = int(r)
-    g = int(g)
-    b = int(b)
-    delC_black = calc_color_dist(r, g, b, 0, 0, 0)
-    delC_white = calc_color_dist(r, g, b, 255, 255, 255)
-
-    # If close to white, return white
-    if delC_white < 150:
-        return 7, True
-    if delC_white < 250:
-        return 7, False
-
-    # If close to black, return black
-    if delC_black < 100:
-        return 0, False
-    if delC_black < 200:
-        return 0, True
-
-    brightness, midval, maxval = sorted([r, g, b])
-
-    if (
-        delC_white < 350  # close to white
-        or math.sqrt((midval - brightness)**2 + (maxval - midval)**2) > 160
-    ):
-        bright_return = True
-    else:
-        bright_return = False
-
-    # if midval != 0:
-    #     ratio = maxval/midval
-    # else:
-    #     ratio = 100
-    if midval == brightness:
-        ratio = 100
-    else:
-        ratio = (maxval - brightness) / (midval - brightness)
-
-    ratio_threshold = 2.2
-    if r == maxval:  # predominantly red
-        if ratio > ratio_threshold:  # red.
-            return 1, bright_return
-        if g == midval:  # yellow
-            return 3, bright_return
-        if b == midval:  # magenta
-            return 5, bright_return
-    if g == maxval:  # predominantly green
-        if ratio > ratio_threshold:  # green.
-            return 2, bright_return
-        if r == midval:  # yellow
-            return 3, bright_return
-        if b == midval:  # cyan
-            return 6, bright_return
-    if b == maxval:  # predominantly blue
-        if ratio > ratio_threshold:  # blue.
-            return 4, bright_return
-        if r == midval:  # magenta
-            return 5, bright_return
-        if g == midval:  # cyan
-            return 6, bright_return

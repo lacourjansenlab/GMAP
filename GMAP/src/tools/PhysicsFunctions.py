@@ -91,8 +91,8 @@ def calc_frame(RunPars, System, outputs):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
@@ -293,8 +293,8 @@ def get_doublepos(System, oscillator):
     Returns
     -------
     doublepos : `np.ndarray`
-        Two length-3 vectors representing the positions of the oscillator.
-        Datatype of these arrays must be float32!
+        Two length-3 vectors representing the positions of the
+        oscillator. Datatype of these arrays must be float32!
     """
 
     map_ = oscillator.Map
@@ -314,8 +314,8 @@ def prep_coupling(RunPars, System):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
@@ -338,8 +338,8 @@ def calc_coupling(RunPars, System, outputs):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
@@ -365,8 +365,8 @@ def generate_output_structures(RunPars, System):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
@@ -391,13 +391,13 @@ def generate_output_structures(RunPars, System):
     if any(data in RunPars.output_data for data in ("ham", "dip")):
         outputs["dipoles"] = np.zeros((nosc, 3), dtype="float32")
 
+    if any(data in RunPars.output_data for data in ("ram",)):
+        outputs["raman"] = np.zeros((nosc, 6), dtype="float32")
+
     if any(data in RunPars.output_data for data in ("pos",)):
         outputs["positions"] = np.zeros((nosc, 3), dtype="float32")
 
     if any(data in RunPars.output_data for data in ("dbp",)):
         outputs["doublepos"] = np.zeros((nosc*2, 3), dtype="float32")
-
-    if any(data in RunPars.output_data for data in ("dbp",)):
-        outputs["raman"] = np.zeros((nosc, 6), dtype="float32")
 
     return outputs

@@ -4,12 +4,11 @@ src/tools/PhysicsFunctions.py.
 
 Missing tests:
 
-(@ August 2nd '24):
-110-158, 243-244, 335-356  (29 missed statements)
+(@ September 20th '24):
+111-165, 250-251  (34 missed statements)
 
-- [WIP] calc_frame not yet tested  (110-146)
-- calc_raman not yet tested (as so custom) (243-244)
-- generate_output_structures not yet tested (287-299)
+- [WIP] calc_frame not yet tested  (111-165)
+- calc_raman not yet tested (as so custom) (250-251)
 """
 
 # standard lib imports
@@ -347,6 +346,53 @@ def test_calc_coupling():
     # J = -0.0278595882711440427
     assert round(J, 6) == round(outputs["hamiltonian"][0, 1], 6)
     assert round(J, 6) == round(np.float32(-0.0278595882711440427), 6)
+
+
+def test_generate_output_structures():
+    system = GM_CT.CustomClass(**{"nosc": 5})
+
+    runpars = GM_CT.CustomClass(**{"output_data": ["ham"]})
+    out = GM_PF.generate_output_structures(runpars, system)
+    assert [*out.keys()] == ["hamiltonian", "dipole_pos", "dipoles"]
+
+    runpars = GM_CT.CustomClass(**{"output_data": ["ene"]})
+    out = GM_PF.generate_output_structures(runpars, system)
+    assert [*out.keys()] == ["energies"]
+
+    runpars = GM_CT.CustomClass(**{"output_data": ["dip"]})
+    out = GM_PF.generate_output_structures(runpars, system)
+    assert [*out.keys()] == ["dipoles"]
+
+    runpars = GM_CT.CustomClass(**{"output_data": ["ram"]})
+    out = GM_PF.generate_output_structures(runpars, system)
+    assert [*out.keys()] == ["raman"]
+
+    runpars = GM_CT.CustomClass(**{"output_data": ["pos"]})
+    out = GM_PF.generate_output_structures(runpars, system)
+    assert [*out.keys()] == ["positions"]
+
+    runpars = GM_CT.CustomClass(**{"output_data": ["dbp"]})
+    out = GM_PF.generate_output_structures(runpars, system)
+    assert [*out.keys()] == ["doublepos"]
+
+    runpars = GM_CT.CustomClass(**{"output_data": [
+        "ham", "ene", "dip", "ram", "pos", "dbp"]})
+    out = GM_PF.generate_output_structures(runpars, system)
+
+    assert out["hamiltonian"].shape == (5, 5)
+    assert out["hamiltonian"].dtype == np.float32
+    assert out["energies"].shape == (5,)
+    assert out["energies"].dtype == np.float32
+    assert out["dipole_pos"].shape == (5, 3)
+    assert out["dipole_pos"].dtype == np.float32
+    assert out["dipoles"].shape == (5, 3)
+    assert out["dipoles"].dtype == np.float32
+    assert out["raman"].shape == (5, 6)
+    assert out["raman"].dtype == np.float32
+    assert out["positions"].shape == (5, 3)
+    assert out["positions"].dtype == np.float32
+    assert out["doublepos"].shape == (10, 3)
+    assert out["doublepos"].dtype == np.float32
 
 
 def get_System_1():

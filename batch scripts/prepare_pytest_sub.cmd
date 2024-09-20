@@ -1,6 +1,8 @@
 @if (@CodeSection == @Batch) @then
 
 call ..\env_GMAP_new\Scripts\activate
+call set JUPYTER_PLATFORM_DIRS=1
+call jupyter --paths
 call cd ..\GMAP
 echo %cd%
 echo "hello"

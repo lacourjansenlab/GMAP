@@ -1,6 +1,6 @@
 # verbose 4
 # verbose_logfile 4
-# #map_directory GMAP
+# #map_directory GMAP/maps
 # 
 # maps_to_use   AmideSC AmideBB CystBridge
 
@@ -18,7 +18,7 @@
 
 verbose 4
 verbose_logfile 4
-maps_to_use   AmideBB AmideSC
+maps_to_use   AmideBB AmideSC 
 couplings_to_use  None   :All
 couplings_to_use  DipDip  AmideSC:AmideSC
 

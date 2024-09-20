@@ -35,7 +35,6 @@ import sys
 import GMAP.src.tools.CLibLoader as GM_CL
 import GMAP.src.tools.Exceptions as GM_Ex
 import GMAP.src.tools.FileHandler as GM_FH
-# import GMAP.src.tools.MathFunctions as GM_MF
 import GMAP.src.tools.MapReader as GM_MR
 import GMAP.src.tools.ParameterParser as GM_PP
 import GMAP.src.tools.PhysicsFunctions as GM_PF
@@ -60,8 +59,8 @@ def manage_frame(frame, RunPars):
     frame : `MDA.Timestep`
         The frame that will be treated next.
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     """
 
     framenum = frame.frame
@@ -197,8 +196,8 @@ def trj_loop(RunPars, System):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The class containing all the information on the system of the
         MD trajectory.
@@ -340,6 +339,18 @@ def trj_loop(RunPars, System):
 
 
 def print_calculation_summary(Files, RunPars, System):
+    """Reports how the calculation went, and some details users might
+    want to know.
+
+    Parameters
+    ----------
+    RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
+    System : :class:`~GMAP.src.tools.SystemReader.System`
+        The class containing all the information on the system of the
+        MD trajectory.
+    """
 
     def sumavg(*args):
         total_time = pr.Timer.get_total_ns(*args)
