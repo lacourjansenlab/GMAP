@@ -94,6 +94,8 @@ class FileLocations:
         callcommand : list of str
             The command used to invoke the program.
         """
+
+        callcommand[0] = Path(callcommand[0]).name
         self.callcommand = " ".join(callcommand)
 
 

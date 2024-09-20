@@ -186,6 +186,11 @@ def print_logo(Files):
         "kind of feedback, go to github.com/Kimvana/GMAP\n"
     )
 
+    Printer().print(
+        1,
+        f"\nRunning the following job:\n{Files.callcommand}"
+    )
+
 
 def cmd_to_help(allhelps, subch):
     """Determines what help to print.
