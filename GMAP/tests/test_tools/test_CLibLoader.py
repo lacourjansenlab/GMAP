@@ -7,7 +7,11 @@ Missing tests:
 (@ August 2nd '24):
   (0 missed statements)
 
-- Nothing is missing!
+- None!
+
+To hide this file from the overview, incomplete tests were added for the
+following:
+- None!
 """
 
 # 3rd party imports
@@ -235,17 +239,19 @@ class TestVClib:
 
         RunPars.VEG_clib_file = (
             RunPars.VEG_clib_file.parent / "doesntexist.txt")
-        with pytest.raises(GM_Ex.GmapFileNotFoundError, match="CL_VG_1$"):
+        # matchstr = "CL_VG_1\033\\[0m$"
+        matchstr = "CL_VG_1$"
+        with pytest.raises(GM_Ex.GmapFileNotFoundError, match=matchstr):
             _ = GM_CL.VEG_CLib(RunPars)
 
         RunPars.VEG_clib_file = (
             RunPars.VEG_clib_file.parent / "VEG.obj")
-        with pytest.raises(GM_Ex.GmapOSError, match="CL_VG_1$"):
+        with pytest.raises(GM_Ex.GmapOSError, match=matchstr):
             _ = GM_CL.VEG_CLib(RunPars)
 
         RunPars.VEG_clib_file = (
             RunPars.VEG_clib_file.parent)
-        with pytest.raises(GM_Ex.GMAPexception, match="CL_VG_1$"):
+        with pytest.raises(GM_Ex.GMAPexception, match=matchstr):
             _ = GM_CL.VEG_CLib(RunPars)
 
 

@@ -22,14 +22,154 @@ YlOrBr, iridescent, incandescent, smooth_rainbow
 
 Bonus:
 A sequential rainbow generator! Feed it the amount of colors you'd like,
-and out comes a list of those colors nicely distributed along the rainbow.
+and out comes a list of those colors nicely distributed along the
+rainbow.
 """
 
+
+# 3rd party imports
 import matplotlib.colors as mplC
 from matplotlib import colormaps
 
+# local imports
+import GMAP.src.tools.CodingTools as GM_CT
+import GMAP.src.tools.StringClasses as GM_SC
+
+
+class PrinterColors(GM_CT.CustomClass):
+    """Saves the provided color strings (ANSI sequences).
+
+    Parameters
+    ----------
+    **kwargs : :class:`~GMAP.src.tools.StringClasses.ColStr`
+        Each kwarg will be assumed a color, where the key is the name
+        of the color, and the value the string containing the ANSI
+        sequence for that specific color.
+
+    Attributes
+    ----------
+    **kwargs :
+        Each of the kwargs becomes an attribute of the class.
+    coldict : dict of str: :class:`~GMAP.src.tools.StringClasses.ColStr`\
+    pairs
+        The dictionary representation of all custom attributes of the
+        class instance
+    coldict_r : dict of :class:`~GMAP.src.tools.StringClasses.ColStr`:\
+    str pairs
+        The inverse of self.coldict
+    """
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.coldict = kwargs
+        self.coldict_r = {v: k for k, v in self.coldict.items()}
+
+
+StandInColors = PrinterColors(**{
+    col: GM_SC.ColStr(f"\033<{col}>") for col in (
+        "clear", "pink_hc", "green_hc", "blue_hc", "red_hc", "red_todef",
+        "green_lc")
+})
+
+DarkModeColors = PrinterColors(**{
+    name: GM_SC.ColStr(code) for name, code in {
+        "clear": "\033[0m",  # reset the colors
+
+        # High contrast colors (bright on dark background)
+        "pink_hc": "\033[38;2;240;96;112m",  # 4bit = bright red
+        "green_hc": "\033[38;2;128;240;112m",  # 4bit = bright green
+        "blue_hc": "\033[38;2;128;192;240m",  # light skyblue, 4bit=bright cyan
+        "red_hc": "\033[38;2;255;0;0m",  # errors, 4bit = bright red
+        "red_todef": "\033[38;2;255;160;176m",  # error text, 4bit = white
+
+        # Low contrast colors (dark(er) on dark background)
+        "green_lc": "\033[38;2;16;96;48m",  # 4bit = dark green
+    }.items()
+})
+
+
+LightModeColors = PrinterColors(**{
+    name: GM_SC.ColStr(code) for name, code in {
+        "clear": "\033[0m",  # reset the color
+
+        # High contrast colors (dark on light background)
+        "pink_hc": "\033[38;2;188;64;64m",  # 4bit = dark red
+        "green_hc": "\033[38;2;55;102;47m",  # 4bit = dark green
+        "blue_hc": "\033[38;2;64;48;144m",  # night skyblue, 4bit = dark blue
+        "red_hc": "\033[38;2;192;0;0m",  # errors, 4bit = dark red
+        "red_todef": "\033[38;2;64;0;0m",  # error text, 4bit = black
+
+        # Low contrast colors (light(er) on light background)
+        "green_lc": "\033[38;2;48;208;64m",  # 4bit = bright green
+    }.items()
+})
+
 
 class QualitativeColorScheme:
+    """Saves a qualitative color scheme - has discrete values.
+
+    These schemes can be used for lines in a graph, or other similar
+    applications where you want distinct, separate colors. These maps
+    are not meant for continuous applications, where colors can
+    smoothly transition into each other.
+
+    Parameters
+    ----------
+    description : str
+        A brief description of the colormap, possibly containing an
+        intended application.
+    input_color_string : str
+        The colors as provided on the PaulTol website. The string must
+        be defined using double quotes, as single quotes are used within
+        the string to denote a color. A color is represented using
+        hexadecimal notation, and colors are separated using commas.
+
+        Example: "'#66CCEE', '#AA3377', '#BBBBBB'"
+    input_name_string : str
+        The name of each color in the color string. Names are separated
+        by whitespaces.
+    name : str, default="noname"
+        The name of the map.
+    last_is_bad_data : bool, default=False
+        Whether the last color in the set is intended to be another
+        color, or a special one to just be used for bad data.
+
+    See Also
+    --------
+    ContinuousColorScheme
+        Meant for when colors should transition continuously.
+
+    Attributes
+    ----------
+    description : str
+        A brief description of the colormap, possibly containing an
+        intended application.
+    color_string : str
+        The colors as provided on the PaulTol website. The string must
+        be defined using double quotes, as single quotes are used within
+        the string to denote a color. A color is represented using
+        hexadecimal notation, and colors are separated using commas.
+
+        Example: "'#66CCEE', '#AA3377', '#BBBBBB'"
+    name_string : str
+        The name of each color in the color string. Names are separated
+        by whitespaces.
+    has_bad_data : bool
+        Whether the map has a special color dedicated to bad data
+    bad_data : str
+        Only present if self.has_bad_data is set to True. Contains the
+        actual color to be used for bad data.
+    color_list : list of str
+        Contains all colors from self.color_string in list form.
+    name_list : list of str
+        Contains all names from self.color_names in list form.
+    color_dict : dict of str: str pairs
+        Contains all colors with their names. Keys are the names, values
+        are the actual colors.
+    name : str
+        The name of the map.
+    """
+
     def __init__(
         self, description, input_color_string, input_name_string,
         name="noname", last_is_bad_data=False
@@ -45,8 +185,10 @@ class QualitativeColorScheme:
             colorlist = colorlist[:-1]
         self.color_list = [item.strip("',") for item in colorlist]
         self.name_list = self.name_string.split()
+        self.success = True
 
         if len(self.color_list) != len(self.name_list):
+            self.success = False
             print(f"failed creating the {name} class, do not use it!")
             return
 
@@ -61,6 +203,62 @@ class QualitativeColorScheme:
 
 
 class ContinuousColorScheme(mplC.ListedColormap):
+    """Saves a continous color scheme - can smoothly transition.
+
+    These schemes can be used for values that vary continuously over a
+    2D surface or other similar applications where you want continuously
+    transitioning colors. These maps are not meant for discrete
+    applications, where colors should always stay distinct.
+
+    Parameters
+    ----------
+    description : str
+        A brief description of the colormap, possibly containing an
+        intended application.
+    input_color_string : str
+        The colors as provided on the PaulTol website. The string must
+        be defined using double quotes, as single quotes are used within
+        the string to denote a color. A color is represented using
+        hexadecimal notation, and colors are separated using commas.
+
+        Example: "'#66CCEE', '#AA3377', '#BBBBBB'"
+    name : str, default="noname"
+        The name of the map.
+    last_is_bad_data : bool, default=False
+        Whether the last color in the set is intended to be another
+        color, or a special one to just be used for bad data.
+
+    See Also
+    --------
+    QualitativeColorScheme
+        Meant for when colors should stay distinct.
+
+    Attributes
+    ----------
+    description : str
+        A brief description of the colormap, possibly containing an
+        intended application.
+    color_string : str
+        The colors as provided on the PaulTol website. The string must
+        be defined using double quotes, as single quotes are used within
+        the string to denote a color. A color is represented using
+        hexadecimal notation, and colors are separated using commas.
+
+        Example: "'#66CCEE', '#AA3377', '#BBBBBB'"
+    has_bad_data : bool
+        Whether the map has a special color dedicated to bad data
+    bad_data : str
+        Only present if self.has_bad_data is set to True. Contains the
+        actual color to be used for bad data.
+    color_list : list of str
+        Contains all colors from self.color_string in list form.
+    color_rgba_array : `np.ndarray`
+        An array containing all colors, to be used by the matplotlib
+        colors module's ListedColorMap.
+    name : str
+        The name of the map.
+    """
+
     def __init__(
         self, description, input_color_string,
         name="noname", last_is_bad_data=False
@@ -82,6 +280,25 @@ class ContinuousColorScheme(mplC.ListedColormap):
 
 
 class DiscreteRainbowGenerator():
+    """Can generate the requested amount of colors equidistant along a
+    rainbow.
+
+    Attributes
+    ----------
+    colors_many : list of str
+        Contains all the colors that could be returned.
+    use_colors_many : dict of int: (list of int) pairs
+        Keys are the amount of colors desired, values are the indices
+        of the colors that should be picked from colors_many. The keys
+        correspond to the lengths of the value lists.
+    bad_data_hex : str
+        The hexadecimal string representation of the color used for bad
+        data.
+    bad_data_float32 : `np.ndarray`
+        The [0, 1] based rgb representation of the color used for bad
+        data.
+    """
+
     colors_many = [
         "#777777",  # 'bad data'
         "#E8ECFB",  # _1
@@ -174,10 +391,26 @@ class DiscreteRainbowGenerator():
         pass
 
     def get_color_list_from_int(self, des_length, dtype="hex"):
-        """
+        """Get the requested amount of colors along the rainbow.
+
         Given an integer between 1 and 28 (inclusive), returns a list of
         colours of that length following the discrete rainbow scheme. If
         des_length does not meet these criteria, return an empty list.
+
+        Parameters
+        ----------
+        des_length : int
+            How many colors should be retrieved.
+        dtype : str, default="hex"
+            The desired output data type. 'hex' for hexidecimal strings,
+            'rgbarruint8' for a int8 numpy array, 'rgbarrfloat32' for a
+            float32 numpy array.
+
+        Returns
+        -------
+        colors : list or `np.ndarray`
+            Datatype depends on the choice for the input parameter
+            dtype. Contains the colors to be used for plotting.
         """
 
         color_id = self.use_colors_many.get(des_length, [])
@@ -185,36 +418,56 @@ class DiscreteRainbowGenerator():
         match dtype:
             case "hex":
                 return hexvals
-            case "rgbarrint8":
+            case "rgbarruint8":
                 return (
-                    mplC.to_rgba_array(hexvals)[:, :3] * 128).astype("int8")
+                    mplC.to_rgba_array(hexvals)[:, :3] * 255).astype("uint8")
             case "rgbarrfloat32":
                 return mplC.to_rgba_array(hexvals)[:, :3]
-        return
 
     def get_color_list_from_iterable(self, datatoplot, dtype="hex"):
-        """
+        """Get a matching amount of color based on input iterable size.
+
         Given an iterable object of length between 1 and 28 (inclusive),
         returns a list of colours of the same length following the
         discrete rainbow scheme. If datatoplot does not meet these
         criteria, return an empty list.
+
+        Parameters
+        ----------
+        datatoplot : iterable
+            The length of this iterable determines how many colors
+            should be returned.
+        dtype : str, default="hex"
+            The desired output data type. 'hex' for hexidecimal strings,
+            'rgbarrint8' for a int8 numpy array, 'rgbarrfloat32' for a
+            float32 numpy array.
+
+        Returns
+        -------
+        colors : list or `np.ndarray`
+            Datatype depends on the choice for the input parameter
+            dtype. Contains the colors to be used for plotting.
         """
+
         num_colors_needed = len(datatoplot)
         return self.get_color_list_from_int(num_colors_needed, dtype)
 
 
 def register_schemes(choice, prefix=""):
-    """
-    registers colormaps of choice in matplotlib.colormaps list of named
-    colormaps. This allows the colormaps to be accessed by name in plotting
+    """Registers chosen colormaps in matplotlib.colormaps.
+
+    matplotlib.colormaps has a list of named colormaps. Being in this
+    list allows any colormap to be accessed by name in plt plotting
     functions.
 
-    par choices:
-    diverging, seqential, both
-
-    par prefix:
-    in case any of the names used in this script give clashes, a custom
-    prefix can be given here - this is prepended to the standard names.
+    Parameters
+    ----------
+    choice : str
+        Can be 'diverging', 'sequential', or 'both'. All colormaps
+        belonging to any such types are imported together
+    prefix : str, default=""
+        This string is prepended to the names of the colormaps when
+        added. This is to avoid dupicate names being present.
     """
 
     both = ("both", "b")

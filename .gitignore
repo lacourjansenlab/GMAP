@@ -7,4 +7,6 @@ env_**
 GMAP/sourcefiles/VEG.exp
 GMAP/sourcefiles/VEG.lib
 GMAP/sourcefiles/VEG.obj
-sphinx_docs/**
+sphinx_docs/_build/**
+
+GMAP/.coverage**

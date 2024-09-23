@@ -5,3 +5,4 @@ GMAP.src.tools.FileHandler module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

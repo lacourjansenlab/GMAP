@@ -30,6 +30,10 @@ couplings_to_use[list_str]                        DipDip :All
 
 verbose(v)[int]                                   0 1 [2] 3 4
 verbose_logfile(vl)[int]                          0 1 [2] 3 4
+safe_mode(safe)[bool]                             False
+dark_mode(dm)[bool]                               True
+command_line_color[str]                           white 4bit [24bit]
+command_line_length[int]                          79
 prevent_overwrite[bool]                           True
 dont_report_error[list_str]                       none
 output_format[list_str]                           [bin] txt

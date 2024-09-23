@@ -491,7 +491,7 @@ Syst : :class:`~GMAP.src.tools.SystemReader.System`
 
 
 
-GM_str_osc(Syst, Map, osc)
+GM_str_osc(Map, Syst, osc)
 ==========================
 
 Returns the (human-readable) string representation of an oscillator of this type.

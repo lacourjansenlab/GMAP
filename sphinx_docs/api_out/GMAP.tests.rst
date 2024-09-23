@@ -9,6 +9,14 @@ Subpackages
 
    GMAP.tests.test_tools
 
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   GMAP.tests.conftest
+
 Module contents
 ---------------
 
@@ -16,3 +24,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

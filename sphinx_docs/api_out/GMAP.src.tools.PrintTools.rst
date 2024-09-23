@@ -5,3 +5,4 @@ GMAP.src.tools.PrintTools module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

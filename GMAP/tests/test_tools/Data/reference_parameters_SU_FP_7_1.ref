@@ -1,3 +1,5 @@
 estatic_range[float]                              -20
 influencers_whitelist[list_str]                   :All
 dont_report_error[list_str]                       none
+safe_mode(safe)[bool]                             False
+
