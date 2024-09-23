@@ -12,6 +12,7 @@ This is the development version of GEMAIM.
 * (general users) run ```python3 -m pip install .```
 * (developers) run ```python3 -m pip install -e ".[testing]"```
 5. now, from anywhere, typing ```GMAP``` will start the program!
+6. Don't forget to compile the C library!
 
 ## How to generate the documentation using sphinx:
 Assuming generating from scratch, and inside a venv (see above, always a good habit)
@@ -65,4 +66,4 @@ When you've made some choices to the code, and would like to rebuild the docs, n
 
 - open terminal
 - ```cc -fPIC -dynamiclib -o scriptname.dylib scriptname.cpp``` (worked fine with AIM)
-- ```cc -fPIC -dynamiclib -std=c++11 -o scriptname.dylib scriptname.cpp``` (needed on Sonoma 14.6.1 to avoid alias warnings)
+- ```cc -fPIC -dynamiclib -std=c++11 -stdlib=libc++ -o scriptname.dylib scriptname.cpp``` (needed on Sonoma 14.6.1 to avoid alias warnings)
