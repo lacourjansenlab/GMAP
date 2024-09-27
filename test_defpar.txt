@@ -2,7 +2,7 @@ topology_file                GMAP/sourcefiles/pdb_1AKI.tpr
 trajectory_file              GMAP/sourcefiles/pdb_1AKI_50frame.xtc
 
 source_directory                GMAP/sourcefiles
-VEG_clib_file                   VEG_MacOS.dylib #VEG.dll
+VEG_clib_file                   VEG.so #VEG_MacOS.dylib #VEG.dll
 log_filename                    log.log
 
 output_legend_filename          legend.txt
