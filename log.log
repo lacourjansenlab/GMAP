@@ -10,20 +10,15 @@
   \        /              |  |      |  |\ (_ o _) /   )
    `'-...-'               '--'      '--' '.(_,_).'`---'
 
-<<<<<<< Updated upstream
-Parsed GMAP parameters at: 0-00:00:00.152
+Parsed GMAP parameters at: 0-00:00:00.011
 
-Could not find the file /Users/monicakarem/Dropbox/My Mac (Mónica’s
-iMac)/Documents/GitHub/GMAP/GMAP/maps/Singles/BChl-c/core.txt. This file is
-required for the map to function. Please consult the information of this map,
-or contact the developer of this map.
+Could not find the file
+/Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/maps/Singles/BChl-c/core.txt.
+This file is required for the map to function. Please consult the information
+of this map, or contact the developer of this map.
 More information can be found in the documentation user pages using the
 following error code: MI_MR_2
-Added all maps at: 0-00:00:00.250
-=======
-Parsed GMAP parameters at: 0-00:00:00.012
 Added all maps at: 0-00:00:00.024
->>>>>>> Stashed changes
 
 -----------
 Influencers
@@ -31,11 +26,7 @@ Influencers
 
 
 Residue names included in influencers:
-<<<<<<< Updated upstream
-LIG, SOL, NA
-=======
-NA, LIG, SOL
->>>>>>> Stashed changes
+SOL, NA, LIG
 
 Residue names NOT included in influencers:
 
@@ -44,37 +35,23 @@ Atoms included in influencers:
 
 Atoms NOT included in influencers:
 
-<<<<<<< Updated upstream
-Initialized MD system at: 0-00:02:34.362
-Initialization complete at: 0-00:02:34.362
-=======
-Initialized MD system at: 0-00:00:01.970
-Initialization complete at: 0-00:00:01.974
->>>>>>> Stashed changes
+Initialized MD system at: 0-00:00:27.888
+Initialization complete at: 0-00:00:27.889
 
-The file /Users/monicakarem/Dropbox/My Mac (Mónica’s
-iMac)/Documents/GitHub/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib was requested to
-be used as the VEG c-library. However, the file is invalid. 
+The file
+/Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib
+was requested to be used as the VEG c-library. However, the file is invalid. 
 
 Traceback (most recent call last):
-File "/Users/monicakarem/Dropbox/My Mac (Mónica’s
-iMac)/Documents/GitHub/GMAP/GMAP/src/tools/CLibLoader.py", line 53, in __init__
-    self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
 File
-"/usr/local/Cellar/python@3.10/3.10.6_2/Frameworks/Python.framework/Versions/3.10/lib/python3.10/ctypes/__init__.py",
-line 374, in __init__
+"/Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/src/tools/CLibLoader.py",
+line 53, in __init__
+    self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File
+"/usr/local/Cellar/python@3.12/3.12.6/Frameworks/Python.framework/Versions/3.12/lib/python3.12/ctypes/__init__.py",
+line 379, in __init__
     self._handle = _dlopen(self._name, mode)
-<<<<<<< Updated upstream
-OSError: dlopen(/Users/monicakarem/Dropbox/My Mac (Mónica’s
-iMac)/Documents/GitHub/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib, 6): no suitable
-image found.  Did find:
-	/Users/monicakarem/Dropbox/My Mac (Mónica’s
-iMac)/Documents/GitHub/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib: mach-o, but wrong
-architecture
-	/Users/monicakarem/Dropbox/My Mac (Mónica’s
-iMac)/Documents/GitHub/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib: mach-o, but wrong
-architecture
-=======
                    ^^^^^^^^^^^^^^^^^^^^^^^^^
 OSError:
 dlopen(/Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib,
@@ -87,7 +64,6 @@ dlopen(/Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/sourc
 '/Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib'
 (mach-o file, but is an incompatible architecture (have 'arm64', need
 'x86_64'))
->>>>>>> Stashed changes
 
 More information can be found in the documentation user pages using the
 following error code: CL_VG_1
