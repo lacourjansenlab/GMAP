@@ -1,0 +1,20 @@
+
+
+  .-_'''-.                ,---.    ,---.   ____   .-------.
+ '_( )_   \               |    \  /    | .'  __ `.\  _(`)_ \
+|(_ o _)|  '              |  ,  \/  ,  |/   '  \  \ (_ o._)|
+. (_,_)/___|   _ _    _ _ |  |\_   /|  ||___|  /  |  (_,_) /
+|  |  .-----. ( ' )--( ' )|  _( )_/ |  |   _.-`   |   '-.-'
+'  \  '-   .'(_{;}_)(_{;}_) (_ o _) |  |.'   _    |   |
+ \  `-'`   |  (_,_)--(_,_)|  (_,_)  |  ||  _( )_  |   |
+  \        /              |  |      |  |\ (_ o _) /   )
+   `'-...-'               '--'      '--' '.(_,_).'`---'
+
+
+The file(s)
+/Users/monicakarem/Dropbox/TCM/Jobs/2-C8S3/MD/H2O_isotropic/MD_1ns_xtc2fs/md_prod_300_xtc2fs_1ns.tpr
+was requested for the parameter topology_file, but could not be found, or is
+not a file. Please make sure you specified it correctly.
+
+More information can be found in the documentation user pages using the
+following error code: SU_NP_2
