@@ -27,6 +27,10 @@ influencers_select_atoms        segid *
 
 verbose                         3
 verbose_logfile                 1
+safe_mode                       False
+dark_mode                       True
+command_line_color              24bit
+command_line_length             79
 prevent_overwrite               False
 dont_report_error               none
 output_format                   bin txt

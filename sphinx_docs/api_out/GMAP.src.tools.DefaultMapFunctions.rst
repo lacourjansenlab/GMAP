@@ -5,3 +5,4 @@ GMAP.src.tools.DefaultMapFunctions module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

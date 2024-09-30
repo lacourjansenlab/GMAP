@@ -137,6 +137,13 @@ def GM_post_init(Files, Map, Syst):
     pass
 
 
+# This is what GMAP assumes this function to contain if it is not specified.
+# If oscillators belonging to this map should be reported any differently, that
+# method should be specified here.
+def placeholder_GM_report_system(Map, Syst):
+    return
+
+
 # A place to do things before the main loop starts (create datastructures
 # to be filled in, for example). GEM itself builds the coupling table at
 # this point in time. Any preparation stuff that only requires constant
@@ -168,7 +175,7 @@ def GM_post_run(Map, Syst):
 # This is what GMAP assumes this function to contain if it is not specified.
 # If oscillators belonging to this map should be reported any differently, that
 # method should be specified here.
-def placeholder_GM_str_osc(Syst, Map, osc):
+def placeholder_GM_str_osc(Map, Syst, osc):
     return f"living on residue number {Syst.resnums[osc.used_atoms[0]]}"
 
 

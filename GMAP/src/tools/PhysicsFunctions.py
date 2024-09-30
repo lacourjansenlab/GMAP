@@ -5,6 +5,7 @@ import numpy as np
 
 # local imports
 import GMAP.src.tools.CLibLoader as GM_CL
+import GMAP.src.tools.PrintTools as GM_PT
 
 
 def calc_CoM(System, atomlist):
@@ -90,8 +91,8 @@ def calc_frame(RunPars, System, outputs):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
@@ -108,9 +109,12 @@ def calc_frame(RunPars, System, outputs):
     """
 
     VEGlib = GM_CL.VEG_CLib()
+    printer = GM_PT.Printer()
 
+    printer.add_time(4, "VEG-related properties:", "VEGprop", "ms")
     for oscix, oscillator in enumerate(System.oscillators):
         # Do we need the estatics?
+        printer.add_time(5, "", "VEGcalc")
         if any(data in RunPars.output_data for data in ("ham", "dip", "ene")):
             if oscillator.Map.Core.electrostatic_choice in ("V", "E", "G"):
                 # calculate VEG
@@ -120,6 +124,7 @@ def calc_frame(RunPars, System, outputs):
             if oscillator.Map.Core.electrostatic_choice in ("E", "G"):
                 oscillator.rotate_VEG()
 
+        printer.add_time(5, "", "VEGuse")
         # do we need dipoles?
         # we also need dipoles for the (full) hamiiltonian.
         if any(data in RunPars.output_data for data in ("ham", "dip")):
@@ -151,8 +156,10 @@ def calc_frame(RunPars, System, outputs):
 
     # calculate the couplings for the hamiltonian
     if "ham" in RunPars.output_data:
+        printer.add_time(4, "Preparing coupling:", "PrepCoup", "ms")
         prep_coupling(RunPars, System)
 
+        printer.add_time(4, "Calculating coupling:", "CalcCoup", "ms")
         calc_coupling(RunPars, System, outputs)
 
     return outputs
@@ -286,8 +293,8 @@ def get_doublepos(System, oscillator):
     Returns
     -------
     doublepos : `np.ndarray`
-        Two length-3 vectors representing the positions of the oscillator.
-        Datatype of these arrays must be float32!
+        Two length-3 vectors representing the positions of the
+        oscillator. Datatype of these arrays must be float32!
     """
 
     map_ = oscillator.Map
@@ -307,8 +314,8 @@ def prep_coupling(RunPars, System):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
@@ -331,8 +338,8 @@ def calc_coupling(RunPars, System, outputs):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
@@ -358,8 +365,8 @@ def generate_output_structures(RunPars, System):
     Parameters
     ----------
     RunPars : :class:`~GMAP.src.tools.ParameterParser.RunPars`
-        The 'main' RunPars instance containing all the basic run-defining
-        parameters.
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
     System : :class:`~GMAP.src.tools.SystemReader.System`
         The object that stores everything the program currently knows
         about the system being treated (names, numbers, types, masses,
@@ -384,13 +391,13 @@ def generate_output_structures(RunPars, System):
     if any(data in RunPars.output_data for data in ("ham", "dip")):
         outputs["dipoles"] = np.zeros((nosc, 3), dtype="float32")
 
+    if any(data in RunPars.output_data for data in ("ram",)):
+        outputs["raman"] = np.zeros((nosc, 6), dtype="float32")
+
     if any(data in RunPars.output_data for data in ("pos",)):
         outputs["positions"] = np.zeros((nosc, 3), dtype="float32")
 
     if any(data in RunPars.output_data for data in ("dbp",)):
         outputs["doublepos"] = np.zeros((nosc*2, 3), dtype="float32")
-
-    if any(data in RunPars.output_data for data in ("dbp",)):
-        outputs["raman"] = np.zeros((nosc, 6), dtype="float32")
 
     return outputs

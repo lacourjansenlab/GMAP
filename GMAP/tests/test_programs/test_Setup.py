@@ -71,7 +71,7 @@ def test_Setup(tmp_path, capsys):
 
     captured = capsys.readouterr()
     assert captured.out.endswith(
-        GM_PT.prettifier(f"Copied folders to {tmp_path} successfully!\n"))
+        GM_PT.word_wrap(f"Copied folders to {tmp_path} successfully!\n"))
 
     target_srcdir = tmp_path / "sourcefiles_copy"
     target_mapdir = tmp_path / "maps_copy"

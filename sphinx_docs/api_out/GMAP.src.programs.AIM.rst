@@ -5,3 +5,4 @@ GMAP.src.programs.AIM module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

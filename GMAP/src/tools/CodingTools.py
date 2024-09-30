@@ -2,10 +2,6 @@
 # standard library imports
 # import inspect
 
-# local imports
-import GMAP.src.tools.Exceptions as GM_Ex
-import GMAP.src.tools.PrintTools as GM_PT
-
 
 class Singleton(type):
     """Metaclassing this class makes any class a singleton.
@@ -63,86 +59,6 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class ErrCode(str):
-    def __eq__(self, other):
-        """This is used to see if two error codes equal each other.
-
-        This function exists to quickly check if an error code is
-        contained within a container (that should loop and _eq_ each
-        item, if I understand correctly).
-
-        One of the error codes can be a string (but not both, because
-        in that case this method would not be called).
-
-        Examples
-        --------
-        >>> errcode = ErrCode("AA_BB_33")
-
-        >>> errcode == "AA_BB_33"
-        True
-        >>> errcode == "AA_BC_33"
-        False
-
-        If one of the two in the comparison is a wildcard (nothing
-        specified in that part), that part will always equal. Note the
-        double underscore for a wildcard in the middle field:
-
-        >>> errcode == "AA_BB_"
-        True
-        >>> errcode == "AA_BC_"
-        False
-        >>> errcode == "AA__33"
-        True
-        """
-
-        # type checking
-        selfsplit = self.split("_")
-        if len(selfsplit) != 3:
-            self.report_invalid_length(self)
-
-        if not isinstance(other, str):
-            self.report_invalid_type(other)
-        othersplit = other.split("_")
-        if len(othersplit) != 3:
-            self.report_invalid_length(other)
-
-        # check the actual equality
-        matched = 0
-        for selfsub, othersub in zip(selfsplit, othersplit):
-            if "" in (selfsub, othersub):
-                matched += 1
-            elif selfsub == othersub:
-                matched += 1
-
-        if matched == 3:
-            return True
-        else:
-            return False
-
-    @staticmethod
-    def report_invalid_type(obj):
-        """Raises error about obj not being of the correct type.
-
-        The comparisons performed
-        """
-
-        GM_PT.Printer().warning(
-            f"\n{obj} is assumed to be an error code, but is not a string, "
-            "so this method cannot be used. Please make sure to only "
-            "compare strings or ErrCodes.",
-            "CT_EC_1",  True, GMAPerrclass=GM_Ex.GmapTypeError
-        )
-
-    @staticmethod
-    def report_invalid_length(obj):
-        GM_PT.Printer().warning(
-            f"\n{obj} is assumed to be an error code, but does not have 3 "
-            "parts separated by underscores. Please make sure to only "
-            "compare valid error codes.",
-            "CT_EC_2",  True, GMAPerrclass=GM_Ex.GmapValueError
-        )
-
-
 class CustomClass:
     """Creates a new class with attributes equallying given dict entries
 
@@ -153,4 +69,3 @@ class CustomClass:
     def __init__(self, **kwargs):
         for parname, val in kwargs.items():
             setattr(self, parname, val)
-        return

@@ -5,3 +5,4 @@ GMAP.src.programs.GEM module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

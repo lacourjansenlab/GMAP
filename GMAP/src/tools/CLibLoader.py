@@ -5,7 +5,7 @@ import ctypes as ct
 # local imports
 import GMAP.src.tools.CodingTools as GM_CT
 import GMAP.src.tools.Exceptions as GM_Ex
-from GMAP.src.tools.PrintTools import Printer
+import GMAP.src.tools.PrintTools as GM_PT
 
 
 class VEG_CLib(metaclass=GM_CT.Singleton):
@@ -52,14 +52,14 @@ class VEG_CLib(metaclass=GM_CT.Singleton):
             )
             self.clib = ct.CDLL(str(RunPars.VEG_clib_file))
         except FileNotFoundError as ex:
-            Printer().warning(
+            GM_PT.Printer().warning(
                 msg, "CL_VG_1", True, exception=ex,
                 GMAPerrclass=GM_Ex.GmapFileNotFoundError
             )
         except Exception as ex:
             # OSError for invalid file (VEG.obj)
             # No others found yet.
-            Printer().warning(
+            GM_PT.Printer().warning(
                 msg, "CL_VG_1", True, exception=ex,
                 GMAPerrclass=GM_Ex.GmapOSError
             )

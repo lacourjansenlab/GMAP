@@ -1,3 +1,4 @@
 dont_report_error[list_str]                       unavail_unavail
 influencers_whitelist[list_str]                   :All
 influencers_blacklist[list_str]                   :None
+safe_mode(safe)[bool]                             False

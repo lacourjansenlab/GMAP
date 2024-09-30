@@ -1,0 +1,1 @@
+cmd /k call prepare_pytest_sub.cmd
