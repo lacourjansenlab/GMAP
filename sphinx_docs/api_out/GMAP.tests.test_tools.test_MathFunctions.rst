@@ -5,3 +5,4 @@ GMAP.tests.test\_tools.test\_MathFunctions module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

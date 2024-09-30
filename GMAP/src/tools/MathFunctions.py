@@ -1,6 +1,13 @@
+
+# standard library imports
+import math
+
 # 3rd party lib imports
 from numba import njit
 import numpy as np
+
+# local imports
+import GMAP.src.tools.constants as GM_con
 
 
 # (as I keep searching here for this, I'm putting this here)
@@ -134,8 +141,9 @@ def PBC_back2box(vect, boxvects):
 def crossprod(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
     """Calculates the cross product between two vectors of size 3.
 
-    This is faster than the dedicated np method, as there are no checks for the
-    correctness of the provided vectors. The method is njitted for added speed.
+    This is faster than the dedicated np method, as there are no checks
+    for the correctness of the provided vectors. The method is njitted
+    for added speed.
 
     Parameters
     ----------
@@ -160,8 +168,9 @@ def crossprod(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
 def dotprod(vect1: np.ndarray, vect2: np.ndarray) -> float:
     """Calculates the dot product between two vectors of size 3.
 
-    This is faster than the dedicated np method, as there are no checks for the
-    correctness of the provided vectors. The method is njitted for added speed.
+    This is faster than the dedicated np method, as there are no checks
+    for the correctness of the provided vectors. The method is njitted
+    for added speed.
 
     Parameters
     ----------
@@ -182,8 +191,9 @@ def vec3_len(vect: np.ndarray) -> float:  # replacement for np.linalg.norm
     """Calculates the norm (length) of a vector of size 3.
 
     This is a replacement for the function `np.linalg.norm`.
-    This is faster than the dedicated np method, as there are no checks for the
-    correctness of the provided vectors. The method is njitted for added speed.
+    This is faster than the dedicated np method, as there are no checks
+    for the correctness of the provided vectors. The method is njitted
+    for added speed.
 
     Parameters
     ----------
@@ -203,11 +213,11 @@ def vec3_len(vect: np.ndarray) -> float:  # replacement for np.linalg.norm
 def project(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
     """ Calculates the orthogonal part of `vect2` to `vect1`.
 
-    Calculates the part of vector `vect2` that is orthogonal to the vector
-    `vect1` (i.e. it subtracts from `vect2` the part that is along `vect1`,
-    and returns the result).
-    Be aware that because of how numba works, both `vect1` and `vect2` should
-    have float32 as the dtype.
+    Calculates the part of vector `vect2` that is orthogonal to the
+    vector `vect1` (i.e. it subtracts from `vect2` the part that is
+    along `vect1`, and returns the result).
+    Be aware that because of how numba works, both `vect1` and `vect2`
+    should have float32 as the dtype.
 
     Parameters
     ----------
@@ -225,3 +235,76 @@ def project(vect1: np.ndarray, vect2: np.ndarray) -> np.ndarray:
     inprod = dotprod(vect1, vect2)/dotprod(vect1, vect1)
     vectout = vect2 - inprod*vect1
     return vectout
+
+
+def calc_color_dist(r1, g1, b1, r2, g2, b2):
+    """Calculates the distance between the two provided colors.
+
+    The distance is calculated using the
+    `redmean method <https://en.wikipedia.org/wiki/Color_difference>`__
+
+    Parameters
+    ----------
+    r1, g1, b1 : int
+        The rgb values of the first color, ints in the interval [0, 255]
+    r1, g1, b1 : int
+        The rgb values of the second color, ints in the interval
+        [0, 255]
+
+    Returns
+    -------
+    delC : float
+        The distance between the two colors. A smaller number means they
+        are more similar. Does not depend on the order of the two
+        colors.
+    """
+
+    # redmean method: https://en.wikipedia.org/wiki/Color_difference
+    r_bar = 0.5 * (r1 + r2)
+    delC = math.sqrt(
+        (2 + r_bar/255) * abs(r1 - r2)**2
+        + 4 * abs(g1 - g2)**2
+        + (2 + (255 - r_bar)/255) * abs(b1 - b2)**2
+    )
+    return delC
+
+
+def convert_color_24_4(r, g, b, lookup={}):
+    """Converts a given 24bit color to the closest 4bit one.
+
+    Calculates the distance of the provided color to each of the 4bit
+    colors, and returns the closest one.
+
+    If a specific 24bit color has been converted, it is saved in the
+    lookup dict for quick reuse.
+
+    Parameters
+    ----------
+    r, g, b : int
+        The rgb values of the color to convert, ints in the interval
+        [0, 255]
+
+    Returns
+    -------
+    outcolor : tuple
+        A tuple of two items, an int and a bool. The integer represents
+        the color (values 0-7), the bool whether it should be bright.
+    """
+
+    rgb = (int(r), int(g), int(b))
+
+    if rgb in lookup:
+        return lookup[rgb]
+
+    maxdist = 765
+    outcolor = (255, 255, 255)
+    for ix, (col, output) in enumerate(GM_con.printed_colors.items()):
+        delC = calc_color_dist(*rgb, *col)
+        if 0 < ix < 4:
+            delC *= 2
+        if delC < maxdist:
+            maxdist = delC
+            outcolor = output
+
+    lookup[rgb] = outcolor
+    return outcolor

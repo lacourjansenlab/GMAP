@@ -1,6 +1,7 @@
 # Quick menu
 - [General rules for code](#general-rules-for-code)
 - [General code-related remarks](#general-code-related-remarks)
+- [Workflow for any developer on the project](#workflow-for-any-developer-on-the-project)
 - [Roadmap](#roadmap)
 - [wishlist](#wishlist)
 - [Package structure](#package-structure)
@@ -16,7 +17,7 @@
 
 
 # General rules for code
-- Follow the TOCM group python style guidelines (which are heavily based on PEP8), can be found [here](https://github.com/lacourjansenlab/CoffeeCodeClub/tree/master/ProgramStyle)
+- Follow the TOCM group python style guidelines (which are heavily based on PEP8), can be found [here](https://github.com/lacourjansenlab/CoffeeCodeClub/tree/master/ProgramStyle), or in the GMAP documentation (Developer Guide -> Code Style)
 - Make use of comments when function of code isn't easily discernable!
 - Its the modern era, we have storage space! Code does not need to be compactly written, legibility is the most important in this project
 - Don't worry about efficiency/speed of a function if it doesnt take more than 1% of total calculation time. This doesn't mean we should aim for blatantly needlessly expensive code.
@@ -30,6 +31,29 @@
 - Use pathlib! (not os)
 - Leave no map in core! This means also amideBB should be decoupled from code
 - After having had a look at argparse, I (KvA) will not use it for the cmdline. It doesn't quite give me what I'm looking for, and doesn't feel quite right.
+
+[back to top](#quick-menu)
+
+# Workflow for any developer on the project
+You'd like to contribute to the development of GMAP? Nice! Thanks! Here is the general workflow everyone should use, to maintain the current project structure.
+- **Pick a task.** What will you do? Usually, this means choosing an issue from the issue page (or project board) and *reading it well.* If you're unsure what to do, ask one of the other developers! Make sure to add your name to the issue, so others know you're tackling it!
+- **Make a plan.** How are you going to solve the issue? Sometimes, it might be useful to discuss with other developers about how to go about it.
+- **Create a branch.** On github, for the issue, you can create a separate branch. The auto-suggested name by github (equals the name of the issue) is the one you should use.
+- **Keep up to date from main.** If you notice anything happening there, pull the updates (GH desktop has the tab branch -> update from main). Keep doing this during all steps to come!
+- **Do the thing.** Usually, this is coding, sometimes, it's something else.
+- **Prettify.** This could mean many things. Make sure you adhere to the [General rules for code](#general-rules-for-code) (including PEP8 code style), you removed commented lines of code, fixed spelling/grammar issues, etc.
+- **Documentation.** Nice that you did the thing, but others should know about it. Make sure that your changes are well documented. This means:
+  - Clear commit messages. Report on all changes, especially those that are important to other developers (changed function signatures, functions whose purpose changed, new functions, removed ones, etc)
+  - In-code documentation. Docstrings, and comments where needed (see code style instructions. Generally - if reading the code doesn't make it obvious in 2 seconds, add the comment!)
+  - Update the manual. If users need to know about your changes, too, make sure to add it to the manual. Think about general explanation, adding a new error code to the list, adding a new parameter, etc.
+- **Confirm current tests work.** Before you, others have already put in hard work. Tests specify what their code should do, so please run all existing tests. If they don't pass, make sure they do. Sometimes it makes sense (your change was expected to break things), but if not, look at your code. Don't blindly change the tests themselves. Don't continue to the next step until all tests pass!
+- **Add new tests for your contribution.**  You've made sure other people's work didn't break, now lets make sure other people can't unknowingly break yours! Create tests for all functionality that you've added, and make sure they pass. This is also the last (and most thorough) bug-fixing step. Any promise you've made in the documentation should be confirmed/reflected in a test. Make sure your own tests pass. All code in src/tools should be covered by tests in tests/test_tools. If you can't cover a statement for whatever reason, add this to the top of the document. Some already have examples of this. Possible reasons for not being able to cover a statement could be:
+  - You're missing the required dataset for testing. This should be noted, so it is not forgotten, and the dataset (and test) can be added later.
+  - You can't reach the statement. Sometimes, you code in more failsaves than needed. Sometimes it makes sense to remove that test, sometimes there's a (future-proofing) reason not to. If you keep it, write it down! That way, someone can compare the expected amount of missed statements to the one actually found!
+- **Prettify, pt2.** You've probably done more work since the last prettifying step, so lets do a final round. See instructions in the first prettifying step!
+- **Update from main.** Make sure you are still up to date. If not, and you take changes from main, do the tests and prettifying again!
+- **Pull request.** Open a pull request to merge your changes to the main branch. Make sure to add 2 reviewers, and resolve any issues they might have. When they are happy, you can merge to main.
+- **Celebrate!** Congratulations, you're done!
 
 [back to top](#quick-menu)
 
@@ -333,12 +357,26 @@ If you need a place to quickly write something down, do it here! It can be tidie
 
 
 - (KvA) TODO before PR:
-  - Done!
+  - clean up code (lots of commented out statements as of writing this)
+  - test/fix the new header functions (quite sure they're buggy still)
+  - add proper erros? to header functions?
+  - add tests for new code?
+  - add note somewhere: GMAP will auto-carry colors over newline. In the terminal, once a color command is issued, the color will remain. any following lines will be run with that color. However, 'less -R' assumes a color reset every newline.
 - (KvA) TODO:
   - start on mapdev-checklist. What things should a mapmaker double check before starting the map (and, simultaneously, have map-testing feature do these checks where possible - at least, write down what it should test)
     - Indicate whether a VEG dependence file for calcfreq has been supplied or not (and similarly for dipoles etc)
   - have c code for potential take the influencers into account (possibly not within c code, but create mirror of system? new position/charges/etc array containing only valid influencers?)
   - Links to relevant packages etc in explanation in main documentation page.
+- (KvA) You can use the cluster 'directly' through: portal.hb.hpc.rug.nl
+- (KvA) If ever needed - we can detect windows command line background color like this: 
+```python
+import colorama
+colors = colorama.win32.GetConsoleScreenBufferInfo().wAttributes
+background_color = colors >> 4
+foreground_color = colors % 16
+```
+Why? The colors are stored in binary format. Counting from the right, the first 3 bits are used for the color (allowing the 8 choices used in 4-bit colors), then a bit for bright/not bright, then 3 bits for the background color, and another for bright/not bright. The order of the colors is different from ANSI: black, blue, green, cyan, red, magenta, yellow, white.
+- (KvA) There doesn't seem to be an easy alternative for non-windows :(
 - (KvA) GEM doesnt check whether command line specifies a refparfile (in case we do want to use them)
 - (KvA) Refparfile currently doesn't indicate whether a parameter is optional, or MUST be given by the user. Or is the N/A choice sufficient?
 - (KvA) Chosen map structure forces coupling maps to be complex? At some point, discuss coupling maps more?

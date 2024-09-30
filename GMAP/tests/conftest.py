@@ -26,9 +26,3 @@ def my_fixture(request):
 @pytest.fixture(autouse=True)
 def reset_singletons():
     GM_CT.Singleton._instances = {}
-
-
-# If this name can be used as an input name to a test, this file is found
-@pytest.fixture(autouse=True)
-def fixt_test_presence():
-    pass

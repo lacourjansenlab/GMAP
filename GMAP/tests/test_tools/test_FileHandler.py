@@ -4,15 +4,13 @@ src/tools/FileHandler.py.
 
 Missing tests:
 
-(@ August 2nd '24):
-97, 101-113, 333, 536-547, 565-570 (26 missed statements)
+(@ September 20th '24):
+115, 119-131, 356 (8 missed statements)
 
 (CUHTAT - currently unknown how to access this)
-- Program is run using any OS other than windows 64 bit (97, 101-113)
+- Program is run using any OS other than windows 64 bit (115, 119-131)
   (CUHTAT; at least within one single run, probably impossible)
-- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (333)
-- output files are not cleared yet.  (536-570)  (this happens in GEM, just
-  before the per-frame loop)
+- the reference parameter file could not be found (SU_FH_2) (CUHTAT) (356)
 """
 
 
@@ -377,6 +375,69 @@ def test_write_output_multiplied():
     )[1:]  # skip first, that is frame ix
     txtdip = txtdip.reshape((3, 8)).T
     assert np.all(txtdip == outputs["doublepos"])
+
+
+def test_clear_output_multiple(tmp_path):
+    ohf = tmp_path / "hamfile"
+    ohf_txt = ohf.parent / f"{ohf.name}.txt"
+    ohf_bin = ohf.parent / f"{ohf.name}.bin"
+
+    oef = tmp_path / "enefile"
+    oef_txt = oef.parent / f"{oef.name}.txt"
+    oef_bin = oef.parent / f"{oef.name}.bin"
+
+    odf = tmp_path / "dipfile"
+    odf_txt = odf.parent / f"{odf.name}.txt"
+    odf_bin = odf.parent / f"{odf.name}.bin"
+
+    orf = tmp_path / "ramfile"
+    orf_txt = orf.parent / f"{orf.name}.txt"
+    orf_bin = orf.parent / f"{orf.name}.bin"
+
+    opf = tmp_path / "posfile"
+    opf_txt = opf.parent / f"{opf.name}.txt"
+    opf_bin = opf.parent / f"{opf.name}.bin"
+
+    odpf = tmp_path / "dbpfile"
+    odpf_txt = odpf.parent / f"{odpf.name}.txt"
+    odpf_bin = odpf.parent / f"{odpf.name}.bin"
+
+    txtfiles = (ohf_txt, oef_txt, odf_txt, orf_txt, opf_txt, odpf_txt)
+    binfiles = (ohf_bin, oef_bin, odf_bin, orf_bin, opf_bin, odpf_bin)
+
+    for fname in txtfiles:
+        with open(fname, "w") as fhand:
+            fhand.write("123")
+        with open(fname, "r") as fhand:
+            assert len(fhand.read()) == 3
+
+    for fname in binfiles:
+        with open(fname, "wb") as fhand:
+            fhand.write(bytes([1, 2, 3]))
+        with open(fname, "rb") as fhand:
+            assert len(fhand.read()) == 3
+
+    runpars = GM_CT.CustomClass(**{
+        "output_data": ["ham", "ene", "dip", "ram", "pos", "dbp"],
+        "output_hamiltonian_filename": ohf,
+        "output_energies_filename": oef,
+        "output_dipole_filename": odf,
+        "output_raman_filename": orf,
+        "output_positions_filename": opf,
+        "output_doublepos_filename": odpf,
+        "output_format": ["bin", "txt"]
+    })
+
+    GM_FH.clear_output(runpars)
+
+    for fname in txtfiles:
+        print(fname)
+        with open(fname, "r") as fhand:
+            assert len(fhand.read()) == 0
+
+    for fname in binfiles:
+        with open(fname, "rb") as fhand:
+            assert len(fhand.read()) == 0
 
 
 def test_write_legend():
