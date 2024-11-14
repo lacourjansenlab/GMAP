@@ -1,5 +1,7 @@
 
 
+
+
   .-_'''-.                ,---.    ,---.   ____   .-------.
  '_( )_   \               |    \  /    | .'  __ `.\  _(`)_ \
 |(_ o _)|  '              |  ,  \/  ,  |/   '  \  \ (_ o._)|
@@ -10,33 +12,61 @@
   \        /              |  |      |  |\ (_ o _) /   )
    `'-...-'               '--'      '--' '.(_,_).'`---'
 
-Parsed GMAP parameters at: 0-00:00:00.011
 
+
+For the most up-to-date version of GMAP, reporting bugs/issues, suggesting
+improvements for the program, questions, or any other kind of feedback, go to
+github.com/Kimvana/GMAP
+
+
+Running the following job:
+GMAP GEM run test_inpar.txt
+[Mon 30 10:21] 0-00:00:00.000:  Start Parsing GMAP parameters
+[Mon 30 10:21] 0-00:00:00.010:  Finished GMAP parameters, start adding maps
+
+WARNING:
 Could not find the file
 /Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/maps/Singles/BChl-c/core.txt.
 This file is required for the map to function. Please consult the information
 of this map, or contact the developer of this map.
 More information can be found in the documentation user pages using the
-following error code: MI_MR_2
-Added all maps at: 0-00:00:00.024
-
------------
-Influencers
------------
+following error code:  MI_MR_2
+[Mon 30 10:21] 0-00:00:00.023:  Added all maps, start initializing MD system
 
 
-Residue names included in influencers:
-SOL, NA, LIG
+╔═════════════╗
+║ Influencers ║
+╚╦════════════╝
+ ║ 
+ ║ Residue names included in influencers:
+ ║ TYR, SER, ARG, HIS, GLU, ASN, CL, TRP, GLY, THR, ALA, LEU, ASP, VAL, MET,
+ ║ SOL, PHE, GLN, ILE, PRO, LYS, CYS
+ ║ 
+ ║ Residue names NOT included in influencers:
+ ║ None
+ ║ 
+ ║ Atoms included in influencers:
+ ║ 0-33875
+ ║ 
+ ║ Atoms NOT included in influencers:
+ ║ None
+ ║ 
+ ╚═══ End of influencers ═════
 
-Residue names NOT included in influencers:
+[Mon 30 10:21] 0-00:00:04.345:  Initialized MD system, start initializing maps
+[Mon 30 10:21] 0-00:00:04.345:  Initialization complete, start loading C
+libraries
 
-Atoms included in influencers:
-0-5143
 
-Atoms NOT included in influencers:
+╔════════════════════╗
+║ MD system analysis ║
+╚╦═══════════════════╝
+ ║ 
+ ║ AmideBB:               128
+ ║ AmideSC:                17
+ ║ 
+ ╚═══ End of MD system analysis ═════
 
-Initialized MD system at: 0-00:00:27.888
-Initialization complete at: 0-00:00:27.889
 
 The file
 /Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/sourcefiles/VEG_MacOS.dylib
@@ -66,4 +96,4 @@ dlopen(/Users/monicakarem/Library/CloudStorage/Dropbox/TCM/git/1/GMAP/GMAP/sourc
 'x86_64'))
 
 More information can be found in the documentation user pages using the
-following error code: CL_VG_1
+following error code:  CL_VG_1
