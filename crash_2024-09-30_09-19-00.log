@@ -1,0 +1,43 @@
+
+
+
+
+  .-_'''-.                ,---.    ,---.   ____   .-------.
+ '_( )_   \               |    \  /    | .'  __ `.\  _(`)_ \
+|(_ o _)|  '              |  ,  \/  ,  |/   '  \  \ (_ o._)|
+. (_,_)/___|   _ _    _ _ |  |\_   /|  ||___|  /  |  (_,_) /
+|  |  .-----. ( ' )--( ' )|  _( )_/ |  |   _.-`   |   '-.-'
+'  \  '-   .'(_{;}_)(_{;}_) (_ o _) |  |.'   _    |   |
+ \  `-'`   |  (_,_)--(_,_)|  (_,_)  |  ||  _( )_  |   |
+  \        /              |  |      |  |\ (_ o _) /   )
+   `'-...-'               '--'      '--' '.(_,_).'`---'
+
+
+
+For the most up-to-date version of GMAP, reporting bugs/issues, suggesting
+improvements for the program, questions, or any other kind of feedback, go to
+github.com/Kimvana/GMAP
+
+
+Running the following job:
+GMAP
+
+Welcome to the G-MAP package. Currently, this is a work in progress. The
+following options are available:
+
+    GMAP
+    GMAP help
+prints this help.
+
+    GMAP help [program]
+prints the help for the requested program
+
+    GMAP AIM
+This program will create the required files for calculating infrared spectra.
+
+    GMAP GEM
+This program will create the required files for calculating electronic spectra.
+
+    GMAP Setup
+This program will copy the source code and maps to target folder.
+
