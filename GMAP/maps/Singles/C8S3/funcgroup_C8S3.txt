@@ -1,5 +1,6 @@
 newstruct
-[LIG]
+[LIG,C8S3,MOL]
+
   C
  C1
   N
