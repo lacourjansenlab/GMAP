@@ -11,9 +11,9 @@ from pathlib import Path
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'GMAP'
-copyright = '2023, KE van Adrichem'
+copyright = '2026, KE van Adrichem'
 author = 'KE van Adrichem'
-release = '1.0'
+release = '1.0'  # will be overwritten
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -67,7 +67,8 @@ html_theme_options = {
         "version_match": version_match,
     },
     "check_switcher": False,
-    
+    "show_version_warning_banner": True,
+    "sticky_banners": True,
 }
 html_static_path = ['_static']
 html_favicon = "Figures/GMAP_ico.ico"
