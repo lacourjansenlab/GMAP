@@ -29,8 +29,21 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+# -- Variables needed in functions -------------------------------------------
+
+# the path of the base repository folder
 repopath = Path(__file__).parent.parent.resolve()
 sys.path.append(str(repopath))
+
+# The name of the current version (in the built docs)
+latest_version = os.environ.get("LATEST_VERSION", "stable")
+source_branch = os.environ.get("SOURCE_BRANCH", "main")
+if source_branch == "development":
+    version_match = "dev"
+    release = "dev"
+else:
+    version_match = ".".join(source_branch.split(".")[:2])
+    release = source_branch
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -45,11 +58,18 @@ html_theme_options = {
     "navbar_end": [
         "search-button",
         "theme-switcher",
+        "version-switcher",
         "navbar-icon-links",
     ],
     "navbar_persistent": [],
+    "switcher": {
+        "json_url": "https://lacourjansenlab.github.io/GMAP/stable/_static/switcher.json",
+        "version_match": version_match,
+    },
+    "check_switcher": False,
+    
 }
-# html_static_path = ['_static']
+html_static_path = ['_static']
 html_favicon = "Figures/GMAP_ico.ico"
 
 suppress_warnings = ["docutils"]
