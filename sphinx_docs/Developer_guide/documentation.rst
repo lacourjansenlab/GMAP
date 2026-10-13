@@ -32,6 +32,8 @@ The prerelease label should be used only when a formal github release is desired
 
 
 
+.. _DevGuide_page_documentation_branchversion:
+
 Branches and versions
 =====================
 
@@ -76,19 +78,26 @@ If a prerelease is created, the documentation for it will be built. It will be a
 Jinja templates
 ***************
 
-There are a few jinja templates available for apidoc to use. This is what they do:
+There are a few jinja templates available for apidoc to use. Each of the pages in the api_out directory is based on one of these templates. 
+This is what each is used for:
 
 
 module.rst.jinja
 ================
 
-This one is used to generate the apidoc pages for python files (e.g. parameter_parser.rst).
+This one is used to generate the apidoc pages for *python files* (e.g. parameter_parser.rst).
 
 
 Package.rst.jinja
 =================
 
-This one is used to generate the apidoc pages for directories (e.g. GMAP, GMAP.src.tools).
+This one is used to generate the apidoc pages for *directories* (e.g. GMAP, GMAP.src.tools).
+
+
+toc.rst.jinja
+=============
+
+This one is used to generate the modules.rst page, that lists all top-level directories. The generation of this file can be switched off using the -T flag with the apidoc command. In that case, this template is not used.
 
 
 

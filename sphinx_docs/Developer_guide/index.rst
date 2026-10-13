@@ -150,6 +150,10 @@ You'd like to contribute to the development of GMAP? Nice! Thanks! Here is the g
 - **Celebrate!** Congratulations, you're done!
 
 
+.. important::
+    If you're one of the senior developers, you're responsible for merging development into main (and creating releases) every so often. See :ref:`the devguide documentation page <DevGuide_page_documentation_branchversion>` for more info.
+
+
 
 ***********************************************
 Pytest instructions
