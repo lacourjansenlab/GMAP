@@ -3,6 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+##################
 GMAP documentation
 ##################
 
@@ -55,7 +56,7 @@ GMAP documentation
     
     .. grid-item-card::
         :margin: 0 3 0 0
-        :link: api_out/modules
+        :link: code_docs
         :link-type: doc
 
         **Code documentation**
@@ -74,7 +75,7 @@ GMAP documentation
     Theory/index
     Adding_a_new_map/index
     Developer_guide/index
-    api_out/modules
+    code_docs
 
 
 What does GMAP do?

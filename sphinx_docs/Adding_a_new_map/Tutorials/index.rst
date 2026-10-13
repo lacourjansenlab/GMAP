@@ -1,3 +1,4 @@
+.. _UserGuide_page_adding_map_Tutorials:
 
 ################################
 Map code tutorials

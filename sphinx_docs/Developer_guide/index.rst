@@ -62,6 +62,16 @@ Welcome! Nice to see you'd like to contribute to GMAP! These pages contain infor
     
     .. grid-item-card::
         :margin: 0 3 0 0
+        :link: documentation
+        :link-type: doc
+
+        **Documentation**
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+        Everything pertaining to the new documentation
+    
+
+    .. grid-item-card::
+        :margin: 0 3 0 0
         :link: GMAP_and_parameters
         :link-type: doc
 
@@ -110,6 +120,8 @@ General code-related remarks
 
 
 
+.. _DevGuide_page_home_workflow:
+
 ***********************************************
 Workflow for any developer on the project
 ***********************************************
@@ -119,7 +131,7 @@ You'd like to contribute to the development of GMAP? Nice! Thanks! Here is the g
 - **Pick a task.** What will you do? Usually, this means choosing an issue from the issue page (or project board) and *reading it well.* If you're unsure what to do, ask one of the other developers! Make sure to add your name to the issue, so others know you're tackling it!
 - **Make a plan.** How are you going to solve the issue? Sometimes, it might be useful to discuss with other developers about how to go about it.
 - **Create a branch.** On github, for the issue, you can create a separate branch. The auto-suggested name by github (equals the name of the issue) is the one you should use.
-- **Keep up to date from main.** If you notice anything happening there, pull the updates (GH desktop has the tab branch -> update from main). Keep doing this during all steps to come!
+- **Keep up to date from development.** If you notice anything happening there, pull the updates (GH desktop has the tab branch -> compare to branch). Keep doing this during all steps to come! In GH desktop, in the 'compare to branch' window, you can see in the bottom left that you will be pulling development to your personal branch.
 - **Do the thing.** Usually, this is coding, sometimes, it's something else.
 - **Prettify.** This could mean many things. Make sure you adhere to the general rules when writing code listed above (including PEP8 code style), you removed commented lines of code, fixed spelling/grammar issues, etc.
 - **Documentation.** Nice that you did the thing, but others should know about it. Make sure that your changes are well documented. This means:
@@ -133,8 +145,8 @@ You'd like to contribute to the development of GMAP? Nice! Thanks! Here is the g
   - You're missing the required dataset for testing. This should be noted, so it is not forgotten, and the dataset (and test) can be added later.
   - You can't reach the statement. Sometimes, you code in more failsaves than needed. Sometimes it makes sense to remove that test, sometimes there's a (future-proofing) reason not to. If you keep it, write it down! That way, someone can compare the expected amount of missed statements to the one actually found!
 - **Prettify, pt2.** You've probably done more work since the last prettifying step, so lets do a final round. See instructions in the first prettifying step!
-- **Update from main.** Make sure you are still up to date. If not, and you take changes from main, do the tests and prettifying again!
-- **Pull request.** Open a pull request to merge your changes to the main branch. Make sure to add 2 reviewers, and resolve any issues they might have. When they are happy, you can merge to main.
+- **Update from development.** Make sure you are still up to date. If not, and you take changes from development, do the tests and prettifying again!
+- **Pull request.** Open a pull request to merge your changes to the **development** branch. Make sure to add 2 reviewers, and resolve any issues they might have. When they are happy, you can merge to main.
 - **Celebrate!** Congratulations, you're done!
 
 
@@ -218,5 +230,6 @@ These might become issues later.
     code_style
     print_colors
     VScode_setup
+    documentation
     GMAP_and_parameters
     estatic_methods

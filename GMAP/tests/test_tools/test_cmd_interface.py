@@ -11,9 +11,12 @@ Missing tests:
 
 To hide this file from the overview, incomplete tests were added for the
 following:
-- the actual call to the requested program - the program's function is
-  tested by its own test file, but triggered GEMs SU_PP_1 here (thats
-  the fastest way to fail within a program invoked by this script)
+
+- the actual call to the requested program
+  The program's function is tested by its own test file, but triggered
+  GEMs SU_PP_1 here (thats the fastest way to fail within a program
+  invoked by this script)
+
 """
 
 # Standard library imports
