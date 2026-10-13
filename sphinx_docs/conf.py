@@ -1,5 +1,23 @@
+"""
+There are many custom things happening here:
+
+- Layout (banners, nr item in navbar, etc)
+- Setting release/version match for version banner
+- Custom javascript code to replace a given id in docs with custom html
+  that is loaded from a static webpage (similar to version switch
+  dropdown). This is useful so the overview of older docs will also
+  include information newer than those docs.
+- A function to generate the custom html mentioned above
+- A function for sphinx to call to generate the 'source' buttons next to
+  code in the apidoc output pages.
+
+"""
+
 import inspect
+import os
+import subprocess
 import sys
+import traceback
 from pathlib import Path
 
 # Configuration file for the Sphinx documentation builder.
@@ -54,6 +72,7 @@ html_theme_options = {
         "image_light": "Figures/GMAP_banner_light.png",
         "image_dark": "Figures/GMAP_banner_dark.png",
     },
+    "header_links_before_dropdown": 4,
     "github_url": "https://github.com/lacourjansenlab/GMAP",
     "navbar_end": [
         "search-button",
@@ -74,6 +93,36 @@ html_static_path = ['_static']
 html_favicon = "Figures/GMAP_ico.ico"
 
 suppress_warnings = ["docutils"]
+
+html_js_files = [(
+    None,
+    {
+        "body": """
+        document.addEventListener("DOMContentLoaded", function() {
+            const targetDiv = document.getElementById("load-release-overview");
+            if (targetDiv) {
+                // DOCUMENTATION_OPTIONS.URL_ROOT is an internal Sphinx variable 
+                // that automatically resolves the correct relative path to your site's root.
+                const rootPath = typeof DOCUMENTATION_OPTIONS !== 'undefined' ? DOCUMENTATION_OPTIONS.URL_ROOT : './';
+                const targetUrl = `https://lacourjansenlab.github.io/GMAP/stable/_static/release_download_overview.html`;
+
+                fetch(targetUrl, { cache: "no-store" })
+                    .then(response => {
+                        if (!response.ok) throw new Error("File not found");
+                        return response.text();
+                    })
+                    .then(data => {
+                        targetDiv.innerHTML = data;
+                    })
+                    .catch(error => {
+                        console.error("Error updating live block:", error);
+                        targetDiv.innerHTML = "<p style='color: red;'>Failed to load live updates.</p>";
+                    });
+            }}
+        );
+        """
+    }
+)]
 
 # -- Other options -----------------------------------------------------------
 numpydoc_class_members_toctree = False
@@ -184,5 +233,99 @@ def linkcode_resolve(domain, info):
         print(fullname)
 
     # Build GitHub URL
-    url = f"https://github.com/lacourjansenlab/GMAP/blob/main/{rel_fn}{linespec}"
+    url = f"https://github.com/lacourjansenlab/GMAP/blob/{source_branch}/{rel_fn}{linespec}"
     return url
+
+
+def release_download_overview():
+    # fetch all tags from github
+    subprocess.run(["git", "fetch", "--tags"])
+    try:
+        tags_raw = subprocess.check_output(
+            ["git", "tag", "-l", "--sort=-v:refname"]).decode("utf-8")
+        tags = [t.strip() for t in tags_raw.split("\n") if t.strip()]
+    except Exception:
+        tags = []
+
+    base_url = "https://github.com/lacourjansenlab/GMAP/releases/tag/"
+
+    # group the tags
+    tags_sorted = []
+    prev_version = ("x", "x")
+    for tag in tags:
+        tag_split = tag.split("-")
+        tag_split = tag_split[0].split(".") + tag_split[1:]
+        version = (tag_split[0], tag_split[1])
+        if version != prev_version:
+            if version[0] != prev_version[0]:
+                tags_sorted.append([version[0], []])
+            tags_sorted[-1][1].append(tag)
+        prev_version = version
+
+    # ----------
+    # build html
+    # ----------
+
+    return_string = ""
+    for (headertext, subtags) in tags_sorted:
+        # section header
+        return_string += (
+            f'<section id="gmap-{headertext}">\n'
+            f'  <h3>\n'
+            f'    GMAP {headertext}\n'
+            f'    <a class="headerlink" href="#gmap-{headertext}" title="Link to this heading">#</a>\n'
+            f'  </h3>\n'
+            f'  <table class="hlist">\n'
+            f'    <tbody>\n'
+            f'      <tr>\n'
+        )
+
+        # determine number of items per column (can be different for each
+        # section)
+        n_total = len(subtags)
+        n_items = n_total // 4
+        if n_total % 4 != 0:
+            n_items += 1
+
+        for colnum in range(4):
+            # starting column in table
+            return_string += (
+                f'        <td>\n'
+                f'          <ul class="simple">\n'
+            )
+
+            # adding one item for each version
+            for tag in subtags[(n_items * colnum):(n_items * (colnum + 1))]:
+                return_string += (
+                    f'            <li>\n'
+                    # f'              ::marker\n'
+                    f'              <p>\n'
+                    f'                <a class="reference external" href="{base_url}{tag}">Version {tag[1:]}</a>\n'
+                    f'              </p>\n'
+                    f'            </li>\n'
+                )
+
+            # closing column in table
+            return_string += (
+                "          </ul>\n"
+                "        </td>\n"
+            )
+
+        # closing section header
+        return_string += (
+            "      </tr>\n"
+            "    </tbody>\n"
+            "  </table>\n"
+            "</section>\n"
+        )
+
+    return return_string
+
+
+# linkfile = Path(__file__).parent / "linkfile.rst"
+# with open(linkfile, "w", encoding="utf-8") as fhand:
+#     fhand.write(release_download_overview())
+
+linkfile = Path(__file__).parent / "_static" / "release_download_overview.html"
+with open(linkfile, "w", encoding="utf-8") as fhand:
+    fhand.write(release_download_overview())
