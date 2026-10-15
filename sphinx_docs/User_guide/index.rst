@@ -1,3 +1,5 @@
+.. _UserGuide_page_index:
+
 ##########
 User guide
 ##########

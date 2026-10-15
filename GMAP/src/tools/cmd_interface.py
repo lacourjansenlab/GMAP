@@ -176,7 +176,7 @@ def print_logo():
         1,
         "\nFor the most up-to-date version of GMAP, reporting bugs/issues, "
         "suggesting improvements for the program, questions, or any other "
-        "kind of feedback, go to github.com/Kimvana/GMAP\n"
+        "kind of feedback, go to github.com/lacourjansenlab/GMAP\n"
     )
 
     # print current moment

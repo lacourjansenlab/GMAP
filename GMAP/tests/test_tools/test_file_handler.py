@@ -8,9 +8,11 @@ Missing tests:
 125, 129-141, 358 (8 missed statements)
 
 (CUHTAT - currently unknown how to access this)
+
 - Program is run using any OS other than windows 64 bit (125, 129-141)
   (CUHTAT; at least within one single run, probably impossible)
 - the reference parameter file could not be found (SU_FH_2) (CUHTAT) (358)
+
 """
 
 

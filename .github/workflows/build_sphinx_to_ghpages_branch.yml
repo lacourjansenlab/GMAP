@@ -2,13 +2,179 @@ name: build-main
 on:
   push:
     branches:
-      - main
+      - development
+  release:
+    types: [published]
+
+
+# Steps and why:
+# - Determine current branch
+#   To know the 'source' of the workflow.
+# - Checkout source branch
+#   This is done in a source directory, to make sure the files can be accessed
+#   anytime during this workflow
+# - Set user
+# - Write switcher json
+#   A lot happens here:
+#   - fetch tags (to prevent the rare instance where the tag of the current
+#     release wasn't added in time)
+#   - From the tags, create the switcher.json file
+#   - Determine the latest stable version for correct symlinking
+#   - Determine the correct label for the current version being built
+#   - Determine whether the symlink needs to be updated.
+# - Setup environment
+#   Install all modules needed to run sphinx build (all modules used by GMAP,
+#   plus all modules required by the sphinx build itself)
+# - Checkout gh-pages branch
+#   Similar to the source branch, done into a destination directory, to make
+#   sure the files can be accessed anytime in the workflow
+# - sphinx build
+#   Actually run the sphinx build command.
+# - nojekyll and commit
+#   The nojekyll is needed to tell github we've fully treated all gh-pages
+#   files already. We also make use of the commit here to remove the old
+#   symlink. Overwriting it really confuses git, so we have to first remove it.
+# - Redirect stable to new release
+#   In the gh-pages branch, we create a symlink named 'stable' referring to
+#   the latest stable found earlier
+# - Push new doc changes
+#   Both commits we've made to the gh-pages branch need to be pushed.
+
 jobs:
   build-main:
     runs-on: ubuntu-latest
     name: building documentation
     steps:
-    - uses: tuftsrt/sphinx-to-branch@v1.2.2
+    - name: Determine current branch
+      # ref_name will contain either the branch name ('development') or the tag
+      # chosen for the triggering release. Checking out a tag (e.g. 1.0) will
+      # result in checking out to a detached HEAD corresponding to the commit
+      # on which the release was based.
+      run: echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+    - name: Checkout source branch
+      uses: actions/checkout@v6
       with:
-        source-directory: sphinx_docs
-        environment-file: sphinx_docs/environment.yaml
+        ref: ${{ env.SOURCE_BRANCH }}
+        path: source
+    - name: set user
+      run: |
+        cd source
+        git config --global user.name "$(git show -s --format='%an' HEAD)"
+        git config --global user.email "$(git show -s --format='%ae' HEAD)"
+    - name: Write switcher json
+      run: |
+        cd source
+        python - <<EOF
+
+        import json
+        import os
+        from pathlib import Path
+        import subprocess
+
+        def get_version(source_branch):
+            if source_branch == "development":
+                return source_branch
+            else:
+                return ".".join(source_branch.split(".")[:2])
+
+        subprocess.run(["git", "fetch", "--tags"])
+        try:
+            tags_raw = subprocess.check_output(["git", "tag", "-l", "--sort=-v:refname"]).decode("utf-8")
+            tags = [t.strip() for t in tags_raw.split("\n") if t.strip()]
+        except Exception:
+            tags = []
+        tags_minor = [get_version(tag) for tag in tags if "-" not in tag]
+        tags_versioned = list(dict.fromkeys([get_version(tag) for tag in tags]))
+
+        for ix_stable, vtag in enumerate(tags_versioned):
+            if vtag in tags_minor:
+                break
+
+        base_url = "https://lacourjansenlab.github.io/GMAP"
+        entries = [
+            {
+                "name": "development",
+                "version": "dev",
+                "release": "dev",
+                "url": f"{base_url}/development/"
+            },
+        ]
+
+        skip_n = len(entries)
+
+        for tag in tags_versioned:
+            entries.append({
+                "name": tag,
+                "version": tag,
+                "release": tag,
+                "url": f"{base_url}/{tag}/"
+            })
+
+        entries[ix_stable + skip_n] = {
+            "name": f"{tags_versioned[ix_stable]} (stable)",
+            "version": tags_versioned[ix_stable],
+            "release": tags_versioned[ix_stable],
+            "url": f"{base_url}/stable/",
+            "preferred": True
+        }
+
+        print(entries)
+
+        Path("sphinx_docs/_static").mkdir(exist_ok=True)
+        with open("sphinx_docs/_static/switcher.json", "w") as fhand:
+            json.dump(entries, fhand, indent=4)
+
+        source_branch = os.environ.get("SOURCE_BRANCH")
+        env_file = os.environ.get("GITHUB_ENV")
+        current_version = get_version(source_branch)
+        with open(env_file, "a") as fhand:
+            fhand.write(f"LATEST_VERSION={tags_minor[0]}\n")
+            fhand.write(f"CURRENT_VERSION={current_version}\n")
+            if current_version == tags_minor[0] and tags_minor.count(tags_minor[0]) == 1:
+                fhand.write("DO_SYMLINK=True\n")
+            else:
+                fhand.write("DO_SYMLINK=False\n")
+
+        EOF
+    - id: setup-environment
+      uses: mamba-org/setup-micromamba@v3
+      with:
+        environment-file: source/sphinx_docs/environment.yaml
+        init-shell: bash
+    - name: Checkout gh-pages branch
+      # only do this if this is the first occurrence of this minor version
+      # (and thus, a new alias is required)
+      uses: actions/checkout@v6
+      with:
+        ref: gh-pages
+        path: destination
+    - name: sphinx-build
+      shell: bash -el {0}
+      run: |
+        cd source
+        sphinx-build -E sphinx_docs ../destination/$CURRENT_VERSION
+        cd ..
+    - name: nojekyll and commit
+      run: |
+        cd destination
+        touch .nojekyll
+        git add .nojekyll
+        git add $CURRENT_VERSION
+        rm stable
+        git commit -m "Built sphinx docs for version $CURRENT_VERSION"
+    - name: Redirect stable to new release
+      # if: ${{ env.DO_SYMLINK == 'True'}}
+      # The below ln command will try to symlink to a (probably) non-existent
+      # directory. Tests on our linux cluster showed that this does generate
+      # a link without errors, the link will just be broken/nonfunctional.
+      run: |
+        echo "Redirecting stable to newly released version"
+        cd destination
+        ln -sf $LATEST_VERSION stable
+        git add -v stable
+        git status
+        git commit -m "redirect stable to new version $LATEST_VERSION"
+    - name: Push new doc changes
+      run: |
+        cd destination
+        git push -u origin gh-pages

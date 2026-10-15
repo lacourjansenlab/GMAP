@@ -8,12 +8,14 @@ Missing tests:
 330-338, 1603  (5 missed statements)
 
 (CUHTAT - currently unknown how to access this )
+
 - Map.append_core() - there was some issue with the corefile (CUHTAT)
   (330-338)
   Any stuff wrong with the corefile will have its own warning call (and not
   use raise) - MI_MC_5
 - The structure of the map has no bonds (but the parameter giving bonds has
   been used) (1603)
+
 """
 
 

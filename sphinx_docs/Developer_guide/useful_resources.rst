@@ -50,6 +50,8 @@ At some point the documentation itself has to be written. reST and numpydoc have
 - and `this <https://lpn-doc-sphinx-primer.readthedocs.io/en/stable/concepts/heading.html>`__ is a good example on how to mark headers.
 - `The PyData Sphinx Theme <https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html>`__ page contains some cool inspiration for looks/layout/structure of webpage.
 - The current home page of the documentation contains a combination of `grids <https://sphinx-design.readthedocs.io/en/latest/grids.html>`__ and `cards <https://sphinx-design.readthedocs.io/en/latest/cards.html>`__ for a cleaner look.
+- The apidoc pages are created automatically using sphinx-apidoc. This tool is highly configurable, allowing the use of templates to govern what the module/package/toc pages should look like. The default templates for this can be found `on the sphinx-doc github <https://github.com/sphinx-doc/sphinx/tree/master/sphinx/templates/apidoc>`__ .
+- `This <https://pydata-sphinx-theme.readthedocs.io/en/stable/user_guide/layout.html>`__ pydata page very clearly shows what each element on the generated pages is called.
 
 
 

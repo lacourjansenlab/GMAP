@@ -3,7 +3,9 @@ Tests all the functions/classes/methods in the file:
 src/tools/math_functions.py.
 
 Missing tests:
-    None?
+
+- None?
+
 """
 
 # 3rd party imports

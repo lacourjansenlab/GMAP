@@ -3,6 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+##################
 GMAP documentation
 ##################
 
@@ -55,7 +56,7 @@ GMAP documentation
     
     .. grid-item-card::
         :margin: 0 3 0 0
-        :link: api_out/modules
+        :link: code_docs
         :link-type: doc
 
         **Code documentation**
@@ -74,7 +75,7 @@ GMAP documentation
     Theory/index
     Adding_a_new_map/index
     Developer_guide/index
-    api_out/modules
+    code_docs
 
 
 What does GMAP do?
@@ -117,6 +118,17 @@ Maps allow to combine ab initio methods and advantages with that of molecular dy
 The figure on the right is a visual representation of this process. A model system is placed in many random enviroments. For each enviroment, the electrostatic potential, the electric field and/or the electric field gradient is calculated, and an ab initio calculation is applied to calculate the desired property. Then, a relation is found between (some of) the inputs and the output.
 
 Then, the same electrostatic properties are calculated for each group in the MD system. The same relation can than be applied to find the desired property for each of the groups.
+
+
+Where to download GMAP?
+=======================
+
+Download link for most recent patch of each version:
+
+.. raw:: html
+
+   <div id="load-release-overview">Loading latest updates...</div>
+
 
 
 Indices and tables
