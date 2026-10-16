@@ -2764,12 +2764,12 @@ def get_parameters(in_parfile, argslist):
     run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
         The 'main' RunPars instance containing all the basic
         run-defining parameters.
-    Singles_mapdict : dict of str: \
+    singles_mapdict : dict of str: \
         :class:`~GMAP.src.tools.map_reader.SingleMap` pairs
         Stores all the :class:`~GMAP.src.tools.map_reader.SingleMap`
         objects for each map supplied. The keys are the Map.name
         attributes corresponding to the maps stored as values.
-    Pairs_mapdict : dict of str: \
+    pairs_mapdict : dict of str: \
         :class:`~GMAP.src.tools.map_reader.PairMap` pairs
         Stores all the :class:`~GMAP.src.tools.map_reader.PairMap`
         objects for each map supplied. The keys are the Map.name

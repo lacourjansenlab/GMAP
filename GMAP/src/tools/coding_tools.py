@@ -75,16 +75,27 @@ class Singleton(type):
 
 
 class SingletonProperty:
-    # decorator implementation for having @property work on the class of a
-    # singleton subclass, instead of just an instance
+    """Decorator implementation for having @property work on the class
+    of a singleton subclass, instead of just an instance.
 
-    # While I know it is not needed in the current version of GMAP (chaining
-    # decorators works in 3.9 and 3.10), I would like to slightly futureproof
-    # the code by not relying on that (as it is removed in 3.10+, and no
-    # info yet on whether it will return)
+    While I know it is not needed in the current version of GMAP
+    (chaining decorators works in 3.9 and 3.10), I would like to
+    slightly futureproof the code by not relying on that (as it is
+    removed in 3.10+, and no info yet on whether it will return)
 
-    # https://stackoverflow.com/questions/76249636/
-    # class-properties-in-python-3-11
+    https://stackoverflow.com/questions/76249636/
+    class-properties-in-python-3-11
+
+    Parameters
+    ----------
+    func : callable
+        The function or method that describes the property behavior.
+    
+    Attributes
+    ----------
+    fget : callable
+        The function or method supplied as func.
+    """
 
     def __init__(self, func):
         self.fget = func
@@ -94,8 +105,21 @@ class SingletonProperty:
 
 
 class FrozenDict(dict):
-    # credit: https://stackoverflow.com/questions/62301911/
-    # is-there-a-dictionary-like-object-that-is-immutable
+    """Immutable dictionary subclass.
+
+    Attempts to alter this dict will raise a `TypeError`. Values are
+    *not* recursively frozen, so it will only work as expected with
+    immutable values.
+
+    credit: https://stackoverflow.com/questions/62301911/
+    is-there-a-dictionary-like-object-that-is-immutable
+
+    Raises
+    ------
+    TypeError
+        If any of (`__add__`, `__radd__`, `__setitem__`, or `update`)
+        is called on an instance.
+    """
 
     def __add__(self, other):
         raise TypeError("You may not alter this dictionary")

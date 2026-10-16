@@ -182,6 +182,20 @@ class VEG_CLib(metaclass=GM_ct.Singleton):
         ]
 
     def positions_to_box(self, system):
+        """Using the system.positions_c data, populate/update the
+        system.positions_box_c array.
+
+        The box vectors of different positions are used often enough
+        to do this conversion once in bulk for every single atom in the
+        box.
+
+        Parameters
+        ----------
+        system : :class:`~GMAP.src.tools.system_reader.System`
+            The class containing all the information on the system of the
+            MD trajectory.
+        """
+
         self.clib.transform_vectors(
             system.positions_c,
             system.natoms,
@@ -190,6 +204,15 @@ class VEG_CLib(metaclass=GM_ct.Singleton):
         )
 
     def calc_CoM_box(self, system):
+        """Calculate all centers of mass.
+
+        Parameters
+        ----------
+        system : :class:`~GMAP.src.tools.system_reader.System`
+            The class containing all the information on the system of the
+            MD trajectory.
+        """
+
         self.clib.calc_CoM_box(
             system.positions_box_c,
             system.masses_c,
@@ -200,6 +223,16 @@ class VEG_CLib(metaclass=GM_ct.Singleton):
         )
 
     def CoM_frombox(self, system):
+        """Convert all centres of mass from box coordinates to
+        global coordinates.
+
+        Parameters
+        ----------
+        system : :class:`~GMAP.src.tools.system_reader.System`
+            The class containing all the information on the system of the
+            MD trajectory.
+        """
+
         self.clib.transform_vectors(
             system.residues.CoM_box_c,
             system.nres,
@@ -208,6 +241,26 @@ class VEG_CLib(metaclass=GM_ct.Singleton):
         )
 
     def calcVEG_perres_main(self, system, run_pars, oscillator):
+        """Calculate the potential on each of the requested points.
+
+        Depending on user choices, a different method of calculating the
+        electrostatics is desired. This method decides which of the
+        calcVEG methods should be used.
+
+        Parameters
+        ----------
+        system : :class:`~GMAP.src.tools.system_reader.System`
+            The object that stores everything the program currently knows
+            about the system being treated (names, numbers, types, masses,
+            charges of all atoms, for example)
+        run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
+            The 'main' RunPars instance containing all the basic
+            run-defining parameters.
+        oscillator : :class:`~GMAP.src.tools.system_reader.Oscillator`
+            The specific oscillator for which the potentials are required.
+        """
+
+        # Determine what function to call
         # First letter (n/c) is (No)Cut.
         # Second letter (r/t) is Rhombic/Triclinic
         allfuncs = {
@@ -227,6 +280,7 @@ class VEG_CLib(metaclass=GM_ct.Singleton):
         elif run_pars.estatics_method == "perres_nocut":
             key += "n"
 
+        # call the function.
         allfuncs[key](system, run_pars, oscillator)
 
     def calcVEG_perres_mm_triclin(self, system, run_pars, oscillator):
