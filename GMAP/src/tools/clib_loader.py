@@ -1,3 +1,19 @@
+"""
+Interface between C-level functions and python code.
+
+Instead of having the python hooks in the C code directly (like numpy
+for example), GMAP leaves the C library as standard c. The ctypes module
+is used to access this c code, and numpy.ctypeslib.as_ctypes is used to
+get data to/from it. 
+
+Classes
+-------
+VEG_CLib
+    Has a method for each function in the VEG C library. These serve
+    akin to wrappers; they take complicated python objects, and extract
+    from those the actually needed c-type objects.
+"""
+
 
 # standard lib imports
 import ctypes as ct

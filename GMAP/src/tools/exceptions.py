@@ -1,3 +1,48 @@
+"""
+Defines all custom exceptions used by GMAP
+
+There is one central GMAPexception subclassing Exception. All other
+exceptions here subclass GMAPexception. The purpose of this is so any
+program directly calling GMAP (not through subprocess) can catch
+GMAPexceptions to find any problems raised by GMAP explicitly.
+
+Where applicable, these errors also subclass the relevant python
+exception to also allow catching the type they actually represent.
+
+Classes
+-------
+GMAPexception
+    The base exception parent to all errors raised by GMAP
+GmapFileSyntaxError
+    A SyntaxError raised by GMAP, specifically for an input file
+GmapParameterError
+    Raised upon problems with input parameters
+GmapMDFileError
+    Raised upon problems with input MD file
+GmapAttributeError
+    An AttributeError raised by GMAP
+GmapFileNotFoundError
+    A FileNotFoundError raised by GMAP
+GmapIndexError
+    An IndexError raised by GMAP
+GmapIsADirectoryError
+    An IsADirectoryError raised by GMAP
+GmapKeyError
+    A KeyError raised by GMAP
+GmapNotADirectoryError
+    A NotADirectoryError raised by GMAP
+GmapNotImplementedError
+    A NotImplementedError raised by GMAP
+GmapOSError
+    An OSError raised by GMAP
+GmapTypeError
+    A TypeError raised by GMAP
+GmapUnicodeDecodeError
+    A UnicodeDecodeError raised by GMAP
+GmapValueError
+    A ValueError raised by GMAP
+"""
+
 
 # standard library imports
 import sys

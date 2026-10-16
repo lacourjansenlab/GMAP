@@ -1,3 +1,28 @@
+"""
+Deals with the MD system.
+
+Contains tools for storing and navigating all the MD files data.
+
+Classes
+-------
+System
+    Stores all information on the MD system and objects therein. Knows
+    almost everything (partially through complex attributes).
+Residues
+    Stores some residue-level information from the MD system.
+Oscillator
+    Stores all information on a single oscillator.
+
+Functions
+---------
+gen_universe
+    Calls MDAanalysis.Universe on the supplied files and catches errors.
+check_box_rightangled
+    Checks whether the supplied universe has only right angles.
+check_box_charge
+    Checks whether the supplied universe has neutral charge.
+"""
+
 
 # import sys
 

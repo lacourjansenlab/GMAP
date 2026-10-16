@@ -1,3 +1,48 @@
+"""
+Manages maps, both Single and Pair.
+
+GMAP (or rather, GEM) is little more than a framework. Maps are integral
+to the workflow: they specify how specific chromophores should be
+treated. Instead of requiring map makers to specify everyting in detail,
+they can pick options in the core.txt file, and optionally a few
+functions in main.py. The code below parses all choices and converts it
+into a functioning map object.
+
+Classes
+-------
+Map
+    Contains all information regarding a single map. Base to build upon.
+    Main focus on file locations and map file parsing.
+SingleMap
+    A singles-oriented subclass of Map. Main focus on creating map
+    functions.
+PairMap
+    A pairs-oriented subclass of Map. Main focus on checking whether
+    it is capable of automatically assigned tasks. Also creates map
+    functions.
+SingleCore
+    Contains all information from a singles map core.txt, neatly parsed.
+PairCore
+    Contains all information from a pairs map core.txt, neatly parsed.
+Structure
+    Defines what a chromophore looks like. Stores a single line from
+    the singles core.txt funcgroup keyword.
+Residue
+    What a single residue within a chromophore looks like.
+
+Functions
+---------
+manage_maps_singles
+    Manages singles maps. Constructs map objects. Does some checking,
+    and error handling.
+manage_maps_pairs
+    Manages pairs maps. Constructs map objects. Does some checking,
+    and error handling.
+scan_mapdirs
+    Analyzes the provided directories that should contain maps.
+    Does the very first crude initialization of maps.
+"""
+
 
 # standard library imports
 import importlib

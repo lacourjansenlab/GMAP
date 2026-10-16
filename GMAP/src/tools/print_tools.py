@@ -1,3 +1,41 @@
+"""
+Manages the printing (and logging) of GMAP.
+
+As very specific behaviour is desired, this file contains a custom
+logging system opposed to using a default module.
+
+Classes
+-------
+Printer
+    Manages prints and logs during runtime. Is a singleton, so can be
+    called directly, no need to pass an instance arount everywhere.
+Timer
+    Manages timekeeping during runtime. Saves timestamps.
+
+Functions
+---------
+color_test
+    Prints the color array to display a number of 24bit colors along
+    with their 4bit counterparts.
+word_wrap
+    Formats the given string to soft-wrap to the desired line length.
+devprint
+    The alternative to python's built-in print() that developers should
+    **always** use! Behaves almost identical to the builtin, except that
+    it also reports the name of the source file and line number.
+header
+    Create a header from the given text.
+footer
+    Create a footer from the given text.
+intlist_to_rangelist
+    Takes a list of integers and packs it into ranges.
+rangestrlist
+    Given a start and stop, return separate items or range. Inclusive.
+time_to_str
+    Converts an amount of nanoseconds into a human-readable formatted
+    string.
+"""
+
 
 # standard library imports
 import datetime
@@ -633,7 +671,7 @@ class Timer:
 
 def color_test():  # run this one with word_wrap to 150 (8 colors per row)
     """Prints the color array to display a number of 24bit colors along
-    with their 4bit counteparts.
+    with their 4bit counterparts.
 
     .. important::
         This function is no longer used, and just here for testing/
@@ -901,7 +939,7 @@ def footer(
             No special header is made - title is taken as-is.
         doublebox :
             The footer closes the dropped double line::
-                 ╚═══ End of Section═══
+                 ╚═══ End of Section ═══
 
             The matching header should be used too.
             Newlines default = (1, 1)

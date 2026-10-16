@@ -1,3 +1,35 @@
+"""
+Deals with scientific(!) references.
+
+Classes
+-------
+Reference
+    Represents a single reference to literature. Contains all info that
+    is present in the .bib file.
+
+Functions
+---------
+read_reference_file
+    Obtain all references from the provided file.
+read_reference_string
+    Obtain all references from the provided string.
+report_references
+    The master function for reporting all references relevant for the
+    performed run/calculation.
+flatten_iterable
+    Part of the reference-reporting. Flattens the data structure.
+    Creates a predictable simple iterable.
+sort_references
+    Part of reference-reporting. Collect all applicable references.
+    Only keeps the ones relevant for the calculation.
+merge_references
+    Part of reference-reporting. Merges all applicable references.
+    Checks for duplicates, and removes them without removing
+    information.
+print_references
+    Part of reference-reporting. Does the actual printing.
+"""
+
 
 # local imports
 import GMAP.src.tools.exceptions as GM_ex

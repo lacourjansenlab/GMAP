@@ -1,3 +1,90 @@
+"""
+Generator of default functions for
+:class:`~GMAP.src.tools.map_reader.Map` objects. 
+
+A map has an asssociated code object that stores python functions which
+can be used by map makers to trigger certain behaviour. When a map does
+not make a choice, a default has to be inserted instead. Those defaults
+are created here.
+
+Classes
+-------
+NewModule
+    Creates an empty class.
+
+Functions
+---------
+get_adjust_run_pars
+    Creates the default for the map function GM_adjust_run_pars
+get_adjust_map_core_raw
+    Creates the default for the map function GM_adjust_map_core_raw
+get_adjust_oscillators
+    Creates the default for the map function GM_adjust_oscillators
+get_filter_oscillators
+    Creates the default for the map function GM_filter_oscillators
+filter_single_line
+    Defines how to apply a filter to a given list of oscillators
+get_post_init
+    Creates the default for the map function GM_post_init
+get_pre_run
+    Creates the default for the map function GM_pre_run
+get_pre_frame
+    Creates the default for the map function GM_pre_frame
+get_post_frame
+    Creates the default for the map function GM_post_frame
+get_post_run
+    Creates the default for the map function GM_post_run
+get_change_coup_type
+    Creates the default for the map function GM_change_coup_type
+get_prep_coupling
+    Creates the default for the map function GM_prep_coupling
+get_calc_coupling
+    Creates the default for the map function GM_calc_coupling
+get_str_osc
+    Creates the default for the map function GM_str_osc
+get_report_system
+    Creates the default for the map function GM_report_system
+get_get_VEG_ref
+    Creates the default for the map function GM_get_VEG_ref
+VEG_from_residues
+    Stores a default for the map function GM_get_VEG_ref, based on
+    residues
+VEG_from_CoM
+    Stores a default for the map function GM_get_VEG_ref, based on
+    center of mass
+interpret_position
+    Converts integers in a simple math expression to atoms of that
+    index. Resulting math obeys PBC.
+get_get_dipole_dir
+    Creates the default for the map function GM_get_dipole_dir
+get_get_dipole_mag
+    Creates the default for the map function GM_get_dipole_mag
+get_get_rotation_matrix
+    Creates the default for the map function GM_get_rotation_matrix
+get_calculate_dipole
+    Creates the default for the map function GM_calculate_dipole
+get_calculate_frequency
+    Creates the default for the map function GM_calculate_frequency
+get_get_position
+    Creates the default for the map function GM_get_position
+get_get_doublepos
+    Creates the default for the map function GM_get_doublepos
+get_report_references
+    Creates the default for the map function GM_report_references
+does_nothing
+    Does nothing.
+returns_last
+    Returns the last argument
+returns_input
+    Returns a function which always returns the input to this function
+uses_maps
+    A simple element-wise multiplication of arrays. These must be of
+    correct size (not checked)
+envelop_int
+    Envelops any integer (but not float) found in given string with the
+    given pre and post.
+"""
+
 
 # 3rd party imports
 import numpy as np
@@ -826,6 +913,6 @@ def envelop_int(string, pre, post):
 
 
 # never called, just to remove the unused warnings for imports
-def unused_user():
+def _unused_user():
     _ = np.array([1, 2])
     _ = GM_mf.dotprod(np.array([1, 2, 3]), np.array([1, 2, 3]))

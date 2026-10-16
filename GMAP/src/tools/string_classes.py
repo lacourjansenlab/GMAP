@@ -1,3 +1,23 @@
+"""
+Contains some classes that inherit from (and behave much like) str.
+
+These are useful to make certain prints/operations easier.
+
+Classes
+-------
+ErrCode
+    Stores a single error code. Only behaviour different from str is
+    the comparison: it allows to equate them in a manner that supports
+    wildcards.
+ColStr
+    Strings capable of dealing with ANSI color strings. Anything to do
+    with length (calling len, indexing) ignores color marker length,
+    changing the string (add, mul, replace, split, etc) respects type,
+    wrapping respects color, and can change its type of color.
+Header
+    Returns a pretty header for distinguishing prints.
+"""
+
 
 # local imports
 import GMAP.src.tools.exceptions as GM_ex

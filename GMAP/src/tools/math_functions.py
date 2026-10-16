@@ -1,3 +1,49 @@
+"""
+Contains all math oriented functionality.
+
+GMAP does require some maths. Most of it can be tackled using modules.
+Some of it cannot, and is defined in this module.
+
+Functions
+---------
+PBC_triclinic
+    Transforms any vector (e.g. atom position) to within the box. Takes
+    and returns in global coordinates.
+PBC_back2box
+    Transforms any vector (e.g. atom position) to within the box. Takes
+    box coordinates, and returns in global coordinates.
+PBC_boxdiff_triclin
+    Takes 2 vectors (e.g. positions) in box coordinates, and returns the
+    shortest difference vector between them, in global coordinates.
+crossprod
+    Cross product between two vectors of length 3. Similar to np.cross,
+    but much faster due to less versatility, and no checks.
+dotprod
+    Dot product between two vectors of length 3. Similar to np.dot,
+    but much faster due to less versatility, and no checks.
+vec3_len
+    Computes length of a vector of length 3. Similar to np.linalg.norm,
+    but much faster due to less versatility, and no checks.
+project
+    Calculates orthogonal part of one vector compared to the other.
+dihedral_base
+    Calculates the dihedral angle for 3 (difference) vectors. Vectors
+    should already have been corrected for PBC.
+dihedral
+    Calculates the dihedral angle for 4 points. Will correct for PBC.
+    Points should be in global coordinates.
+dihedral_boxcoords
+    Calculates the dihedral angle for 4 points. Will correct for PBC.
+    Points should be in box coordinates.
+calc_color_dist
+    Calculates the distance between two colors following the readmean
+    method.
+convert_color_24_4
+    Converts a 24-bit color (standard full-rgb colors) to the nearest
+    4 bit (ANSI). It does not take into account a specific color scheme.
+    Instead, it uses pre-programmed standards from GMAP.constants.
+"""
+
 
 # standard library imports
 import math
@@ -91,9 +137,6 @@ def PBC_triclinic(vect, boxvects, boxvects_inv):
 
     unit_vec = vect @ boxvects_inv
     # use the PBC_back2box to prevent code duplication.
-    # however, this function (PBC_triclinic) is not njit'ed, so the 'normal'
-    # PBC_back2box gives a typing error. To avoid it, don't call the njit'ed
-    # PBC_back2box, but the original py-version.
     return PBC_back2box(unit_vec, boxvects)
 
 

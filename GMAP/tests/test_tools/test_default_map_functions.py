@@ -407,4 +407,4 @@ def get_system_VEGtests():
 
 # just for coverage....
 def test_unused():
-    assert GM_dmf.unused_user() is None
+    assert GM_dmf._unused_user() is None

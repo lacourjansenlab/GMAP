@@ -1,3 +1,64 @@
+"""
+Parses and manages parameters.
+
+There are multiple different sources for parameters. command line, input
+file, defaults file, reference file. Plus, all valid parameters and
+required datatypes for these are stored in the reference file.
+This module distills all that information to a single straightforward
+object for GMAP to use.
+It does this not only for GMAP-central parameters, but also map-specific
+ones.
+
+The search for parameters is hard, as the reference file defines the
+allowed/available parameters, but we cannot find the reference file
+without looking at the given parameters.
+Therefore, the few parameters relevant for file-finding are extracted
+manually, and after the reference file is found, all parameter sources
+are parsed properly.
+
+Classes
+-------
+RefPars
+    Contains the choices and defaults from the reference file.
+RawPars
+    Contains the choices from a single source (cmdline, input, etc)
+RunPars
+    Contains the final choices for this calculation. Takes into account
+    all relevant RefPars and RawPars sources.
+
+Functions
+---------
+get_parameters
+    Analyses all parameter sources to build the central and map-specific
+    RunPars objects.
+add_missing_frame_parameter
+    In the case of two frame number parameters, adds the third with a
+    value based on the existing two.
+parse_commandline
+    Very basic parsing. Extracts job to run, provided input parameter
+    file, and arguments. Does not attempt to interpret arguments.
+find_defparfile_in_cmd
+    Finds any parameters pertaining to default parfile in command line.
+find_par_in_cmd
+    Searches for a given parameter in the command line.
+find_mapdir
+    Extracts choice for the parameter map_directory from the command
+    line.
+directory_list_checker
+    Checks whether each of the given paths exists, and is a directory.
+get_pardict
+    Takes an iterable, and returns it in dict form.
+cleanline
+    Removes any escape character and text following it.
+parse_influencerfile
+    Parses an entire influencer file. A collection of influencers.
+parse_influencerfile_line
+    Parse a single influencer definition.
+parse_influencer_par
+    Rewrites the choice for influencers in parameter file to match the
+    syntax of the influencer file.
+"""
+
 
 # standard library imports
 from pathlib import Path

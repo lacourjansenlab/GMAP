@@ -1,3 +1,21 @@
+"""
+Contains some abstract objects simplifying further code.
+
+Classes
+-------
+Singleton
+    Metaclassing this class makes any class a singleton.
+SingletonProperty
+    A class that metaclasses a singleton can use the @SingletonProperty
+    decorator to expose an attribute of the instance as if belonging
+    to the class.
+FrozenDict
+    Inherits from python dict, but makes it such that after creation,
+    the dict cannot be changed anymore.
+CustomClass
+    Creates a new class with attributes equallying given dict entries.
+    Mainly useful for creating dummy objects during testing.
+"""
 
 
 class Singleton(type):

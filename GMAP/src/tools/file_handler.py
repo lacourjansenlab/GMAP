@@ -1,3 +1,72 @@
+"""
+Keeps track of files and file locations.
+
+This module does not actually parse file contents. It really just keeps
+track of where relevant files are stored, and tries to find any
+desired files.
+
+Classes
+-------
+FileLocations
+    A singleton that stores the locations most important to the program.
+    Does not contain user choices (those are taken care of by the
+    parameter_parser module), but rather what the environment looks
+    like.
+
+Functions
+---------
+find_exec_os
+    Determines on what platform GMAP is running.
+get_file
+    Given the diffent parameter sources, look for a file provided for
+    the given parameter. Sources are checked in order of importance for
+    the definition of the parameter.
+get_bare_file
+    Like get_file, but without having to consider directories, too.
+get_def_parfile
+    Fetches the default parameter file. Path is looked up, file is
+    tested for existing and readability.
+try_file
+    Checks if the given location exists and is a file.
+check_file_readability
+    Checks if a given file can be read.
+write_output
+    Write all output for a single frame to files.
+write_single
+    Write a single datastructure to files of give name.
+clear_output
+    Prepare an empty file for each output, possibly clearing existing
+    files.
+clear_single
+    Clears any file if it exists prior to writing.
+write_legend
+    Writes the contents of the legend output file.
+write_parameter_file
+    Writes the contents of the parameter output file.
+write_single_parameter_source
+    Writes the parameters from a single source to the parameter output
+    file.
+write_parameter_header
+    Write the header of the next parameter source to the output file.
+get_full_parameter_name
+    Figure out what name the parameter should be saved as. Necessary for
+    when a parameter belongs to a map, and not GMAP itself.
+write_parameter_line_main
+    Manages the writing of a single parameter to the parameter file.
+    Does this by detecting the relevant case, and calling the relevant
+    function.
+write_parameter_line
+    Writes a single parameter to the parameter file. For simple cases.
+write_parameter_intersect
+    Writes a single parameter to the parameter file. For when there's
+    multiple different parameters that are mutually exclusive.
+merge_files
+    Merges output files from multiple runs. Needed for when running
+    in parallel.
+fname_to_tempname
+    Generates the temporary file names used for parallel threads.
+"""
+
 
 # standard library imports
 import ctypes as ct
