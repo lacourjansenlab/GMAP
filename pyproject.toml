@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools >= 61.0", "setuptools-scm[simple] >= 8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,7 +8,7 @@ authors = [
     {name = "Kim E. van Adrichem"}
 ]
 description = "A tool for calculating vibrational and electronic spectra, more to be added."
-version = "0.0.1"
+dynamic = ["version"]
 classifiers = [
     "Programming Language :: Python :: 3"
 ]

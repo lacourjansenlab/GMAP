@@ -202,6 +202,7 @@ def print_logo():
     logostr += colors.clear
 
     Printer.print(1, "\n\n" + logostr + "\n")
+    Printer.print(1, f"\nRunning GMAP version {GMAP.__version__}")
     Printer.print(
         1,
         "\nFor the most up-to-date version of GMAP, reporting bugs/issues, "
