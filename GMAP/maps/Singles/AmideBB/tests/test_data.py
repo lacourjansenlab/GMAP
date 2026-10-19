@@ -29,6 +29,7 @@ from pathlib import Path
 
 # 3rd party lib imports
 import numpy as np
+import pytest
 
 # GMAP imports
 import GMAP.src.tools.cmd_interface as GM_ci
@@ -106,6 +107,7 @@ def test_raman(tmp_path):
     core_test_raman("", tmp_path, 0.00005)
 
 
+@pytest.mark.nofiles
 def test_special_groups(tmp_path):
     # This runs GMAP to create the results
     curdir = Path(__file__).resolve().parent
@@ -131,6 +133,7 @@ def test_special_groups(tmp_path):
     assert legendcontents[15] == line15
 
 
+@pytest.mark.nofiles
 def core_test_frequencies(mapname, NNtreat, tmp_path, limit):
     # This runs GMAP to create the results
     curdir = Path(__file__).resolve().parent
@@ -184,6 +187,7 @@ def makeham(fname, n_singles):
     return squareham
 
 
+@pytest.mark.nofiles
 def core_test_dipoles(freqmapname, dipmapname, tmp_path, limit):
     # This runs GMAP to create the results
     curdir = Path(__file__).resolve().parent
@@ -203,6 +207,7 @@ def core_test_dipoles(freqmapname, dipmapname, tmp_path, limit):
     core_compare_dippos(dipold, dipnew, limit)
 
 
+@pytest.mark.nofiles
 def core_test_positions(atom, tmp_path, limit):
     # This runs GMAP to create the results
     curdir = Path(__file__).resolve().parent
@@ -222,6 +227,7 @@ def core_test_positions(atom, tmp_path, limit):
     core_compare_dippos(dipold, dipnew, limit)
 
 
+@pytest.mark.nofiles
 def core_test_raman(fbonus, tmp_path, limit):
     # This runs GMAP to create the results
     curdir = Path(__file__).resolve().parent

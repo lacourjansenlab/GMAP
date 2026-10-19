@@ -11,7 +11,7 @@ Missing tests:
 
 """
 
-# Standard library imports
+# 3rd party imports
 import pytest
 
 # Local imports

@@ -23,8 +23,8 @@ Missing tests:
 from pathlib import Path
 
 # 3rd party imports
-import pytest
 import numpy as np
+import pytest
 
 # local imports
 import GMAP.src.tools.default_map_functions as GM_dmf

@@ -476,7 +476,7 @@ class System:
                 "\nNone of the requested oscillators could be found in the "
                 "supplied MD system. Either change the choice for the "
                 "parameter maps_to_use, or for the parameters topology_file "
-                "and/or trajectory_file. Quitting!"
+                "and/or trajectory_file. Quitting!",
                 "MD_SU_7", True,
                 GMAPerrclass=GM_ex.GmapValueError
             )
@@ -499,13 +499,13 @@ class System:
             if checked:
                 checked_oscillators.append(checked)
 
-        nosc = sum([len(oscillators) for oscillators in allgroups])
+        nosc = sum([len(oscillators) for oscillators in checked_oscillators])
         if nosc == 0:
             GM_pt.Printer.warning(
                 "\nNone of the requested oscillators could be found in the "
                 "supplied MD system. Either change the choice for the "
                 "parameter maps_to_use, or for the parameters topology_file "
-                "and/or trajectory_file. Quitting!"
+                "and/or trajectory_file. Quitting!",
                 "MD_SU_7", True,
                 GMAPerrclass=GM_ex.GmapValueError
             )
@@ -539,7 +539,7 @@ class System:
                 "supplied MD system. Most likely, one of the criteria defined "
                 "using either 'singles_whitelist' or 'singles_blacklist' is "
                 "too strict. Please make sure the chosen criteria match the "
-                "chosen MD files. Quitting!"
+                "chosen MD files. Quitting!",
                 "MD_SU_7", True,
                 GMAPerrclass=GM_ex.GmapValueError
             )
