@@ -73,11 +73,28 @@ class Map:
         Users of the program are probably looking for the
         :ref:`adding a new map<UserGuide_page_adding_map>` page.
 
+    .. important ::
+        This class is not intended to be used/instantiated itself.
+        Multiple methods live here to avoid code duplication, but are
+        not created by the class itself and require attributes not
+        present/instantiated here either.
+        
+        When subclassing this class, the subclass should do the
+        following:
+
+        - Call `extract_code` before attempting to call `complete_code`
+          to instantiate the `code` attribute.
+        - Call `find_core` before attempting to call `attempt_core` to
+          instantiate the `rawcore` attribute.
+
     Parameters
     ----------
     mapdir : pathlib.Path
         The absolute path to the directory on the users system that
         contains the files for this specific map
+    avail_files : list of `pathlib.Path`
+        All files that are in the same map directory as this map. These
+        are the files available for appending using 'add_corefile'
 
     Attributes
     ----------
@@ -101,7 +118,7 @@ class Map:
         All files that are in the same map directory as this map. These
         are the files available for appending using 'add_corefile'
     type : str
-        The type of this map. Either 'Singles' or 'Doubles'
+        The type of this map. Either 'Singles' or 'Pairs'
     cmd_pars : :class:`~GMAP.src.tools.parameter_parser.RawPars`
         The object storing all parameters provided on the command line
         that belong to this map.
@@ -115,20 +132,20 @@ class Map:
     run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
         The RunPars instance containing all the basic run-defining
         parameters that belong to this map.
-    code : module
-        The code that goes along with this map, if present. If not, an
-        empty module will be filled with default functions. If it is
-        present, any missing functions will be added from the default
-        functions.
-    rawcore : dict of str: list of str pairs
-        The contents of core.txt, after very simple parsing
-    core : :class:`Core`
-        The contents of core.txt, fully parsed and ready to use.
+    references : dict
+        The contents of the map-specific references.bib file.
+    corepath : `pathlib.Path`
+        The path to/of the core.txt file. Dynamically created for any
+        instance upon calling `find_core`.
 
     Notes
     -----
     .. seealso ::
-        :class:`~GMAP.src.tools.parameter_parser.RefPars`
+        :class:`~GMAP.src.tools.parameter_parser.RefPars` : For more
+            information about the ref_pars object
+        :class:`SingleMap` : Subclass of :class:`Map` for Singles-type
+            maps
+        :class:`PairMap` : Subclass of :class:`Map` for Pairs-type maps
     """
 
     def __init__(self, mapdir, avail_files):
@@ -155,7 +172,6 @@ class Map:
         if refparfilename.is_file():
             self.ref_pars = GM_pp.RefPars(refparfilename, False)
         else:
-            # self.ref_pars = None
             with open(refparfilename, "w", encoding='utf-8') as _:
                 pass
             self.ref_pars = GM_pp.RefPars(refparfilename, False)
@@ -321,6 +337,13 @@ class Map:
             arguments, they should be supplied as kwargs in a dict.
             If any function needs them, the kwargs for all must be
             provided, this tuple must have the same length as funcnames.
+
+        Note
+        ----
+        The `code` attribute is not actually created by this class. It
+        assumes subclasses create it, before calling this function to
+        update them. This function is also not called by any function
+        in this class.
         """
 
         if not kwargslist:
@@ -338,6 +361,13 @@ class Map:
 
         Appends the contents of the requested file(s). If added files
         rely on files themselves, those dependencies are also added.
+
+        Note
+        ----
+        The `rawcore` attribute is not actually created by this class.
+        It assumes subclasses create it, before calling this function to
+        update them. This function is also not called by any function
+        in this class.
         """
 
         all_to_add = [
@@ -560,6 +590,30 @@ class Map:
 
 
 class SingleMap(Map):
+    """A :class:`Map` subclass for Singles maps.
+
+    Singles maps are used for computing information that only requires a
+    single oscillator taking part (like absorbing frequency, dipole
+    moment).
+
+    Attributes
+    ----------
+    code : module
+        The code that goes along with this map, if present. If not, an
+        empty module will be filled with default functions. If it is
+        present, any missing functions will be added from the default
+        functions.
+    rawcore : dict of str: list of str pairs
+        The contents of core.txt, after very simple parsing
+    corepath : `pathlib.Path`
+        The path to/of the core.txt file. Dynamically created upon
+        calling `find_core` when `initialize` is called. This function
+        should be called in the program flow after all GMAP parameters
+        are initialized, and before loading in MD data.
+    core : :class:`Core`
+        The contents of core.txt, fully parsed and ready to use.
+    """
+
     def initialize(self):
         """Initializes the map.
 
@@ -742,6 +796,20 @@ class PairMap(Map):
         Contains all pairs that should be coupled by this map. The array
         is of dtype 'int32', and contains a row for each pair. A pair
         is indicated by the oscix of each oscillator involved.
+    code : module
+        The code that goes along with this map, if present. If not, an
+        empty module will be filled with default functions. If it is
+        present, any missing functions will be added from the default
+        functions.
+    rawcore : dict of str: list of str pairs
+        The contents of core.txt, after very simple parsing
+    corepath : `pathlib.Path`
+        The path to/of the core.txt file. Dynamically created upon
+        calling `find_core` when `initialize` is called. This function
+        should be called in the program flow after all GMAP parameters
+        are initialized, and before loading in MD data.
+    core : :class:`Core`
+        The contents of core.txt, fully parsed and ready to use.
     """
 
     def initialize(self):
@@ -1073,6 +1141,9 @@ class SingleCore:
         requested, we can throw an error and quit!
     can_output : set of str
         The output types for which this map can be used.
+    ham_first : bool
+        Whether this map needs to have the hamiltonian (frequencies)
+        calculated first. If not, the dipoles will be done first.
     functional_group : list of list of list of list of list of str
         The more structured version of what functional group(s) this
         map operates on.
@@ -1133,6 +1204,12 @@ class SingleCore:
         then added to the gas phase frequency to obtain the actual
         frequency. If frequency_data_array_linear is also present, the
         result/influence of both will be added.
+    length_units : str
+        Whether the map assumes any information to be provided in units
+        of bohr or angstrom ('bohr' or 'ang').
+    freq_multiplier : float
+        Any frequencies calculated for this map should be multiplied by
+        this value.
     """
 
     def __init__(self, map_):

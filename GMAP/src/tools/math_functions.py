@@ -144,6 +144,18 @@ def PBC_triclinic(vect, boxvects, boxvects_inv):
 def PBC_back2box(vect, boxvects):
     """Takes a vector in box coordinates, moves it to lie within the
     main box, and translate back to global/system/MD coordinates.
+
+    Parameters
+    ----------
+    vect : np.ndarray
+        The vector that should be treated following the PBC. The method
+        is tested for shapes (3,) and (M, 3), but it should work for
+        the general case (N,) and (M, N), where N is the size of
+        boxvects, and M is arbitrary.
+    boxvects : np.ndarray
+        The vectors uniquely defining the box.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
     """
 
     half = np.float32(0.5)
@@ -152,7 +164,20 @@ def PBC_back2box(vect, boxvects):
 
 @njit
 def PBC_boxdiff_triclin(boxvect1, boxvect2, boxvects):
-    """Calculates the shortest difference between two given points."""
+    """Calculates the shortest difference between two given points.
+    
+    Parameters
+    ----------
+    boxvect1, boxvect2 : np.ndarray
+        The vectors between which to calculate the difference. The
+        method is tested for shape (3,), but it should work
+        for the general case (N,), where N is the size of
+        boxvects.
+    boxvects : np.ndarray
+        The vectors uniquely defining the box.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
+    """
 
     boxdiff = boxvect1 - boxvect2
     return PBC_back2box(boxdiff, boxvects)
@@ -305,6 +330,11 @@ def dihedral_base(b0, b1, b2):
     source:
     https://stackoverflow.com/questions/20305272/
     dihedral-torsion-angle-from-four-points-in-cartesian-coordinates-in-python
+
+    Parameters
+    ----------
+    b0, b1, b2 : `np.ndarray`
+        The vectors defining the dihedral angle.
     """
 
     # normalize b1 so that it does not influence magnitude of vector
@@ -340,6 +370,19 @@ def dihedral(p0, p1, p2, p3, boxvects, boxvects_inv):
     When looking at these 4 points such that p2 lies behind p1 (or other way
     around?), we're concerned with the apparent angle p0, p1, p3 (which is
     identical to the apparent angle p0, p2, p3).
+
+    Parameters
+    ----------
+    p0, p1, p2, p3 : `np.ndarray`
+        The points defining the dihedral angle.
+    boxvects : np.ndarray
+        The vectors uniquely defining the box.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
+    boxvects_inv : np.ndarray
+        The inverse matrix of boxvects.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
     """
 
     b0 = PBC_triclinic(p0 - p1, boxvects, boxvects_inv)
@@ -357,6 +400,15 @@ def dihedral_boxcoords(p0, p1, p2, p3, boxvects):
     When looking at these 4 points such that p2 lies behind p1 (or other way
     around?), we're concerned with the apparent angle p0, p1, p3 (which is
     identical to the apparent angle p0, p2, p3).
+
+    Parameters
+    ----------
+    p0, p1, p2, p3 : `np.ndarray`
+        The points defining the dihedral angle.
+    boxvects : np.ndarray
+        The vectors uniquely defining the box.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
     """
 
     b0 = PBC_boxdiff_triclin(p0, p1, boxvects)

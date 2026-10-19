@@ -124,6 +124,11 @@ class Reference:
         colon. If there are multiple different output/text pairs, those
         are separated using a semicolon. When multiple outputs share
         a text, they are separated using a comma.
+    bibtype : str
+        The type of bib entry (the very first thing in a bib entry).
+    bibkey : str
+        The key used by reference managers (between curly braces on the
+        first line of a bib entry).
     """
 
     def __init__(self, input_string):
@@ -223,7 +228,7 @@ class Reference:
         Parameters
         ----------
         input_string : str
-        The string that contains this specific reference.
+            The string that contains this specific reference.
         """
 
         # split and parse first line

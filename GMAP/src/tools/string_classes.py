@@ -693,7 +693,7 @@ class Header:
                 l: A line left of the text
                 r: A line right of the text
                 c: Corners
-        padding : int, default=0
+        n_padding : int, default=0
             How much extra space there should be. Over and underlines
             will get longer by twice this amount, the title itself gets
             this amount of whitespaces before and after the text.
