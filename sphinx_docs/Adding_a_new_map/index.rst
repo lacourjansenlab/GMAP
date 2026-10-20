@@ -4,7 +4,7 @@
 Adding a new map
 ################
 
-These pages will contain information on maps, and how to add them. A map will
+These pages contain information on maps, and how to add them. A map is
 be represented in the program as a :class:`~GMAP.src.tools.map_reader.Map` type
 object.
 
