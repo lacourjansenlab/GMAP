@@ -124,7 +124,7 @@ There are a lot of basic properties available in the program by default. This is
 Attributes of SingleCore class
 ==============================
 
-Some of these overlap with the Oscillator class. While this is a blueprint, the Oscillator class represents a specific case - so the indices are in a different 'base'.
+Some of these overlap with the Oscillator class. While this is a blueprint, the Oscillator class represents a specific case - so the indices are in a different 'base'. They are explained further on the :ref:`core.txt for singles maps <AddMap_FileStruct_SingCore>` page.
 
 These represent the choices/values made in a Map's core.txt file.
 

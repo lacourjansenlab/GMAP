@@ -349,7 +349,7 @@ map_directory
 | (shorthand: -md)
 | (used by: GEM, DEPICT)
 
-The location of the maps directory. Multiple directories are allowed to be given. Within a maps directory, the maps that can be used are stored. See :ref:`adding a new map <UserGuide_page_adding_map>` for more information on what maps are and how to make one.
+The location of the maps directory. Multiple directories are allowed to be given. Within a maps directory, the maps that can be used are stored. See :ref:`adding a new map <UserGuide_page_adding_map>` for more information on what maps are and how to make one, and `the repository README<https://github.com/lacourjansenlab/GMAP>`__ for more information on how to add new maps to your installation.
 
 
 .. _UserGuide_page_parameter_overview_topfile:
@@ -585,7 +585,7 @@ maps_to_use
 | (shorthand: -um)
 | (used by: GEM, DEPICT)
 
-Which maps should be considered in the calculation. Or, in other words, which kinds of oscillators should be found, and calculated properties for. There are limited choices - namely, the names of the maps supplied through the parameter map_directory.
+Which maps should be considered in the calculation. Or, in other words, which kinds of oscillators should be found, and calculated properties for. There are limited choices - namely, the names of the maps present in the directory supplied through the parameter map_directory.
 
 
 .. _UserGuide_page_parameter_overview_usecoup:
@@ -607,7 +607,7 @@ couplings_to_use
 
     If a certain type of pair is covered by multiple lines in the same parameter file, the one lowest down will take precedence.
 
-Which couplings should be used in the calculation, and for what purpose. A MD system contains a certain number of oscillators (selected by 'maps_to_use'), that have their oscillating frequencies coupled inside the hamiltonian.
+Which couplings should be used in the calculation, and for what purpose. An MD system contains a certain number of oscillators (selected by 'maps_to_use'), that have their oscillating frequencies coupled inside the hamiltonian.
 
 By default, all oscillators are coupled using the dipole-dipole coupling method (denoted using ``couplings_to_use   DipDip :All``), but a different choice can be made. If you want to choose a different coupling method for a certain oscillator, you can!
 

@@ -1025,7 +1025,8 @@ def get_report_references():
     By default, all references should be considered.
     
     For more details on GM_report_references, see
-    :ref:`MapFiles_SingMainPy_report_references` (Single).
+    :ref:`MapFiles_SingMainPy_report_references` (Single) or
+    :ref:`MapFiles_PairMainPy_report_references` (Pair)`.
 
     Returns
     -------
