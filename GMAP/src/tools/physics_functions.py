@@ -1,3 +1,49 @@
+"""
+Contains all physics-related functionality.
+
+The root of many actual GMAP calculations. Other files do a lot of
+bookkeeping.
+
+Functions
+-------
+calc_CoM
+    Calculate the centre of mass of a given set of atoms.
+system_CoM
+    Calculates the centre of mass of each residue in the system.
+calc_frame
+    The heart of the per-frame loop. Does the actual calculations.
+calc_dipole
+    Calculate the dipole moment for a given chromophore. Does not do
+    this itself, but calls the relevant Map function, and stores the
+    output correctly.
+calc_frequency
+    Calculate the absorbtion frequency for a given chromophore. Does not
+    do this itself, but calls the relevant Map function, and stores the
+    output correctly.
+calc_raman
+    Calculate the raman tensor for a given chromophore. Does not do
+    this itself, but calls the relevant Map function, and stores the
+    output correctly.
+get_positions
+    Determine the position for a given chromophore. Does not do
+    this itself, but calls the relevant Map function, and stores the
+    output correctly.
+get_doublepos
+    Determine the double positions for a given chromophore. Does not do
+    this itself, but calls the relevant Map function, and stores the
+    output correctly.
+prep_coupling
+    For each requested/required coupling map, call its prep_coupling
+    function.
+calc_coupling
+    For each requested/required coupling map, call its calc_coupling
+    function. Also scales the calculated couplings with the requested
+    scale factor and dielectric constant.
+generate_output_structures
+    Generates a dictionary containing a numpy array for each requested
+    output type.
+"""
+
 
 # 3rd party imports
 from numba import njit

@@ -323,7 +323,7 @@ def GM_post_init(map_, system):
         GM_pt.Printer.warning(
             "\nInvalid number of arguments provided for the parameter "
             "AmideBB.labels. Please make sure you both provide a mode of "
-            "selecting, and a choice for that mode."
+            "selecting, and a choice for that mode.",
             "map_AmideBB_6", True
         )
     elif choice[0] == "resnums":

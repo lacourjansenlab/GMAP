@@ -46,7 +46,7 @@ This field has the sole purpose of allowing a map-creator to easily select the c
 
 In this example, I will be using some references from the AmideBB map, with a few changes:
 - To not obscure the details that matter, I'm leaving out quite a few fields from the .bib. Please do try to include those in your files!
-- The code is to give an idea, not exactly as present in the map.
+- The code is to give an idea, not exactly as present in the map. It should be placed in the file main.py within your map directory.
 
 .. code-block:: text
 

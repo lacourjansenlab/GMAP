@@ -1,4 +1,5 @@
 
+.. _Quickstart_Tutorial_amidecalc:
 ################################################################
 Calculating the amide-I spectrum of a Protein
 ################################################################
@@ -242,10 +243,19 @@ The AmideBB and AmideSC maps also allow to choose a dipole model using 'AmideBB.
 
 Next, using 'ProteinAmide.coupling_choice' and 'ProteinAmide.NN_coupling_choice', you can select which coupling methods you would prefer for the general coupling, and the nearest-neighbour coupling.
 
-Finally, if you're computing on a cluster, you can tell GMAP how much time you have available for the calculation using the parameter 'time_limit'. If the program can't finish before then, it will safely stop. To guess how long the program will need, you can try extrapolate from how long the 1-frame calculation took, but that gives only a rough estimate. Longer trial-calculations can give better estimates.
+Then, if you're computing on a cluster, you can tell GMAP how much time you have available for the calculation using the parameter 'time_limit'. If the program can't finish before then, it will safely stop. To guess how long the program will need, you can try extrapolate from how long the 1-frame calculation took, but that gives only a very rough estimate, usually much longer than the eventual time. Longer trial-calculations can give better estimates; depending on system size, you will need 20 (10k+ singles) to 1000 ( less than 50 residues) frames to get a reasonably accurate time estimation.
+When you run a calculation with verbose and/or verbose_log set to 2 or higher, you will get updates during the calculation showing you how long the calculation has taken, along with predictions on the remaining time.
+
+.. tip::
+    When using time_limit, make sure to use an appropriate value for the parameter batch_size. When the time_limit is too conservative and/or the batch size is too large, GMAP might stop too early.
+
+    Every time it finished a batch, GMAP will see how long a batch takes (on average). When there's time to do two more batches, GMAP will start the next batch.
+
+Finally, also for working on clusters, GMAP has the option to run in parallel on multiple cores. This is useful if your cluster requires using multiple, or if the calculation would take too long otherwise. The :ref:`number_cores <UserGuide_page_parameter_overview_numcores>` parameter can be used to tell GMAP to run in parallel. **Don't use this if you don't actually have multiple cores due to much greater RAM usage!** Follow the number_cores link for more information on this.
 
 When the program quits because of this time limit, it does so safely, and will report what frame it did last. This allows one to do only the remaining frames in a subsequent calculation. GMAP does not yet offer a tool to stitch the outputs of the two runs together, though.
 
+.. _Quickstart_Tutorial_amidecalc_fileexample:
 
 .. code-block:: text
     
@@ -261,6 +271,7 @@ When the program quits because of this time limit, it does so safely, and will r
     number_frames        50000
     time_limit           300  # this is in minutes!
     output_data          ham dip pos
+    number_cores         4  # Only if you actually have these available!
 
 
     AmideBB.include_protein_residues  HIE HSD  # only present if you needed this previously

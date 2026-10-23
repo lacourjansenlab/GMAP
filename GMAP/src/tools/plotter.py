@@ -1,3 +1,19 @@
+"""
+Can create plots.
+
+Functions
+---------
+plot_coupling_choices
+    Creates the plot showing what coupling method is picked for each
+    entry.
+val_to_color
+    For images in manual. Creates a pandas dataframe style - compatible
+    color string for the input color.
+plot_color_conv
+    For images in manual. Create the plots showing 24bit colors and the
+    4bit color they will be converted into.
+"""
+
 
 # standard lib imports
 from pathlib import Path
