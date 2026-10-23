@@ -202,12 +202,14 @@ jobs:
     - name: push badge to pages
       # if: github.ref_type == 'tag'
       run: |
-        mv coverage-badge.svg destination/coverage-badge.svg
         grep 'created at' htmlcov/index.html
         echo '--------------------------------'
         grep 'created at' destination/htmlcov/index.html
         echo '--------------------------------'
-        cp -rf htmlcov destination/htmlcov
+        rm destination/coverage-badge.svg || true
+        rm destination/htmlcov/* || true
+        mv coverage-badge.svg destination/coverage-badge.svg
+        cp -f htmlcov/* destination/htmlcov/.
         grep 'created at' destination/htmlcov/index.html
         echo '--------------------------------'
 
