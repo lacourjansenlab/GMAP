@@ -114,7 +114,9 @@ jobs:
       run: |
         cd source
         cd GMAP
-        pytest -c ../pyproject.toml -x maps/Singles/AmideBB/tests maps/Singles/AmideSC/tests maps/Pairs/ProteinAmide/tests
+        pytest -x maps/Singles/AmideBB/tests 
+        pytest -x --cov-append maps/Singles/AmideSC/tests
+        pytest -x --cov-append maps/Pairs/ProteinAmide/tests
         ls -lsah
     - name: mv .coverage file (unix)
       run:
