@@ -160,7 +160,7 @@ jobs:
         cp -r htmlcov destination/htmlcov
         cd destination
         git add -v coverage-badge.svg
-        dit add -v htmlcov
+        git add -v htmlcov
         git status
         git commit -m "adding new coverage badge"
         git push -u origin gh-pages
