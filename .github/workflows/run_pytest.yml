@@ -55,13 +55,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install GMAP py3.10
-      if: ${{ matrix.python-version == "3.10"}}
+      if: ${{ matrix.python-version == '3.10'}}
       run: |
         cd source
         python -m pip install requirements_py3-10.txt
         python -m pip install -e ".[testing]"
     - name: Install GMAP py3.13
-      if: ${{ matrix.python-version == "3.13"}}
+      if: ${{ matrix.python-version == '3.13'}}
       run: |
         cd source
         python -m pip install requirements_py3-13.txt
@@ -72,7 +72,7 @@ jobs:
         cd GMAP
         pytest -x tests
     - name: Upload Coverage Artifact
-      if: ${{ matrix.python-version == "3.13"}}
+      if: ${{ matrix.python-version == '3.13'}}
       uses: actions/upload-artifact@v4
       with:
         name: coverage-data-${{ matrix.os }}
