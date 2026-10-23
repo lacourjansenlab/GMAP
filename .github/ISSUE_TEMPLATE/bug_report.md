@@ -14,7 +14,7 @@
 <!--- Tell us what happens instead of the expected behavior -->
 
 ## Possible Solution
-<!--- Not obligatory, but suggest a fix/reason for the bug, -->
+<!--- Not obligatory, but you can suggest a fix/reason for the bug, -->
 
 ## Steps to Reproduce
 <!--- Provide a link to a live example, or an unambiguous set of steps to -->
@@ -42,7 +42,7 @@
 <!--- Provide a detailed description of the change or addition you are proposing -->
 
 ## Possible Implementation
-<!--- Not obligatory, but suggest an idea for implementing addition or change -->
+<!--- Not obligatory, but you can suggest an idea for implementing addition or change -->
 
 ## Required files
 <!--- Any files needed to recreate your input: -->
@@ -50,3 +50,13 @@
 <!--- md files (only 2 frames in trajectory!) -->
 <!--- output files (only 2 frames in relevant files) -->
 <!--- output of pip-freeze if relevant -->
+
+
+## Checklist before submitting:
+* [ ] Did you make sure to complete every mandatory question?
+* [ ] Did you add all necessary files?
+* [ ] Did you make sure to add no more than 2 frames?
+* [ ] Did you make sure no file is larger than 25MB (10MB for photo/video)?
+
+If you cannot attach 2 frames due to file size, try just one frame. If even that is too large, please only then share the files outside of github.
+

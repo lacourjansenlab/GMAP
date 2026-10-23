@@ -31,6 +31,7 @@ Examples of unacceptable behaviour include:
 address, without their explicit permission
 * Other conduct which could reasonably be considered inappropriate in a
 professional setting
+* Any conduct which could reasonably be considered purposefully sharing malicious content, code or otherwise.
 
 ## Our Responsibilities
 
