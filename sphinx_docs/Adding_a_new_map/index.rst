@@ -7,7 +7,9 @@ Adding a new map
 
 The strength of GMAP is that it is system-agnostic. Anything specific to your system (be it protein or chlorophyll, infrared or electronic) is encoded in a map. A collection of these maps can be found in `the GMAP_map_library github repository <https://https://github.com/lacourjansenlab/GMAP_map_library>`__. We encourage anyone who has made a map to share it there, so it can be used by the community.
 
-The pages here will contain information on maps, and how to create them. A map will be represented in the program as a :class:`~GMAP.src.tools.map_reader.Map` type object.
+These pages contain information on maps, and how to add them. A map is
+be represented in the program as a :class:`~GMAP.src.tools.map_reader.Map` type
+object.
 
 
 .. grid:: 1 2 2 3

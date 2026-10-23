@@ -1,0 +1,28 @@
+<!--- Provide a general summary of the issue in the Title above -->
+
+## Prerequisites
+* [ ] Have you read the CONTRIBUTING.md (especially the enhancement suggestion section)?
+* [ ] Are you running the latest version?
+* [ ] Did you check the existing issues?
+* [ ] Did you check the Discussions?
+* [ ] Are you reporting to the correct repository? (or should this go to [GMAP_map_library](https://github.com/lacourjansenlab/GMAP_map_library) instead?)
+* [ ] Did you perform a cursory search?
+
+## Suggested Behavior
+<!--- Tell us what should happen -->
+
+## Current Behavior
+<!--- Tell us what happens instead of the expected behavior -->
+
+## Context (Environment)
+<!--- How has the lack of this feature affected you? What are you trying to accomplish? -->
+<!--- Providing context helps us come up with a solution that is most useful in the real world -->
+
+<!--- Provide a general summary of the request in the Title above -->
+
+## Detailed Description
+<!--- Provide a detailed description of the change or addition you are proposing -->
+
+## Possible Implementation
+<!--- Not obligatory, but you can suggest an idea for implementing addition or change -->
+
