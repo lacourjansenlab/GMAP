@@ -55,7 +55,7 @@ patch = ["subprocess"]
 
 
 [tool.pytest.ini_options]
-addopts = "--cov-config=pyproject.toml --cov-report=term-missing --cov=src"
+addopts = "--cov-report=term-missing"
 
 
 [tool.setuptools.package-data]

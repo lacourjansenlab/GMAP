@@ -71,7 +71,7 @@ jobs:
       run: |
         cd source
         cd GMAP
-        pytest -x tests
+        pytest -x --cov-config=../pyproject.toml --cov=src tests
     - name: mv .coverage file (unix)
       if: ${{ matrix.os != 'windows-latest'}}
       run:
@@ -113,9 +113,9 @@ jobs:
     - name: execute-tests
       run: |
         cd source
-        pytest -x -p GMAP.tests.conftest GMAP/maps/Singles/AmideBB/tests 
-        pytest -x -p GMAP.tests.conftest --cov-append GMAP/maps/Singles/AmideSC/tests
-        pytest -x -p GMAP.tests.conftest --cov-append GMAP/maps/Pairs/ProteinAmide/tests
+        pytest -x -p GMAP.tests.conftest --cov-config=pyproject.toml --cov=GMAP/src GMAP/maps/Singles/AmideBB/tests 
+        pytest -x -p GMAP.tests.conftest --cov-config=pyproject.toml --cov=GMAP/src --cov-append GMAP/maps/Singles/AmideSC/tests
+        pytest -x -p GMAP.tests.conftest --cov-config=pyproject.toml --cov=GMAP/src --cov-append GMAP/maps/Pairs/ProteinAmide/tests
         ls -lsah
     - name: mv .coverage file (unix)
       run:
