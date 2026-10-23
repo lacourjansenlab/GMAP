@@ -23,7 +23,7 @@ jobs:
     - name: Install GMAP
       run: |
         cd source
-        python -m pip install requirements_py3-13.txt
+        python -m pip install -r requirements_py3-13.txt
         python -m pip install -e ".[testing]"
     - name: Execute smoke test
       run: |
@@ -58,13 +58,13 @@ jobs:
       if: ${{ matrix.python-version == '3.10'}}
       run: |
         cd source
-        python -m pip install requirements_py3-10.txt
+        python -m pip install -r requirements_py3-10.txt
         python -m pip install -e ".[testing]"
     - name: Install GMAP py3.13
       if: ${{ matrix.python-version == '3.13'}}
       run: |
         cd source
-        python -m pip install requirements_py3-13.txt
+        python -m pip install -r requirements_py3-13.txt
         python -m pip install -e ".[testing]"
     - name: execute-tests
       run: |
