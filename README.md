@@ -1,3 +1,5 @@
+[![Coverage Status](https://githubusercontent.com/lacourjansenlab/GMAP/refs/heads/gh-pages/coverage-badge.svg)](./reports/coverage/index.html)
+
 # GMAP
 
 This is the main version of GMAP. Both the stable release version (main branch) and developments (other branches) can be found here.
