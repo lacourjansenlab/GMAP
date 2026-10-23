@@ -1,3 +1,64 @@
+"""
+Parses and manages parameters.
+
+There are multiple different sources for parameters. command line, input
+file, defaults file, reference file. Plus, all valid parameters and
+required datatypes for these are stored in the reference file.
+This module distills all that information to a single straightforward
+object for GMAP to use.
+It does this not only for GMAP-central parameters, but also map-specific
+ones.
+
+The search for parameters is hard, as the reference file defines the
+allowed/available parameters, but we cannot find the reference file
+without looking at the given parameters.
+Therefore, the few parameters relevant for file-finding are extracted
+manually, and after the reference file is found, all parameter sources
+are parsed properly.
+
+Classes
+-------
+RefPars
+    Contains the choices and defaults from the reference file.
+RawPars
+    Contains the choices from a single source (cmdline, input, etc)
+RunPars
+    Contains the final choices for this calculation. Takes into account
+    all relevant RefPars and RawPars sources.
+
+Functions
+---------
+get_parameters
+    Analyses all parameter sources to build the central and map-specific
+    RunPars objects.
+add_missing_frame_parameter
+    In the case of two frame number parameters, adds the third with a
+    value based on the existing two.
+parse_commandline
+    Very basic parsing. Extracts job to run, provided input parameter
+    file, and arguments. Does not attempt to interpret arguments.
+find_defparfile_in_cmd
+    Finds any parameters pertaining to default parfile in command line.
+find_par_in_cmd
+    Searches for a given parameter in the command line.
+find_mapdir
+    Extracts choice for the parameter map_directory from the command
+    line.
+directory_list_checker
+    Checks whether each of the given paths exists, and is a directory.
+get_pardict
+    Takes an iterable, and returns it in dict form.
+cleanline
+    Removes any escape character and text following it.
+parse_influencerfile
+    Parses an entire influencer file. A collection of influencers.
+parse_influencerfile_line
+    Parse a single influencer definition.
+parse_influencer_par
+    Rewrites the choice for influencers in parameter file to match the
+    syntax of the influencer file.
+"""
+
 
 # standard library imports
 from pathlib import Path
@@ -52,6 +113,9 @@ class RefPars:
 
     Attributes
     ----------
+    is_main : bool
+        Whether this RefPars instance contains parameters of GMAP itself
+        (opposed to belonging to a specific map).
     fname : pathlib.Path
         The absolute path to the file that contains all desired
         parameters
@@ -61,6 +125,9 @@ class RefPars:
         one is found, this number is used to generate a temporary
         filename so the run can continue. Then, the number is
         incremented by one to prevent duplicate file names.
+    compounds : tuple
+        The parameter names stored in here are allowed to occur on
+        multiple lines.
     options : dict
         Some parameters don't allow free choice, but instead require you
         to pick from a certain list. `options` contains that list. Its
@@ -111,7 +178,6 @@ class RefPars:
         Some parameters allow more than one choice to be given. All
         these parameters are stored in this list, but must also be
         stored depending on the expected type of the items in the list.
-
     """
 
     def __init__(self, fname, is_main=True):
@@ -473,7 +539,8 @@ class RefPars:
             self.choices[parname] = options
 
     def resolve(self):
-        """Fixes intertwined/special parameters the standard parser can't fix
+        """Fixes intertwined/special parameters the standard parser
+        can't fix
         """
 
         # influencers - we need some defaults, but they should not clash in any
@@ -1662,7 +1729,10 @@ class RunPars:
     .. note::
         This class has many attributes, all variable: each parameter in
         ref_pars becomes an attribute. Same name, same capitalization,
-        same everything.
+        same everything. Please refer to the references_parameters.ref
+        file for an overview, or to
+        :ref:`the parameter overview<UserGuide_page_parameter_overview>`
+        page in the documentation.
 
     Parameters
     ----------
@@ -1741,6 +1811,11 @@ class RunPars:
         The name of the default parameter file used.
     inparfilename : `pathlib.Path`
         The name of the input parameter file used.
+    all_coupling_scale_factors : list of list of str
+        Each entry in this list corresponds to a line from the input
+        parameters. But only for the 'couplings_scale' parameter.
+    coupling_scale_factors_dict : dict
+        The dict representation of `all_coupling_scale_factors`
     """
 
     def __init__(
@@ -2178,12 +2253,6 @@ class RunPars:
         self.resolve_couplings(cmd_pars, in_pars, def_pars)
         self.resolve_coupling_scale(cmd_pars, in_pars, def_pars)
         self.resolve_estatics()
-        # dpr(self.singles_whitelist)
-        # dpr(ref_pars.choices.get("singles_whitelist", []))
-        # dpr(def_pars.choices.get("singles_whitelist", []))
-        # dpr(in_pars.choices.get("singles_whitelist", []))
-        # dpr(cmd_pars.choices.get("singles_whitelist", []))
-        # raise KeyError
         self.resolve_singles_BWlist()
 
     def resolve_framenums(self, cmd_pars, in_pars, def_pars, ref_pars):
@@ -2621,7 +2690,7 @@ class RunPars:
         return failed_couppairs
 
     def final_resolve_coupling_scale(self):
-        """Figure out which coupling methods should get with factor.
+        """Figure out which coupling methods should get which factor.
 
         The scaling keyword allows the ':All' syntax, but at the regular
         place (run_pars.resolve()) the full set isn't known yet.
@@ -2703,12 +2772,12 @@ def get_parameters(in_parfile, argslist):
     run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
         The 'main' RunPars instance containing all the basic
         run-defining parameters.
-    Singles_mapdict : dict of str: \
+    singles_mapdict : dict of str: \
         :class:`~GMAP.src.tools.map_reader.SingleMap` pairs
         Stores all the :class:`~GMAP.src.tools.map_reader.SingleMap`
         objects for each map supplied. The keys are the Map.name
         attributes corresponding to the maps stored as values.
-    Pairs_mapdict : dict of str: \
+    pairs_mapdict : dict of str: \
         :class:`~GMAP.src.tools.map_reader.PairMap` pairs
         Stores all the :class:`~GMAP.src.tools.map_reader.PairMap`
         objects for each map supplied. The keys are the Map.name

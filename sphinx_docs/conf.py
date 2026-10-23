@@ -63,6 +63,9 @@ else:
     version_match = ".".join(source_branch.split(".")[:2])
     release = source_branch
 
+# reference/example for creating versioned docs
+# https://blog.esciencecenter.nl/posts/2022-10-20---versioned-documentation-using-only-github-actions-and-github/
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 

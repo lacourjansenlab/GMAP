@@ -14,6 +14,7 @@ import GMAP.src.tools.constants as GM_con
 import GMAP.src.tools.exceptions as GM_ex
 import GMAP.src.tools.default_map_functions as GM_dmf
 import GMAP.src.tools.print_tools as GM_pt
+# from GMAP.src.tools.print_tools import devprint as dpr
 
 # own module imports
 import AmideSC_code.calculation_methods as MC_cm
@@ -120,6 +121,7 @@ def GM_adjust_oscillators(map_, system, oscillator_list):
                 smallest_resix = resix
                 smallest_ix = ix
         newlist.append(oscillator_list.pop(smallest_ix))
+
     return newlist
 
 
@@ -206,7 +208,7 @@ def GM_post_init(map_, system):
         GM_pt.Printer.warning(
             "\nInvalid number of arguments provided for the parameter "
             "AmideSC.labels. Please make sure you both provide a mode of "
-            "selecting, and a choice for that mode."
+            "selecting, and a choice for that mode.",
             "map_AmideSC_3", True
         )
     elif choice[0] == "resnums":

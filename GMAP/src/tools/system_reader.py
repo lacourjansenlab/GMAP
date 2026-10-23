@@ -1,3 +1,28 @@
+"""
+Deals with the MD system.
+
+Contains tools for storing and navigating all the MD files data.
+
+Classes
+-------
+System
+    Stores all information on the MD system and objects therein. Knows
+    almost everything (partially through complex attributes).
+Residues
+    Stores some residue-level information from the MD system.
+Oscillator
+    Stores all information on a single oscillator.
+
+Functions
+---------
+gen_universe
+    Calls MDAanalysis.Universe on the supplied files and catches errors.
+check_box_rightangled
+    Checks whether the supplied universe has only right angles.
+check_box_charge
+    Checks whether the supplied universe has neutral charge.
+"""
+
 
 # import sys
 
@@ -11,6 +36,7 @@ import GMAP.src.tools.default_map_functions as GM_dmf
 import GMAP.src.tools.exceptions as GM_ex
 import GMAP.src.tools.parameter_parser as GM_pp
 import GMAP.src.tools.print_tools as GM_pt
+from GMAP.src.tools.print_tools import devprint as dpr
 
 
 class System:
@@ -43,12 +69,30 @@ class System:
     positions : `np.ndarray`
         A 2D array of shape [self.natoms, 3] storing the position of
         each atom in the MD system.
+    positions_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `positions` (not a copy, a direct view, same info!), but in
+        a format suitable for passing data to c.
+    positions_box : `np.ndarray`
+        The data in `positions`, but translated to box coordinates.
+    positions_box_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `positions_box` (not a copy, a direct view, same info!), but
+        in a format suitable for passing data to c.
     masses : `np.ndarray`
         A 1D array of length self.natoms storing the mass of each atom.
+    masses_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `masses` (not a copy, a direct view, same info!), but in
+        a format suitable for passing data to c.
     charges : `np.ndarray`
         A 1D array of length self.natoms storing the charge of each
         atom. This is the charge as used by the MD system, not as a
         certain map might need it.
+    charges_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `charges` (not a copy, a direct view, same info!), but in
+        a format suitable for passing data to c.
     types : `np.ndarray`
         A 1D array of length self.natoms storing the type of each atom.
         A type is often dependent on the forcefield used - each element
@@ -62,12 +106,22 @@ class System:
         The amount of atoms found in the MD trajectory.
     nres : `np.int32`
         The amount of residues found in the MD trajectory.
+    dt : float
+        The amount of time between frames of the trajectory in ps.
     boxdims : `np.ndarray`
         The length of the 3 vectors defining the MD simulation box
         (its PBC). These are the first 3 entries returned by
         MDA.Universe.dimensions.
+    boxdims_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `boxdims` (not a copy, a direct view, same info!), but in
+        a format suitable for passing data to c.
     halfbox : `np.ndarray`
         Same as boxdims, but each value is divided by 2.
+    halfbox_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `halfbox` (not a copy, a direct view, same info!), but in
+        a format suitable for passing data to c.
     angles : `np.ndarray`
         The angles between the three vectors defining the MD simulation
         box (its PBC). These are the last 3 entries returned by
@@ -77,8 +131,16 @@ class System:
         boxvects[i] returns one of the three vectors.
         The result of MDA.lib.mdamath.triclinic_vectors(
         self.universe.dimensions)
+    boxvects_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `boxvects` (not a copy, a direct view, same info!), but in
+        a format suitable for passing data to c.
     boxvects_inv : `np.ndarray`
         The inverse of the rotation matrix self.boxvects.
+    boxvects_inv_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `boxvects_inv` (not a copy, a direct view, same info!), but
+        in a format suitable for passing data to c.
     safesphere : float
         The radius of the sphere in which distances can be calculated
         accurately. If the length of any vector exceeds this size, there
@@ -194,6 +256,13 @@ class System:
         """Sets the basic properties of the system.
 
         Extracts them from self.universe.atoms, and saves them in self.
+
+        Parameters
+        ----------
+        read_only : bool, default = False
+            Whether the universe will be used only for reading. If set
+            to False, c-arrays will be initialized to prepare for the
+            calculations.
         """
 
         self.atnums = self.universe.atoms.ix
@@ -451,7 +520,7 @@ class System:
                 "\nNone of the requested oscillators could be found in the "
                 "supplied MD system. Either change the choice for the "
                 "parameter maps_to_use, or for the parameters topology_file "
-                "and/or trajectory_file. Quitting!"
+                "and/or trajectory_file. Quitting!",
                 "MD_SU_7", True,
                 GMAPerrclass=GM_ex.GmapValueError
             )
@@ -474,13 +543,13 @@ class System:
             if checked:
                 checked_oscillators.append(checked)
 
-        nosc = sum([len(oscillators) for oscillators in allgroups])
+        nosc = sum([len(oscillators) for oscillators in checked_oscillators])
         if nosc == 0:
             GM_pt.Printer.warning(
                 "\nNone of the requested oscillators could be found in the "
                 "supplied MD system. Either change the choice for the "
                 "parameter maps_to_use, or for the parameters topology_file "
-                "and/or trajectory_file. Quitting!"
+                "and/or trajectory_file. Quitting!",
                 "MD_SU_7", True,
                 GMAPerrclass=GM_ex.GmapValueError
             )
@@ -514,7 +583,7 @@ class System:
                 "supplied MD system. Most likely, one of the criteria defined "
                 "using either 'singles_whitelist' or 'singles_blacklist' is "
                 "too strict. Please make sure the chosen criteria match the "
-                "chosen MD files. Quitting!"
+                "chosen MD files. Quitting!",
                 "MD_SU_7", True,
                 GMAPerrclass=GM_ex.GmapValueError
             )
@@ -953,6 +1022,12 @@ class System:
         This function is supposed to be called at the beginning of every
         frame to ensure that the properties stored inside are up to
         date.
+
+        Parameters
+        ----------
+        run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
+            The 'main' RunPars instance containing all the basic
+            run-defining parameters.
         """
 
         printer = GM_pt.Printer
@@ -1034,10 +1109,18 @@ class Residues:
         An array as long as there are residues in the MD system, with
         dtype np.int32. For each residue, it stores the index of the
         first atom.
+    first_ix_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `first_ix` (not a copy, a direct view, same info!), but
+        in a format suitable for passing data to c.
     last_ix : np.ndarray
         An array as long as there are residues in the MD system, with
         dtype np.int32. For each residue, it stores the index of the
         last atom.
+    last_ix_c : `c_float_array_n`
+        n denotes the size of the array. Contains the same information
+        as `last_ix` (not a copy, a direct view, same info!), but
+        in a format suitable for passing data to c.
     resnames : list of str
         A list as long as there are residues in the MD system. For each
         residue, it stores its residue name.
@@ -1139,6 +1222,9 @@ class Oscillator:
 
     Attributes
     ----------
+    system : :class:`~GMAP.src.tools.system_reader.System`
+        The class containing all the information on the system of the
+        MD trajectory.
     map_ : :class:`~GMAP.src.tools.map_reader.SingleMap`
         The map that this oscillator belongs to.
     used_atoms : list of int
@@ -1164,6 +1250,9 @@ class Oscillator:
         written. Is of shape (n_estatic_atoms, 10).
     VEGout_c : `ctypes.Array`
         The c-friendly variant of self.VEGout
+    positions : `np.ndarray`
+        The positions of all atoms given in used_atoms, in global
+        coordinates.
     positions_box : `np.ndarray`
         The positions of all atoms given in used_atoms, in box
         coordinates.

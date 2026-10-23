@@ -23,6 +23,11 @@ value for estatic_range should be used, and what method for calculating
 the electrostatic properties.
 
 For more information, check the manual on N/A.
+
+.. danger::
+    DEPICT has not been used/tested in a long time. Proceed at your own
+    risk. We are happy to receive any issues on github, but please be
+    very clear/explicit so we can help you.
 """
 
 
@@ -39,6 +44,25 @@ import GMAP.src.tools.system_reader as GM_sr
 
 
 def calc_data(printer, run_pars, system):
+    """Compute datapoints for the estat vs spheresize graph.
+
+    This function is very old (it predates Printer being a singleton!).
+    Unsure if it still runs. Update docstring after testing/updating
+    code!
+
+    Parameters
+    ----------
+    printer : :class:`~GMAP.src.tools.print_tools.Printer`
+        The printing/logging object.
+    run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
+    system : :class:`~GMAP.src.tools.system_reader.System`
+        The object that stores everything the program currently knows
+        about the system being treated (names, numbers, types, masses,
+        charges of all atoms, for example)
+    """
+
     # GEM is now done - let maps initialize as well
     for mapname in system.oscillators_ordered.keys():
         map_ = run_pars.requested_mapdict[mapname]
@@ -80,6 +104,21 @@ def calc_data(printer, run_pars, system):
 
 
 def show_data(printer, run_pars):
+    """Using plt, displays the data computed using :func:`calc_data`
+
+    This function is very old (it predates Printer being a singleton!).
+    Unsure if it still runs. Update docstring after testing/updating
+    code!
+
+    Parameters
+    ----------
+    printer : :class:`~GMAP.src.tools.print_tools.Printer`
+        The printing/logging object.
+    run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
+    """
+
     with open(run_pars.output_estatics_filename, "r") as fhand:
         data = np.loadtxt(fhand)
 
@@ -89,6 +128,15 @@ def show_data(printer, run_pars):
 
 
 def DEPICT(callcommand):
+    """Manages the DEPICT workflow.
+
+    Initializes the main program state, then performs calculation and/or
+    plotting if desired.
+
+    callcommand : list of str
+        This is the user input into the terminal.
+    """
+
     printer = GM_pt.Printer
     alljobs = [
         "calculate",

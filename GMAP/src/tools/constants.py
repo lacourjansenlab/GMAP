@@ -1,5 +1,8 @@
 """
 A file containing all kinds of constants that the program might need.
+
+Does not contain any functions or classes. Just variables with an
+associated value. Useful for working with units throughout the program.
 """
 
 

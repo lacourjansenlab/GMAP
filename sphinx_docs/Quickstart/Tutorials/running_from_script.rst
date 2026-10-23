@@ -6,6 +6,10 @@ Running GMAP from a script
 
 The default way to use GMAP is to call it directly from the command line. However, there might be some situations where that is undesired, or simply does not work. For those cases, we've made it possible to run it through python, too! Here's a quick minimal working example:
 
+.. caution::
+    The default way of using GMAP is the default way for a reason! Only use the information below if you really know what you're doing!
+
+
 .. code-block:: python
 
     # import the required module

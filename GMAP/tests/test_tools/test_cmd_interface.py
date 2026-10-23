@@ -16,8 +16,10 @@ following:
 """
 
 # Standard library imports
-import pytest
 import subprocess
+
+# 3rd party imports
+import pytest
 
 # Local imports
 import GMAP
@@ -26,6 +28,7 @@ import GMAP.src.tools.cmd_interface as GM_ci
 import GMAP.src.tools.print_tools as GM_pt
 
 
+@pytest.mark.nofiles
 def test_cmd_interface(capsys):
     callcommand = ["GMAP", "nothing", "nothing"]
     with pytest.raises(GmapAttributeError, match="SU_GM_1"):

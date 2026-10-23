@@ -145,12 +145,14 @@ apply_dd_coupling
 map_choice
     This is no longer covered by GMAP. Instead, you need to tell the AmideBB and AmideSC maps your choice for this one - they have this parameter now. See the readme of those maps for more information; parameters to be used are:
 
+    - ``maps_to_use AmideBB AmideSC``
     - ``AmideBB.frequency_map_choice``
     - ``AmideSC.frequency_map_choice``
 
 Dipole_choice
     This is no longer covered by GMAP. Instead, you need to tell the AmideBB and AmideSC maps your choice for this one - they have this parameter now. See the readme of those maps for more information; parameters to be used are:
 
+    - ``maps_to_use AmideBB AmideSC``
     - ``AmideBB.dipole_map_choice``
     - ``AmideSC.dipole_map_choice``
 
@@ -170,6 +172,7 @@ NN_coupling_choice
 AtomPos_choice
     This is no longer covered by GMAP. Instead, you need to tell the AmideBB and AmideSC maps your choice for this one - they have this parameter now. See the readme of those maps for more information; parameters to be used are:
 
+    - ``maps_to_use AmideBB AmideSC``
     - ``AmideBB.pos_choice``
     - ``AmideSC.pos_choice``
 

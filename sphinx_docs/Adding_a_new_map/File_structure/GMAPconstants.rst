@@ -59,3 +59,9 @@ ea0
 
 Debye2ea0
     The factor to multiply with a value in Debye to convert it to atomic units. It has a value of 0.3934302697868071 and is calculated as ``Debye / ea0``.
+
+printed_colors
+    A dictionary defining the RGB value (keys) for each color for ANSI-4 (values). These choices follow those by the windows console, as they are easiest. Only useful if you want to do things with colored output.
+
+printed_colors_r
+    Like the printed_colors dict, but with keys and values reversed. Only useful if you want to do things with colored output.
