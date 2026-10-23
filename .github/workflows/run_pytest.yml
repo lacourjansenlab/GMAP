@@ -209,8 +209,10 @@ jobs:
         git add -v coverage-badge.svg
         git add -v htmlcov
         git status
-        git commit -m "adding new coverage badge"
-        git push -u origin gh-pages
+        if ! git diff-index --quiet HEAD; then
+          git commit -m "adding new coverage badge"
+          git push -u origin gh-pages
+        fi
 
     
     
