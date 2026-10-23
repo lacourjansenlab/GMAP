@@ -148,7 +148,7 @@ jobs:
     - name: Install genbadge
       run: python -m pip install genbadge[coverage]
     - name: Run genbadge
-      run: genbadge coverage
+      run: genbadge coverage -i coverage.xml -o coverage-badge.svg
     - name: set user
       run: |
         cd destination
