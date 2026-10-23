@@ -26,7 +26,6 @@ jobs:
         python -m pip install -e ".[testing]"
     - name: Execute smoke test
       run: |
-        ls -lsah
         cd source
-        ls -lsah
+        cd GMAP
         pytest -k test_if_runs tests
