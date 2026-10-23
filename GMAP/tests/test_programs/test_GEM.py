@@ -15,6 +15,7 @@ def test_if_runs(tmp_path):
     with open(tmp_path / "input_parameters.txt", "w") as fhand:
         fhand.write("output_directory  out\n")
         fhand.write("log_directory   out\n")
+        fhand.write("number_frames   2\n")
     (tmp_path / "out").mkdir()
 
     GM_ci.cmd_interface([

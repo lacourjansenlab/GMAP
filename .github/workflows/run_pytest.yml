@@ -1,0 +1,28 @@
+name: run-pytest
+on:
+  push
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+    # We need to know what branch to test. ref_name contains the name of the
+    # triggering branch. Store it.
+    - name: Determine current branch
+      run: echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+    # checkout the correct branch, into the source directory.
+    - name: Checkout source branch
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ env.SOURCE_BRANCH }}
+        path: source
+    - name: Setup python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.13'
+    - name: Install GMAP
+      run: |
+        cd source
+        python -m pip install -e ".[testing]"
+    - name: Execute smoke test
+      run: pytest -k test_if_runs tests
