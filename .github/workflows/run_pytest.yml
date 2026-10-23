@@ -28,7 +28,8 @@ jobs:
     - name: Execute smoke test
       run: |
         cd source
-        pytest -k test_if_runs GMAP/tests
+        cd GMAP
+        pytest -k test_if_runs tests
 
   full-pytest-run:
     needs: smoke-test
@@ -69,15 +70,16 @@ jobs:
     - name: execute-tests
       run: |
         cd source
-        pytest -x GMAP/tests
+        cd GMAP
+        pytest -x tests
     - name: mv .coverage file (unix)
       if: ${{ matrix.os != 'windows-latest'}}
       run:
-        mv source/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
+        mv source/GMAP/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
     - name: mv .coverage file (windows)
       if: ${{ matrix.os == 'windows-latest'}}
       run:
-        move source/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
+        move source/GMAP/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
     - name: Upload Coverage Artifact
       if: ${{ matrix.python-version == '3.13'}}
       uses: actions/upload-artifact@v4
