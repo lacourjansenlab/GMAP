@@ -141,28 +141,28 @@ jobs:
         echo '```' >> $GITHUB_STEP_SUMMARY
     # now, report is done, make it accessible to README.md
     - name: Checkout gh-pages branch
-      if: github.ref_type == 'tag'
+      # if: github.ref_type == 'tag'
       uses: actions/checkout@v6
       with:
         ref: gh-pages
         path: destination
     - name: Install genbadge
-      if: github.ref_type == 'tag'
+      # if: github.ref_type == 'tag'
       run: python -m pip install genbadge[coverage]
     - name: Run genbadge
-      if: github.ref_type == 'tag'
+      # if: github.ref_type == 'tag'
       run: genbadge coverage -i coverage.xml -o coverage-badge.svg
     - name: set user
-      if: github.ref_type == 'tag'
+      # if: github.ref_type == 'tag'
       run: |
         cd destination
         git config --global user.name "$(git show -s --format='%an' HEAD)"
         git config --global user.email "$(git show -s --format='%ae' HEAD)"
     - name: push badge to pages
-      if: github.ref_type == 'tag'
+      # if: github.ref_type == 'tag'
       run: |
         mv coverage-badge.svg destination/coverage-badge.svg
-        cp -r htmlcov destination/htmlcov
+        cp -rf htmlcov destination/htmlcov
         cd destination
         ls -lsah
         ls -lsah htmlcov/
