@@ -157,8 +157,10 @@ jobs:
     - name: push badge to pages
       run: |
         mv coverage-badge.svg destination/coverage-badge.svg
+        cp -r htmlcov destination/htmlcov
         cd destination
         git add -v coverage-badge.svg
+        dit add -v htmlcov
         git status
         git commit -m "adding new coverage badge"
         git push -u origin gh-pages
