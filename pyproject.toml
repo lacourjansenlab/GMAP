@@ -35,6 +35,13 @@ testing = [
     "sphinx-design >= 0.5"
 ]
 
+[tool.coverage.run]
+patch = ["subprocess"]
+
+
+[tool.pytest.ini_options]
+addopts = "--cov-config=../pyproject.toml --cov-report=term-missing --cov=src"
+
 
 [tool.setuptools.package-data]
 GMAP = ["sourcefiles/**", "maps/**", "logo.txt"]

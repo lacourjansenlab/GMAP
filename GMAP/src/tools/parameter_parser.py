@@ -1614,7 +1614,7 @@ class RawPars:
                 f"{self.fname}. The parameter positions_center must take "
                 f"Exactly 3 values, but {nvals} were detected. "
                 "Please make sure there are exactly 3.",
-                "SU_FP_6", True, GMAPerrclass=GM_ex.GmapValueError
+                "SU_WP_9", True, GMAPerrclass=GM_ex.GmapValueError
             )
 
     def finalize_map_pars(self):
