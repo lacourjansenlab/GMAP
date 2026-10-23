@@ -86,7 +86,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: coverage-data-${{ matrix.os }}
-        path: source/GMAP/.coverage
+        path: .coverage.${{ matrix.os }}.${{ matrix.python-version }}
         include-hidden-files: true
         retention-days: 1
   
