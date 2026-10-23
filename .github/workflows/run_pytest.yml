@@ -28,8 +28,7 @@ jobs:
     - name: Execute smoke test
       run: |
         cd source
-        cd GMAP
-        pytest -k test_if_runs tests
+        pytest -k test_if_runs GMAP/tests
 
   full-pytest-run:
     needs: smoke-test
@@ -70,16 +69,15 @@ jobs:
     - name: execute-tests
       run: |
         cd source
-        cd GMAP
-        pytest -x tests
+        pytest -x GMAP/tests
     - name: mv .coverage file (unix)
       if: ${{ matrix.os != 'windows-latest'}}
       run:
-        mv source/GMAP/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
+        mv source/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
     - name: mv .coverage file (windows)
       if: ${{ matrix.os == 'windows-latest'}}
       run:
-        move source/GMAP/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
+        move source/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
     - name: Upload Coverage Artifact
       if: ${{ matrix.python-version == '3.13'}}
       uses: actions/upload-artifact@v4
@@ -113,14 +111,13 @@ jobs:
     - name: execute-tests
       run: |
         cd source
-        cd GMAP
-        pytest -x -c ../pyproject.toml maps/Singles/AmideBB/tests 
-        pytest -x -c ../pyproject.toml --cov-append maps/Singles/AmideSC/tests
-        pytest -x -c ../pyproject.toml --cov-append maps/Pairs/ProteinAmide/tests
+        pytest -x GMAP/maps/Singles/AmideBB/tests 
+        pytest -x --cov-append GMAP/maps/Singles/AmideSC/tests
+        pytest -x --cov-append GMAP/maps/Pairs/ProteinAmide/tests
         ls -lsah
     - name: mv .coverage file (unix)
       run:
-        mv source/GMAP/.coverage .coverage.maps
+        mv source/.coverage .coverage.maps
     - name: Upload Coverage Artifact
       uses: actions/upload-artifact@v4
       with:
