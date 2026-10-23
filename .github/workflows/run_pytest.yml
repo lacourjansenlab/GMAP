@@ -23,9 +23,102 @@ jobs:
     - name: Install GMAP
       run: |
         cd source
+        python -m pip install requirements_py3-13.txt
         python -m pip install -e ".[testing]"
     - name: Execute smoke test
       run: |
         cd source
         cd GMAP
         pytest -k test_if_runs tests
+
+  full-pytest-run:
+    needs: smoke-test
+    runs-on: ${{ matrix.os }}
+    matrix:
+      os: [ubuntu-latest, macos-latest, windows-latest]
+      python-version: ["3.13"]
+      include:
+        - os: ubuntu-latest
+          python-version: "3.10"
+    steps:
+    - name: Determine current branch
+      run: echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+    # checkout the correct branch, into the source directory.
+    - name: Checkout source branch
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ env.SOURCE_BRANCH }}
+        path: source
+    - name: Setup python
+      uses: actions/setup-python@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install GMAP py3.10
+      if: ${{ matrix.python-version == "3.10"}}
+      run: |
+        cd source
+        python -m pip install requirements_py3-10.txt
+        python -m pip install -e ".[testing]"
+    - name: Install GMAP py3.13
+      if: ${{ matrix.python-version == "3.13"}}
+      run: |
+        cd source
+        python -m pip install requirements_py3-13.txt
+        python -m pip install -e ".[testing]"
+    - name: execute-tests
+      run: |
+        cd source
+        cd GMAP
+        pytest -x tests
+    - name: Upload Coverage Artifact
+      if: ${{ matrix.python-version == "3.13"}}
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-data-${{ matrix.os }}
+        path: .coverage
+        include-hidden-files: true
+        retention-days: 1
+  
+  merge-coverage:
+    runs-on: ubuntu-latest
+    # Wait for the test jobs to finish
+    needs: full-pytest-run
+    # Run regardless of whether the tests passed.
+    if: always()
+    steps:
+    - name: Determine current branch
+      run: echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+    # checkout the correct branch, into the source directory.
+    - name: Checkout source branch
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ env.SOURCE_BRANCH }}
+        path: source
+    - name: Setup python
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.13"
+    - name: Install Coverage Tool
+      run: python -m pip install coverage
+
+      # Download all artifacts matching the pattern into the current directory
+    - name: Download All Coverage Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        pattern: coverage-data-*
+        merge-multiple: true
+    - name: Combine Coverage and Generate Reports
+      run: |
+        # 1. Combines all .coverage.* files into a single unified .coverage file
+        coverage combine
+        
+        # 2. Create the Workflow Run Summary page content
+        echo "### 📊 Code Coverage Summary" >> \$GITHUB_STEP_SUMMARY
+        echo "" >> \$GITHUB_STEP_SUMMARY
+        echo "```text" >> \$GITHUB_STEP_SUMMARY
+        
+        # Run the terminal report and stream it straight into the step summary
+        coverage report -m >> \$GITHUB_STEP_SUMMARY
+        
+        echo "```" >> $GITHUB_STEP_SUMMARY
+
