@@ -111,6 +111,10 @@ jobs:
         merge-multiple: true
     - name: Combine Coverage and Generate Reports
       run: |
+        pwd
+        ls -lsah
+        cd GMAP
+
         # 1. Combines all .coverage.* files into a single unified .coverage file
         coverage combine
         
