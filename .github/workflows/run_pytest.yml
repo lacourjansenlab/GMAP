@@ -111,9 +111,9 @@ jobs:
     - name: execute-tests
       run: |
         cd source
-        pytest -x GMAP/maps/Singles/AmideBB/tests 
-        pytest -x --cov-append GMAP/maps/Singles/AmideSC/tests
-        pytest -x --cov-append GMAP/maps/Pairs/ProteinAmide/tests
+        pytest -x -p GMAP.tests.conftest GMAP/maps/Singles/AmideBB/tests 
+        pytest -x -p GMAP.tests.conftest --cov-append GMAP/maps/Singles/AmideSC/tests
+        pytest -x -p GMAP.tests.conftest --cov-append GMAP/maps/Pairs/ProteinAmide/tests
         ls -lsah
     - name: mv .coverage file (unix)
       run:
