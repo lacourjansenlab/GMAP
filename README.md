@@ -1,4 +1,4 @@
-[![Coverage Status](https://raw.githubusercontent.com/lacourjansenlab/GMAP/refs/heads/gh-pages/coverage-badge.svg)](https://raw.githubusercontent.com/lacourjansenlab/GMAP/refs/heads/gh-pages/htmlcov/index.html)
+[![Coverage Status](https://raw.githubusercontent.com/lacourjansenlab/GMAP/refs/heads/gh-pages/coverage-badge.svg)](https://lacourjansenlab.github.io/GMAP/htmlcov/index.html)
 
 # GMAP
 
