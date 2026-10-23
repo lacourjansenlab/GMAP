@@ -124,14 +124,15 @@ jobs:
 
         # 1. Combines all .coverage.* files into a single unified .coverage file
         coverage combine
+        ls -lsah
         
         # 2. Create the Workflow Run Summary page content
-        echo "### 📊 Code Coverage Summary" >> \$GITHUB_STEP_SUMMARY
-        echo "" >> \$GITHUB_STEP_SUMMARY
-        echo "```text" >> \$GITHUB_STEP_SUMMARY
+        echo "### 📊 Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "```text" >> $GITHUB_STEP_SUMMARY
         
         # Run the terminal report and stream it straight into the step summary
-        coverage report -m >> \$GITHUB_STEP_SUMMARY
+        coverage report -m >> $GITHUB_STEP_SUMMARY
         
         echo "```" >> $GITHUB_STEP_SUMMARY
 
