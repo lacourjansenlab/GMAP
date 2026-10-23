@@ -160,6 +160,8 @@ jobs:
       run: |
         cp source/pyproject.toml .
 
+        ls -lsah
+
         # 1. Combines all .coverage.* files into a single unified .coverage file
         coverage combine
 
@@ -201,12 +203,12 @@ jobs:
       # if: github.ref_type == 'tag'
       run: |
         mv coverage-badge.svg destination/coverage-badge.svg
-        grep 'created at' htmlconv/index.html
+        grep 'created at' htmlcov/index.html
         echo '--------------------------------'
-        grep 'created at' destination/htmlconv/index.html
+        grep 'created at' destination/htmlcov/index.html
         echo '--------------------------------'
         cp -rf htmlcov destination/htmlcov
-        grep 'created at' destination/htmlconv/index.html
+        grep 'created at' destination/htmlcov/index.html
         echo '--------------------------------'
 
         cd destination
