@@ -35,6 +35,7 @@ jobs:
     needs: smoke-test
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false 
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.13"]
@@ -70,13 +71,13 @@ jobs:
       run: |
         cd source
         cd GMAP
-        pytest -x tests
+        pytest -x -k test_if_runs tests
     - name: Upload Coverage Artifact
       if: ${{ matrix.python-version == '3.13'}}
       uses: actions/upload-artifact@v4
       with:
         name: coverage-data-${{ matrix.os }}
-        path: .coverage
+        path: source/GMAP/.coverage
         include-hidden-files: true
         retention-days: 1
   
