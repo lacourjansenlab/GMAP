@@ -38,9 +38,10 @@ testing = [
 
 [tool.coverage.paths]
 source = [
-    "source/",
-    "*/source/",
-    "C:\\*\\source\\"
+    "source/GMAP/src/",
+    "*/source/GMAP/src/",
+    "D:\\a\\GMAP\\GMAP\\source\\GMAP\\src\\",
+    "C:\\*\\source\\GMAP\\src\\"
 ]
 
 
@@ -54,7 +55,7 @@ patch = ["subprocess"]
 
 
 [tool.pytest.ini_options]
-addopts = "--cov-config=../pyproject.toml --cov-report=term-missing --cov=src"
+addopts = "--cov-config=pyproject.toml --cov-report=term-missing --cov=src -p GMAP.tests.conftest"
 
 
 [tool.setuptools.package-data]
