@@ -72,7 +72,6 @@ jobs:
         cd source
         cd GMAP
         pytest -x tests
-        ls -lsah
     - name: mv .coverage file (unix)
       if: ${{ matrix.os != 'windows-latest'}}
       run:
@@ -115,7 +114,7 @@ jobs:
       run: |
         cd source
         cd GMAP
-        pytest -x maps/Singles/AmideBB/tests maps/Singles/AmideSC/tests maps/Pairs/ProteinAmide/tests
+        pytest -c ../pyproject.toml -x maps/Singles/AmideBB/tests maps/Singles/AmideSC/tests maps/Pairs/ProteinAmide/tests
         ls -lsah
     - name: mv .coverage file (unix)
       run:
@@ -158,6 +157,7 @@ jobs:
         merge-multiple: true
     - name: Combine Coverage and Generate Reports
       run: |
+        cp source/pyproject.toml .
 
         # 1. Combines all .coverage.* files into a single unified .coverage file
         coverage combine

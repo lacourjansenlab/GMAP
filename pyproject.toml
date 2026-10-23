@@ -35,6 +35,20 @@ testing = [
     "sphinx-design >= 0.5"
 ]
 
+
+[tool.coverage.paths]
+source = [
+    "source/",
+    "*/source/",
+    "C:\\*\\source\\"
+]
+
+
+[tool.coverage.report]
+include_namespace_packages = true
+skip_empty = true
+
+
 [tool.coverage.run]
 patch = ["subprocess"]
 
