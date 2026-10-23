@@ -201,7 +201,14 @@ jobs:
       # if: github.ref_type == 'tag'
       run: |
         mv coverage-badge.svg destination/coverage-badge.svg
+        grep 'created at' htmlconv/index.html
+        echo '--------------------------------'
+        grep 'created at' destination/htmlconv/index.html
+        echo '--------------------------------'
         cp -rf htmlcov destination/htmlcov
+        grep 'created at' destination/htmlconv/index.html
+        echo '--------------------------------'
+
         cd destination
         ls -lsah
         ls -lsah htmlcov/
