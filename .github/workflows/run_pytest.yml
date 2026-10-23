@@ -25,4 +25,6 @@ jobs:
         cd source
         python -m pip install -e ".[testing]"
     - name: Execute smoke test
-      run: pytest -k test_if_runs tests
+      run: |
+        cd source
+        pytest -k test_if_runs tests
