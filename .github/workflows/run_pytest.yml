@@ -166,6 +166,7 @@ jobs:
         cd destination
         ls -lsah
         ls -lsah htmlcov/
+        rm htmlcov/.gitignore
         git add -v coverage-badge.svg
         git add -v htmlcov
         git status
