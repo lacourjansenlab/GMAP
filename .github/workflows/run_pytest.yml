@@ -4,9 +4,9 @@ on:
   release:
     types: [published]
 
-permissions:
-  contents: write # Grants the workflow permission to push changes
-  pull-requests: write
+# permissions:
+#   contents: write # Grants the workflow permission to push changes
+#   pull-requests: write
 
 jobs:
   smoke-test:
@@ -15,7 +15,7 @@ jobs:
     # We need to know what branch to test. ref_name contains the name of the
     # triggering branch. Store it.
     - name: Determine current branch
-      run: echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+      run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
     # checkout the correct branch, into the source directory.
     - name: Checkout source branch
       uses: actions/checkout@v6
