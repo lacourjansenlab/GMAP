@@ -1,5 +1,5 @@
 [![coverage Status](https://raw.githubusercontent.com/lacourjansenlab/GMAP/refs/heads/gh-pages/coverage-badge.svg)](https://lacourjansenlab.github.io/GMAP/htmlcov/index.html)
-[![build](https://github.com/lacourjansenlab/GMAP/actions/workflows/run_pytest.yml/badge.svg?branch=main)](https://github.com/lacourjansenlab/GMAP/actions/workflows/run_pytest.yml)
+[![run-pytest](https://img.shields.io/github/actions/workflow/status/lacourjansenlab/GMAP/run_pytest.yml?style=flat&logo=github&label=build)](https://github.com/lacourjansenlab/GMAP/actions/workflows/run_pytest.yml)
 
 # GMAP
 
