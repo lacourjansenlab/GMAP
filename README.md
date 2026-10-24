@@ -1,4 +1,5 @@
-[![Coverage Status](https://raw.githubusercontent.com/lacourjansenlab/GMAP/refs/heads/gh-pages/coverage-badge.svg)](https://lacourjansenlab.github.io/GMAP/htmlcov/index.html)
+[![coverage Status](https://raw.githubusercontent.com/lacourjansenlab/GMAP/refs/heads/gh-pages/coverage-badge.svg)](https://lacourjansenlab.github.io/GMAP/htmlcov/index.html)
+[![build](https://github.com/lacourjansenlab/GMAP/actions/workflows/run_pytest.yml/badge.svg?branch=main)](https://github.com/lacourjansenlab/GMAP/actions/workflows/run_pytest.yml)
 
 # GMAP
 
