@@ -4,6 +4,10 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write # Grants the workflow permission to push changes
+  pull-requests: write
+
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
