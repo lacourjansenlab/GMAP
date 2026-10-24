@@ -4,10 +4,6 @@ on:
   release:
     types: [published]
 
-# permissions:
-#   contents: write # Grants the workflow permission to push changes
-#   pull-requests: write
-
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
@@ -50,7 +46,7 @@ jobs:
             python-version: "3.10"
     steps:
     - name: Determine current branch
-      run: echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+      run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
     # checkout the correct branch, into the source directory.
     - name: Checkout source branch
       uses: actions/checkout@v6
@@ -100,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Determine current branch
-      run: echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+      run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
     # checkout the correct branch, into the source directory.
     - name: Checkout source branch
       uses: actions/checkout@v6
@@ -145,7 +141,7 @@ jobs:
     if: always()
     steps:
     - name: Determine current branch
-      run: echo "SOURCE_BRANCH=${{ github.ref_name }}" >> $GITHUB_ENV
+      run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
     # checkout the correct branch, into the source directory.
     - name: Checkout source branch
       uses: actions/checkout@v6
