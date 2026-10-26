@@ -29,6 +29,7 @@ from pathlib import Path
 
 # 3rd party lib imports
 import numpy as np
+import pytest
 
 # GMAP imports
 import GMAP.src.tools.cmd_interface as GM_ci
@@ -55,6 +56,7 @@ def test_GLDP_coups(tmp_path):
     core_test_frequencies("GLDP", tmp_path, 0.0002)
 
 
+@pytest.mark.nofiles
 def core_test_frequencies(mapname, tmp_path, limit, nameadd=""):
     # This runs GMAP to create the results
     if mapname in ("Tasumi", "GLDP"):

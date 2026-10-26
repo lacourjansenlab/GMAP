@@ -56,7 +56,6 @@ import GMAP.src.tools.system_reader as GM_sr
 def manage_frame(frame, run_pars):
     """Performs all the checks involved with starting a new frame.
 
-    Future/TODO:
     Checks if the new frame should be treated (or is out of range).
     Prints the new frame number, along with an ETA (to know how much
     longer the calculation will take). Also confirms whether there is
@@ -70,6 +69,11 @@ def manage_frame(frame, run_pars):
     run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
         The 'main' RunPars instance containing all the basic
         run-defining parameters.
+
+    Returns
+    -------
+    break_after : bool
+        Whether the per-frame loop should be broken after this frame.
     """
 
     framenum = frame.frame
@@ -93,6 +97,7 @@ def manage_frame(frame, run_pars):
     else:  # lvl4 prints ETA for each frame.
         verbose_level = 4
 
+    # Print the frame ETA header
     GM_pt.Printer.print(
         4,
         "Current time   | current frame | time elapsed | time to go   | "
@@ -207,6 +212,19 @@ def early_stop(framenum, run_pars):
     If there is not enough time to finish two more, the next batch will
     not start. This is done to ensure that there is also enough time for
     the program to finish things off after the last batch.
+
+    Parameters
+    ----------
+    framenum : int
+        The frame number at which this function is called
+    run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
+
+    Returns
+    -------
+    stop : bool
+        Whether the calculation should stop early.
     """
 
     relframenum = framenum - run_pars.start_frame
@@ -326,8 +344,6 @@ def trj_loop(run_pars, system):
         GM_pt.Printer.add_time(
             4, "updates done. next: initialize", "StructInit", "ms")
 
-        # (only if needed) recalc COM
-
         # initialize output structures (like Ham)
         outputs = GM_pf.generate_output_structures(run_pars, system)
 
@@ -392,9 +408,6 @@ def trj_loop(run_pars, system):
         for mapname in system.oscillators_ordered_coup.keys():  # pairs
             map_ = run_pars.requested_pairmapdict[mapname]
             map_.code.GM_post_run(map_, system)
-
-    # print all that the user does not yet know
-    # (profiler?)
 
 
 def print_calculation_summary(run_pars, system, parallel=False):
@@ -674,6 +687,45 @@ def run(
     in_parfile, argslist, run_pars, singles_mapdict, pairs_mapdict,
     cmd_pars, in_pars, def_pars, ref_pars
 ):
+    """Performs the 'run' command of GEM (GMAP GEM run)
+
+    Initializes maps, C library, system_reader.System.
+    Writes coupling file, parameter file.
+    Performs trajectory loop (main calculation)
+    Starts/ends profiling, and formats output.
+    Reports calculation summary.
+
+    Parameters
+    ----------
+    in_parfile : `pathlib.Path`
+        The path to the requested input parameter file.
+    argslist : list of str
+        The slice of sys.argv containing all parameter choices given on
+        the command line.
+    run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
+    singles_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.map_reader.SingleMap` pairs
+        Stores all the :class:`~GMAP.src.tools.map_reader.SingleMap`
+        objects for each map supplied. The keys are the Map.name
+        attributes corresponding to the maps stored as values.
+    pairs_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.map_reader.PairMap` pairs
+        Stores all the :class:`~GMAP.src.tools.map_reader.PairMap`
+        objects for each map supplied. The keys are the Map.name
+        attributes corresponding to the maps stored as values.
+    cmd_pars : :class:`RawPars`
+        Contains any parameter choices made on the command line
+    in_pars : :class:`RawPars`
+        Contains any parameter choices made in the input parameter file
+    def_pars : :class:`RawPars` or :class:`RefPars`
+        Contains all default parameter choices. Might be ref_pars, might
+        be from a separate default parameters file.
+    ref_pars : :class:`RefPars`
+        Contains all available parameters from GMAP itself
+        (not map-specific)
+    """
 
     # If requested, profile the run.
     if run_pars.profiler:
@@ -763,6 +815,27 @@ def run(
 
 
 def par_single_job(inputpar):
+    """The executive unit for parallel jobs.
+
+    concurrent.futures.ProcessPoolExecutor.map takes only a function
+    to execute, and a single parameter to give to that function.
+    This function is the one given to that executor. It needs to unpack
+    the provided inputs, and contain the actual instruction for the
+    calculation.
+
+    The way this is done, is by using subprocess to call another
+    GMAP instance to perform a single-core calculation. In/output file
+    names, verbosity, number of cores, number of frames are all adjusted
+    to work as a child-process.
+
+    Parameters
+    ----------
+    inputpar : list of list of dict/int pairs
+        The input needed for the call to work. The dict is the dict
+        representation of runpars, while int is the number (id) of the
+        core executing this job.
+    """
+
     run_pars_dict, core_num = inputpar
     n_cores = run_pars_dict["number_cores"]
 
@@ -825,6 +898,47 @@ def parallel(
     in_parfile, argslist, run_pars, singles_mapdict, pairs_mapdict,
     cmd_pars, in_pars, def_pars, ref_pars
 ):
+    """Performs the 'parallel' command of GEM (GMAP GEM run)
+
+    Initializes maps, system_reader.System.
+    Writes parameter file.
+    Removes system again (to save memory).
+    Manages filelocations for parallel runs.
+    Calls parallel runs.
+    Merges output files to look like 'normal' outputs again.
+    Reports calculation summary.
+
+    Parameters
+    ----------
+    in_parfile : `pathlib.Path`
+        The path to the requested input parameter file.
+    argslist : list of str
+        The slice of sys.argv containing all parameter choices given on
+        the command line.
+    run_pars : :class:`~GMAP.src.tools.parameter_parser.RunPars`
+        The 'main' RunPars instance containing all the basic
+        run-defining parameters.
+    singles_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.map_reader.SingleMap` pairs
+        Stores all the :class:`~GMAP.src.tools.map_reader.SingleMap`
+        objects for each map supplied. The keys are the Map.name
+        attributes corresponding to the maps stored as values.
+    pairs_mapdict : dict of str: \
+        :class:`~GMAP.src.tools.map_reader.PairMap` pairs
+        Stores all the :class:`~GMAP.src.tools.map_reader.PairMap`
+        objects for each map supplied. The keys are the Map.name
+        attributes corresponding to the maps stored as values.
+    cmd_pars : :class:`RawPars`
+        Contains any parameter choices made on the command line
+    in_pars : :class:`RawPars`
+        Contains any parameter choices made in the input parameter file
+    def_pars : :class:`RawPars` or :class:`RefPars`
+        Contains all default parameter choices. Might be ref_pars, might
+        be from a separate default parameters file.
+    ref_pars : :class:`RefPars`
+        Contains all available parameters from GMAP itself
+        (not map-specific)
+    """
 
     # first, some bookkeeping to figure out basics
 
@@ -908,11 +1022,18 @@ def parallel(
     print_calculation_summary(run_pars, system_dummy, parallel=True)
 
 
-# still a placeholder - this function still has to grow. Should in the
-# end manage the different run modes, and probably do nothing else?
-# This means, a big decision tree: match job, case x: call func_x,
-# case y: call func_y, etc. Now, we're basically only doing 1 kind of job.
 def GEM(callcommand):
+    """The entry point of the module.
+
+    Parses the command line, extracs parameters, and calls the
+    required function for job execution.
+
+    Parameters
+    ----------
+    callcommand : list of str
+        This is the user input into the terminal.
+    """
+
     GM_pt.Printer.add_time(
         3, "Start Parsing GMAP parameters", "ParParse", "ms")
     # step 1 (is GEM in demo mode? to become: What job do we need to do?)
@@ -954,8 +1075,17 @@ def main(callcommand):
     """Fakes behaviour as if called from __main__.
 
     During normal operation (user types 'GMAP ...' in the command line),
-    this function should never be called. This function replicates the
-    'normal' behaviour so partial tests are possible.
+    this function should never be called. Instead, the entrypoint is in
+    the cmd_interface file, and it points directly to the GEM function
+    above.
+    
+    This function replicates the 'normal' behaviour so partial tests are
+    possible.
+
+    Parameters
+    ----------
+    callcommand : list of str
+        This is the user input into the terminal.
     """
 
     if len(callcommand) == 1:

@@ -12,7 +12,7 @@ Any parameter specified here can be set/supplied by the user, so choices can var
 
 In the program, the contents of this file are stored in the map-specific instance of a :class:`~GMAP.src.tools.map_reader.Map` object, as the `ref_pars` attribute.
 
-For a good example, you can look at the file 'reference_parameters.ref' in the sourcefiles directory. It contains all the parameters used by the program.
+For a good example, you can look at the file `'reference_parameters.ref' <https://github.com/lacourjansenlab/GMAP/blob/main/GMAP/sourcefiles/reference_parameters.ref>`__ in the sourcefiles directory. It contains all the parameters used by the program.
 
 
 ***********
@@ -39,7 +39,11 @@ In the case of 'path' parameter types, something must be appended, too. There ar
 Finally, all files denoted as above are expected to already exist. If a parameter should denote a filename for a file to be created during a run, the parameter type should be appended with '_c'. This should go after anything else.
 
 While all the above gives information on how the program should deal with the parameter, parameter_choice contains the actual choice(s) to be used. There are a few different possibilities.
-Firstly, it might not make sense at all to define this parameter in the reference file. This is like a default file, so, for example, the parameter storing the default parameter file name doesn't make sense to be there. But another valid reason might just be that the program is easier to use if the parameter is not defined there, like the log file name. Whatever the case, if you don't want to allow the default parameter file to contain a choice (and not have a choice in the reference file either), you opt for the choice '[N/A]'.
+
+Firstly, it might not make sense at all to define this parameter in the reference file. This is like a default file, so, for example, the parameter storing the default parameter file name doesn't make sense to be there. But another valid reason might just be that the program is easier to use (not: the map is easier to create) if the parameter is not defined there, like the log file name. Whatever the case, if you don't want to allow the default parameter file to contain a choice (and not have a choice in the reference file either), you opt for the choice '[N/A]'. Make sure to use this very judiciously, as each user, for each run, will always have to specify this parameter.
+
 Secondly, you might want to limit what choices a user can make. For example, for the verbose setting, we only want to allow the user the numbers 0-4 (inclusive). In that case, all choices are entered (separated by whitespaces), and the default choice is marked by a pair of square brackets. So, for verbose, the choice looks like this: '0 1 [2] 3 4'. If the parameter type is prepended by 'list\_', multiple items may be marked. A default MUST be marked (in order to identify that there are limited options). 
-Finally, a user might have free choice. In that case, only the default choices have to be given. The format is the same as above - items separated by whitespaces. If the parameter type is prepended by 'list', there may be multiple default choices, otherwise, at most one.
+
+Finally, a user might have free choice. In that case, only the default choices have to be given. The format is the same as above - items separated by whitespaces. If the parameter type is prepended by 'list', there may be multiple default choices, otherwise, at most one. There should be no square brackets around any choice.
+
 Please note that implicit to the parameter type, bools can only take 'True' or 'False' (capitalization is ignored by the program) - this does not need to be supplied as options in the reference parameter file.

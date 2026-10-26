@@ -10,7 +10,7 @@ The purpose of Setup is to simplify editing of these files.
 Future functions may include a force flag and the abillity to create new
 folders.
 
-For more information, check the manual on N/A.
+For more information, check the manual on https://lacourjansenlab.github.io/GMAP/.
 """
 
 # standard lib imports
@@ -104,8 +104,12 @@ def main():
     """Fakes behaviour as if called from __main__.
 
     During normal operation (user types 'GMAP ...' in the command line),
-    this function should never be called. This function replicates the
-    'normal' behaviour so partial tests are possible.
+    this function should never be called. Instead, the entrypoint is in
+    the cmd_interface file, and it points directly to the Setup function
+    above.
+    
+    This function replicates the 'normal' behaviour so partial tests are
+    possible.
     """
 
     callcommand = sys.argv

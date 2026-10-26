@@ -73,7 +73,7 @@ While we can find a single cysteine residue like this, it doesn't guarantee that
 
 Now, there are two residues. All atoms that belong to the 'first' residue must be mentioned after the first residue-itentifying square brackets. Then, we start the second one, with all required atoms with it. Done, right?
 
-Wrong. There is no indication of the actual bond yet. We only indicated that the group consists of two residues, but in this format, they can be meters apart. Whenever a group consists of more than one residue, we have to indicate how the given residues should be bonded. All residues should be bonded together, but there are no rules as to what residues should be bonded to which others, and in which order they should be given.
+Wrong. There is no indication of the actual bond yet. We only indicated that the group consists of two residues, but in this format, they can be meters apart. Whenever a group consists of more than one residue, we have to indicate how the given residues should be bonded. All residues given on a single line should be bonded together, but there are no rules as to what residues should be bonded to which others, and in which order they should be given.
 
 In this case, we only need a single bond - we need to indicate that the two sulfur atoms are bonded. Lets call our bond '1' (any index will do). We have to label the atoms that are bonded by bond 1 with a 1::
 
@@ -271,7 +271,7 @@ Multiple bonds are separated using whitespace, again, two identical examples:
 .. code-block:: text
     
     functional_group   [CPR] C1 C2 C3
-    functional_group_bonds  1-2 2-3 1-3
+    functional_group_bonds  0-1 1-2 0-2
 
 
 **********
@@ -302,7 +302,7 @@ Or, if you want a completely different order of atoms::
     functional_group        [ASN]    CG  OD1  CB  ND2  HD21  HD22
     used_atoms              4 0 3 1   # HD21, CG, ND2, OD1
 
-In this case, the zeroth atom in used atom will have the same name as the zeroeth atom in functional_group, its name will be CG. Similarly, the twoeth atom in used_atoms is defined to be the threeeth atom in functional_group, so its name will be ND2.
+In this case, the zeroth atom in used_atoms will have the same name as the zeroeth atom in functional_group, its name will be CG. Similarly, the twoeth atom in used_atoms is defined to be the threeeth atom in functional_group, so its name will be ND2.
 
 .. hint::
     Most programming languages count starting from 0. Therefore, referring to an item as the 'first' can get confusing - we associate first with 1, while it will actually be called 0. This is why a different set of names is often used for counting. You can say that the first letter of the alphabet is a, but you could also say that the zeroeth letter is a. alphabet[1] is b, so the oneth letter of the alphabet is b.
@@ -667,7 +667,7 @@ dipole_data_file
 
 As illustrated under 'r_pos and r_vec', the dipole moment of oscillators is a key property for the program. While the information in that section is used to give the direction of the dipole moment vector (and its position), it doesn't contain any information on its magnitude. Thats what this parameter, and the parameter 'dipole_gas_phase' are for. If the magnitude of the dipole moment cannot vary, see dipole_gas_phase.
 
-This parameter is used for defining how the dipole moment depends on the electrostatics from the environment. There are two different options; either the dipole has a set direction with the magnitude depending on the elecctrostatics, or each of the x, y and z components of the vector depend on the electrostatics separately. Each of the two options requires a slightly different file format, so this parameter is specified using two parts. First, you either specify ``magnitude`` or ``xyz`` (depending on which format), and then this is followed up by a filename (with extension) present in the same mapping directory. This file will contain the actual dependency.
+This parameter is used for defining how the dipole moment depends on the electrostatics from the environment. There are two different options; either the dipole has a set direction with the magnitude depending on the electrostatics, or each of the x, y and z components of the vector depend on the electrostatics separately. Each of the two options requires a slightly different file format, so this parameter is specified using two parts. First, you either specify ``magnitude`` or ``xyz`` (depending on which format), and then this is followed up by a filename (with extension) present in the same mapping directory. This file will contain the actual dependency.
 
 .. tip::
     Each of the methods uses x, y and z directions. These are assumed local to the oscillator at the moment its dipole moment is determined (so, within a single frame), unless stated otherwise. The final dipole moment calculated by the program is in the same cartesian coordinates as the provided MD system was.

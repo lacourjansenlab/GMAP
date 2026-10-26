@@ -2,11 +2,15 @@
 # standard lib imports
 import filecmp
 
+# 3rd party imports
+import pytest
+
 # local imports
 import GMAP.src.tools.cmd_interface as GM_ci
 
 
 # Now, we also test whether the program can actually run.
+@pytest.mark.nofiles
 def test_if_runs(tmp_path):
     with open(tmp_path / "input_parameters.txt", "w") as fhand:
         fhand.write("output_directory  out\n")
@@ -18,6 +22,7 @@ def test_if_runs(tmp_path):
         str((tmp_path / "input_parameters.txt").resolve())])
 
 
+@pytest.mark.nofiles
 def test_early_quit(tmp_path):
     with open(tmp_path / "input_parameters.txt", "w") as fhand:
         fhand.write("output_directory  out\n")
@@ -42,6 +47,7 @@ def test_early_quit(tmp_path):
                 assert line.split()[2] == "0-51"
 
 
+@pytest.mark.nofiles
 def test_parallel_run(tmp_path):
     # make directories
     dir_onecore = tmp_path / "onecore"

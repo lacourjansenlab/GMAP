@@ -1,3 +1,33 @@
+"""
+Provides the command line interface.
+
+When a user calls GMAP, this script is activated. It makes sure the
+correct program (GEM, Setup) is called, and performs the first
+rudimentary parsing of command line arguments.
+
+Functions
+-------
+cmd_interface
+    The main function orchestrating the process from GMAP command to
+    calling the correct program. Uses the other functions in this
+    script.
+calldict
+    Creates a dict out of the call command with parameter names as keys,
+    and user choice for these as values.
+get_safe_dark
+    From the call dict, looks at user choices, and determines whether
+    GMAP should run in safe mode or dark mode.
+print_logo
+    Prints the GMAP welcome message. Logo, version, github link, date,
+    and command that invoked GMAP.
+cmd_to_help
+    Prints the correct help message.
+cmd_to_tools
+    Determines what (sub) program (GEM, Setup) should be called.
+main
+    Obtains sys.argv and calls cmd_interface.
+"""
+
 
 import sys
 
@@ -172,6 +202,7 @@ def print_logo():
     logostr += colors.clear
 
     Printer.print(1, "\n\n" + logostr + "\n")
+    Printer.print(1, f"\nRunning GMAP version {GMAP.__version__}")
     Printer.print(
         1,
         "\nFor the most up-to-date version of GMAP, reporting bugs/issues, "

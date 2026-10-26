@@ -46,8 +46,8 @@ Remarks
 *******
 
 - This codebase is object oriented. For consistency, functional programming should be avoided.
-- **Always** use pathlib over os. The os module is deprecated.
-- Not a single map should be left in the 'core' - also holds for amideBB and such.
+- **Always** use pathlib over os. Where it has the same functionality. Some parts of os have never received a successor, those can still use os.
+- Not a single map should be left in the 'core' of GMAP - also holds for amideBB and such.
 - Argparse has been considered, but will not be used.
 
 
@@ -55,7 +55,7 @@ Remarks
 General rules
 *************
 
-- Documentation, documentation! When writing code, document all the choices/assumptions/etc you make. If it is too much to immediately document them neatly, use the 'development notes-goals-thoughts.md' file. It has a dump section where you can put them down. Add your initials, so someone else can come remind you later.
+- Documentation, documentation! When writing code, document all the choices/assumptions/etc you make. If it is too much to immediately document them neatly, at least jot them down somewhere. Add your initials, in case you forget to work them out later.
 - Whenever the function of a piece of code isn't easily discernable, use comments.
 - Storage space for code is not the issue. Legibility is more important than how compact a line of code is.
 - Don't worry about efficiency/speed of a function if it doesnt take more than 1% of total calculation time. This doesn't mean we should aim for blatantly needlessly expensive code -  'good means good enough'.
@@ -122,7 +122,7 @@ Imports
 
 - Never import everything from a source (from numpy import \*) – this makes the source of methods used very unclear. Things like ‘import numpy’, ‘import numpy as np’, and ‘from numpy import pi’ are okay.
 - For local imports, use absolute imports wherever possible – exception to this are large projects where absolute imports are unwieldy, and relative are more legible
-- The module os is deprecated – use pathlib instead.
+- The module os is deprecated – use pathlib instead, where pathlib has an alternative. For the features of os pathlib doesn't cover, os is acceptable.
 
 
 *************

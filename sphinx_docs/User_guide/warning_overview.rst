@@ -13,51 +13,52 @@ Codes starting with SU
 SU_FP
 =====
 
+.. _UserGuide_page_warning_overview_SU_FP_1:
 SU_FP_1
 -------
-The user attempted to supply their own reference parameter file. This behaviour is not yet supported. Instead, please use a default parameter file. Change the .ref extension to a .txt, and make sure the file structure matches the example in [ADD CROSSLINK!].
+The user attempted to supply their own reference parameter file. This behaviour is not yet supported. Instead, please use a default parameter file. Change the .ref extension to a .txt, and make sure the file structure matches the example in :ref:`the quickstart amide tutorial<Quickstart_Tutorial_amidecalc_fileexample>`.
 
 SU_FP_2
 -------
-The file structure for reference parameter files is different than that of default parameter files. Make sure the file structure matches the example in [ADD CROSSLINK!].
+The file structure for reference parameter files is different than that of default parameter files. Make sure the file structure matches the example in `the main repository <https://github.com/lacourjansenlab/GMAP/blob/main/GMAP/sourcefiles/reference_parameters.ref>`__.
 
 SU_FP_3
 -------
 The type of a parameter in the reference parameter file has been specified slightly wrong. The format is recognized, but the contents are probably misspelled. 
-If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file `'reference_parameters.ref' <https://github.com/lacourjansenlab/GMAP/blob/main/GMAP/sourcefiles/reference_parameters.ref>`__ that lives in the sourcefiles directory for examples.
 If you have not touched the file that created this error, please get in touch with the person that created the file.
 
 SU_FP_4
 -------
 An unexpected error was encountered while parsing the types of parameters in the reference parameter file. It might be that there is a mistake in the (type or amount of) brackets used, whitespaces between the brackets, and many more.
-If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file `'reference_parameters.ref' <https://github.com/lacourjansenlab/GMAP/blob/main/GMAP/sourcefiles/reference_parameters.ref>`__ that lives in the sourcefiles directory for examples.
 If you have not touched the file that created this error, please get in touch with the person that created the file.
 
 SU_FP_5
 -------
 While parsing the choice of a parameter in the reference parameter file, there was a wrong type. Either the parameter has an unexpected python type, or a bool was specified with an choice of the wrong type (it couldn't be converted to a True or False). 
-If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file `'reference_parameters.ref' <https://github.com/lacourjansenlab/GMAP/blob/main/GMAP/sourcefiles/reference_parameters.ref>`__ that lives in the sourcefiles directory for examples.
 If you have not touched the file that created this error, please get in touch with the person that created the file.
 
 SU_FP_6
 -------
 While parsing the choice of a parameter in the reference parameter file, an unexpected amount of choices was encountered. If the type of the parameter does not contain 'list\_', only one choice can be given.
-If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file `'reference_parameters.ref' <https://github.com/lacourjansenlab/GMAP/blob/main/GMAP/sourcefiles/reference_parameters.ref>`__ that lives in the sourcefiles directory for examples.
 If you have not touched the file that created this error, please get in touch with the person that created the file.
 
 SU_FP_7
 -------
 While parsing the choice of a parameter in the reference parameter file, a different error occurred.
-If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file 'reference_parameters.ref' that lives in the sourcefiles directory for examples.
+If you are developing the file that triggered the error, :ref:`here <AddMap_page_map_parameters_types>` you can find more info on the different types, or look at the file `'reference_parameters.ref' <https://github.com/lacourjansenlab/GMAP/blob/main/GMAP/sourcefiles/reference_parameters.ref>`__ that lives in the sourcefiles directory for examples.
 If you have not touched the file that created this error, please get in touch with the person that created the file.
 
 SU_FP_8
 -------
-The reference parameter file was missing the parameters 'influencers_whitelist' and 'influencers_blacklist'. Make sure both are present.
+The reference parameter file was missing the parameters :ref:`'influencers_whitelist'<UserGuide_page_parameter_overview_inflWL>`` and :ref:`'influencers_blacklist'<UserGuide_page_parameter_overview_inflBL>`. Make sure both are present.
 
 SU_FP_9
 -------
-Due to definition conflicts, path-type parameters cannot take options in the reference file. If you want a user to pick between a number of files, give them names and use a string type parameter instead.
+Due to definition conflicts, path-type parameters cannot take options in the reference file. If you want a user to pick between a number of files, give them names and use a string type parameter instead. An example of this can be found in the `AmideBB <https://github.com/lacourjansenlab/GMAP/blob/main/GMAP/maps/Singles/AmideBB/parameters.ref>`__ and `AmideSC <https://github.com/lacourjansenlab/GMAP/blob/main/GMAP/maps/Singles/AmideSC/parameters.ref>`__ maps, which both use the 'frequency_map_choice' parameter to select one of the frequency map parameter files.
 
 
 SU_WP
@@ -137,7 +138,7 @@ SU_NP
 
 SU_NP_1
 -------
-The program needs a choice for the parameter, but none was found. Most likely, this is a parameter that is not allowed to be specified in both the default and reference parameter files, and should therefore be specified in the input parameter file or on the command line. [ADD CROSSLINK!]
+The program needs a choice for the parameter, but none was found. Most likely, this is a parameter that is not allowed to be specified in both the default and reference parameter files, and should therefore be specified in the input parameter file or on the command line. The parameter name provided in the error message can be found on :ref:`the parameter overview page <UserGuide_page_parameter_overview>`. There, you find more information on this parameter, and how to provide it.
 
 SU_NP_2
 -------
@@ -149,15 +150,15 @@ After interpreting the choices made on the command line, input-, default- and re
 
 SU_NP_4
 -------
-Considering all parameter sources, it was found that the influencers should be defined by the given file. This file, however, contains (an) invalid character(s).
+Considering all parameter sources, it was found that the influencers should be defined by the given file. This file, however, contains (an) invalid character(s). :ref:`The specifying influencers page<UserGuide_page_influencer_specification>` explains in more detail how to structure this file.
 
 SU_NP_5
 -------
-The given parameter file contains a mistake in how things are specified. See the returned python error for more information. To see the error, set either the parameter 'verbose', or the parameter 'verbose_logfile' to 4.
+The given parameter file contains a mistake in how things are specified. See the returned python error for more information. To see the error, set either the parameter 'verbose', or the parameter 'verbose_logfile' to 4. :ref:`The specifying influencers page<UserGuide_page_influencer_specification>` page might be able to help.
 
 SU_NP_6
 -------
-The given command for select_atoms triggered some error. See the returned python error for more information. To see the error, set either the parameter 'verbose', or the parameter 'verbose_logfile' to 4.
+The given command for select_atoms triggered some error. See the returned python error for more information. To see the error, set either the parameter 'verbose', or the parameter 'verbose_logfile' to 4. :ref:`The specifying influencers page<UserGuide_page_influencer_specification>` page might be able to help.
 
 SU_NP_7
 -------
@@ -165,7 +166,7 @@ The mentioned parameters have choices that are valid on their own, but their com
 
 SU_NP_8
 -------
-The given parameter was provided with an invalid choice. The error gives more information on what parameter, and whats wrong.
+The given parameter was provided with an invalid choice. The error gives more information on what parameter, and whats wrong. :ref:`This page <UserGuide_page_parameter_overview>` might be of help.
 
 
 SU_PP
@@ -173,19 +174,19 @@ SU_PP
 
 SU_PP_1
 -------
-The specified choice of how the program should run was not recognized. Use the suggested line to see the options.
+The specified choice of how the program should run was not recognized. Run the suggested command to see the options.
 
 SU_PP_2
 -------
-The chosen way of running this program needs an input file. See [ADD CROSSLINK!] on how to correctly specify one.
+The chosen way of running this program needs an input file. :ref:`The quickstart amide tutorial<Quickstart_Tutorial_amidecalc>` has an example showing how to do this.
 
 SU_PP_3
 -------
-The chosen input parameter file on the command line was not found. Make sure you spelled it correctly. Also see [ADD CROSSLINK!]
+The chosen input parameter file on the command line was not found. Make sure you spelled it correctly, and the named file exists. :ref:`The quickstart amide tutorial<Quickstart_Tutorial_amidecalc>` has an example showing how to do this.
 
 SU_PP_4
 -------
-The command line contains the same parameter name more than once. Make sure to only give it once. If you use the shorthand, the full name is not needed. If there is a parameter that takes multiple choices, see [ADD CROSSLINK!] on how to supply those.
+The command line contains the same parameter name more than once. Make sure to only give it once. If you use the shorthand, the full name is not needed. If there is a parameter that takes multiple choices, see :ref:`this page <UserGuide_page_specifying_parameters_file>` on how to supply those.
 
 
 SU_FH
@@ -193,7 +194,7 @@ SU_FH
 
 SU_FH_1
 -------
-The chosen default parameter file could not be found. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. [ADD CROSSLINK!]
+The chosen default parameter file could not be found. Either, there is a typo in the path specified, or a mistake has been made in where the path should be specified relative to. One option is to see if this error persists if you specify the absolute path. :ref:`This page <UserGuide_page_specifying_parameters_file>` explains how to do this, and :ref:`the quickstart amide tutorial<Quickstart_Tutorial_amidecalc>` has an example.
 
 SU_FH_2
 -------
@@ -201,7 +202,7 @@ The program requires some reference as to what parameters are required. For some
 
 SU_FH_3
 -------
-Probably, the wrong file was supplied for this parameter. The program expects a plain text file, as can be made/edited using notepad, nano, vi, less, etc. [ADD CROSSLINK!]
+Probably, the wrong file was supplied for this parameter. The program expects a plain text file, as can be made/edited using notepad, nano, vi, less, etc. :ref:`This page <UserGuide_page_specifying_parameters_file>` explains how to do this, and :ref:`the quickstart amide tutorial<Quickstart_Tutorial_amidecalc>` has an example.
 
 
 SU_MR
@@ -217,7 +218,7 @@ SU_GEM
 
 SU_GEM_1
 --------
-The default parameter file supplied to gem is expected to be a .txt file. This error was triggered because the file has a different extension. .ref files are planned to be supported in the future (See SU_FP_1) [ADD CROSSLINK!]
+The default parameter file supplied to gem is expected to be a .txt file. This error was triggered because the file has a different extension. .ref files are planned to be supported in the future. Also see :ref:`SU_FP_1<UserGuide_page_warning_overview_SU_FP_1>`.
 
 
 SU_GM
@@ -238,31 +239,45 @@ MI_MR
 
 MI_MR_1
 -------
-For some reason, the main python file of the map could not be opened. This is an issue that most likely needs to be fixed by the developer of this file. If you set the verbose (or verbose logfile) level to 4, you can see the python traceback for more information.
+For some reason, the main python file of the map could not be opened. This is an issue that most likely needs to be fixed by the developer of this file. If you set the verbose (or verbose logfile) level to 4, you can see the python traceback for more information. 
+
+Information for map makers: Make sure to look at the correct traceback, as there might suddenly be multiple. Usually, this error code is raised by 'simple' programming errors.
 
 MI_MR_2
 -------
 Could not find the core.txt file for the given map. A map is defined by its core, and cannot live without. This is an issue that most likely needs to be fixed by the developer of this map.
 
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
+
 MI_MR_3
 -------
-The given parameter had no choice defined. Each parameter needs a choice for a map to make sense. This is an issue that most likely needs to be fixed by the developer of this map.
+The given keyword had no choice defined. Each keyword needs a choice for a map to make sense. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
 
 MI_MR_4
 -------
-The given parameter occurs on more than a single line in the file. However, it may only occur once. This is an issue that most likely needs to be fixed by the developer of this map.
+The given keyword occurs on more than a single line in the file. However, it may only occur once. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
 
 MI_MR_5
 -------
 An extra core file was requested to be appended to the given core file. However, some error occurred while trying to do this. This is an issue that most likely needs to be fixed by the developer of this map.
 
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
+
 MI_MR_6
 -------
 An extra core file was requested to be appended to the given core file. However, no file of the requested name could be found. If the developer did not provide additional instructions on extra files to add, this is an issue that most likely needs to be fixed by the developer of this map.
 
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
+
 MI_MR_7
 -------
 A prerequisite part of the map was missing. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingMainPy>` you can find information for the main.py file for singles maps.
 
 
 MI_MC
@@ -270,23 +285,29 @@ MI_MC
 
 MI_MC_1
 -------
-There are two ways of defining what the molecule a map operates on looks like. Either you specify each possible version of the molecule on a new line of core.txt using the parameter 'functional group', or, you choose to not define these in the core.txt file, but instead in a separate file (this might be preferred for maps operating on (very) large molecules). This file can be 'linked' by specifying its name using the parameter 'functional_group_file'.
+There are two ways of defining what the molecule a map operates on looks like. Either you specify each possible version of the molecule on a new line of core.txt using the keyword 'functional group', or, you choose to not define these in the core.txt file, but instead in a separate file (this might be preferred for maps operating on (very) large molecules). This file can be 'linked' by specifying its name using the keyword 'functional_group_file'.
 
 The two methods are exclusive - all molecules must be in that single file, or all must be in the core.txt file. This warning was triggered because both systems were used simultaneously.
 
 This is an issue that most likely needs to be fixed by the developer of this map.
 
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps.
+
 MI_MC_2
 -------
 There are two ways of defining what the molecule a map operates on looks like (see error SU_MC_1). This definition is essential: without, the map cannot function. Neither of the two methods was used/recognized in the file, resulting in a non-functional map. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps.
 
 MI_MC_3
 -------
 The map requires the given file to exist in order to recognize the molecule in the MD system. However, the file could not be found. Please make sure you copied the entire map-specific directory in your maps directory. If you did so, this is an issue that most likely needs to be fixed by the developer of this map.
 
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps.
+
 MI_MC_4
 -------
-The map contains a definition of functional_group that couldn't be interpreted. This could either be in the mentioned file itself, or the file linked in that file under the parameter functional_group_file. This is an issue that most likely needs to be fixed by the developer of this map.
+The map contains a definition of functional_group that couldn't be interpreted. This could either be in the mentioned file itself, or the file linked in that file under the keyword functional_group_file. This is an issue that most likely needs to be fixed by the developer of this map.
 
 The error code given consists of three parts, separated by two dashes. The first part is the thing that went wrong (see overview below), the second and third indicate where this went wrong. The second number indicates which line (in the case of core.txt), or which newstruct (in the case of a provided file) triggered the error - 0 indicates the first, 1 indicates the second, etc. The 3rd number indicates the index of the atom that was last parsed successfully before the error triggered.
 
@@ -309,44 +330,64 @@ The error code given consists of three parts, separated by two dashes. The first
     | !!! careful! For this error, the 3rd number does not indicate the index of the last successful atom, but instead, the 'label' of the bond triggering the error !!!
     | When parsing the bonds defined within this structure (using parentheses), a certain bond identifier was found too often, or not often enough. Each identifier should occur exactly twice, a single atom may have multiple bond identifiers.
 
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps.
+
 MI_MC_5
 -------
 The map contains a definition of 'functional_group_bonds' that cannot be interpreted. Make sure it contains exactly two indices (each consisting of numbers only), separated by only a hyphen. Spaces should only be used to separate bonds from each other. The indices should count along the atoms defined in 'functional_group', starting from 0. Residue names do not count in this counting method.
 
 This is an issue that most likely needs to be fixed by the developer of this map.
 
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps.
+
 MI_MC_6
 -------
-The core.txt of every map can contain a variety of parameters, some of which are optional. Others are mandatory. The listed parameter is mandatory, but was missing. It must be added before the map can function. This is an issue that most likely needs to be fixed by the developer of this map.
+The core.txt of every map can contain a variety of keywords, some of which are optional. Others are mandatory. The listed keyword is mandatory, but was missing. It must be added before the map can function. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
 
 MI_MC_7
 -------
-This parameter must be specified using only numbers and spaces, but something else was used. This is an issue that most likely needs to be fixed by the developer of this map.
+This keyword must be specified using only numbers and spaces, but something else was used. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
 
 MI_MC_8
 -------
-The size of the integers for this parameter cannot exceed the amount of atoms given for the other mentioned parameter. Please note that counting starts at 0. This is an issue that most likely needs to be fixed by the developer of this map.
+The size of the integers for this keyword cannot exceed the amount of atoms given for the other mentioned keyword. Please note that counting starts at 0. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
 
 MI_MC_9
 -------
-The given parameter encodes a (position) vector, but its definition couldn't be interpreted. [Cite relevant manual page!!!]
+The given keyword encodes a (position) vector, but its definition couldn't be interpreted. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
 
 MI_MC_10
 --------
 If type is set to be 'linear', only one axis needs to be defined. Any of x, y and z can be used, depending on the map constants used. The other two will be taken perpendicular to eachother, and the one defined.
 If type is set to be 'standard', two of the three axes need to be defined. The first (any of x, y, and z) will take the direction as is, the second (any of the remainder of x, y and z) will have the component along the first removed. This means that for the second, only the perpendicular component will be used for the direction of the vector. The third is assumed by the program to be the cross product of the first vector with the second (first x second).
 
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
+
 MI_MC_11
 --------
-There was an issue with the specification for the keyword 'valid_combinations' for one of the maps. [Cite relevant manual page!!]
+There was an issue with the specification for the keyword 'valid_combinations' for one of the maps. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
 
 MI_MC_12
 --------
-The mentioned parameter can only take a limited amount of options, and one of those used is not one of them. [Cite relevant manual page!!]
+The mentioned keyword can only take a limited amount of options, and one of those used is not one of them. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
 
 MI_MC_13
 --------
-The mentioned parameter can take either the form of a decimal number, or of something python can interpret. Any constants in the numpy library (e.g. np.pi) are available, as well as all constants in the GMAP constants module.  [Cite relevant manual page!!]
+The mentioned keyword can take either the form of a decimal number, or of something python can interpret. Any constants in the numpy library (e.g. np.pi) are available, as well as all constants in the GMAP constants module. This is an issue that most likely needs to be fixed by the developer of this map.
+
+Information for map makers: :ref:`Here<AddMap_FileStruct_SingCore>` you can find information for the core.txt file for singles maps, and :ref:`here<AddMap_FileStruct_PairCore>` you can find information for the core.txt file for pairs maps.
 
 
 MI_MM
@@ -362,6 +403,8 @@ The user requested the use of a certain map, but the program cannot use/find it.
 MI_MM_2
 -------
 Certain coupling maps require some additional information from oscillators which cannot be provided/determined by GMAP, or the coupling map itself. Therefore, the map for an oscillator must give it specifically for this coupling map (which is completely optional for a map to do). This error was triggered because the mentioned combination of maps is not supported.
+
+If the used maps README files imply the combination should work, this could be a bug, which you should report to them. If the files do not suggest the combination should work, you could *politely* ask them if they could support it in the future. 
 
 MI_MM_3
 -------
@@ -388,17 +431,13 @@ MD_SU_1
 -------
 There was an issue with creating the universe from the supplied MD files (parameters 'topology_file' and 'trajectory_file').
 
-MD_SU_2
--------
-The supplied MD files contain a universe that has a bounding box with non-90-degree angles. The current version does not support this.
-
 MD_SU_3
 -------
-The supplied MD files have a non-zero charge. The amount the charge is allowed to deviate is defined using the parameter neutral_charge_threshold. If the system has non-integer charge, the program will quit, if the charge is non-neutral, the program will throw a warning, but continue.
+The supplied MD files have a non-zero charge. The amount the charge is allowed to deviate is defined using the parameter neutral_charge_threshold. If the system has non-integer charge, the program will quit, if the charge is non-neutral, the program will throw a warning, but continue. If needed, you can raise the value for neutral_charge_threshold, but be very cautious, as this protection exists for a reason. For very large systems (100k+ atoms), having to raise this value becomes more likely. :ref:`This page <UserGuide_page_parameter_overview>` explains in more detail how the parameter works.
 
 MD_SU_4
 -------
-The atoms in the supplied MD system have an unexpected convention - their numbering didn't start at 0 and/or resets counting. Please get in touch with the developers of GMAP!
+The atoms in the supplied MD system have an unexpected convention - their numbering didn't start at 0 and/or resets counting. Please get in touch with the developers of GMAP through `github issues!<https://github.com/lacourjansenlab/GMAP/issues>`__
 
 MD_SU_5
 -------
@@ -418,6 +457,8 @@ MD_SU_6
 Some circular reference was found when determining what coupling map should be used to couple a certain pair of oscillators. The first one in the list is the one directly requested by the user, and that map determined that the second map in the list would be a better fit. Each map points to the next in the list, until one is encountered that has been requested before, starting this circular nature. This means the program will never find a suitable map, and thus quits.
 The issue could lie with the initial (or any other) map not being a good fit, and therefore sorting out the pair wrongly. Alternatively, there's a mistake in the map's code directing it to a different map. 
 
+If you encounter this issue, look at the README of the map you requested. If your system should be treatable by the map, contact the map developers, as this is most likely a bug.
+
 MD_SU_7
 -------
 The supplied MD trajectory did not contain any of the requested oscillators.
@@ -436,11 +477,11 @@ The directory to which the sourcefiles and the maps are attempted to be copied, 
 
 Setup_2
 -------
-A file named sourcefiles_copy already exists in the directory that is being copied to.
+A file or directory named sourcefiles_copy already exists in the directory that is being copied to.
 
 Setup_3
 -------
-A file named maps_copy already exists in the directory that is being copied to.
+A file or directory named maps_copy already exists in the directory that is being copied to.
 
 
 
@@ -457,20 +498,20 @@ Other codes
 
 PF_MD_1
 =======
-During finalizing a parallel computation, GMAP tries to remove any temporary files/folders created during the run. If you encountered this error, the program couldn't delete such a temporary directory, as it contains files the program didn't expect. Please have a look at the directory yourself to see if files can be removed, and please let us know how you triggered this error, so we can bugfix!
+During finalizing a parallel computation, GMAP tries to remove any temporary files/folders created during the run. If you encountered this error, the program couldn't delete such a temporary directory, as it contains files the program didn't expect. Please have a look at the directory yourself to see if files can be removed, and please let us know through `github issues<https://github.com/lacourjansenlab/GMAP/issues>`__ how you triggered this error, so we can bugfix!
 
 
 CT_EC_1
 =======
-Something was compared to an error code, but wasn't one itself. If the error persists without using any custom maps, please contact the GMAP developers. If not, please contact the respective map authors.
+Something was compared to an error code, but wasn't one itself. If the error persists without using any custom maps, please contact the GMAP developers through `github issues<https://github.com/lacourjansenlab/GMAP/issues>`__. If not, please contact the respective map authors.
 
 CT_EC_2
 =======
-Something was compared to an error code, but had the wrong format. If the error persists without using any custom maps, please contact the GMAP developers. If not, please contact the respective map authors.
+Something was compared to an error code, but had the wrong format. If the error persists without using any custom maps, please contact the GMAP developersthrough `github issues<https://github.com/lacourjansenlab/GMAP/issues>`__. If not, please contact the respective map authors.
 
 howtogethere
 ============
-As far as I know, there is no way to actually trigger this one. If you managed to do so, congratulations! Please let us know how you did so!
+As far as I know, there is no way to actually trigger this one. If you managed to do so, congratulations! Please let us know through `github issues<https://github.com/lacourjansenlab/GMAP/issues>`__ how you did so!
 
 
 

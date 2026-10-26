@@ -1,3 +1,49 @@
+"""
+Contains all math oriented functionality.
+
+GMAP does require some maths. Most of it can be tackled using modules.
+Some of it cannot, and is defined in this module.
+
+Functions
+---------
+PBC_triclinic
+    Transforms any vector (e.g. atom position) to within the box. Takes
+    and returns in global coordinates.
+PBC_back2box
+    Transforms any vector (e.g. atom position) to within the box. Takes
+    box coordinates, and returns in global coordinates.
+PBC_boxdiff_triclin
+    Takes 2 vectors (e.g. positions) in box coordinates, and returns the
+    shortest difference vector between them, in global coordinates.
+crossprod
+    Cross product between two vectors of length 3. Similar to np.cross,
+    but much faster due to less versatility, and no checks.
+dotprod
+    Dot product between two vectors of length 3. Similar to np.dot,
+    but much faster due to less versatility, and no checks.
+vec3_len
+    Computes length of a vector of length 3. Similar to np.linalg.norm,
+    but much faster due to less versatility, and no checks.
+project
+    Calculates orthogonal part of one vector compared to the other.
+dihedral_base
+    Calculates the dihedral angle for 3 (difference) vectors. Vectors
+    should already have been corrected for PBC.
+dihedral
+    Calculates the dihedral angle for 4 points. Will correct for PBC.
+    Points should be in global coordinates.
+dihedral_boxcoords
+    Calculates the dihedral angle for 4 points. Will correct for PBC.
+    Points should be in box coordinates.
+calc_color_dist
+    Calculates the distance between two colors following the readmean
+    method.
+convert_color_24_4
+    Converts a 24-bit color (standard full-rgb colors) to the nearest
+    4 bit (ANSI). It does not take into account a specific color scheme.
+    Instead, it uses pre-programmed standards from GMAP.constants.
+"""
+
 
 # standard library imports
 import math
@@ -91,9 +137,6 @@ def PBC_triclinic(vect, boxvects, boxvects_inv):
 
     unit_vec = vect @ boxvects_inv
     # use the PBC_back2box to prevent code duplication.
-    # however, this function (PBC_triclinic) is not njit'ed, so the 'normal'
-    # PBC_back2box gives a typing error. To avoid it, don't call the njit'ed
-    # PBC_back2box, but the original py-version.
     return PBC_back2box(unit_vec, boxvects)
 
 
@@ -101,6 +144,18 @@ def PBC_triclinic(vect, boxvects, boxvects_inv):
 def PBC_back2box(vect, boxvects):
     """Takes a vector in box coordinates, moves it to lie within the
     main box, and translate back to global/system/MD coordinates.
+
+    Parameters
+    ----------
+    vect : np.ndarray
+        The vector that should be treated following the PBC. The method
+        is tested for shapes (3,) and (M, 3), but it should work for
+        the general case (N,) and (M, N), where N is the size of
+        boxvects, and M is arbitrary.
+    boxvects : np.ndarray
+        The vectors uniquely defining the box.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
     """
 
     half = np.float32(0.5)
@@ -109,7 +164,20 @@ def PBC_back2box(vect, boxvects):
 
 @njit
 def PBC_boxdiff_triclin(boxvect1, boxvect2, boxvects):
-    """Calculates the shortest difference between two given points."""
+    """Calculates the shortest difference between two given points.
+    
+    Parameters
+    ----------
+    boxvect1, boxvect2 : np.ndarray
+        The vectors between which to calculate the difference. The
+        method is tested for shape (3,), but it should work
+        for the general case (N,), where N is the size of
+        boxvects.
+    boxvects : np.ndarray
+        The vectors uniquely defining the box.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
+    """
 
     boxdiff = boxvect1 - boxvect2
     return PBC_back2box(boxdiff, boxvects)
@@ -262,6 +330,11 @@ def dihedral_base(b0, b1, b2):
     source:
     https://stackoverflow.com/questions/20305272/
     dihedral-torsion-angle-from-four-points-in-cartesian-coordinates-in-python
+
+    Parameters
+    ----------
+    b0, b1, b2 : `np.ndarray`
+        The vectors defining the dihedral angle.
     """
 
     # normalize b1 so that it does not influence magnitude of vector
@@ -297,6 +370,19 @@ def dihedral(p0, p1, p2, p3, boxvects, boxvects_inv):
     When looking at these 4 points such that p2 lies behind p1 (or other way
     around?), we're concerned with the apparent angle p0, p1, p3 (which is
     identical to the apparent angle p0, p2, p3).
+
+    Parameters
+    ----------
+    p0, p1, p2, p3 : `np.ndarray`
+        The points defining the dihedral angle.
+    boxvects : np.ndarray
+        The vectors uniquely defining the box.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
+    boxvects_inv : np.ndarray
+        The inverse matrix of boxvects.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
     """
 
     b0 = PBC_triclinic(p0 - p1, boxvects, boxvects_inv)
@@ -314,6 +400,15 @@ def dihedral_boxcoords(p0, p1, p2, p3, boxvects):
     When looking at these 4 points such that p2 lies behind p1 (or other way
     around?), we're concerned with the apparent angle p0, p1, p3 (which is
     identical to the apparent angle p0, p2, p3).
+
+    Parameters
+    ----------
+    p0, p1, p2, p3 : `np.ndarray`
+        The points defining the dihedral angle.
+    boxvects : np.ndarray
+        The vectors uniquely defining the box.
+        Must be a square array. Size (3,3) has been tested, but in
+        theory, any shape (N, N) should work.
     """
 
     b0 = PBC_boxdiff_triclin(p0, p1, boxvects)
