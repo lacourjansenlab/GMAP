@@ -577,22 +577,30 @@
   <section id="module-GMAP.tests.test_tools.test_system_reader">
 <span id="gmap-tests-test-tools-test-system-reader-module"></span><h1>GMAP.tests.test_tools.test_system_reader module<a class="headerlink" href="#module-GMAP.tests.test_tools.test_system_reader" title="Link to this heading">#</a></h1>
 <p>tests missing:</p>
-<p>(&#64; July 22nd ‘24):
-167, 178-183, 264, 491, 613, 1362, 1406  (10 missed statements)</p>
+<p>(&#64; October 23rd ‘26):
+171-172, 178-183, 252, 450, 466, 495, 512, 635, 1405, 1449  (10 missed statements)</p>
 <ul class="simple">
-<li><p>non-rightangled system    (167, 1406)</p></li>
+<li><p>non-rightangled system    (171-172, 1406)</p></li>
 <li><p>MDA system without bond information (both testing it with, and without
 needing this information)   (178-183)</p></li>
 <li><p>MDA system which does not contain ascending atom indices starting elsewhere
-than 0 (Do these exist?)   (264)</p></li>
-<li><p>The universe doesn’t contain any requested oscillators (491)</p></li>
+than 0 (Do these exist?)   (252)</p></li>
+<li><p>The universe doesn’t contain any requested oscillators (at all) (450)</p></li>
+<li><p>The universe doesn’t contain any requested oscillators (subset) (466)</p></li>
+<li><p>The universe doesn’t contain any requested oscillators (subset after extra
+check)(495)</p></li>
+<li><p>The universe doesn’t contain any requested oscillators (final) (512)</p></li>
 <li><p>An oscillator (and MD file to support it) that has the same atom name
-multiple times in a single residue   (613)</p></li>
-<li><p>MDA.Universe FileNotFoundError (can we even trigger this one?)   (1362)</p></li>
+multiple times in a single residue   (635)</p></li>
+<li><p>MDA.Universe FileNotFoundError (can we even trigger this one?)   (1405)</p></li>
+<li><ol class="arabic simple" start="1449">
+<li></li>
+</ol>
+</li>
 </ul>
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestOscillator">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">TestOscillator</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L324-L355"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestOscillator" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">TestOscillator</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L329-L360"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestOscillator" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="table">
@@ -608,19 +616,19 @@ multiple times in a single residue   (613)</p></li>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestOscillator.test_rotate_VEG">
-<span class="sig-name descname"><span class="pre">test_rotate_VEG</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L341-L355"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestOscillator.test_rotate_VEG" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_rotate_VEG</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L346-L360"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestOscillator.test_rotate_VEG" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestOscillator.test_str_osc">
-<span class="sig-name descname"><span class="pre">test_str_osc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L325-L339"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestOscillator.test_str_osc" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_str_osc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L330-L344"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestOscillator.test_str_osc" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestSystem">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">TestSystem</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L36-L321"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">TestSystem</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L41-L326"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="table">
@@ -654,74 +662,74 @@ multiple times in a single residue   (613)</p></li>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestSystem.test_MD_SU_6">
-<span class="sig-name descname"><span class="pre">test_MD_SU_6</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L307-L321"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_MD_SU_6" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_MD_SU_6</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L312-L326"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_MD_SU_6" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestSystem.test_SU_NP_5">
-<span class="sig-name descname"><span class="pre">test_SU_NP_5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L267-L286"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_SU_NP_5" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_SU_NP_5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L272-L291"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_SU_NP_5" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestSystem.test_SU_NP_6">
-<span class="sig-name descname"><span class="pre">test_SU_NP_6</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L288-L305"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_SU_NP_6" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_SU_NP_6</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L293-L310"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_SU_NP_6" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestSystem.test_find_influencers">
-<span class="sig-name descname"><span class="pre">test_find_influencers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L99-L189"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_find_influencers" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_find_influencers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L104-L194"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_find_influencers" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestSystem.test_find_osc_singlebonded">
-<span class="sig-name descname"><span class="pre">test_find_osc_singlebonded</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L225-L235"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_find_osc_singlebonded" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_find_osc_singlebonded</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L230-L240"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_find_osc_singlebonded" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestSystem.test_find_oscillators">
-<span class="sig-name descname"><span class="pre">test_find_oscillators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L191-L223"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_find_oscillators" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_find_oscillators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L196-L228"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_find_oscillators" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestSystem.test_multiple_res_osc">
-<span class="sig-name descname"><span class="pre">test_multiple_res_osc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L237-L265"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_multiple_res_osc" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_multiple_res_osc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L242-L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_multiple_res_osc" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.TestSystem.test_set_properties">
-<span class="sig-name descname"><span class="pre">test_set_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L37-L97"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_set_properties" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_set_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L42-L102"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.TestSystem.test_set_properties" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.parameter_getter">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">parameter_getter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmdline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inpardict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_clib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L472-L523"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.parameter_getter" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">parameter_getter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmdline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inpardict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_clib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L477-L528"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.parameter_getter" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.test_MD_SU_1">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_MD_SU_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L402-L435"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_MD_SU_1" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_MD_SU_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L407-L440"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_MD_SU_1" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.test_MD_SU_3">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_MD_SU_3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L438-L469"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_MD_SU_3" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_MD_SU_3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsys</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L443-L474"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_MD_SU_3" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.test_check_box_charge">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_check_box_charge</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L384-L397"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_check_box_charge" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_check_box_charge</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L389-L402"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_check_box_charge" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.test_check_box_rightangled">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_check_box_rightangled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L376-L381"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_check_box_rightangled" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_check_box_rightangled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L381-L386"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_check_box_rightangled" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_system_reader.test_gen_universe">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_gen_universe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L358-L371"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_gen_universe" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_system_reader.</span></span><span class="sig-name descname"><span class="pre">test_gen_universe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_system_reader.py#L363-L376"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_system_reader.test_gen_universe" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>

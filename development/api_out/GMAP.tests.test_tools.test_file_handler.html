@@ -579,17 +579,19 @@
 <p>Tests all the functions/classes/methods in the file:
 src/tools/file_handler.py.</p>
 <p>Missing tests:</p>
-<p>(&#64; January 10th ‘25):
-125, 129-141, 358 (8 missed statements)</p>
+<p>(&#64; October 23rd ‘26):
+127, 131-143, 360, 1013 (9 missed statements)</p>
 <p>(CUHTAT - currently unknown how to access this)</p>
 <ul class="simple">
-<li><p>Program is run using any OS other than windows 64 bit (125, 129-141)
+<li><p>Program is run using any OS other than windows 64 bit (127, 131-143)
 (CUHTAT; at least within one single run, probably impossible)</p></li>
-<li><p>the reference parameter file could not be found (SU_FH_2) (CUHTAT) (358)</p></li>
+<li><p>the reference parameter file could not be found (SU_FH_2) (CUHTAT) (360)</p></li>
+<li><p>The directory containing the temporary files for parallel runs was not empty,
+so it couldn’t be removed. (1013)</p></li>
 </ul>
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_file_handler.TestFileLocations">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">TestFileLocations</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L36-L50"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.TestFileLocations" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">TestFileLocations</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L38-L52"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.TestFileLocations" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="table">
@@ -602,44 +604,44 @@ src/tools/file_handler.py.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_file_handler.TestFileLocations.test_sinprops">
-<span class="sig-name descname"><span class="pre">test_sinprops</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L37-L50"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.TestFileLocations.test_sinprops" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_sinprops</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L39-L52"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.TestFileLocations.test_sinprops" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_file_handler.test_SU_FH_1">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_SU_FH_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L577-L583"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_SU_FH_1" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_SU_FH_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L579-L585"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_SU_FH_1" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_file_handler.test_clear_output_multiple">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_clear_output_multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmp_path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L402-L462"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_clear_output_multiple" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_clear_output_multiple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmp_path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L404-L464"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_clear_output_multiple" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_file_handler.test_get_bare_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_get_bare_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L53-L61"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_get_bare_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_get_bare_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L55-L63"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_get_bare_file" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_file_handler.test_write_legend">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_write_legend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L465-L505"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_write_legend" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_write_legend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L467-L507"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_write_legend" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_file_handler.test_write_output">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_write_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L64-L230"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_write_output" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_write_output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L66-L232"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_write_output" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_file_handler.test_write_output_multiplied">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_write_output_multiplied</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L233-L399"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_write_output_multiplied" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_write_output_multiplied</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L235-L401"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_write_output_multiplied" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_file_handler.test_write_parameter_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_write_parameter_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmp_path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L508-L574"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_write_parameter_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_file_handler.</span></span><span class="sig-name descname"><span class="pre">test_write_parameter_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tmp_path</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_file_handler.py#L510-L576"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_file_handler.test_write_parameter_file" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>

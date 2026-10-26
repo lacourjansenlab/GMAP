@@ -580,11 +580,12 @@
 src/tools/clib_loader.py.</p>
 <p>Missing tests:</p>
 <dl class="simple">
-<dt>(&#64; August 2nd ‘24):</dt><dd><p>(0 missed statements)</p>
+<dt>(&#64; October 23rd ‘26):</dt><dd><p>(3 missed statements)</p>
 </dd>
 </dl>
 <ul class="simple">
-<li><p>None!</p></li>
+<li><p>275, 276 (no triclinic boxes)</p></li>
+<li><p>279 (no tests done with just perres (instead of perres_nocut))</p></li>
 </ul>
 <p>To hide this file from the overview, incomplete tests were added for the
 following:</p>
@@ -593,7 +594,7 @@ following:</p>
 </ul>
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_clib_loader.TestVClib">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_clib_loader.</span></span><span class="sig-name descname"><span class="pre">TestVClib</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L30-L582"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_clib_loader.</span></span><span class="sig-name descname"><span class="pre">TestVClib</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L31-L583"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
@@ -626,45 +627,45 @@ following:</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_clib_loader.TestVClib.test_CL_VG_1">
-<span class="sig-name descname"><span class="pre">test_CL_VG_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L558-L582"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_CL_VG_1" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_CL_VG_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L559-L583"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_CL_VG_1" title="Link to this definition">#</a></dt>
 <dd><p>This test will fail if the singletons are not cleared!!!!</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_influencers">
-<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_influencers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L241-L302"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_influencers" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_influencers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L242-L303"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_influencers" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_rhombic">
-<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_rhombic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L177-L239"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_rhombic" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_rhombic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L178-L240"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_rhombic" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_rhombic_nocut">
-<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_rhombic_nocut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L471-L556"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_rhombic_nocut" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_rhombic_nocut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L472-L557"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_rhombic_nocut" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_triclin">
-<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_triclin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L31-L175"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_triclin" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_triclin</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L32-L176"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_triclin" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_triclin_nocut">
-<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_triclin_nocut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L304-L469"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_triclin_nocut" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">test_calcVEG_perres_mm_triclin_nocut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L305-L470"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.TestVClib.test_calcVEG_perres_mm_triclin_nocut" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_clib_loader.get_System_1">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_clib_loader.</span></span><span class="sig-name descname"><span class="pre">get_System_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L585-L643"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.get_System_1" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_clib_loader.</span></span><span class="sig-name descname"><span class="pre">get_System_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L586-L644"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.get_System_1" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.tests.test_tools.test_clib_loader.get_oscillator_1">
-<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_clib_loader.</span></span><span class="sig-name descname"><span class="pre">get_oscillator_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L646-L663"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.get_oscillator_1" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.tests.test_tools.test_clib_loader.</span></span><span class="sig-name descname"><span class="pre">get_oscillator_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/tests/test_tools/test_clib_loader.py#L647-L664"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.tests.test_tools.test_clib_loader.get_oscillator_1" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
