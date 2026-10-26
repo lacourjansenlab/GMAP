@@ -1,3 +1,5 @@
+.. _UserGuide_page_adding_map_file_structure:
+
 ##############
 File structure
 ##############
