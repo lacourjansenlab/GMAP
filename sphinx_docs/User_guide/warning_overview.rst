@@ -509,6 +509,12 @@ CT_EC_2
 =======
 Something was compared to an error code, but had the wrong format. If the error persists without using any custom maps, please contact the GMAP developersthrough `github issues<https://github.com/lacourjansenlab/GMAP/issues>`__. If not, please contact the respective map authors.
 
+
+RH_GR_1
+=======
+The base GMAP references file could not be found. If the error persists after a fresh installation, please contact the GMAP developers through `github issues<https://github.com/lacourjansenlab/GMAP/issues>`__.
+
+
 howtogethere
 ============
 As far as I know, there is no way to actually trigger this one. If you managed to do so, congratulations! Please let us know through `github issues<https://github.com/lacourjansenlab/GMAP/issues>`__ how you did so!

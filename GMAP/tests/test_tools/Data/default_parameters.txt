@@ -6,8 +6,9 @@ source_directory                ../../../sourcefiles
 
 log_directory
 VEG_clib_file                   VEG
-log_filename                    log.log
+references_file                 references.bib
 
+log_filename                    log.log
 log_profiling_filename          prof.out
 log_profiling_tempfile          prof.temp
 log_profiling_graph_filename    profout.png
