@@ -4,11 +4,13 @@ src/tools/physics_functions.py.
 
 Missing tests:
 
-(@ September 20th '24):
-111-168, 250-251  (37 missed statements)
+(@ October 23rd '26):
+145-217, 302-303  (39 missed statements)
 
-- [WIP] calc_frame not yet tested  (111-165)
-- calc_raman not yet tested (as so custom) (250-251)
+- [WIP] calc_frame not yet *unit* tested. Most is covered by integration tests.
+  (145-217)
+- calc_raman not yet tested (as so custom, and no default GMAP implementation)
+  *by GMAP*. The AmideBB tests do cover it. (302-303)
 
 """
 

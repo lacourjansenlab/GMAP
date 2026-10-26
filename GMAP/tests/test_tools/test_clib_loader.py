@@ -4,10 +4,11 @@ src/tools/clib_loader.py.
 
 Missing tests:
 
-(@ August 2nd '24):
-  (0 missed statements)
+(@ October 23rd '26):
+  (3 missed statements)
 
-- None!
+- 275, 276 (no triclinic boxes)
+- 279 (no tests done with just perres (instead of perres_nocut))
 
 To hide this file from the overview, incomplete tests were added for the
 following:

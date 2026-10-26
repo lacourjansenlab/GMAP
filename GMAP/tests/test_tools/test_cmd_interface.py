@@ -4,7 +4,7 @@ src/tools/cmd_interface.py.
 
 Missing tests:
 
-(@ Sept 20th '24):
+(@ October 23rd '26):
   (0 missed statements)
 
 - None!
@@ -12,11 +12,7 @@ Missing tests:
 To hide this file from the overview, incomplete tests were added for the
 following:
 
-- the actual call to the requested program
-  The program's function is tested by its own test file, but triggered
-  GEMs SU_PP_1 here (thats the fastest way to fail within a program
-  invoked by this script)
-
+- None!
 """
 
 # Standard library imports
@@ -99,6 +95,11 @@ def test_get_safe_dark():
 
 
 def test_main():
+    # The proper way of unittesting main() is to populate sys.argv, and to then
+    # have a mock for cmd_interface, and check whether the call to that mock
+    # is actually called with the new populated info.
+
+    # The callcommand below is the fastest way to have GMAP error.
     callcommand = ["GMAP", "nothing", "nothing"]
     captured = subprocess.run(callcommand, capture_output=True)
     stderr = captured.stderr

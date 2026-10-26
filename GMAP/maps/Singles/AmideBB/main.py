@@ -7,6 +7,7 @@ import GMAP.src.tools.constants as GM_con
 import GMAP.src.tools.default_map_functions as GM_dmf
 import GMAP.src.tools.exceptions as GM_ex
 import GMAP.src.tools.print_tools as GM_pt
+from GMAP.src.tools.print_tools import devprint as dpr
 
 # own module imports
 import AmideBB_code.calculation_methods as MC_cm
@@ -318,7 +319,7 @@ def GM_post_init(map_, system):
     # Interpret user choice for labels
     choice = map_.run_pars.labels
     if choice[0] == "None":
-        map_.run_pars.labels = set()
+        map_.labels = set()
     elif len(choice) < 2:
         GM_pt.Printer.warning(
             "\nInvalid number of arguments provided for the parameter "
@@ -329,9 +330,9 @@ def GM_post_init(map_, system):
     elif choice[0] == "resnums":
         amideoscs = [
             osc.resnums[0] for osc in system.oscillators_ordered[map_.name]]
-        map_.run_pars.labels = set(map_.Core.allow_ranges(
+        map_.labels = set(map_.Core.allow_ranges(
             choice[1:], max(amideoscs)))
-        if len(map_.run_pars.labels - set(amideoscs)) > 0:
+        if len(map_.labels - set(amideoscs)) > 0:
             GM_pt.Printer.warning(
                 "\nInvalid residues chosen using the parameter "
                 "AmideBB.labels. Please make sure all residue numbers provided"
@@ -347,7 +348,7 @@ def GM_post_init(map_, system):
                 "are valid 3-letter amino acid codes.",
                 "map_AmideBB_6", True
             )
-        map_.run_pars.labels = set([
+        map_.labels = set([
             osc.resnums[0]
             for osc in system.oscillators_ordered[map_.name]
             if osc.resnames[0] in choiceset
@@ -463,7 +464,7 @@ def GM_calculate_frequency(map_, system, osc):
     if map_.run_pars.solvent == "H2O":
         freq = (freq - 340) / 0.791
 
-    if osc.resnums[0] in map_.run_pars.labels:
+    if osc.resnums[0] in map_.labels:
         freq += map_.run_pars.shift_label
     else:
         freq += map_.run_pars.shift_base

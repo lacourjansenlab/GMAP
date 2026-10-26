@@ -1,8 +1,8 @@
 """
 tests missing:
 
-(@ Sept 17th '24):
-  623-642 (15 missed statements)
+(@ October 23rd '26):
+  656-675 (15 missed statements)
 
 - Ever changing prints from color_test. Honestly too lazy to write out
   the test - luckily its a programmer helper function. (623-642)
@@ -22,8 +22,11 @@ import GMAP.src.tools.print_tools as GM_pt
 def test_devprint(capsys):
     GM_pt.devprint("this is a test")
     captured = capsys.readouterr()
+    # The number below should match the line number on which the above devprint
+    # occurs. As this test (among other things) tests whether the automatic
+    # detection of linenumbers works, it has to be changed manually.
     assert captured.out == (
-        "(line   22) this is a test (from test_devprint in test_print_tools.py)"
+        "(line   23) this is a test (from test_devprint in test_print_tools.py)"
         "\n"
     )
 

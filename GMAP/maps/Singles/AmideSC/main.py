@@ -156,7 +156,7 @@ def GM_post_init(map_, system):
         if map_.run_pars.solvent == "H2O":
             freq = (freq - 340) / 0.791
 
-        if osc.resnums[0] in map_.run_pars.labels:
+        if osc.resnums[0] in map_.labels:
             freq += map_.run_pars.shift_label
         else:
             freq += map_.run_pars.shift_base
@@ -203,7 +203,7 @@ def GM_post_init(map_, system):
     # Interpret user choice for labels
     choice = map_.run_pars.labels
     if choice[0] == "None":
-        map_.run_pars.labels = set()
+        map_.labels = set()
     elif len(choice) < 2:
         GM_pt.Printer.warning(
             "\nInvalid number of arguments provided for the parameter "
@@ -214,9 +214,9 @@ def GM_post_init(map_, system):
     elif choice[0] == "resnums":
         amideoscs = [
             osc.resnums[0] for osc in system.oscillators_ordered[map_.name]]
-        map_.run_pars.labels = set(map_.Core.allow_ranges(
+        map_.labels = set(map_.Core.allow_ranges(
             choice[1:], max(amideoscs)))
-        if len(map_.run_pars.labels - set(amideoscs)) > 0:
+        if len(map_.labels - set(amideoscs)) > 0:
             GM_pt.Printer.warning(
                 "\nInvalid residues chosen using the parameter "
                 "AmideSC.labels. Please make sure all residue numbers provided"
@@ -234,7 +234,7 @@ def GM_post_init(map_, system):
                 "appear as a sidechain group in your simulation.",
                 "map_AmideSC_3", True
             )
-        map_.run_pars.labels = set([
+        map_.labels = set([
             osc.resnums[0]
             for osc in system.oscillators_ordered[map_.name]
             if osc.resnames[0] in choiceset

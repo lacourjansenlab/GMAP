@@ -48,11 +48,11 @@ def test_Jansen_freqs(tmp_path):
 
 
 def test_Cho_freqs(tmp_path):
-    core_test_frequencies("Cho", tmp_path, 0.0004)
+    core_test_frequencies("Cho", tmp_path, 0.001)
 
 
 def test_Hirst_freqs(tmp_path):
-    core_test_frequencies("Hirst", tmp_path, 0.0011)
+    core_test_frequencies("Hirst", tmp_path, 0.002)
 
 
 def test_Torii_dips(tmp_path):

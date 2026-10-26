@@ -1,0 +1,234 @@
+name: run-pytest
+on:
+  pull_request:
+  release:
+    types: [published]
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+    # We need to know what branch to test. ref_name contains the name of the
+    # triggering branch. Store it.
+    - name: Determine current branch
+      run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
+    # checkout the correct branch, into the source directory.
+    - name: Checkout source branch
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ env.SOURCE_BRANCH }}
+        path: source
+    - name: Setup python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.13'
+    - name: Install GMAP
+      run: |
+        cd source
+        python -m pip install -r requirements_py3-13.txt
+        python -m pip install -e ".[testing]"
+    - name: Execute smoke test
+      run: |
+        cd source
+        cd GMAP
+        pytest -k test_if_runs tests
+
+  full-pytest-run:
+    needs: smoke-test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false 
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.13"]
+        include:
+          - os: ubuntu-latest
+            python-version: "3.10"
+    steps:
+    - name: Determine current branch
+      run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
+    # checkout the correct branch, into the source directory.
+    - name: Checkout source branch
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ env.SOURCE_BRANCH }}
+        path: source
+    - name: Setup python
+      uses: actions/setup-python@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install GMAP py3.10
+      if: ${{ matrix.python-version == '3.10'}}
+      run: |
+        cd source
+        python -m pip install -r requirements_py3-10.txt
+        python -m pip install -e ".[testing]"
+    - name: Install GMAP py3.13
+      if: ${{ matrix.python-version == '3.13'}}
+      run: |
+        cd source
+        python -m pip install -r requirements_py3-13.txt
+        python -m pip install -e ".[testing]"
+    - name: execute-tests
+      run: |
+        cd source
+        cd GMAP
+        pytest -x --cov-config=../pyproject.toml --cov=src tests
+    - name: mv .coverage file (unix)
+      if: ${{ matrix.os != 'windows-latest'}}
+      run:
+        mv source/GMAP/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
+    - name: mv .coverage file (windows)
+      if: ${{ matrix.os == 'windows-latest'}}
+      run:
+        move source/GMAP/.coverage .coverage.${{ matrix.os }}.${{ matrix.python-version }}
+    - name: Upload Coverage Artifact
+      if: ${{ matrix.python-version == '3.13'}}
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-data-${{ matrix.os }}
+        path: .coverage.${{ matrix.os }}.${{ matrix.python-version }}
+        include-hidden-files: true
+        retention-days: 1
+
+  maps-pytest-run:
+    needs: smoke-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Determine current branch
+      run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
+    # checkout the correct branch, into the source directory.
+    - name: Checkout source branch
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ env.SOURCE_BRANCH }}
+        path: source
+    - name: Setup python
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.13"
+    - name: Install GMAP py3.13
+      run: |
+        cd source
+        python -m pip install -r requirements_py3-13.txt
+        python -m pip install -e ".[testing]"
+    - name: execute-tests
+      run: |
+        cd source
+        pytest -x -p GMAP.tests.conftest --cov-config=pyproject.toml --cov=GMAP/src GMAP/maps/Singles/AmideBB/tests 
+        pytest -x -p GMAP.tests.conftest --cov-config=pyproject.toml --cov=GMAP/src --cov-append GMAP/maps/Singles/AmideSC/tests
+        pytest -x -p GMAP.tests.conftest --cov-config=pyproject.toml --cov=GMAP/src --cov-append GMAP/maps/Pairs/ProteinAmide/tests
+        ls -lsah
+    - name: mv .coverage file (unix)
+      run:
+        mv source/.coverage .coverage.maps
+    - name: Upload Coverage Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-data-maps
+        path: .coverage.maps
+        include-hidden-files: true
+        retention-days: 1
+  
+  merge-coverage:
+    # The outputs are always merged. However, a new badge and viewable html
+    # files are only created upon release, so that the badge will only ever
+    # display information about a stable release, and not just any version.
+    runs-on: ubuntu-latest
+    # Wait for the test jobs to finish
+    needs: [full-pytest-run, maps-pytest-run]
+    # Run regardless of whether the tests passed.
+    if: always()
+    steps:
+    - name: Determine current branch
+      run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
+    # checkout the correct branch, into the source directory.
+    - name: Checkout source branch
+      uses: actions/checkout@v6
+      with:
+        ref: ${{ env.SOURCE_BRANCH }}
+        path: source
+    - name: Setup python
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.13"
+    - name: Install Coverage Tool
+      run: python -m pip install coverage
+
+      # Download all artifacts matching the pattern into the current directory
+    - name: Download All Coverage Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        pattern: coverage-data-*
+        merge-multiple: true
+    - name: Combine Coverage and Generate Reports
+      run: |
+        cp source/pyproject.toml .
+
+        ls -lsah
+
+        # 1. Combines all .coverage.* files into a single unified .coverage file
+        coverage combine
+
+        # 2. Run xml and html for the later badge.
+        coverage xml
+        coverage html
+
+        ls -lsah
+        
+        # 3. Create the Workflow Run Summary page content
+        echo "### 📊 Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo '```text' >> $GITHUB_STEP_SUMMARY
+        
+        # Run the terminal report and stream it straight into the step summary
+        coverage report -m >> $GITHUB_STEP_SUMMARY
+        
+        echo '```' >> $GITHUB_STEP_SUMMARY
+    # now, report is done, make it accessible to README.md
+    - name: Checkout gh-pages branch
+      if: github.ref_type == 'tag'
+      uses: actions/checkout@v6
+      with:
+        ref: gh-pages
+        path: destination
+    - name: Install genbadge
+      if: github.ref_type == 'tag'
+      run: python -m pip install genbadge[coverage]
+    - name: Run genbadge
+      if: github.ref_type == 'tag'
+      run: genbadge coverage -i coverage.xml -o coverage-badge.svg
+    - name: set user
+      if: github.ref_type == 'tag'
+      run: |
+        cd destination
+        git config --global user.name "$(git show -s --format='%an' HEAD)"
+        git config --global user.email "$(git show -s --format='%ae' HEAD)"
+    - name: push badge to pages
+      if: github.ref_type == 'tag'
+      run: |
+        grep 'created at' htmlcov/index.html
+        echo '--------------------------------'
+        grep 'created at' destination/htmlcov/index.html
+        echo '--------------------------------'
+        rm destination/coverage-badge.svg || true
+        rm destination/htmlcov/* || true
+        mv coverage-badge.svg destination/coverage-badge.svg
+        cp -f htmlcov/* destination/htmlcov/.
+        grep 'created at' destination/htmlcov/index.html
+        echo '--------------------------------'
+
+        cd destination
+        ls -lsah
+        ls -lsah htmlcov/
+        rm htmlcov/.gitignore || true
+        git add -v coverage-badge.svg
+        git add -v htmlcov
+        git status
+        if ! git diff-index --quiet HEAD; then
+          git commit -m "adding new coverage badge"
+          git push -u origin gh-pages
+        fi
+
+    
+    

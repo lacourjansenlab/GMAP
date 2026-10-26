@@ -1,18 +1,23 @@
 """
 tests missing:
 
-(@ July 22nd '24):
-167, 178-183, 264, 491, 613, 1362, 1406  (10 missed statements)
+(@ October 23rd '26):
+171-172, 178-183, 252, 450, 466, 495, 512, 635, 1405, 1449  (10 missed statements)
 
-- non-rightangled system    (167, 1406)
+- non-rightangled system    (171-172, 1406)
 - MDA system without bond information (both testing it with, and without
   needing this information)   (178-183)
 - MDA system which does not contain ascending atom indices starting elsewhere
-  than 0 (Do these exist?)   (264)
-- The universe doesn't contain any requested oscillators (491)
+  than 0 (Do these exist?)   (252)
+- The universe doesn't contain any requested oscillators (at all) (450)
+- The universe doesn't contain any requested oscillators (subset) (466)
+- The universe doesn't contain any requested oscillators (subset after extra
+  check)(495)
+- The universe doesn't contain any requested oscillators (final) (512)
 - An oscillator (and MD file to support it) that has the same atom name
-  multiple times in a single residue   (613)
-- MDA.Universe FileNotFoundError (can we even trigger this one?)   (1362)
+  multiple times in a single residue   (635)
+- MDA.Universe FileNotFoundError (can we even trigger this one?)   (1405)
+- (1449)
 
 """
 
