@@ -25,7 +25,7 @@ GMAP is a package of tools for use in computing spectra from molecular dynamics 
 
 on this page:
 - [Where to download](#where-to-download)
-- [How to install](#how-to-install-general-users)
+- [How to install](#how-to-install)
 - [How to expand the program using maps](#how-to-expand-the-program-using-maps)
 - [How to compile C code](#how-to-compile-c-code)
 - [Differences between GMAP and AIM](#differences-between-gmap-and-aim)
