@@ -269,12 +269,12 @@ class VEG_CLib(metaclass=GM_ct.Singleton):
             "tc": self.calcVEG_perres_mm_triclin,
             "tn": self.calcVEG_perres_mm_triclin_nocut
         }
+
         if run_pars.treat_box == "orthorhombic":
             key = "r"
         elif run_pars.treat_box == "triclinic":
             key = "t"
-        else:
-            key = "t"
+
         if run_pars.estatics_method == "perres":
             key += "c"
         elif run_pars.estatics_method == "perres_nocut":

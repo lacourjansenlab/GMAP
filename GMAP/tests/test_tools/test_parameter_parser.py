@@ -4,17 +4,24 @@ src/tools/parameter_parser.py.
 
 Missing tests:
 
-(@ March 11th '25):
-384-385, 446, 1191, 1304, 1855-1856 (7 missed statements)
+(@ October 23rd '26):
+383-384, 445, 588, 1200, 1313, 1612, 1874-1875, 2404, 2444, 3323 (12 missed statements)
 
 (CUHTAT - currently unknown how to access this )
 
 - SU_FP_7 (CUHTAT)   (383-384)
 - ref_pars parse choice - unknown dtype (CUHTAT)  (445)
-- RawPars verify choice - unknown dtype (CUHTAT)  (1190)
+- positions_center didn't receive exactly 3 values in refpars (SU_FP_6) (588)
+- RawPars verify choice - unknown dtype (CUHTAT)  (1200)
 - RawPars checkparexist - variable may occur multiple times, but is also
-  not expected in deffiles (N/A in refpars)  (1303)
-- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1854-1855)
+  not expected in deffiles (N/A in refpars)  (1313)
+- positions_center didn't receive exactly 3 values in rawpars (SU_WP_9) (1612)
+- RunPars unknown loc for -md - SU_NP_3   (CUHTAT, SU_PP_3!)  (1874-1875)
+- both couplings-scale and dielectric_constant have a value different from 1.
+  (SU_NP_7) (2404)
+- dielectric_constant has a negative value, which is non-physical (SU_NP_8)
+  (2444)
+- influencer_line has another way of of ending than currently tested. (3323)
 
 """
 

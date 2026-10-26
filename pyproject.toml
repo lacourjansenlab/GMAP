@@ -36,6 +36,28 @@ testing = [
 ]
 
 
+[tool.coverage.paths]
+source = [
+    "source/GMAP/src/",
+    "*/source/GMAP/src/",
+    "D:\\a\\GMAP\\GMAP\\source\\GMAP\\src\\",
+    "C:\\*\\source\\GMAP\\src\\"
+]
+
+
+[tool.coverage.report]
+include_namespace_packages = true
+skip_empty = true
+
+
+[tool.coverage.run]
+patch = ["subprocess"]
+
+
+[tool.pytest.ini_options]
+addopts = "--cov-report=term-missing"
+
+
 [tool.setuptools.package-data]
 GMAP = ["sourcefiles/**", "maps/**", "logo.txt"]
 

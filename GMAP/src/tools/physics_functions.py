@@ -223,7 +223,7 @@ def calc_frame(run_pars, system, outputs):
             r_vec, r_pos = calc_dipole(system, oscillator)
             outputs["dipoles"][oscix] = r_vec  # needed for both ham and dip
 
-            if any(data in run_pars.output_data for data in ("ham")):
+            if any(data in run_pars.output_data for data in ("ham",)):
                 outputs["dipole_pos"][oscix] = r_pos  # only ham!
 
         if "ram" in run_pars.output_data:
