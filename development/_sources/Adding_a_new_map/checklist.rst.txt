@@ -94,7 +94,7 @@ Easy mistakes to make during map development
 
 - Getting units scrambled
 - mistaking file paths / files
-- indexing wrong. Don't forget that all indexes in core.txt files are 0-based!
+- indexing wrong. Don't forget that all indices in core.txt files are 0-based!
 
 
 

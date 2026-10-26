@@ -576,9 +576,24 @@
                   
   <section id="module-GMAP.src.tools.plotter">
 <span id="gmap-src-tools-plotter-module"></span><h1>GMAP.src.tools.plotter module<a class="headerlink" href="#module-GMAP.src.tools.plotter" title="Link to this heading">#</a></h1>
+<p>Can create plots.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>plot_coupling_choices</dt><dd><p>Creates the plot showing what coupling method is picked for each
+entry.</p>
+</dd>
+<dt>val_to_color</dt><dd><p>For images in manual. Creates a pandas dataframe style - compatible
+color string for the input color.</p>
+</dd>
+<dt>plot_color_conv</dt><dd><p>For images in manual. Create the plots showing 24bit colors and the
+4bit color they will be converted into.</p>
+</dd>
+</dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.plotter.plot_color_conv">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.plotter.</span></span><span class="sig-name descname"><span class="pre">plot_color_conv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/plotter.py#L126-L208"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.plotter.plot_color_conv" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.plotter.</span></span><span class="sig-name descname"><span class="pre">plot_color_conv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/plotter.py#L142-L224"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.plotter.plot_color_conv" title="Link to this definition">#</a></dt>
 <dd><p>Create the plots showing 24bit colors and their 4bit version.</p>
 <p>These plots are intended to aid choosing colors in the program - you
 can quickly see what colors they will be converted to, and from a
@@ -588,7 +603,7 @@ subset of colors with the same target, pick the right one.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.plotter.plot_coupling_choices">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.plotter.</span></span><span class="sig-name descname"><span class="pre">plot_coupling_choices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/plotter.py#L19-L94"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.plotter.plot_coupling_choices" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.plotter.</span></span><span class="sig-name descname"><span class="pre">plot_coupling_choices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/plotter.py#L35-L110"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.plotter.plot_coupling_choices" title="Link to this definition">#</a></dt>
 <dd><p>Creates the plot showing what coupling method is picked for each
 entry.</p>
 <p>The plot has a maximum of 28 colors (different coupling methods) it
@@ -621,7 +636,7 @@ normal run, this output is just for testing purposes.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.plotter.val_to_color">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.plotter.</span></span><span class="sig-name descname"><span class="pre">val_to_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/plotter.py#L99-L123"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.plotter.val_to_color" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.plotter.</span></span><span class="sig-name descname"><span class="pre">val_to_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/plotter.py#L115-L139"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.plotter.val_to_color" title="Link to this definition">#</a></dt>
 <dd><p>Create a pandas dataframe style - compatible color string for the
 input color</p>
 <dl class="field-list simple">
@@ -692,6 +707,7 @@ with pandas data frame styles.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.plotter.plot_color_conv"><code class="docutils literal notranslate"><span class="pre">plot_color_conv()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.plotter.plot_coupling_choices"><code class="docutils literal notranslate"><span class="pre">plot_coupling_choices()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.plotter.val_to_color"><code class="docutils literal notranslate"><span class="pre">val_to_color()</span></code></a></li>

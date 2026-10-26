@@ -4,7 +4,7 @@
 User guide
 ##########
 
-These pages will contain information relevant for common use of the program.
+These pages contain information relevant for common use of the program.
 
 
 

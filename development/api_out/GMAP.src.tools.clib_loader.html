@@ -576,9 +576,23 @@
                   
   <section id="module-GMAP.src.tools.clib_loader">
 <span id="gmap-src-tools-clib-loader-module"></span><h1>GMAP.src.tools.clib_loader module<a class="headerlink" href="#module-GMAP.src.tools.clib_loader" title="Link to this heading">#</a></h1>
+<p>Interface between C-level functions and python code.</p>
+<p>Instead of having the python hooks in the C code directly (like numpy
+for example), GMAP leaves the C library as standard c. The ctypes module
+is used to access this c code, and numpy.ctypeslib.as_ctypes is used to
+get data to/from it.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>VEG_CLib</dt><dd><p>Has a method for each function in the VEG C library. These serve
+akin to wrappers; they take complicated python objects, and extract
+from those the actually needed c-type objects.</p>
+</dd>
+</dl>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.clib_loader.VEG_CLib">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.clib_loader.</span></span><span class="sig-name descname"><span class="pre">VEG_CLib</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L11-L440"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.clib_loader.</span></span><span class="sig-name descname"><span class="pre">VEG_CLib</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L27-L510"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stores and manages all c functions regarding electrostatics.</p>
 <p>Each (external) function in the library has it’s own associated
@@ -606,6 +620,12 @@ so a .dll (windows), .so (linux) or .dylib (macOS) file.</p>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.clib_loader.VEG_CLib.CoM_frombox" title="GMAP.src.tools.clib_loader.VEG_CLib.CoM_frombox"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CoM_frombox</span></code></a>(system)</p></td>
+<td><p>Convert all centres of mass from box coordinates to global coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_main" title="GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calcVEG_perres_main</span></code></a>(system, run_pars, oscillator)</p></td>
+<td><p>Calculate the potential on each of the requested points.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_rhombic" title="GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_rhombic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calcVEG_perres_mm_rhombic</span></code></a>(system, run_pars, ...)</p></td>
 <td><p>Calculate the potential on each of the requested points.</p></td>
 </tr>
@@ -618,22 +638,11 @@ so a .dll (windows), .so (linux) or .dylib (macOS) file.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_triclin_nocut" title="GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_triclin_nocut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calcVEG_perres_mm_triclin_nocut</span></code></a>(system, ...)</p></td>
 <td><p>Calculate the potential on each of the requested points.</p></td>
 </tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="table">
-<tbody>
-<tr class="row-odd"><td><p><strong>CoM_frombox</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#GMAP.src.tools.clib_loader.VEG_CLib.calc_CoM_box" title="GMAP.src.tools.clib_loader.VEG_CLib.calc_CoM_box"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calc_CoM_box</span></code></a>(system)</p></td>
+<td><p>Calculate all centers of mass.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>calcVEG_perres_main</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p><strong>calc_CoM_box</strong></p></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p><strong>positions_to_box</strong></p></td>
-<td></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#GMAP.src.tools.clib_loader.VEG_CLib.positions_to_box" title="GMAP.src.tools.clib_loader.VEG_CLib.positions_to_box"><code class="xref py py-obj docutils literal notranslate"><span class="pre">positions_to_box</span></code></a>(system)</p></td>
+<td><p>Using the system.positions_c data, populate/update the system.positions_box_c array.</p></td>
 </tr>
 </tbody>
 </table>
@@ -651,17 +660,47 @@ same array, meaning that any changes to any values made in
 <code class="docutils literal notranslate"><span class="pre">my_arr</span></code> will also apply to <code class="docutils literal notranslate"><span class="pre">my_arr_c</span></code>, and vice versa.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.clib_loader.VEG_CLib.CoM_frombox">
-<span class="sig-name descname"><span class="pre">CoM_frombox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L186-L192"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.CoM_frombox" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">CoM_frombox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L225-L241"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.CoM_frombox" title="Link to this definition">#</a></dt>
+<dd><p>Convert all centres of mass from box coordinates to
+global coordinates.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>system</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.system_reader.html#GMAP.src.tools.system_reader.System" title="GMAP.src.tools.system_reader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The class containing all the information on the system of the
+MD trajectory.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_main">
-<span class="sig-name descname"><span class="pre">calcVEG_perres_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L194-L214"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">calcVEG_perres_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L243-L284"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_main" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the potential on each of the requested points.</p>
+<p>Depending on user choices, a different method of calculating the
+electrostatics is desired. This method decides which of the
+calcVEG methods should be used.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>system</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.system_reader.html#GMAP.src.tools.system_reader.System" title="GMAP.src.tools.system_reader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about the system being treated (names, numbers, types, masses,
+charges of all atoms, for example)</p>
+</dd>
+<dt><strong>run_pars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.parameter_parser.html#GMAP.src.tools.parameter_parser.RunPars" title="GMAP.src.tools.parameter_parser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic
+run-defining parameters.</p>
+</dd>
+<dt><strong>oscillator</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.system_reader.html#GMAP.src.tools.system_reader.Oscillator" title="GMAP.src.tools.system_reader.Oscillator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Oscillator</span></code></a></span></dt><dd><p>The specific oscillator for which the potentials are required.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_rhombic">
-<span class="sig-name descname"><span class="pre">calcVEG_perres_mm_rhombic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L329-L384"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_rhombic" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">calcVEG_perres_mm_rhombic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L399-L454"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_rhombic" title="Link to this definition">#</a></dt>
 <dd><p>Calculate the potential on each of the requested points.</p>
 <p>This is basically a wrapper for the c function of the same
 name. As c cannot return arrays, the output is instead written
@@ -698,7 +737,7 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_rhombic_nocut">
-<span class="sig-name descname"><span class="pre">calcVEG_perres_mm_rhombic_nocut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L386-L440"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_rhombic_nocut" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">calcVEG_perres_mm_rhombic_nocut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L456-L510"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_rhombic_nocut" title="Link to this definition">#</a></dt>
 <dd><p>Calculate the potential on each of the requested points.</p>
 <p>This is basically a wrapper for the c function of the same
 name. As c cannot return arrays, the output is instead written
@@ -734,7 +773,7 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_triclin">
-<span class="sig-name descname"><span class="pre">calcVEG_perres_mm_triclin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L216-L271"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_triclin" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">calcVEG_perres_mm_triclin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L286-L341"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_triclin" title="Link to this definition">#</a></dt>
 <dd><p>Calculate the potential on each of the requested points.</p>
 <p>This is basically a wrapper for the c function of the same
 name. As c cannot return arrays, the output is instead written
@@ -771,7 +810,7 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_triclin_nocut">
-<span class="sig-name descname"><span class="pre">calcVEG_perres_mm_triclin_nocut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L273-L327"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_triclin_nocut" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">calcVEG_perres_mm_triclin_nocut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L343-L397"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_mm_triclin_nocut" title="Link to this definition">#</a></dt>
 <dd><p>Calculate the potential on each of the requested points.</p>
 <p>This is basically a wrapper for the c function of the same
 name. As c cannot return arrays, the output is instead written
@@ -807,13 +846,37 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.clib_loader.VEG_CLib.calc_CoM_box">
-<span class="sig-name descname"><span class="pre">calc_CoM_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L176-L184"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calc_CoM_box" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">calc_CoM_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L206-L223"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.calc_CoM_box" title="Link to this definition">#</a></dt>
+<dd><p>Calculate all centers of mass.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>system</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.system_reader.html#GMAP.src.tools.system_reader.System" title="GMAP.src.tools.system_reader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The class containing all the information on the system of the
+MD trajectory.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.clib_loader.VEG_CLib.positions_to_box">
-<span class="sig-name descname"><span class="pre">positions_to_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L168-L174"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.positions_to_box" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">positions_to_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/clib_loader.py#L184-L204"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.clib_loader.VEG_CLib.positions_to_box" title="Link to this definition">#</a></dt>
+<dd><p>Using the system.positions_c data, populate/update the
+system.positions_box_c array.</p>
+<p>The box vectors of different positions are used often enough
+to do this conversion once in bulk for every single atom in the
+box.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>system</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.system_reader.html#GMAP.src.tools.system_reader.System" title="GMAP.src.tools.system_reader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The class containing all the information on the system of the
+MD trajectory.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -866,6 +929,7 @@ run-defining parameters.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.clib_loader.VEG_CLib"><code class="docutils literal notranslate"><span class="pre">VEG_CLib</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.clib_loader.VEG_CLib.CoM_frombox"><code class="docutils literal notranslate"><span class="pre">VEG_CLib.CoM_frombox()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.clib_loader.VEG_CLib.calcVEG_perres_main"><code class="docutils literal notranslate"><span class="pre">VEG_CLib.calcVEG_perres_main()</span></code></a></li>

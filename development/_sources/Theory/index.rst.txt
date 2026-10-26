@@ -2,7 +2,7 @@
 Theory
 ##########
 
-These pages will contain an overview of the theory used in GMAP.
+These pages contain an overview of the theory used in GMAP.
 
 
 .. grid:: 1 2 2 3

@@ -25,7 +25,7 @@ GMAP documentation
 
         **User Guide**
         ^^^^^^^^^^^^^^
-        It would be really nice to have a clear user guide here!
+        More tips and tricks for using GMAP.
     
     .. grid-item-card::
         :margin: 0 3 0 0
@@ -81,7 +81,7 @@ GMAP documentation
 What does GMAP do?
 ==================
 
-Gmap combines different spectroscopic tools into one convenient package. All of these tools play a role in computing a spectrum from a simple atomistic structure.
+GMAP combines different spectroscopic tools into one convenient package. All of these tools play a role in computing a spectrum from a simple atomistic structure.
 
 .. image:: Figures/Spectroscopy_workflow.png
     :alt: A schematic representation of the spectroscopy workflow.

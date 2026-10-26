@@ -809,7 +809,7 @@ more -R [filename]  (windows)</p>
 <div class="line">(shorthand: -md)</div>
 <div class="line">(used by: GEM, DEPICT)</div>
 </div>
-<p>The location of the maps directory. Multiple directories are allowed to be given. Within a maps directory, the maps that can be used are stored. See <a class="reference internal" href="../Adding_a_new_map/index.html#userguide-page-adding-map"><span class="std std-ref">adding a new map</span></a> for more information on what maps are and how to make one.</p>
+<p>The location of the maps directory. Multiple directories are allowed to be given. Within a maps directory, the maps that can be used are stored. See <a class="reference internal" href="../Adding_a_new_map/index.html#userguide-page-adding-map"><span class="std std-ref">adding a new map</span></a> for more information on what maps are and how to make one, and <a href="#id1"><span class="problematic" id="id2">`the repository README&lt;https://github.com/lacourjansenlab/GMAP&gt;`__</span></a> for more information on how to add new maps to your installation.</p>
 </section>
 <section id="topology-file">
 <span id="userguide-page-parameter-overview-topfile"></span><h3>topology_file<a class="headerlink" href="#topology-file" title="Link to this heading">#</a></h3>
@@ -1033,7 +1033,7 @@ When set to <code class="docutils literal notranslate"><span class="pre">0</span
 <div class="line">(shorthand: -um)</div>
 <div class="line">(used by: GEM, DEPICT)</div>
 </div>
-<p>Which maps should be considered in the calculation. Or, in other words, which kinds of oscillators should be found, and calculated properties for. There are limited choices - namely, the names of the maps supplied through the parameter map_directory.</p>
+<p>Which maps should be considered in the calculation. Or, in other words, which kinds of oscillators should be found, and calculated properties for. There are limited choices - namely, the names of the maps present in the directory supplied through the parameter map_directory.</p>
 </section>
 <section id="couplings-to-use">
 <span id="userguide-page-parameter-overview-usecoup"></span><h3>couplings_to_use<a class="headerlink" href="#couplings-to-use" title="Link to this heading">#</a></h3>
@@ -1052,7 +1052,7 @@ When set to <code class="docutils literal notranslate"><span class="pre">0</span
 <p>In other words, for every type of coupling, the program separately walks through all parameter files.</p>
 <p>If a certain type of pair is covered by multiple lines in the same parameter file, the one lowest down will take precedence.</p>
 </div>
-<p>Which couplings should be used in the calculation, and for what purpose. A MD system contains a certain number of oscillators (selected by ‘maps_to_use’), that have their oscillating frequencies coupled inside the hamiltonian.</p>
+<p>Which couplings should be used in the calculation, and for what purpose. An MD system contains a certain number of oscillators (selected by ‘maps_to_use’), that have their oscillating frequencies coupled inside the hamiltonian.</p>
 <p>By default, all oscillators are coupled using the dipole-dipole coupling method (denoted using <code class="docutils literal notranslate"><span class="pre">couplings_to_use</span>&#160;&#160; <span class="pre">DipDip</span> <span class="pre">:All</span></code>), but a different choice can be made. If you want to choose a different coupling method for a certain oscillator, you can!</p>
 <p>The general format is as follows: <code class="docutils literal notranslate"><span class="pre">couplings_to_use</span>&#160; <span class="pre">[coupling</span> <span class="pre">map</span> <span class="pre">name]</span> <span class="pre">[group</span> <span class="pre">selection]</span></code></p>
 <p>The options available for the coupling map name depend on the maps you’ve loaded in - all options are the names of folders inside the ‘Pairs’ folder, which is inside the maps folder (the one(s) provided using ‘map_directory’). One extra option is always available: ‘None’, for if you don’t want the program to calculate any coupling. This will lead to a value of 0 for those couplings. You can only specify one coupling map per line!</p>

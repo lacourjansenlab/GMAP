@@ -576,9 +576,34 @@
                   
   <section id="module-GMAP.src.tools.system_reader">
 <span id="gmap-src-tools-system-reader-module"></span><h1>GMAP.src.tools.system_reader module<a class="headerlink" href="#module-GMAP.src.tools.system_reader" title="Link to this heading">#</a></h1>
+<p>Deals with the MD system.</p>
+<p>Contains tools for storing and navigating all the MD files data.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>System</dt><dd><p>Stores all information on the MD system and objects therein. Knows
+almost everything (partially through complex attributes).</p>
+</dd>
+<dt>Residues</dt><dd><p>Stores some residue-level information from the MD system.</p>
+</dd>
+<dt>Oscillator</dt><dd><p>Stores all information on a single oscillator.</p>
+</dd>
+</dl>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>gen_universe</dt><dd><p>Calls MDAanalysis.Universe on the supplied files and catches errors.</p>
+</dd>
+<dt>check_box_rightangled</dt><dd><p>Checks whether the supplied universe has only right angles.</p>
+</dd>
+<dt>check_box_charge</dt><dd><p>Checks whether the supplied universe has neutral charge.</p>
+</dd>
+</dl>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Oscillator">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">Oscillator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1126-L1377"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">Oscillator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1209-L1466"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stores all information on a single oscillator.</p>
 <dl class="field-list">
@@ -596,6 +621,9 @@ specified in functional_group are in here.</p>
 </dd>
 <dt class="field-even">Attributes<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
+<dt><strong>system</strong><span class="classifier"><a class="reference internal" href="#GMAP.src.tools.system_reader.System" title="GMAP.src.tools.system_reader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The class containing all the information on the system of the
+MD trajectory.</p>
+</dd>
 <dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.SingleMap" title="GMAP.src.tools.map_reader.SingleMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleMap</span></code></a></span></dt><dd><p>The map that this oscillator belongs to.</p>
 </dd>
 <dt><strong>used_atoms</strong><span class="classifier">list of int</span></dt><dd><p>Using <a href="#id1"><span class="problematic" id="id2">map_</span></a>.used_atoms - contains the system indices of the atoms
@@ -620,6 +648,9 @@ the electrostatic properties for.</p>
 written. Is of shape (n_estatic_atoms, 10).</p>
 </dd>
 <dt><strong>VEGout_c</strong><span class="classifier"><cite>ctypes.Array</cite></span></dt><dd><p>The c-friendly variant of self.VEGout</p>
+</dd>
+<dt><strong>positions</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The positions of all atoms given in used_atoms, in global
+coordinates.</p>
 </dd>
 <dt><strong>positions_box</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The positions of all atoms given in used_atoms, in box
 coordinates.</p>
@@ -670,7 +701,7 @@ The position at which the dipole moment lies.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Oscillator.apply_dielectric_constant">
-<span class="sig-name descname"><span class="pre">apply_dielectric_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constant</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1288-L1298"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.apply_dielectric_constant" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">apply_dielectric_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">constant</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1377-L1387"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.apply_dielectric_constant" title="Link to this definition">#</a></dt>
 <dd><p>Divide the VEG array by the dielectric constant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -685,7 +716,7 @@ divided by it.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Oscillator.frame_update">
-<span class="sig-name descname"><span class="pre">frame_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1300-L1327"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.frame_update" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">frame_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1389-L1416"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.frame_update" title="Link to this definition">#</a></dt>
 <dd><p>Update the frame-specific attributes of the instance.</p>
 <p>When a new frame starts, the system positions array is updated,
 so the information in this class that depends on that must be
@@ -702,7 +733,7 @@ updated, too.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Oscillator.get_VEG_ref">
-<span class="sig-name descname"><span class="pre">get_VEG_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1329-L1351"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.get_VEG_ref" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_VEG_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1418-L1440"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.get_VEG_ref" title="Link to this definition">#</a></dt>
 <dd><p>Obtain the VEG point for the current system. Must be repeated
 every frame.</p>
 <dl class="field-list">
@@ -728,7 +759,7 @@ calculated for this oscillator.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Oscillator.get_rotation_matrix">
-<span class="sig-name descname"><span class="pre">get_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1353-L1377"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.get_rotation_matrix" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1442-L1466"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.get_rotation_matrix" title="Link to this definition">#</a></dt>
 <dd><p>Obtain the rotation matrix for the current system. Must be
 repeated every frame.</p>
 <dl class="field-list">
@@ -757,7 +788,7 @@ matrix provided here.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Oscillator.process_atschoice">
-<span class="sig-name descname"><span class="pre">process_atschoice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attname</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1217-L1244"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.process_atschoice" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">process_atschoice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attname</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1306-L1333"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.process_atschoice" title="Link to this definition">#</a></dt>
 <dd><p>Converts the provided attribute into c-friendly objects.</p>
 <p>This has been turned into a separate function, so if maps want
 to change anything about the structures programmatically (as
@@ -776,7 +807,7 @@ self.attname should be of type list of int.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Oscillator.rotate_VEG">
-<span class="sig-name descname"><span class="pre">rotate_VEG</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1246-L1286"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.rotate_VEG" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">rotate_VEG</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1335-L1375"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Oscillator.rotate_VEG" title="Link to this definition">#</a></dt>
 <dd><p>Rotate the stored VEG from cartesian to local basis.</p>
 <p>The local basis is defined in self.rotation_matrix. The
 potential is not rotated, only the field and gradient are.</p>
@@ -786,7 +817,7 @@ potential is not rotated, only the field and gradient are.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Residues">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">Residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1018-L1123"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Residues" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">Residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1093-L1206"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Residues" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Creates and stores information on the system on a per-residue
 basis</p>
@@ -801,14 +832,22 @@ MD trajectory.</p>
 </dl>
 </dd>
 <dt class="field-even">Attributes<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt><strong>first_ix</strong><span class="classifier">np.ndarray</span></dt><dd><p>An array as long as there are residues in the MD system, with
 dtype np.int32. For each residue, it stores the index of the
 first atom.</p>
 </dd>
+<dt><strong>first_ix_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>first_ix</cite> (not a copy, a direct view, same info!), but
+in a format suitable for passing data to c.</p>
+</dd>
 <dt><strong>last_ix</strong><span class="classifier">np.ndarray</span></dt><dd><p>An array as long as there are residues in the MD system, with
 dtype np.int32. For each residue, it stores the index of the
 last atom.</p>
+</dd>
+<dt><strong>last_ix_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>last_ix</cite> (not a copy, a direct view, same info!), but
+in a format suitable for passing data to c.</p>
 </dd>
 <dt><strong>resnames</strong><span class="classifier">list of str</span></dt><dd><p>A list as long as there are residues in the MD system. For each
 residue, it stores its residue name.</p>
@@ -837,7 +876,7 @@ each residue, it stores its center of mass.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Residues.find_markers">
-<span class="sig-name descname"><span class="pre">find_markers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1056-L1100"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Residues.find_markers" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">find_markers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1139-L1183"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Residues.find_markers" title="Link to this definition">#</a></dt>
 <dd><p>Make lookup tables (len=nres) for basic residue-based
 properties.</p>
 <p>1D arrays are built with a length equal to the amount of
@@ -859,7 +898,7 @@ system that will be analyzed.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.Residues.manage_influencers">
-<span class="sig-name descname"><span class="pre">manage_influencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">influencerset</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1102-L1123"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Residues.manage_influencers" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">manage_influencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">influencerset</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1185-L1206"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.Residues.manage_influencers" title="Link to this definition">#</a></dt>
 <dd><p>Return all atom indices with one of the given residue names</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -875,7 +914,7 @@ system that will be analyzed.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">System</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L16-L1015"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">System</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L42-L1090"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stores all information on the MD system and objects therein</p>
 <dl class="field-list">
@@ -907,11 +946,29 @@ each atom belongs to.</p>
 <dt><strong>positions</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 2D array of shape [self.natoms, 3] storing the position of
 each atom in the MD system.</p>
 </dd>
+<dt><strong>positions_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>positions</cite> (not a copy, a direct view, same info!), but in
+a format suitable for passing data to c.</p>
+</dd>
+<dt><strong>positions_box</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The data in <cite>positions</cite>, but translated to box coordinates.</p>
+</dd>
+<dt><strong>positions_box_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>positions_box</cite> (not a copy, a direct view, same info!), but
+in a format suitable for passing data to c.</p>
+</dd>
 <dt><strong>masses</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the mass of each atom.</p>
+</dd>
+<dt><strong>masses_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>masses</cite> (not a copy, a direct view, same info!), but in
+a format suitable for passing data to c.</p>
 </dd>
 <dt><strong>charges</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the charge of each
 atom. This is the charge as used by the MD system, not as a
 certain map might need it.</p>
+</dd>
+<dt><strong>charges_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>charges</cite> (not a copy, a direct view, same info!), but in
+a format suitable for passing data to c.</p>
 </dd>
 <dt><strong>types</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>A 1D array of length self.natoms storing the type of each atom.
 A type is often dependent on the forcefield used - each element
@@ -926,11 +983,21 @@ each atom belongs to.</p>
 </dd>
 <dt><strong>nres</strong><span class="classifier"><cite>np.int32</cite></span></dt><dd><p>The amount of residues found in the MD trajectory.</p>
 </dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>The amount of time between frames of the trajectory in ps.</p>
+</dd>
 <dt><strong>boxdims</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The length of the 3 vectors defining the MD simulation box
 (its PBC). These are the first 3 entries returned by
 MDA.Universe.dimensions.</p>
 </dd>
+<dt><strong>boxdims_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>boxdims</cite> (not a copy, a direct view, same info!), but in
+a format suitable for passing data to c.</p>
+</dd>
 <dt><strong>halfbox</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>Same as boxdims, but each value is divided by 2.</p>
+</dd>
+<dt><strong>halfbox_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>halfbox</cite> (not a copy, a direct view, same info!), but in
+a format suitable for passing data to c.</p>
 </dd>
 <dt><strong>angles</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The angles between the three vectors defining the MD simulation
 box (its PBC). These are the last 3 entries returned by
@@ -941,7 +1008,15 @@ boxvects[i] returns one of the three vectors.
 The result of MDA.lib.mdamath.triclinic_vectors(
 self.universe.dimensions)</p>
 </dd>
+<dt><strong>boxvects_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>boxvects</cite> (not a copy, a direct view, same info!), but in
+a format suitable for passing data to c.</p>
+</dd>
 <dt><strong>boxvects_inv</strong><span class="classifier"><cite>np.ndarray</cite></span></dt><dd><p>The inverse of the rotation matrix self.boxvects.</p>
+</dd>
+<dt><strong>boxvects_inv_c</strong><span class="classifier"><cite>c_float_array_n</cite></span></dt><dd><p>n denotes the size of the array. Contains the same information
+as <cite>boxvects_inv</cite> (not a copy, a direct view, same info!), but
+in a format suitable for passing data to c.</p>
 </dd>
 <dt><strong>safesphere</strong><span class="classifier">float</span></dt><dd><p>The radius of the sphere in which distances can be calculated
 accurately. If the length of any vector exceeds this size, there
@@ -1039,13 +1114,13 @@ instead of oscillator objects.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.abs_resnums">
-<span class="sig-name descname"><span class="pre">abs_resnums</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L238-L264"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.abs_resnums" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">abs_resnums</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L307-L333"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.abs_resnums" title="Link to this definition">#</a></dt>
 <dd><p>Renumbers residue numbers so they start at 0, and never reset</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.basic_boxchecks">
-<span class="sig-name descname"><span class="pre">basic_boxchecks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L153-L190"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.basic_boxchecks" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">basic_boxchecks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L215-L252"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.basic_boxchecks" title="Link to this definition">#</a></dt>
 <dd><p>Performs the first basic analyses on the provided universe.</p>
 <p>Doesn’t return anything - if anything is amiss, it will just
 throw a fatal error.</p>
@@ -1062,7 +1137,7 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.confirm_bond">
-<span class="sig-name descname"><span class="pre">confirm_bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ix1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix2</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L666-L683"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.confirm_bond" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">confirm_bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ix1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ix2</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L735-L752"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.confirm_bond" title="Link to this definition">#</a></dt>
 <dd><p>Check whether the given atoms are bonded</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1082,7 +1157,7 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.confirm_internal_bond">
-<span class="sig-name descname"><span class="pre">confirm_internal_bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L645-L664"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.confirm_internal_bond" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">confirm_internal_bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oscillator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L714-L733"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.confirm_internal_bond" title="Link to this definition">#</a></dt>
 <dd><p>Check whether the given bond exists in the given oscillator</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1105,13 +1180,13 @@ the bond.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.determine_box">
-<span class="sig-name descname"><span class="pre">determine_box</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L266-L283"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.determine_box" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">determine_box</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L335-L352"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.determine_box" title="Link to this definition">#</a></dt>
 <dd><p>Find out what the simulation box looks like.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.extend_oscillator">
-<span class="sig-name descname"><span class="pre">extend_oscillator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">found_local_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_local_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_residue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_oscillators</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L780-L837"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.extend_oscillator" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">extend_oscillator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">found_local_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_local_ix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_residue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_oscillators</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L849-L906"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.extend_oscillator" title="Link to this definition">#</a></dt>
 <dd><p>Add all residues that are correctly bonded.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1150,7 +1225,7 @@ of atoms added on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.find_influencers">
-<span class="sig-name descname"><span class="pre">find_influencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L285-L401"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_influencers" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">find_influencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L354-L470"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_influencers" title="Link to this definition">#</a></dt>
 <dd><p>Find the indices of all atoms that are influencers</p>
 <p>Influencers are the atoms whose charge should be considered
 while calculating the VEG for a given point. This is a first
@@ -1169,7 +1244,7 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.find_oscillators">
-<span class="sig-name descname"><span class="pre">find_oscillators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L403-L520"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_oscillators" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">find_oscillators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L472-L589"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_oscillators" title="Link to this definition">#</a></dt>
 <dd><p>Finds all the oscillators in the MD system</p>
 <p>Before an oscillator is considered ‘found’, it has to match the
 following criteria:</p>
@@ -1192,7 +1267,7 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.find_oscillators_atoms">
-<span class="sig-name descname"><span class="pre">find_oscillators_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resnum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">residue_atoms</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L598-L643"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_oscillators_atoms" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">find_oscillators_atoms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resnum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">residue_atoms</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L667-L712"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_oscillators_atoms" title="Link to this definition">#</a></dt>
 <dd><p>See if the found residue indeed matches the desired template</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1217,7 +1292,7 @@ instead.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.find_oscillators_perstruct">
-<span class="sig-name descname"><span class="pre">find_oscillators_perstruct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L522-L566"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_oscillators_perstruct" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">find_oscillators_perstruct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">struct</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L591-L635"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_oscillators_perstruct" title="Link to this definition">#</a></dt>
 <dd><p>Finds all oscillators matching the given structure.</p>
 <p>Considers residue and atoms names, as well as bonds defined in
 the map.</p>
@@ -1242,7 +1317,7 @@ structure.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.find_oscillators_residue">
-<span class="sig-name descname"><span class="pre">find_oscillators_residue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">residue</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L568-L596"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_oscillators_residue" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">find_oscillators_residue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">residue</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L637-L665"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.find_oscillators_residue" title="Link to this definition">#</a></dt>
 <dd><p>Finds all oscillators matching the given residue template.</p>
 <p>Only considers residue and atoms names.</p>
 <dl class="field-list">
@@ -1266,7 +1341,7 @@ of.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.match_residues">
-<span class="sig-name descname"><span class="pre">match_residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_oscillators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L685-L778"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.match_residues" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">match_residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_oscillators</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L754-L847"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.match_residues" title="Link to this definition">#</a></dt>
 <dd><p>Finds the full oscillator from component residues</p>
 <p>Some oscillators live fully inside a single residue, but others
 don’t. If they dont, the atoms of multiple residues have to
@@ -1310,7 +1385,7 @@ contains.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.order_oscillators_pairs">
-<span class="sig-name descname"><span class="pre">order_oscillators_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L863-L948"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.order_oscillators_pairs" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">order_oscillators_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L932-L1017"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.order_oscillators_pairs" title="Link to this definition">#</a></dt>
 <dd><p>Sort all present oscillators by their map.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1325,7 +1400,7 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.order_oscillators_singles">
-<span class="sig-name descname"><span class="pre">order_oscillators_singles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L839-L861"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.order_oscillators_singles" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">order_oscillators_singles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L908-L930"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.order_oscillators_singles" title="Link to this definition">#</a></dt>
 <dd><p>Sort all present oscillators by their map.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1340,7 +1415,7 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.print_system">
-<span class="sig-name descname"><span class="pre">print_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L981-L1015"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.print_system" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">print_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1056-L1090"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.print_system" title="Link to this definition">#</a></dt>
 <dd><p>Reports what the MD system looks like - what oscillators were
 found</p>
 <dl class="field-list">
@@ -1356,25 +1431,44 @@ run-defining parameters.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.set_properties">
-<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L193-L236"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.set_properties" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">read_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L255-L305"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.set_properties" title="Link to this definition">#</a></dt>
 <dd><p>Sets the basic properties of the system.</p>
 <p>Extracts them from self.universe.atoms, and saves them in self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>read_only</strong><span class="classifier">bool, default = False</span></dt><dd><p>Whether the universe will be used only for reading. If set
+to False, c-arrays will be initialized to prepare for the
+calculations.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.System.update_properties">
-<span class="sig-name descname"><span class="pre">update_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L950-L979"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.update_properties" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">update_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1019-L1054"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.System.update_properties" title="Link to this definition">#</a></dt>
 <dd><p>Reloads the frame-dependent properties of the system.</p>
 <p>This function is supposed to be called at the beginning of every
 frame to ensure that the properties stored inside are up to
 date.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>run_pars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.parameter_parser.html#GMAP.src.tools.parameter_parser.RunPars" title="GMAP.src.tools.parameter_parser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic
+run-defining parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.check_box_charge">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">check_box_charge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charges</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1452-L1497"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.check_box_charge" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">check_box_charge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charges</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1541-L1586"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.check_box_charge" title="Link to this definition">#</a></dt>
 <dd><p>Checks whether the supplied universe has neutral charge.</p>
 <p>If the box has a non-integer charge, the program throws an error
 and quits.</p>
@@ -1402,7 +1496,7 @@ neutral.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.check_box_rightangled">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">check_box_rightangled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1430-L1449"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.check_box_rightangled" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">check_box_rightangled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">universe</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1519-L1538"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.check_box_rightangled" title="Link to this definition">#</a></dt>
 <dd><p>Checks whether the supplied universe has only right angles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1422,7 +1516,7 @@ neutral.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.system_reader.gen_universe">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">gen_universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1380-L1427"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.gen_universe" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.system_reader.</span></span><span class="sig-name descname"><span class="pre">gen_universe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/system_reader.py#L1469-L1516"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.system_reader.gen_universe" title="Link to this definition">#</a></dt>
 <dd><p>Calls MDAanalysis.Universe on the supplied files and catches
 errors.</p>
 <dl class="field-list">
@@ -1491,6 +1585,8 @@ run-defining parameters.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.system_reader.Oscillator"><code class="docutils literal notranslate"><span class="pre">Oscillator</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.system_reader.Oscillator.apply_dielectric_constant"><code class="docutils literal notranslate"><span class="pre">Oscillator.apply_dielectric_constant()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.system_reader.Oscillator.frame_update"><code class="docutils literal notranslate"><span class="pre">Oscillator.frame_update()</span></code></a></li>

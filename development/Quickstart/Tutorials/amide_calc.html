@@ -522,7 +522,7 @@
                 <article class="bd-article">
                   
   <section id="calculating-the-amide-i-spectrum-of-a-protein">
-<h1>Calculating the amide-I spectrum of a Protein<a class="headerlink" href="#calculating-the-amide-i-spectrum-of-a-protein" title="Link to this heading">#</a></h1>
+<span id="quickstart-tutorial-amidecalc"></span><h1>Calculating the amide-I spectrum of a Protein<a class="headerlink" href="#calculating-the-amide-i-spectrum-of-a-protein" title="Link to this heading">#</a></h1>
 <p>This tutorial will demonstrate how to use GMAP’s GEM to calculate the spectrum of the amide-I vibration of a protein. Or, more specifically, how to convert an MD trajectory into a <a class="reference internal" href="../../Theory/Hamiltonians.html#theory-page-hamiltonians"><span class="std std-ref">Hamiltionian</span></a> trajectory, one of the important steps in the spectrum-calculating process.</p>
 <p>Before this tutorial, make sure you have/did the following:</p>
 <ul class="simple">
@@ -693,9 +693,16 @@ AmideBB.include_protein_residues  HIE HSD
 <p>Then, what model should be used for calculating the frequencies? At the time of writing, the AmideBB and AmideSC maps support 5 common models: the Tokmakoff, Skinner, Jansen, Cho and Hirst models. You can see if this is still true for yours in the map’s readme files. For this example, lets explicitly choose the Skinner map (which is also the default) using the ‘AmideBB.frequency_map_choice’ and ‘AmideSC.frequency_map_choice’ parameters.</p>
 <p>The AmideBB and AmideSC maps also allow to choose a dipole model using ‘AmideBB.dipole_map_choice’ and ‘AmideSC.dipole_map_choice’.</p>
 <p>Next, using ‘ProteinAmide.coupling_choice’ and ‘ProteinAmide.NN_coupling_choice’, you can select which coupling methods you would prefer for the general coupling, and the nearest-neighbour coupling.</p>
-<p>Finally, if you’re computing on a cluster, you can tell GMAP how much time you have available for the calculation using the parameter ‘time_limit’. If the program can’t finish before then, it will safely stop. To guess how long the program will need, you can try extrapolate from how long the 1-frame calculation took, but that gives only a rough estimate. Longer trial-calculations can give better estimates.</p>
+<p>Then, if you’re computing on a cluster, you can tell GMAP how much time you have available for the calculation using the parameter ‘time_limit’. If the program can’t finish before then, it will safely stop. To guess how long the program will need, you can try extrapolate from how long the 1-frame calculation took, but that gives only a very rough estimate, usually much longer than the eventual time. Longer trial-calculations can give better estimates; depending on system size, you will need 20 (10k+ singles) to 1000 ( less than 50 residues) frames to get a reasonably accurate time estimation.
+When you run a calculation with verbose and/or verbose_log set to 2 or higher, you will get updates during the calculation showing you how long the calculation has taken, along with predictions on the remaining time.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When using time_limit, make sure to use an appropriate value for the parameter batch_size. When the time_limit is too conservative and/or the batch size is too large, GMAP might stop too early.</p>
+<p>Every time it finished a batch, GMAP will see how long a batch takes (on average). When there’s time to do two more batches, GMAP will start the next batch.</p>
+</div>
+<p>Finally, also for working on clusters, GMAP has the option to run in parallel on multiple cores. This is useful if your cluster requires using multiple, or if the calculation would take too long otherwise. The <a class="reference internal" href="../../User_guide/parameter_overview.html#userguide-page-parameter-overview-numcores"><span class="std std-ref">number_cores</span></a> parameter can be used to tell GMAP to run in parallel. <strong>Don’t use this if you don’t actually have multiple cores due to much greater RAM usage!</strong> Follow the number_cores link for more information on this.</p>
 <p>When the program quits because of this time limit, it does so safely, and will report what frame it did last. This allows one to do only the remaining frames in a subsequent calculation. GMAP does not yet offer a tool to stitch the outputs of the two runs together, though.</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>topology_file        D:\spectra\my_protein_spectra\MD_files\my_protein.tpr
+<div class="highlight-text notranslate" id="quickstart-tutorial-amidecalc-fileexample"><div class="highlight"><pre><span></span>topology_file        D:\spectra\my_protein_spectra\MD_files\my_protein.tpr
 trajectory_file      D:\spectra\my_protein_spectra\MD_files\my_protein.xtc
 
 output_directory     D:\spectra\my_protein_spectra\GEM_files
@@ -707,6 +714,7 @@ couplings_to_use     ProteinAmide   :All
 number_frames        50000
 time_limit           300  # this is in minutes!
 output_data          ham dip pos
+number_cores         4  # Only if you actually have these available!
 
 
 AmideBB.include_protein_residues  HIE HSD  # only present if you needed this previously

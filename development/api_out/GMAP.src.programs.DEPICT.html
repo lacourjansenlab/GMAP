@@ -596,20 +596,67 @@ potential changes with estatic_range. This aids in determining what
 value for estatic_range should be used, and what method for calculating
 the electrostatic properties.</p>
 <p>For more information, check the manual on N/A.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>DEPICT has not been used/tested in a long time. Proceed at your own
+risk. We are happy to receive any issues on github, but please be
+very clear/explicit so we can help you.</p>
+</div>
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.DEPICT.DEPICT">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.DEPICT.</span></span><span class="sig-name descname"><span class="pre">DEPICT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/DEPICT.py#L91-L131"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.DEPICT.DEPICT" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.DEPICT.</span></span><span class="sig-name descname"><span class="pre">DEPICT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/DEPICT.py#L130-L179"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.DEPICT.DEPICT" title="Link to this definition">#</a></dt>
+<dd><p>Manages the DEPICT workflow.</p>
+<p>Initializes the main program state, then performs calculation and/or
+plotting if desired.</p>
+<dl class="simple">
+<dt>callcommand<span class="classifier">list of str</span></dt><dd><p>This is the user input into the terminal.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.DEPICT.calc_data">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.DEPICT.</span></span><span class="sig-name descname"><span class="pre">calc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/DEPICT.py#L41-L79"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.DEPICT.calc_data" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.DEPICT.</span></span><span class="sig-name descname"><span class="pre">calc_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/DEPICT.py#L46-L103"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.DEPICT.calc_data" title="Link to this definition">#</a></dt>
+<dd><p>Compute datapoints for the estat vs spheresize graph.</p>
+<p>This function is very old (it predates Printer being a singleton!).
+Unsure if it still runs. Update docstring after testing/updating
+code!</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.print_tools.html#GMAP.src.tools.print_tools.Printer" title="GMAP.src.tools.print_tools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The printing/logging object.</p>
+</dd>
+<dt><strong>run_pars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.parameter_parser.html#GMAP.src.tools.parameter_parser.RunPars" title="GMAP.src.tools.parameter_parser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic
+run-defining parameters.</p>
+</dd>
+<dt><strong>system</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.system_reader.html#GMAP.src.tools.system_reader.System" title="GMAP.src.tools.system_reader.System"><code class="xref py py-class docutils literal notranslate"><span class="pre">System</span></code></a></span></dt><dd><p>The object that stores everything the program currently knows
+about the system being treated (names, numbers, types, masses,
+charges of all atoms, for example)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.DEPICT.show_data">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.DEPICT.</span></span><span class="sig-name descname"><span class="pre">show_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/DEPICT.py#L82-L88"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.DEPICT.show_data" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.DEPICT.</span></span><span class="sig-name descname"><span class="pre">show_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">printer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/DEPICT.py#L106-L127"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.DEPICT.show_data" title="Link to this definition">#</a></dt>
+<dd><p>Using plt, displays the data computed using <a class="reference internal" href="#GMAP.src.programs.DEPICT.calc_data" title="GMAP.src.programs.DEPICT.calc_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">calc_data()</span></code></a></p>
+<p>This function is very old (it predates Printer being a singleton!).
+Unsure if it still runs. Update docstring after testing/updating
+code!</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>printer</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.print_tools.html#GMAP.src.tools.print_tools.Printer" title="GMAP.src.tools.print_tools.Printer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Printer</span></code></a></span></dt><dd><p>The printing/logging object.</p>
+</dd>
+<dt><strong>run_pars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.parameter_parser.html#GMAP.src.tools.parameter_parser.RunPars" title="GMAP.src.tools.parameter_parser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic
+run-defining parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 

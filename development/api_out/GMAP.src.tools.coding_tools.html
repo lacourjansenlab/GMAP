@@ -576,9 +576,27 @@
                   
   <section id="module-GMAP.src.tools.coding_tools">
 <span id="gmap-src-tools-coding-tools-module"></span><h1>GMAP.src.tools.coding_tools module<a class="headerlink" href="#module-GMAP.src.tools.coding_tools" title="Link to this heading">#</a></h1>
+<p>Contains some abstract objects simplifying further code.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>Singleton</dt><dd><p>Metaclassing this class makes any class a singleton.</p>
+</dd>
+<dt>SingletonProperty</dt><dd><p>A class that metaclasses a singleton can use the &#64;SingletonProperty
+decorator to expose an attribute of the instance as if belonging
+to the class.</p>
+</dd>
+<dt>FrozenDict</dt><dd><p>Inherits from python dict, but makes it such that after creation,
+the dict cannot be changed anymore.</p>
+</dd>
+<dt>CustomClass</dt><dd><p>Creates a new class with attributes equallying given dict entries.
+Mainly useful for creating dummy objects during testing.</p>
+</dd>
+</dl>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.coding_tools.CustomClass">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.coding_tools.</span></span><span class="sig-name descname"><span class="pre">CustomClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L95-L104"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.CustomClass" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.coding_tools.</span></span><span class="sig-name descname"><span class="pre">CustomClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L137-L146"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.CustomClass" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Creates a new class with attributes equallying given dict entries</p>
 <p>Of the given dictionary, keys will become the attribute names, the
@@ -587,8 +605,14 @@ values will become the actual stored thing in that attribute.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.coding_tools.FrozenDict">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.coding_tools.</span></span><span class="sig-name descname"><span class="pre">FrozenDict</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L78-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.FrozenDict" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.coding_tools.</span></span><span class="sig-name descname"><span class="pre">FrozenDict</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L107-L134"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.FrozenDict" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>Immutable dictionary subclass.</p>
+<p>Attempts to alter this dict will raise a <cite>TypeError</cite>. Values are
+<em>not</em> recursively frozen, so it will only work as expected with
+immutable values.</p>
+<p>credit: <a class="reference external" href="https://stackoverflow.com/questions/62301911/">https://stackoverflow.com/questions/62301911/</a>
+is-there-a-dictionary-like-object-that-is-immutable</p>
 <p class="rubric">Methods</p>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
@@ -628,9 +652,18 @@ values will become the actual stored thing in that attribute.</p>
 </tbody>
 </table>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>TypeError</dt><dd><p>If any of (<cite>__add__</cite>, <cite>__radd__</cite>, <cite>__setitem__</cite>, or <cite>update</cite>)
+is called on an instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.coding_tools.FrozenDict.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <span class="optional">]</span><em class="sig-param"><span class="n"><span class="pre">**F</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None.</span>&#160; <span class="pre">Update</span> <span class="pre">D</span> <span class="pre">from</span> <span class="pre">mapping/iterable</span> <span class="pre">E</span> <span class="pre">and</span> <span class="pre">F.</span></span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L91-L92"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.FrozenDict.update" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <span class="optional">]</span><em class="sig-param"><span class="n"><span class="pre">**F</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None.</span>&#160; <span class="pre">Update</span> <span class="pre">D</span> <span class="pre">from</span> <span class="pre">mapping/iterable</span> <span class="pre">E</span> <span class="pre">and</span> <span class="pre">F.</span></span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L133-L134"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.FrozenDict.update" title="Link to this definition">#</a></dt>
 <dd><p>If E is present and has a .keys() method, then does:  for k in E.keys(): D[k] = E[k]
 If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v
 In either case, this is followed by: for k in F:  D[k] = F[k]</p>
@@ -640,7 +673,7 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.coding_tools.Singleton">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.coding_tools.</span></span><span class="sig-name descname"><span class="pre">Singleton</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L3-L56"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.Singleton" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.coding_tools.</span></span><span class="sig-name descname"><span class="pre">Singleton</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L21-L74"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.Singleton" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></p>
 <p>Metaclassing this class makes any class a singleton.</p>
 <p class="rubric">Methods</p>
@@ -703,8 +736,30 @@ the tests report they are using conftest.py.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.coding_tools.SingletonProperty">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.coding_tools.</span></span><span class="sig-name descname"><span class="pre">SingletonProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L59-L75"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.SingletonProperty" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.coding_tools.</span></span><span class="sig-name descname"><span class="pre">SingletonProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/coding_tools.py#L77-L104"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.coding_tools.SingletonProperty" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Decorator implementation for having &#64;property work on the class
+of a singleton subclass, instead of just an instance.</p>
+<p>While I know it is not needed in the current version of GMAP
+(chaining decorators works in 3.9 and 3.10), I would like to
+slightly futureproof the code by not relying on that (as it is
+removed in 3.10+, and no info yet on whether it will return)</p>
+<p><a class="reference external" href="https://stackoverflow.com/questions/76249636/">https://stackoverflow.com/questions/76249636/</a>
+class-properties-in-python-3-11</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>func</strong><span class="classifier">callable</span></dt><dd><p>The function or method that describes the property behavior.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>fget</strong><span class="classifier">callable</span></dt><dd><p>The function or method supplied as func.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -756,6 +811,7 @@ the tests report they are using conftest.py.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.coding_tools.CustomClass"><code class="docutils literal notranslate"><span class="pre">CustomClass</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.coding_tools.FrozenDict"><code class="docutils literal notranslate"><span class="pre">FrozenDict</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.coding_tools.FrozenDict.update"><code class="docutils literal notranslate"><span class="pre">FrozenDict.update()</span></code></a></li>

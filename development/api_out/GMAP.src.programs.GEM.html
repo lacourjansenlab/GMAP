@@ -599,12 +599,23 @@ in the corresponding .emap file.</p>
 <p>For more information, check the manual on N/A.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.GEM">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">GEM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L915-L943"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.GEM" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">GEM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L1025-L1064"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.GEM" title="Link to this definition">#</a></dt>
+<dd><p>The entry point of the module.</p>
+<p>Parses the command line, extracs parameters, and calls the
+required function for job execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>callcommand</strong><span class="classifier">list of str</span></dt><dd><p>This is the user input into the terminal.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.early_stop">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">early_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L198-L234"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.early_stop" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">early_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L203-L252"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.early_stop" title="Link to this definition">#</a></dt>
 <dd><p>Determines whether to stop the calculation early, or to continue.</p>
 <p>This decision is based on the amount of remaining time, used time,
 and frame batch size. Basically, the program divides all frames to
@@ -615,23 +626,50 @@ to finish another.
 If there is not enough time to finish two more, the next batch will
 not start. This is done to ensure that there is also enough time for
 the program to finish things off after the last batch.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>framenum</strong><span class="classifier">int</span></dt><dd><p>The frame number at which this function is called</p>
+</dd>
+<dt><strong>run_pars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.parameter_parser.html#GMAP.src.tools.parameter_parser.RunPars" title="GMAP.src.tools.parameter_parser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic
+run-defining parameters.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>stop</strong><span class="classifier">bool</span></dt><dd><p>Whether the calculation should stop early.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.main">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L953-L965"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.main" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L1074-L1095"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.main" title="Link to this definition">#</a></dt>
 <dd><p>Fakes behaviour as if called from __main__.</p>
 <p>During normal operation (user types ‘GMAP …’ in the command line),
-this function should never be called. This function replicates the
-‘normal’ behaviour so partial tests are possible.</p>
+this function should never be called. Instead, the entrypoint is in
+the cmd_interface file, and it points directly to the GEM function
+above.</p>
+<p>This function replicates the ‘normal’ behaviour so partial tests are
+possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>callcommand</strong><span class="classifier">list of str</span></dt><dd><p>This is the user input into the terminal.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.manage_frame">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">manage_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L56-L105"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.manage_frame" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">manage_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L56-L110"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.manage_frame" title="Link to this definition">#</a></dt>
 <dd><p>Performs all the checks involved with starting a new frame.</p>
-<p>Future/TODO:
-Checks if the new frame should be treated (or is out of range).
+<p>Checks if the new frame should be treated (or is out of range).
 Prints the new frame number, along with an ETA (to know how much
 longer the calculation will take). Also confirms whether there is
 enough time to start on the next batch of frames before time runs
@@ -646,22 +684,88 @@ run-defining parameters.</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>break_after</strong><span class="classifier">bool</span></dt><dd><p>Whether the per-frame loop should be broken after this frame.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.par_single_job">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">par_single_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputpar</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L765-L821"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.par_single_job" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">par_single_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputpar</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L817-L894"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.par_single_job" title="Link to this definition">#</a></dt>
+<dd><p>The executive unit for parallel jobs.</p>
+<p>concurrent.futures.ProcessPoolExecutor.map takes only a function
+to execute, and a single parameter to give to that function.
+This function is the one given to that executor. It needs to unpack
+the provided inputs, and contain the actual instruction for the
+calculation.</p>
+<p>The way this is done, is by using subprocess to call another
+GMAP instance to perform a single-core calculation. In/output file
+names, verbosity, number of cores, number of frames are all adjusted
+to work as a child-process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>inputpar</strong><span class="classifier">list of list of dict/int pairs</span></dt><dd><p>The input needed for the call to work. The dict is the dict
+representation of runpars, while int is the number (id) of the
+core executing this job.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.parallel">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_parfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argslist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">singles_mapdict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs_mapdict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L824-L908"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.parallel" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_parfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argslist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">singles_mapdict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs_mapdict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L897-L1022"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.parallel" title="Link to this definition">#</a></dt>
+<dd><p>Performs the ‘parallel’ command of GEM (GMAP GEM run)</p>
+<p>Initializes maps, system_reader.System.
+Writes parameter file.
+Removes system again (to save memory).
+Manages filelocations for parallel runs.
+Calls parallel runs.
+Merges output files to look like ‘normal’ outputs again.
+Reports calculation summary.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>in_parfile</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The path to the requested input parameter file.</p>
+</dd>
+<dt><strong>argslist</strong><span class="classifier">list of str</span></dt><dd><p>The slice of sys.argv containing all parameter choices given on
+the command line.</p>
+</dd>
+<dt><strong>run_pars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.parameter_parser.html#GMAP.src.tools.parameter_parser.RunPars" title="GMAP.src.tools.parameter_parser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic
+run-defining parameters.</p>
+</dd>
+<dt><strong>singles_mapdict</strong><span class="classifier">dict of str: <a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.SingleMap" title="GMAP.src.tools.map_reader.SingleMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleMap</span></code></a> pairs</span></dt><dd><p>Stores all the <a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.SingleMap" title="GMAP.src.tools.map_reader.SingleMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleMap</span></code></a>
+objects for each map supplied. The keys are the Map.name
+attributes corresponding to the maps stored as values.</p>
+</dd>
+<dt><strong>pairs_mapdict</strong><span class="classifier">dict of str: <a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.PairMap" title="GMAP.src.tools.map_reader.PairMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">PairMap</span></code></a> pairs</span></dt><dd><p>Stores all the <a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.PairMap" title="GMAP.src.tools.map_reader.PairMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">PairMap</span></code></a>
+objects for each map supplied. The keys are the Map.name
+attributes corresponding to the maps stored as values.</p>
+</dd>
+<dt><strong>cmd_pars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></span></dt><dd><p>Contains any parameter choices made on the command line</p>
+</dd>
+<dt><strong>in_pars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></span></dt><dd><p>Contains any parameter choices made in the input parameter file</p>
+</dd>
+<dt><strong>def_pars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></span></dt><dd><p>Contains all default parameter choices. Might be ref_pars, might
+be from a separate default parameters file.</p>
+</dd>
+<dt><strong>ref_pars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></span></dt><dd><p>Contains all available parameters from GMAP itself
+(not map-specific)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.print_calculation_summary">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_calculation_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L400-L440"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_calculation_summary" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_calculation_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L413-L453"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_calculation_summary" title="Link to this definition">#</a></dt>
 <dd><p>Reports how the calculation went, and some details users might
 want to know.</p>
 <dl class="field-list">
@@ -682,7 +786,7 @@ MD trajectory.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.print_frame_ETA">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_frame_ETA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endframe</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L108-L195"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_frame_ETA" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_frame_ETA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endframe</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L113-L200"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_frame_ETA" title="Link to this definition">#</a></dt>
 <dd><p>Prints some time information about this frame.</p>
 <p>Will report on the time at which the report takes place, the current
 frame, time elapsed, an estimate of the time remaining, and an
@@ -740,7 +844,7 @@ the parameter end_frame.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.print_in_output_filenames">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_in_output_filenames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L565-L635"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_in_output_filenames" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_in_output_filenames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L578-L648"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_in_output_filenames" title="Link to this definition">#</a></dt>
 <dd><p>report which files were used during the calculation</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -755,7 +859,7 @@ run-defining parameters.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.print_relevant_references">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_relevant_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L638-L670"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_relevant_references" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_relevant_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L651-L683"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_relevant_references" title="Link to this definition">#</a></dt>
 <dd><p>report which references should be cited for this calculation</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -773,7 +877,7 @@ MD trajectory.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.print_time_splits">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_time_splits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L443-L521"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_time_splits" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_time_splits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L456-L534"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_time_splits" title="Link to this definition">#</a></dt>
 <dd><p>Report how much time was spent on what parts of the calculation</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -790,7 +894,7 @@ run-defining parameters.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.print_treated_avail_frames">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_treated_avail_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L524-L562"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_treated_avail_frames" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">print_treated_avail_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L537-L575"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.print_treated_avail_frames" title="Link to this definition">#</a></dt>
 <dd><p>Report what frames from MD are available, which were requested,
 and which actually calculated.</p>
 <p>For now, there is no difference between the requested and calculated
@@ -812,12 +916,50 @@ MD trajectory.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.run">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_parfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argslist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">singles_mapdict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs_mapdict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L673-L762"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.run" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_parfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argslist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">singles_mapdict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairs_mapdict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L686-L814"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.run" title="Link to this definition">#</a></dt>
+<dd><p>Performs the ‘run’ command of GEM (GMAP GEM run)</p>
+<p>Initializes maps, C library, system_reader.System.
+Writes coupling file, parameter file.
+Performs trajectory loop (main calculation)
+Starts/ends profiling, and formats output.
+Reports calculation summary.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>in_parfile</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The path to the requested input parameter file.</p>
+</dd>
+<dt><strong>argslist</strong><span class="classifier">list of str</span></dt><dd><p>The slice of sys.argv containing all parameter choices given on
+the command line.</p>
+</dd>
+<dt><strong>run_pars</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.parameter_parser.html#GMAP.src.tools.parameter_parser.RunPars" title="GMAP.src.tools.parameter_parser.RunPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunPars</span></code></a></span></dt><dd><p>The ‘main’ RunPars instance containing all the basic
+run-defining parameters.</p>
+</dd>
+<dt><strong>singles_mapdict</strong><span class="classifier">dict of str: <a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.SingleMap" title="GMAP.src.tools.map_reader.SingleMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleMap</span></code></a> pairs</span></dt><dd><p>Stores all the <a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.SingleMap" title="GMAP.src.tools.map_reader.SingleMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleMap</span></code></a>
+objects for each map supplied. The keys are the Map.name
+attributes corresponding to the maps stored as values.</p>
+</dd>
+<dt><strong>pairs_mapdict</strong><span class="classifier">dict of str: <a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.PairMap" title="GMAP.src.tools.map_reader.PairMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">PairMap</span></code></a> pairs</span></dt><dd><p>Stores all the <a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.PairMap" title="GMAP.src.tools.map_reader.PairMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">PairMap</span></code></a>
+objects for each map supplied. The keys are the Map.name
+attributes corresponding to the maps stored as values.</p>
+</dd>
+<dt><strong>cmd_pars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></span></dt><dd><p>Contains any parameter choices made on the command line</p>
+</dd>
+<dt><strong>in_pars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code></span></dt><dd><p>Contains any parameter choices made in the input parameter file</p>
+</dd>
+<dt><strong>def_pars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawPars</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></span></dt><dd><p>Contains all default parameter choices. Might be ref_pars, might
+be from a separate default parameters file.</p>
+</dd>
+<dt><strong>ref_pars</strong><span class="classifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">RefPars</span></code></span></dt><dd><p>Contains all available parameters from GMAP itself
+(not map-specific)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.programs.GEM.trj_loop">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">trj_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L237-L397"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.trj_loop" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.programs.GEM.</span></span><span class="sig-name descname"><span class="pre">trj_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/programs/GEM.py#L255-L410"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.programs.GEM.trj_loop" title="Link to this definition">#</a></dt>
 <dd><p>Performs the main per-frame loop for GEM.</p>
 <p>Does the last bit of initialization that needs to happen, and then
 treats each frame.</p>

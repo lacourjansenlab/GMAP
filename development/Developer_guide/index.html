@@ -525,7 +525,7 @@
 <p>Welcome! Nice to see you’d like to contribute to GMAP! These pages contain information specifically for developers of the program itself, but can also be useful for developers of maps. Scroll down this page for a general introduction, or select a topic from the menu here.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Map != map()! The main program in the GMAP package (GEM) serves a specific purpose: converting an md trajectory into a Hamiltonian trajectory. In the spectroscopic community, this conversion is traditionally done using so-called maps. In this package, <a class="reference internal" href="../api_out/GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.Map" title="GMAP.src.tools.map_reader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> objects contain all information on such a spectroscopic map. Do not confuse these objects with python’s built-in map() function - it doesn’t occur yet in the program as of writing this text (january 2024), and is not expected to, either.</p>
+<p>Map != map()! The main program in the GMAP package (GEM) serves a specific purpose: converting an md trajectory into a Hamiltonian trajectory. In the spectroscopic community, this conversion is traditionally done using so-called maps. In this package, <a class="reference internal" href="../api_out/GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.Map" title="GMAP.src.tools.map_reader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> objects contain all information on such a spectroscopic map. Do not confuse these objects with python’s built-in map() function - it doesn’t occur yet in the program as of writing this text (january 2024; still accurate in october 2026), and is not expected to, either.</p>
 </div>
 <div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-3 docutils">
@@ -616,7 +616,7 @@
 <ul class="simple">
 <li><p>Follow the TOCM group python style guidelines (which are heavily based on PEP8), can be found <a class="reference external" href="https://github.com/lacourjansenlab/CoffeeCodeClub/tree/master/ProgramStyle">here</a>, or in the GMAP documentation (Developer Guide -&gt; Code Style)</p></li>
 <li><p>Make use of comments when function of code isn’t easily discernable!</p></li>
-<li><p>Its the modern era, we have storage space! Code does not need to be compactly written, legibility is the most important in this project</p></li>
+<li><p>Its the modern era, we have storage space! Code does not need to be compactly written, legibility is the most important in this project.</p></li>
 <li><p>Don’t worry about efficiency/speed of a function if it doesnt take more than 1% of total calculation time. This doesn’t mean we should aim for blatantly needlessly expensive code.</p></li>
 <li><p>Document the choices/assumptions/etc you make, so they can be put in (the developers parts of) the manual later.</p></li>
 <li><p>Printing should <strong>always</strong> be done with a custom print command (except when defining these), not the python default print. if you want to temporarily print something during development, use <code class="docutils literal notranslate"><span class="pre">GMAP.src.tools.print_tools.devprint()</span></code> instead. It behaves _EXACTLY_ like print does, but adds a linenumber and name of file/function to the print - this way, it is easy to find it back, and remove it.</p></li>
@@ -695,6 +695,74 @@
 <li><p>navigate to ‘functions’, scroll down to the function you want to check out, click it.</p></li>
 <li><p>Here, scroll to the line, and on the right side of the screen, click the dropdown menu.</p></li>
 </ul>
+</section>
+<section id="how-to-generate-the-documentation-using-sphinx">
+<h2>How to generate the documentation using sphinx<a class="headerlink" href="#how-to-generate-the-documentation-using-sphinx" title="Link to this heading">#</a></h2>
+<p>A pre-built version of the documentation comes with the release pipeline on github, and is published to <a class="reference external" href="https://lacourjansenlab.github.io/GMAP/">the github pages.</a>. There are versioned pages for the releases, and a development version that matches the sources files in the development branch.</p>
+<p>The instructions below are for when you want to test changes made locally, before merging any changes to the development branch. Pay close attention on where to start! The repo is prepared, so when working in the GMAP repo, you can usually start at step 8. You need to start at step 6 when you create/remove python modules. However, you do need to install GMAP in developer mode (see README).</p>
+<p>Assuming generating from scratch, and inside a venv (see README, always a good habit):</p>
+<ol class="arabic simple">
+<li><p>When doing this in a different repository (i.e. no automagical module installs), make sure to run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">sphinx</span></code>, <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">numpydoc</span></code>, and (optionally) <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pydata-sphinx-theme</span></code></p></li>
+<li><p>Create a directory for all sphinx output using <code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">sphinx</span></code>. It is preferred this directory lives in the base directory of your project (in case of GMAP, the same directory as where this document is located).</p></li>
+<li><p>Navigate to the newly created directory. Inside, run <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code>. You are prompted to make some choices, but the defaults are good enough. Just keep hitting enter until done. This will create a file named <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> and one named <code class="docutils literal notranslate"><span class="pre">index.rst</span></code>, along with some makefiles. Remember the abovementioned two files, they’re important!</p></li>
+<li><p>Make the following changes to the conf.py:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>At the very top of the file, add the line <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">sys</span></code> and <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">pathlib</span> <span class="pre">import</span> <span class="pre">Path</span></code></p></li>
+<li><p>a bit further down, replace <code class="docutils literal notranslate"><span class="pre">extensions</span> <span class="pre">=</span> <span class="pre">[]</span></code> with <code class="docutils literal notranslate"><span class="pre">extensions</span> <span class="pre">=</span> <span class="pre">['sphinx.ext.autodoc',</span> <span class="pre">'numpydoc']</span></code></p></li>
+<li><p>just below this, there are definitions for templates_path and exclude_patterns. Just below there, add the following line: <code class="docutils literal notranslate"><span class="pre">sys.path.append(str((Path(__file__).parent).resolve()))</span></code></p></li>
+<li><p><strong>if</strong> you installed the pydata theme earlier, replace the line <code class="docutils literal notranslate"><span class="pre">html_theme</span> <span class="pre">=</span> <span class="pre">'alabaster'</span></code> line further down in the document with <code class="docutils literal notranslate"><span class="pre">html_theme</span> <span class="pre">=</span> <span class="pre">'pydata_sphinx_theme'</span></code></p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="5">
+<li><p>Within the sphinx output directory, create another directory for the api output using <code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">api_out</span></code></p></li>
+<li><p><strong>Without</strong> changing directories, run <code class="docutils literal notranslate"><span class="pre">sphinx-apidoc</span> <span class="pre">-efPT</span> <span class="pre">-o</span> <span class="pre">api_out</span> <span class="pre">--templatedir=_templates</span> <span class="pre">../GMAP</span></code>. When building for a different project, make sure to point to the base folder of the <strong>code</strong> part of your project. Meaning of flags:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>-e means that each module will get its own page</p></li>
+<li><p>-f means that files will be overwritten when/where needed</p></li>
+<li><p>-P means that private methods/classes/functions will be documented, too</p></li>
+<li><p>-T means there won’t be a modules.rst file being generated.</p></li>
+<li><p>-o is the marker that the named directory is the intended output directory.</p></li>
+<li><p>–templatedir points to the directory with templates. These change the output from apidoc.</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="7">
+<li><p>Make the following changes to index.rst (you know, that file created in step 3):</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>replace <code class="docutils literal notranslate"><span class="pre">:maxdepth:</span> <span class="pre">2</span></code> with <code class="docutils literal notranslate"><span class="pre">:maxdepth:</span> <span class="pre">4</span></code> in case your project is very nested like GMAP</p></li>
+<li><p>right below this line, add the line <code class="docutils literal notranslate"><span class="pre">:glob:</span></code> - make sure to match the indentation of the lines above!</p></li>
+<li><p>right below the glob line, add an empty line, followed by the line <code class="docutils literal notranslate"><span class="pre">api_out/**.rst</span></code>. Again, make sure to mind indentation!</p></li>
+</ul>
+</div></blockquote>
+<ol class="arabic simple" start="8">
+<li><p>Within the sphinx output directory, run the following commands:</p></li>
+</ol>
+<blockquote>
+<div><ul class="simple">
+<li><p>(optional if familiar with output) <code class="docutils literal notranslate"><span class="pre">make</span></code> - this will show all supported document types to generate docs. We’ll be using basic html here, but note the fact you can also generate a pdf, man file, and many more!</p></li>
+<li><p>(developers only) don’t forget to do a build with the line defining ‘suppress_warnings’ in conf.py disabled to check what’s being suppressed!</p></li>
+<li><p>Build the documentation of your choice. In case of html, the command will be <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>The final step will report on how the documentation building went, and report any errors/issues. The documentation should build without errors. If not - the following issues are known and proven harmless:</p>
+<ul class="simple">
+<li><p>any issues about formatting specifically in docstrings in the .py files. Mostly unexpected indentations.</p></li>
+<li><p>html_static_path entry ‘_static’ does not exist.</p></li>
+</ul>
+<p>Any other issues/errors should be reported (or fixed if you introduced it). Examples include (<em>but are not limited to!</em>):</p>
+<ul class="simple">
+<li><p>Any warnings including the text ‘unknown document’ or ‘nonexistent document’.</p></li>
+<li><p>Any warnings saying ‘document isn’t included in any TOCtree’.</p></li>
+<li><p>Any warnings reporting issues with ‘target’s.</p></li>
+</ul>
+<p>The ouput files will be inside the sphinx folder, in _build/html. Open _build/html/index.html to get to the home page of your ‘website’.</p>
+<p>In case you build html documents, the interlinking is relative: you can move (and rename) the ‘html’ folder to your liking. It can be shared and everything, and it should even be compatible with github pages (if I understand things correctly).</p>
+<p>When you’ve made some choices to the code, and would like to rebuild the docs, not all steps have to be followed again. For minor changes, it is sufficient to redo step 8 only. For major changes (those that involve the addition/removal/restructuring of (sub)modules), restart at step 6.</p>
 </section>
 <section id="random-good-to-knows">
 <h2>Random good-to-knows<a class="headerlink" href="#random-good-to-knows" title="Link to this heading">#</a></h2>
@@ -790,6 +858,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-code-related-remarks">General code-related remarks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-for-any-developer-on-the-project">Workflow for any developer on the project</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pytest-instructions">Pytest instructions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-generate-the-documentation-using-sphinx">How to generate the documentation using sphinx</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-good-to-knows">Random good-to-knows</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-thoughts">Random thoughts</a></li>
 </ul>

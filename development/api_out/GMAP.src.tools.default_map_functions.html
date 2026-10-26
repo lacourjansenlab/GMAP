@@ -576,15 +576,102 @@
                   
   <section id="module-GMAP.src.tools.default_map_functions">
 <span id="gmap-src-tools-default-map-functions-module"></span><h1>GMAP.src.tools.default_map_functions module<a class="headerlink" href="#module-GMAP.src.tools.default_map_functions" title="Link to this heading">#</a></h1>
+<p>Generator of default functions for
+<a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.Map" title="GMAP.src.tools.map_reader.Map"><code class="xref py py-class docutils literal notranslate"><span class="pre">Map</span></code></a> objects.</p>
+<p>A map has an asssociated code object that stores python functions which
+can be used by map makers to trigger certain behaviour. When a map does
+not make a choice, a default has to be inserted instead. Those defaults
+are created here.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>NewModule</dt><dd><p>Creates an empty class.</p>
+</dd>
+</dl>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>get_adjust_run_pars</dt><dd><p>Creates the default for the map function GM_adjust_run_pars</p>
+</dd>
+<dt>get_adjust_map_core_raw</dt><dd><p>Creates the default for the map function GM_adjust_map_core_raw</p>
+</dd>
+<dt>get_adjust_oscillators</dt><dd><p>Creates the default for the map function GM_adjust_oscillators</p>
+</dd>
+<dt>get_filter_oscillators</dt><dd><p>Creates the default for the map function GM_filter_oscillators</p>
+</dd>
+<dt>filter_single_line</dt><dd><p>Defines how to apply a filter to a given list of oscillators</p>
+</dd>
+<dt>get_post_init</dt><dd><p>Creates the default for the map function GM_post_init</p>
+</dd>
+<dt>get_pre_run</dt><dd><p>Creates the default for the map function GM_pre_run</p>
+</dd>
+<dt>get_pre_frame</dt><dd><p>Creates the default for the map function GM_pre_frame</p>
+</dd>
+<dt>get_post_frame</dt><dd><p>Creates the default for the map function GM_post_frame</p>
+</dd>
+<dt>get_post_run</dt><dd><p>Creates the default for the map function GM_post_run</p>
+</dd>
+<dt>get_change_coup_type</dt><dd><p>Creates the default for the map function GM_change_coup_type</p>
+</dd>
+<dt>get_prep_coupling</dt><dd><p>Creates the default for the map function GM_prep_coupling</p>
+</dd>
+<dt>get_calc_coupling</dt><dd><p>Creates the default for the map function GM_calc_coupling</p>
+</dd>
+<dt>get_str_osc</dt><dd><p>Creates the default for the map function GM_str_osc</p>
+</dd>
+<dt>get_report_system</dt><dd><p>Creates the default for the map function GM_report_system</p>
+</dd>
+<dt>get_get_VEG_ref</dt><dd><p>Creates the default for the map function GM_get_VEG_ref</p>
+</dd>
+<dt>VEG_from_residues</dt><dd><p>Stores a default for the map function GM_get_VEG_ref, based on
+residues</p>
+</dd>
+<dt>VEG_from_CoM</dt><dd><p>Stores a default for the map function GM_get_VEG_ref, based on
+center of mass</p>
+</dd>
+<dt>interpret_position</dt><dd><p>Converts integers in a simple math expression to atoms of that
+index. Resulting math obeys PBC.</p>
+</dd>
+<dt>get_get_dipole_dir</dt><dd><p>Creates the default for the map function GM_get_dipole_dir</p>
+</dd>
+<dt>get_get_dipole_mag</dt><dd><p>Creates the default for the map function GM_get_dipole_mag</p>
+</dd>
+<dt>get_get_rotation_matrix</dt><dd><p>Creates the default for the map function GM_get_rotation_matrix</p>
+</dd>
+<dt>get_calculate_dipole</dt><dd><p>Creates the default for the map function GM_calculate_dipole</p>
+</dd>
+<dt>get_calculate_frequency</dt><dd><p>Creates the default for the map function GM_calculate_frequency</p>
+</dd>
+<dt>get_get_position</dt><dd><p>Creates the default for the map function GM_get_position</p>
+</dd>
+<dt>get_get_doublepos</dt><dd><p>Creates the default for the map function GM_get_doublepos</p>
+</dd>
+<dt>get_report_references</dt><dd><p>Creates the default for the map function GM_report_references</p>
+</dd>
+<dt>does_nothing</dt><dd><p>Does nothing.</p>
+</dd>
+<dt>returns_last</dt><dd><p>Returns the last argument</p>
+</dd>
+<dt>returns_input</dt><dd><p>Returns a function which always returns the input to this function</p>
+</dd>
+<dt>uses_maps</dt><dd><p>A simple element-wise multiplication of arrays. These must be of
+correct size (not checked)</p>
+</dd>
+<dt>envelop_int</dt><dd><p>Envelops any integer (but not float) found in given string with the
+given pre and post.</p>
+</dd>
+</dl>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.NewModule">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">NewModule</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L12-L14"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.NewModule" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">NewModule</span></span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L99-L101"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.NewModule" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.VEG_from_CoM">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">VEG_from_CoM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_atoms</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L323-L347"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.VEG_from_CoM" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">VEG_from_CoM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_atoms</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L584-L608"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.VEG_from_CoM" title="Link to this definition">#</a></dt>
 <dd><p>Creates the function GM_get_VEG_ref for given atoms.</p>
 <p>Each atom given will count towards the VEG centre.</p>
 <dl class="field-list simple">
@@ -607,7 +694,7 @@ this oscillator.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.VEG_from_residues">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">VEG_from_residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_atoms</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L289-L320"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.VEG_from_residues" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">VEG_from_residues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_atoms</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L550-L581"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.VEG_from_residues" title="Link to this definition">#</a></dt>
 <dd><p>Creates the function GM_get_VEG_ref for given residues.</p>
 <p>Each residue is defined by an atom that is part of it. All atoms of
 the given residues will count towards the centre of mass.</p>
@@ -630,13 +717,19 @@ this oscillator.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions._unused_user">
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">_unused_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L1146-L1150"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions._unused_user" title="Link to this definition">#</a></dt>
+<dd><p>never called, just to remove the unused warnings for imports</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.does_nothing">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">does_nothing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L730-L731"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.does_nothing" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">does_nothing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L1048-L1049"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.does_nothing" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.envelop_int">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">envelop_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L755-L825"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.envelop_int" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">envelop_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L1073-L1143"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.envelop_int" title="Link to this definition">#</a></dt>
 <dd><p>Envelops any integer (but not float) found in string with pre and
 post.</p>
 <p>Currently, python built-in and numpy functions are supported.</p>
@@ -681,7 +774,7 @@ post.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.filter_single_line">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">filter_single_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BW</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">found</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avail</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L96-L209"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.filter_single_line" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">filter_single_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">BW</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">found</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avail</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L224-L337"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.filter_single_line" title="Link to this definition">#</a></dt>
 <dd><p>Apply the filter rule on a single line to the current list of
 found oscillators.</p>
 <p>This function has been designed with the assumption that the
@@ -728,33 +821,85 @@ black/whitelist rules.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_adjust_map_core_raw">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_adjust_map_core_raw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L26-L27"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_adjust_map_core_raw" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_adjust_map_core_raw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L126-L140"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_adjust_map_core_raw" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_adjust_map_core_raw.</p>
+<p>For more details on GM_adjust_map_core_raw, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-adjust-map-core-raw"><span class="std std-ref">GM_adjust_map_core_raw</span></a> (Single) or
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-adjust-map-core-raw"><span class="std std-ref">GM_adjust_map_core_raw</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_adjust_map_core_raw</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to make changes to the
+contents of the core.txt file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_adjust_oscillators">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_adjust_oscillators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L30-L31"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_adjust_oscillators" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_adjust_oscillators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L143-L156"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_adjust_oscillators" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_adjust_oscillators.</p>
+<p>For more details on GM_adjust_map_core_raw, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-adjust-oscillators"><span class="std std-ref">GM_adjust_oscillators</span></a> (Single).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_adjust_oscillators</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to make changes to the
+found oscillators.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_adjust_run_pars">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_adjust_run_pars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L22-L23"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_adjust_run_pars" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_adjust_run_pars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L109-L123"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_adjust_run_pars" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_adjust_run_pars.</p>
+<p>For more details on GM_adjust_run_pars, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-adjust-run-pars"><span class="std std-ref">GM_adjust_run_pars</span></a> (Single) or
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-adjust-run-pars"><span class="std std-ref">GM_adjust_run_pars</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_adjust_run_pars</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to make changes to requested
+run parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_calc_coupling">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_calc_coupling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L241-L242"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_calc_coupling" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_calc_coupling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L463-L476"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_calc_coupling" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_calc_coupling.</p>
+<p>For more details on GM_calc_coupling, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-calc-coupling"><span class="std std-ref">GM_calc_coupling</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_calc_coupling</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to calculate the couplings
+for this map, this frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_calculate_dipole">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_calculate_dipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L564-L614"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_calculate_dipole" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_calculate_dipole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L838-L891"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_calculate_dipole" title="Link to this definition">#</a></dt>
 <dd><p>Default for obtaining the dipole.</p>
 <p>If the size of the dipole does not depend on the electrostatics, or
 only a single dependence (through magnitude), the returned method
 just combines GM_get_dipole_dir with GM_get_dipole_mag.
 If each of the x, y and z components have their own dependency on
 the electrostatics, the r_vec from GM_get_dipole_dir is ignored.</p>
+<p>For more details on GM_get_dipole, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-calculate-dipole"><span class="std std-ref">GM_calculate_dipole</span></a> (Single).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -773,12 +918,14 @@ the electrostatics, the r_vec from GM_get_dipole_dir is ignored.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_calculate_frequency">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_calculate_frequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L617-L672"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_calculate_frequency" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_calculate_frequency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L894-L952"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_calculate_frequency" title="Link to this definition">#</a></dt>
 <dd><p>Default for obtaining the frequency.</p>
 <p>If frequency does not depend on the electrostatics, the returned
 frequency simply equals the gas phase value. If there is a
 dependency, the VEGout array will be combined with the mapping
 coeffients to obtain the frequency.</p>
+<p>For more details on GM_calculate_frequency, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-calculate-frequency"><span class="std std-ref">GM_calculate_frequency</span></a> (Single).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -798,13 +945,33 @@ frequency</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_change_coup_type">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_change_coup_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L232-L234"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_change_coup_type" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_change_coup_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L425-L444"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_change_coup_type" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_change_coup_type.</p>
+<p>For more details on GM_change_coup_type, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-change-coup-type"><span class="std std-ref">GM_change_coup_type</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>The mapname that the function should return.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_change_coup_type</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to assign the correct
+coupling map to a provided oscillator pair.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_filter_oscillators">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_filter_oscillators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L34-L93"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_filter_oscillators" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_filter_oscillators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L159-L221"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_filter_oscillators" title="Link to this definition">#</a></dt>
 <dd><p>provides the default for the function GM_filter_oscillators.</p>
+<p>For more details on GM_filter_oscillators, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-filter-oscillators"><span class="std std-ref">GM_filter_oscillators</span></a> (Single).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -819,9 +986,11 @@ found in the system.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_get_VEG_ref">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_VEG_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L259-L286"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_VEG_ref" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_VEG_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L517-L547"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_VEG_ref" title="Link to this definition">#</a></dt>
 <dd><p>Creates the function GM_get_VEG_ref.</p>
 <p>Recognizes requested method and finds relevant function.</p>
+<p>For more details on GM_get_VEG_ref, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-get-veg-ref"><span class="std std-ref">GM_get_VEG_ref</span></a> (Single).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -841,8 +1010,10 @@ this oscillator.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_get_dipole_dir">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L408-L460"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_dipole_dir" title="Link to this definition">#</a></dt>
-<dd><p>Default for obtaining the dipole</p>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L754-L809"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_dipole_dir" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_get_dipole_dir.</p>
+<p>For more details on GM_get_dipole_dir, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-get-dipole-dir"><span class="std std-ref">GM_get_dipole_dir</span></a> (Single).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -852,7 +1023,7 @@ this oscillator.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>GM_get_dipole</strong><span class="classifier">function</span></dt><dd><p>The function that every oscillator can call to get its dipole
+<dt><strong>GM_get_dipole_dir</strong><span class="classifier">function</span></dt><dd><p>The function that every oscillator can call to get its dipole
 moment direction (might not always get used), and the position
 of that dipole moment.</p>
 </dd>
@@ -863,8 +1034,10 @@ of that dipole moment.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_get_dipole_mag">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole_mag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L463-L483"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_dipole_mag" title="Link to this definition">#</a></dt>
-<dd><p>Default for obtaining the dipole magnitude</p>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_dipole_mag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L812-L835"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_dipole_mag" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_get_dipole_mag.</p>
+<p>For more details on GM_get_dipole_mag, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-get-dipole-mag"><span class="std std-ref">GM_get_dipole_mag</span></a> (Single).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -878,29 +1051,65 @@ moment.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_get_doublepos">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_doublepos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L691-L711"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_doublepos" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_doublepos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L985-L1019"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_doublepos" title="Link to this definition">#</a></dt>
 <dd><p>Default for obtaining the double positions.</p>
 <p>By default, the author of a map uses the oscillator-indices to
 indicate what positions (e.g. just an atom index) should be
 returned.
 Those instructions are interpreted here and converted to a function
 that can be used during runs.</p>
+<p>For more details on GM_get_doublepos, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-get-doublepos"><span class="std std-ref">GM_get_doublepos</span></a> (Single).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.SingleMap" title="GMAP.src.tools.map_reader.SingleMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleMap</span></code></a></span></dt><dd><p>The map instance which this function will belong to.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_get_doublepos</strong><span class="classifier">function</span></dt><dd><p>The function that every oscillator will call to get its
+doublepos (two positions)</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_get_position">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L675-L688"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_position" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L955-L982"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_position" title="Link to this definition">#</a></dt>
 <dd><p>Default for obtaining the position.</p>
 <p>By default, the author of a map uses the oscillator-indices to
 indicate what position (e.g. just an atom index) should be returned.
 Those instructions are interpreted here and converted to a function
 that can be used during runs.</p>
+<p>For more details on GM_get_position, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-get-position"><span class="std std-ref">GM_get_position</span></a> (Single).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>map_</strong><span class="classifier"><a class="reference internal" href="GMAP.src.tools.map_reader.html#GMAP.src.tools.map_reader.SingleMap" title="GMAP.src.tools.map_reader.SingleMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleMap</span></code></a></span></dt><dd><p>The map instance which this function will belong to.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>GM_get_position</strong><span class="classifier">function</span></dt><dd><p>The function that every oscillator will call to get its
+position</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_get_rotation_matrix">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L486-L561"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_rotation_matrix" title="Link to this definition">#</a></dt>
-<dd><p>Default for creating a rotation matrix</p>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_get_rotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L673-L751"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_get_rotation_matrix" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_get_rotation_matrix.</p>
+<p>For more details on GM_get_rotation_matrix, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-get-rotation-matrix"><span class="std std-ref">GM_get_rotation_matrix</span></a> (Single).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -920,54 +1129,167 @@ matrix</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_post_frame">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_post_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L224-L225"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_post_frame" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_post_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L391-L405"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_post_frame" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_post_frame.</p>
+<p>For more details on GM_post_frame, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-post-frame"><span class="std std-ref">GM_post_frame</span></a> (Single) or
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-post-frame"><span class="std std-ref">GM_post_frame</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_post_frame</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to round up any
+frame-specific tasks.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_post_init">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_post_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L212-L213"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_post_init" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_post_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L340-L354"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_post_init" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_post_init.</p>
+<p>For more details on GM_post_init, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-post-init"><span class="std std-ref">GM_post_init</span></a> (Single) or
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-post-init"><span class="std std-ref">GM_post_init</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_post_init</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to perform any further map
+initialization.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_post_run">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_post_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L228-L229"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_post_run" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_post_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L408-L422"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_post_run" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_post_run.</p>
+<p>For more details on GM_post_run, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-post-run"><span class="std std-ref">GM_post_run</span></a> (Single) or
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-post-run"><span class="std std-ref">GM_post_run</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_post_run</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to round up any tasks before
+the calculation/GMAP stops.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_pre_frame">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_pre_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L220-L221"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_pre_frame" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_pre_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L374-L388"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_pre_frame" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_pre_frame.</p>
+<p>For more details on GM_pre_frame, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-pre-frame"><span class="std std-ref">GM_pre_frame</span></a> (Single) or
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-pre-frame"><span class="std std-ref">GM_pre_frame</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_pre_frame</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to do prep work that needs to
+be repeated for every frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_pre_run">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_pre_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L216-L217"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_pre_run" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_pre_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L357-L371"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_pre_run" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_pre_run.</p>
+<p>For more details on GM_pre_run, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-pre-run"><span class="std std-ref">GM_pre_run</span></a> (Single) or
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-pre-run"><span class="std std-ref">GM_pre_run</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_pre_run</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to do prep work that needs
+to happen before the calculation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_prep_coupling">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_prep_coupling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L237-L238"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_prep_coupling" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_prep_coupling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L447-L460"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_prep_coupling" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_prep_coupling.</p>
+<p>For more details on GM_prep_coupling, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-prep-coupling"><span class="std std-ref">GM_prep_coupling</span></a> (Pair).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_prep_coupling</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to do any prep work for the
+couplings of this frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_report_references">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_report_references</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L714-L722"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_report_references" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_report_references</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L1022-L1040"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_report_references" title="Link to this definition">#</a></dt>
 <dd><p>Default for obtaining the correct references of a map.</p>
 <p>By default, all references should be considered.</p>
+<p>For more details on GM_report_references, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-report-references"><span class="std std-ref">GM_report_references</span></a> (Single) or
+<a class="reference internal" href="../Adding_a_new_map/File_structure/pair_main_py.html#mapfiles-pairmainpy-report-references"><span class="std std-ref">GM_report_references</span></a> (Pair)`.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_report_references</strong><span class="classifier">function</span></dt><dd><p>The function that can be used to get the magnitude of a dipole
+moment.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_report_system">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_report_system</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L251-L256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_report_system" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_report_system</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L497-L514"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_report_system" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_report_system.</p>
+<p>For more details on GM_report_system, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-report-system"><span class="std std-ref">GM_report_system</span></a> (Single).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_report_system</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to determine how this map
+should be listed when GMAP reports on the MD system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.get_str_osc">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_str_osc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L245-L248"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_str_osc" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">get_str_osc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L479-L494"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.get_str_osc" title="Link to this definition">#</a></dt>
+<dd><p>provides the default for the function GM_str_osc.</p>
+<p>For more details on GM_str_osc, see
+<a class="reference internal" href="../Adding_a_new_map/File_structure/single_main_py.html#mapfiles-singmainpy-str-osc"><span class="std std-ref">GM_str_osc</span></a> (Single).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>GM_str_osc</strong><span class="classifier">function</span></dt><dd><p>The function that should be called to determine the
+representative string of this oscillator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.interpret_position">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">interpret_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L350-L405"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.interpret_position" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">interpret_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L611-L670"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.interpret_position" title="Link to this definition">#</a></dt>
 <dd><p>Creates a function that finds a requested position.</p>
 <p>This position could be the definition of the VEG-sphere-centre
 (VEG reference), but it could also be the position or doublepos
@@ -983,6 +1305,10 @@ the box positions of the atoms with that int as used_ix.</p>
 <dt><strong>parname</strong><span class="classifier">str</span></dt><dd><p>The name of the parameter which specified the position currently
 being analyzed.</p>
 </dd>
+<dt><strong>center</strong><span class="classifier">list or <cite>np.ndarray</cite>, default = [0, 0, 0]</span></dt><dd><p>The center of the output positions. If the box coordinate
+representation of the difference from any point to this center
+exceeds 0.5, that point is wrapped around the box.</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -997,22 +1323,17 @@ position for this oscillator.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.returns_input">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">returns_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L738-L741"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.returns_input" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">returns_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L1056-L1059"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.returns_input" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.returns_last">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">returns_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L734-L735"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.returns_last" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.unused_user">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">unused_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L829-L831"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.unused_user" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">returns_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L1052-L1053"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.returns_last" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.default_map_functions.uses_maps">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">uses_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gas_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VEGs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapconsts_list</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L744-L748"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.uses_maps" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.default_map_functions.</span></span><span class="sig-name descname"><span class="pre">uses_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gas_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">VEGs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapconsts_list</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/default_map_functions.py#L1062-L1066"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.default_map_functions.uses_maps" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -1064,9 +1385,12 @@ position for this oscillator.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.NewModule"><code class="docutils literal notranslate"><span class="pre">NewModule</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.VEG_from_CoM"><code class="docutils literal notranslate"><span class="pre">VEG_from_CoM()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.VEG_from_residues"><code class="docutils literal notranslate"><span class="pre">VEG_from_residues()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions._unused_user"><code class="docutils literal notranslate"><span class="pre">_unused_user()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.does_nothing"><code class="docutils literal notranslate"><span class="pre">does_nothing()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.envelop_int"><code class="docutils literal notranslate"><span class="pre">envelop_int()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.filter_single_line"><code class="docutils literal notranslate"><span class="pre">filter_single_line()</span></code></a></li>
@@ -1096,7 +1420,6 @@ position for this oscillator.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.interpret_position"><code class="docutils literal notranslate"><span class="pre">interpret_position()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.returns_input"><code class="docutils literal notranslate"><span class="pre">returns_input()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.returns_last"><code class="docutils literal notranslate"><span class="pre">returns_last()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.unused_user"><code class="docutils literal notranslate"><span class="pre">unused_user()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.default_map_functions.uses_maps"><code class="docutils literal notranslate"><span class="pre">uses_maps()</span></code></a></li>
 </ul>
   </nav></div>

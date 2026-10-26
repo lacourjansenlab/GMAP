@@ -576,15 +576,43 @@
                   
   <section id="module-GMAP.src.tools.cmd_interface">
 <span id="gmap-src-tools-cmd-interface-module"></span><h1>GMAP.src.tools.cmd_interface module<a class="headerlink" href="#module-GMAP.src.tools.cmd_interface" title="Link to this heading">#</a></h1>
+<p>Provides the command line interface.</p>
+<p>When a user calls GMAP, this script is activated. It makes sure the
+correct program (GEM, Setup) is called, and performs the first
+rudimentary parsing of command line arguments.</p>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>cmd_interface</dt><dd><p>The main function orchestrating the process from GMAP command to
+calling the correct program. Uses the other functions in this
+script.</p>
+</dd>
+<dt>calldict</dt><dd><p>Creates a dict out of the call command with parameter names as keys,
+and user choice for these as values.</p>
+</dd>
+<dt>get_safe_dark</dt><dd><p>From the call dict, looks at user choices, and determines whether
+GMAP should run in safe mode or dark mode.</p>
+</dd>
+<dt>print_logo</dt><dd><p>Prints the GMAP welcome message. Logo, version, github link, date,
+and command that invoked GMAP.</p>
+</dd>
+<dt>cmd_to_help</dt><dd><p>Prints the correct help message.</p>
+</dd>
+<dt>cmd_to_tools</dt><dd><p>Determines what (sub) program (GEM, Setup) should be called.</p>
+</dd>
+<dt>main</dt><dd><p>Obtains sys.argv and calls cmd_interface.</p>
+</dd>
+</dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.cmd_interface._report_unknown_choice">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">_report_unknown_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L12-L19"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface._report_unknown_choice" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">_report_unknown_choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L42-L49"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface._report_unknown_choice" title="Link to this definition">#</a></dt>
 <dd><p>Wrapper for warning call SU_GM_1.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.cmd_interface.calldict">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">calldict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L73-L106"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.calldict" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">calldict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L103-L136"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.calldict" title="Link to this definition">#</a></dt>
 <dd><p>Create a dict off of the call command.</p>
 <p>Naive logic leads the keys to be a string starting with ‘-’, and the
 values to be the choices. Values can be empty lists. The first entry
@@ -607,7 +635,7 @@ is different - its the program call!</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.cmd_interface.cmd_interface">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">cmd_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L22-L70"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.cmd_interface" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">cmd_interface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L52-L100"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.cmd_interface" title="Link to this definition">#</a></dt>
 <dd><p>Directs the user to the correct program.</p>
 <p>Interpret what program the user would like to use, and direct the
 order to it. Or, when requested, print the help of GMAP or that of
@@ -625,7 +653,7 @@ actually requested from the program.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.cmd_interface.cmd_to_help">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">cmd_to_help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allhelps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subch</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L205-L225"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.cmd_to_help" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">cmd_to_help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allhelps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subch</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L236-L256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.cmd_to_help" title="Link to this definition">#</a></dt>
 <dd><p>Determines what help to print.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -642,7 +670,7 @@ help to be printed.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.cmd_interface.cmd_to_tools">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">cmd_to_tools</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allhelps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subch</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L228-L250"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.cmd_to_tools" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">cmd_to_tools</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allhelps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callcommand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subch</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L259-L281"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.cmd_to_tools" title="Link to this definition">#</a></dt>
 <dd><p>Determines which tool to invoke.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -664,7 +692,7 @@ actually requested from the program.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.cmd_interface.get_safe_dark">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">get_safe_dark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_args</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L109-L157"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.get_safe_dark" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">get_safe_dark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_args</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L139-L187"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.get_safe_dark" title="Link to this definition">#</a></dt>
 <dd><p>Determine whether the program has been requested to run in safe
 or dark mode</p>
 <dl class="field-list simple">
@@ -689,7 +717,7 @@ chosen for a dark background)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.cmd_interface.main">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L253-L261"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.main" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L284-L292"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.main" title="Link to this definition">#</a></dt>
 <dd><p>The entrypoint for the entire GMAP program. GMAP aliases here.</p>
 <p>Collects the command line instructions, and passes them to the
 function interpreting these.</p>
@@ -697,7 +725,7 @@ function interpreting these.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.cmd_interface.print_logo">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">print_logo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L160-L202"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.print_logo" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.cmd_interface.</span></span><span class="sig-name descname"><span class="pre">print_logo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/cmd_interface.py#L190-L233"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.cmd_interface.print_logo" title="Link to this definition">#</a></dt>
 <dd><p>Prints the program logo and corresponding text.</p>
 </dd></dl>
 
@@ -750,6 +778,7 @@ function interpreting these.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.cmd_interface._report_unknown_choice"><code class="docutils literal notranslate"><span class="pre">_report_unknown_choice()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.cmd_interface.calldict"><code class="docutils literal notranslate"><span class="pre">calldict()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.cmd_interface.cmd_interface"><code class="docutils literal notranslate"><span class="pre">cmd_interface()</span></code></a></li>

@@ -576,10 +576,148 @@
                   
   <section id="module-GMAP.src.tools.file_handler">
 <span id="gmap-src-tools-file-handler-module"></span><h1>GMAP.src.tools.file_handler module<a class="headerlink" href="#module-GMAP.src.tools.file_handler" title="Link to this heading">#</a></h1>
+<p>Keeps track of files and file locations.</p>
+<p>This module does not actually parse file contents. It really just keeps
+track of where relevant files are stored, and tries to find any
+desired files.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>FileLocations</dt><dd><p>A singleton that stores the locations most important to the program.
+Does not contain user choices (those are taken care of by the
+parameter_parser module), but rather what the environment looks
+like.</p>
+</dd>
+</dl>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>find_exec_os</dt><dd><p>Determines on what platform GMAP is running.</p>
+</dd>
+<dt>get_file</dt><dd><p>Given the diffent parameter sources, look for a file provided for
+the given parameter. Sources are checked in order of importance for
+the definition of the parameter.</p>
+</dd>
+<dt>get_bare_file</dt><dd><p>Like get_file, but without having to consider directories, too.</p>
+</dd>
+<dt>get_def_parfile</dt><dd><p>Fetches the default parameter file. Path is looked up, file is
+tested for existing and readability.</p>
+</dd>
+<dt>try_file</dt><dd><p>Checks if the given location exists and is a file.</p>
+</dd>
+<dt>check_file_readability</dt><dd><p>Checks if a given file can be read.</p>
+</dd>
+<dt>write_output</dt><dd><p>Write all output for a single frame to files.</p>
+</dd>
+<dt>write_single</dt><dd><p>Write a single datastructure to files of give name.</p>
+</dd>
+<dt>clear_output</dt><dd><p>Prepare an empty file for each output, possibly clearing existing
+files.</p>
+</dd>
+<dt>clear_single</dt><dd><p>Clears any file if it exists prior to writing.</p>
+</dd>
+<dt>write_legend</dt><dd><p>Writes the contents of the legend output file.</p>
+</dd>
+<dt>write_parameter_file</dt><dd><p>Writes the contents of the parameter output file.</p>
+</dd>
+<dt>write_single_parameter_source</dt><dd><p>Writes the parameters from a single source to the parameter output
+file.</p>
+</dd>
+<dt>write_parameter_header</dt><dd><p>Write the header of the next parameter source to the output file.</p>
+</dd>
+<dt>get_full_parameter_name</dt><dd><p>Figure out what name the parameter should be saved as. Necessary for
+when a parameter belongs to a map, and not GMAP itself.</p>
+</dd>
+<dt>write_parameter_line_main</dt><dd><p>Manages the writing of a single parameter to the parameter file.
+Does this by detecting the relevant case, and calling the relevant
+function.</p>
+</dd>
+<dt>write_parameter_line</dt><dd><p>Writes a single parameter to the parameter file. For simple cases.</p>
+</dd>
+<dt>write_parameter_intersect</dt><dd><p>Writes a single parameter to the parameter file. For when there’s
+multiple different parameters that are mutually exclusive.</p>
+</dd>
+<dt>merge_files</dt><dd><p>Merges output files from multiple runs. Needed for when running
+in parallel.</p>
+</dd>
+<dt>fname_to_tempname</dt><dd><p>Generates the temporary file names used for parallel threads.</p>
+</dd>
+</dl>
+</section>
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.FileLocations">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">FileLocations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L25-L109"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.FileLocations" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">FileLocations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L94-L248"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.FileLocations" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Stores a frozen, singleton collection of environment variables.</p>
+<p>Intended to be called very early (currently, this is the very first
+object created by GMAP), it saves information about the context of
+this run. File paths, dates, command line arguments, and more.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>While not specifically stated, any of the attributes defined
+in the code below this docstring (but above the 
+<cite>def __post_init__</cite> line), can be used as parameters when
+instantiating this class for the first time.</p>
+<p>This is relevant for the instr attribute. During normal GMAP
+usage, the <a class="reference internal" href="GMAP.src.tools.cmd_interface.html#GMAP.src.tools.cmd_interface.cmd_interface" title="GMAP.src.tools.cmd_interface.cmd_interface"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmd_interface()</span></code></a>
+will do the instantiation of this class, and overwrite the instr
+attribute with a copy of the command used to call the function.</p>
+<p>When this function is used as an entry point instead of a
+subprocess-assisted call from outside, the instr (and thus
+instruction) attribute will be different from the cmd (and thus
+callcommand) attribute.</p>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>syspathcopy</strong><span class="classifier">tuple</span></dt><dd><p>A static copy of sys.path.</p>
+</dd>
+<dt><strong>cmd</strong><span class="classifier">tuple</span></dt><dd><p>A static copy of sys.argv. Not intended to be used outside this
+class, use <cite>callcommand</cite> instead.</p>
+</dd>
+<dt><strong>instr</strong><span class="classifier">tuple</span></dt><dd><p>A static copy of sys.argv, although in most runs this one is set
+in <a class="reference internal" href="GMAP.src.tools.cmd_interface.html#GMAP.src.tools.cmd_interface.cmd_interface" title="GMAP.src.tools.cmd_interface.cmd_interface"><code class="xref py py-func docutils literal notranslate"><span class="pre">cmd_interface()</span></code></a>, allowing
+a different value.
+Not intended to be used outside this class, use <cite>instruction</cite>
+instead.</p>
+</dd>
+<dt><strong>start</strong><span class="classifier">int</span></dt><dd><p>Time at which the program started in nanoseconds.</p>
+</dd>
+<dt><strong>script_dir</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The location where GMAP is stored/installed.</p>
+</dd>
+<dt><strong>cwd</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The current working directory at the time of calling the
+program.</p>
+</dd>
+<dt><strong>now</strong><span class="classifier"><cite>datetime.datetime</cite></span></dt><dd><p>Roughly when the code started. Most likely you will not want to
+use this one, but <cite>now_str</cite> instead.</p>
+</dd>
+<dt><strong>refparfilename_hc</strong><span class="classifier">str</span></dt><dd><p>hard coded file name for the reference parameter file.</p>
+</dd>
+<dt><strong>callcommand</strong><span class="classifier">str</span></dt><dd><p>The str representation of cmd for later use.</p>
+</dd>
+<dt><strong>instruction</strong><span class="classifier">str</span></dt><dd><p>The str representation of instr for later use.</p>
+</dd>
+<dt><strong>now_str</strong><span class="classifier">str</span></dt><dd><p>A safe, filesystem-independent string representation of <cite>now</cite>.</p>
+</dd>
+<dt><strong>sourcedir_hc</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The hardcoded default directory for the sourcefiles (c library,
+reference parameter file, etc)</p>
+</dd>
+<dt><strong>mapdir_hc</strong><span class="classifier"><cite>pathlib.Path</cite></span></dt><dd><p>The hardcoded default directory for storing maps.</p>
+</dd>
+<dt><strong>exec_os</strong><span class="classifier">str</span></dt><dd><p>The OS on which GMAP is currently running. Will take one of the
+following values:
+Win32bit, Win64bit, MacOS, Linux.</p>
+</dd>
+<dt><strong>clib_extension</strong><span class="classifier">str</span></dt><dd><p>When looking for pre-built C libraries, this is what the
+filename is assumed to end in. Is assigned depending on the OS
+detected. Contains both the extension, and a prefix for clarity.
+Options:
+_Linux.so, _Win32bit.dll, _Win64bit.dll, _MacOS.dylib</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.FileLocations._callcommand">
 <span class="sig-name descname"><span class="pre">_callcommand</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dataclasses.InitVar</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#GMAP.src.tools.file_handler.FileLocations._callcommand" title="Link to this definition">#</a></dt>
@@ -657,12 +795,12 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.FileLocations.now">
-<span class="sig-name descname"><span class="pre">now</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.datetime(2026,</span> <span class="pre">10,</span> <span class="pre">15,</span> <span class="pre">11,</span> <span class="pre">25,</span> <span class="pre">6,</span> <span class="pre">150979)</span></em><a class="headerlink" href="#GMAP.src.tools.file_handler.FileLocations.now" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">now</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.datetime(2026,</span> <span class="pre">10,</span> <span class="pre">26,</span> <span class="pre">10,</span> <span class="pre">53,</span> <span class="pre">25,</span> <span class="pre">290154)</span></em><a class="headerlink" href="#GMAP.src.tools.file_handler.FileLocations.now" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.FileLocations.now_str">
-<span class="sig-name descname"><span class="pre">now_str</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'2026-10-15_11-25-06'</span></em><a class="headerlink" href="#GMAP.src.tools.file_handler.FileLocations.now_str" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">now_str</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'2026-10-26_10-53-25'</span></em><a class="headerlink" href="#GMAP.src.tools.file_handler.FileLocations.now_str" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -682,7 +820,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.FileLocations.start">
-<span class="sig-name descname"><span class="pre">start</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">201854118449</span></em><a class="headerlink" href="#GMAP.src.tools.file_handler.FileLocations.start" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">start</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">72190981831</span></em><a class="headerlink" href="#GMAP.src.tools.file_handler.FileLocations.start" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -694,7 +832,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.check_file_readability">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">check_file_readability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doquit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L397-L434"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.check_file_readability" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">check_file_readability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doprint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doquit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L536-L573"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.check_file_readability" title="Link to this definition">#</a></dt>
 <dd><p>Checks if a given file can be read.</p>
 <p>If not, lets GM_pt.Printer raise the appropriate error.</p>
 <div class="admonition seealso">
@@ -727,7 +865,7 @@ not readable to the program.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.clear_output">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">clear_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L551-L574"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.clear_output" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">clear_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L690-L713"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.clear_output" title="Link to this definition">#</a></dt>
 <dd><p>Prepare an empty file for each output</p>
 <p>If files already exist, clears them. If not, creates them.</p>
 <dl class="field-list">
@@ -743,7 +881,7 @@ run-defining parameters.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.clear_single">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">clear_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L577-L597"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.clear_single" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">clear_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L716-L736"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.clear_single" title="Link to this definition">#</a></dt>
 <dd><p>Clears any file if it exists prior to writing</p>
 <p>A file shouldn’t contain anything when first appended to.</p>
 <dl class="field-list">
@@ -762,7 +900,7 @@ should not include the extension!</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.find_exec_os">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">find_exec_os</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L112-L149"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.find_exec_os" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">find_exec_os</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L251-L288"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.find_exec_os" title="Link to this definition">#</a></dt>
 <dd><p>Determines which os the system is running on.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -777,7 +915,7 @@ Linux, or MacOS.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.fname_to_tempname">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">fname_to_tempname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CPU</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L1022-L1063"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.fname_to_tempname" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">fname_to_tempname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CPU</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L1161-L1202"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.fname_to_tempname" title="Link to this definition">#</a></dt>
 <dd><p>Generate the temporary file names used for parallel threads based
 on required file type, a run_pars instance, and CPU number.</p>
 <dl class="field-list">
@@ -806,7 +944,7 @@ by this function.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.get_bare_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">get_bare_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floc_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L240-L306"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.get_bare_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">get_bare_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floc_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L379-L445"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.get_bare_file" title="Link to this definition">#</a></dt>
 <dd><p>Determine the path to a file given all input sources</p>
 <p>There are 4 places that might store information regarding the file’s
 path, which should be considered in a set order.</p>
@@ -856,7 +994,7 @@ in the same order.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.get_def_parfile">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">get_def_parfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_parfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pardict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L309-L367"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.get_def_parfile" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">get_def_parfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_parfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pardict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L448-L506"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.get_def_parfile" title="Link to this definition">#</a></dt>
 <dd><p>Given the parameter information on the command line, and,
 optionally, an input parameters file and its contents, finds out the
 location of the default parameters file.</p>
@@ -880,7 +1018,7 @@ program quits.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.get_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L152-L237"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.get_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files_hc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pardict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pardicts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parfilelocs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L291-L376"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.get_file" title="Link to this definition">#</a></dt>
 <dd><p>Determine the path to a file given all input sources</p>
 <p>As there are 4 places that might store information regarding the
 file’s path, each of which can contain 2 bits of information, which
@@ -939,7 +1077,7 @@ in the same order.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.get_full_parameter_name">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">get_full_parameter_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourcename</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L769-L787"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.get_full_parameter_name" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">get_full_parameter_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourcename</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L908-L926"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.get_full_parameter_name" title="Link to this definition">#</a></dt>
 <dd><p>Figure out what name the parameter should be saved as.</p>
 <p>GMAP parameters should be written/saved as-is, while map paramters
 should be preceded by the map name.</p>
@@ -958,7 +1096,7 @@ should be saved.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.merge_files">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">merge_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L954-L1019"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.merge_files" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">merge_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L1093-L1158"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.merge_files" title="Link to this definition">#</a></dt>
 <dd><p>Merge output files from multiple runs.</p>
 <p>Log files from child-runs are pasted to the end of the one of the
 original run (and the originals removed). Parameter files from child
@@ -977,7 +1115,7 @@ run-defining parameters.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.try_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">try_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L370-L394"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.try_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">try_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L509-L533"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.try_file" title="Link to this definition">#</a></dt>
 <dd><p>Checks if the given location exists, and is a file.</p>
 <p>If so, returns pathlib.Path.resolve(location), otherwise, returns
 None. Does not check whether the file is of a readable format.</p>
@@ -1006,7 +1144,7 @@ None. Does not check whether the file is of a readable format.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.write_legend">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L600-L624"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_legend" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L739-L763"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_legend" title="Link to this definition">#</a></dt>
 <dd><p>Writes the contents of the legend file.</p>
 <p>The purpose of the legend file is to specify what the other output
 files contain. Each file saves some property of the oscillators of
@@ -1032,7 +1170,7 @@ MD trajectory.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.write_output">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L437-L508"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_output" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L576-L647"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_output" title="Link to this definition">#</a></dt>
 <dd><p>Write the output for a single frame to files.</p>
 <p>Writes all outputs - all (requested) datastructures in all
 (requested) formats.</p>
@@ -1054,7 +1192,7 @@ contains hamiltonian and dipole arrays.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.write_parameter_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L627-L680"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L766-L819"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_file" title="Link to this definition">#</a></dt>
 <dd><p>Save the parameters of the current run to a file so the run can
 be repeated.</p>
 <dl class="field-list">
@@ -1083,7 +1221,7 @@ be from a separate default parameters file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.write_parameter_header">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sourcename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L748-L766"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_header" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sourcename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L887-L905"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_header" title="Link to this definition">#</a></dt>
 <dd><p>Write the header of the next parameter source to the output file.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1101,7 +1239,7 @@ be written.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.write_parameter_intersect">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_intersect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prparname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parnames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L911-L951"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_intersect" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_intersect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prparname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parnames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L1050-L1090"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_intersect" title="Link to this definition">#</a></dt>
 <dd><p>Save a single parameter. This one has multiple options in the
 reference file, of which only one may be written.</p>
 <p>Each possible parameter source is searched for all valid parameters.
@@ -1134,7 +1272,7 @@ prparname when looking through the source</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.write_parameter_line">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prparname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L882-L908"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_line" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prparname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L1021-L1047"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_line" title="Link to this definition">#</a></dt>
 <dd><p>Write a single parameter line to the output file.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1156,7 +1294,7 @@ that we’d like to write to file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.write_parameter_line_main">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_line_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prparname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sp_prname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L790-L879"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_line_main" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_parameter_line_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prparname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sp_prname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L929-L1018"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_parameter_line_main" title="Link to this definition">#</a></dt>
 <dd><p>Save the parameters of a single source to a file so the run can
 be repeated.</p>
 <dl class="field-list">
@@ -1191,7 +1329,7 @@ be from a separate default parameters file.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.write_single">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L511-L548"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_single" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenum_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L650-L687"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_single" title="Link to this definition">#</a></dt>
 <dd><p>Write a single datastructure to files of given name.</p>
 <p>Writes to all different requested formats at once.</p>
 <dl class="field-list">
@@ -1216,7 +1354,7 @@ should not include the extension!</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.file_handler.write_single_parameter_source">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_single_parameter_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reffhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourcename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L683-L745"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_single_parameter_source" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.file_handler.</span></span><span class="sig-name descname"><span class="pre">write_single_parameter_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reffhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfhand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourcename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">def_pars</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/file_handler.py#L822-L884"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.file_handler.write_single_parameter_source" title="Link to this definition">#</a></dt>
 <dd><p>Save the parameters of a single source to a file so the run can
 be repeated.</p>
 <dl class="field-list">
@@ -1295,6 +1433,8 @@ be from a separate default parameters file.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.file_handler.FileLocations"><code class="docutils literal notranslate"><span class="pre">FileLocations</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.file_handler.FileLocations._callcommand"><code class="docutils literal notranslate"><span class="pre">FileLocations._callcommand</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#GMAP.src.tools.file_handler.FileLocations._clib_extension"><code class="docutils literal notranslate"><span class="pre">FileLocations._clib_extension</span></code></a></li>
