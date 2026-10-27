@@ -611,7 +611,7 @@ information.</p>
 </section>
 <dl class="py class">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.Reference">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">Reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L39-L298"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.Reference" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">Reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L41-L300"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.Reference" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The representation of a single reference.</p>
 <p>These instances save all information present in the .bib file, and
@@ -722,7 +722,7 @@ first line of a bib entry).</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.Reference.authorstr">
-<span class="sig-name descname"><span class="pre">authorstr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L286-L298"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.Reference.authorstr" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">authorstr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L288-L300"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.Reference.authorstr" title="Link to this definition">#</a></dt>
 <dd><p>Prepares the author attribute for printing.</p>
 <p>The author attribute has already been formatted to contain only
 initials, now, all names are added together. If there are too
@@ -731,7 +731,7 @@ many names, only report the first 5, and omit the rest.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.Reference.format_author">
-<span class="sig-name descname"><span class="pre">format_author</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L270-L284"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.Reference.format_author" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">format_author</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L272-L286"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.Reference.format_author" title="Link to this definition">#</a></dt>
 <dd><p>Parses the raw author string (as obtained from the reference)
 into the style of GMAP.</p>
 <p>Assumes the family name is mentioned first, and the given
@@ -742,7 +742,7 @@ Some do already give letters only, others full names.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.Reference.interpret_input_string">
-<span class="sig-name descname"><span class="pre">interpret_input_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L224-L268"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.Reference.interpret_input_string" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">interpret_input_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_string</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L226-L270"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.Reference.interpret_input_string" title="Link to this definition">#</a></dt>
 <dd><p>The core method for parsing the input string provided upon
 initializing this class.</p>
 <dl class="field-list simple">
@@ -759,7 +759,7 @@ initializing this class.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.flatten_iterable">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">flatten_iterable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L414-L457"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.flatten_iterable" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">flatten_iterable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L432-L475"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.flatten_iterable" title="Link to this definition">#</a></dt>
 <dd><p>Part of the reference-reporting. Flattens the data structure.</p>
 <p>The target structure is just a simple list of references. No work
 on sorting/grouping references is done.</p>
@@ -781,7 +781,7 @@ on sorting/grouping references is done.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.merge_references">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">merge_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">references</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L496-L533"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.merge_references" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">merge_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">references</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L514-L551"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.merge_references" title="Link to this definition">#</a></dt>
 <dd><p>Part of reference-reporting. Merges all applicable references.</p>
 <p>Until now, there could have been a lot of duplicate references
 floating around. It is time to make sure we gather all instances
@@ -813,7 +813,7 @@ values are lists of the reasons for reporting a reference.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.print_references">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">print_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">references</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L536-L552"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.print_references" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">print_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">references</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L554-L570"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.print_references" title="Link to this definition">#</a></dt>
 <dd><p>Part of reference-reporting. Does the actual printing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -828,7 +828,7 @@ values are lists of the reasons for reporting a reference.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.read_reference_file">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">read_reference_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L301-L325"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.read_reference_file" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">read_reference_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L303-L327"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.read_reference_file" title="Link to this definition">#</a></dt>
 <dd><p>Obtain all references from the provided file.</p>
 <p>The references are sorted into the output dict by their mapkey
 fields. If a single reference has multiple map keys, it occurs
@@ -854,7 +854,7 @@ references that have that specific key in their mapkey field.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.read_reference_string">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">read_reference_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L328-L360"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.read_reference_string" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">read_reference_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L330-L362"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.read_reference_string" title="Link to this definition">#</a></dt>
 <dd><p>Obtain all references from the provided string.</p>
 <p>The string is assumed to look like the contents of a .bib file.</p>
 <dl class="field-list simple">
@@ -877,7 +877,7 @@ references that have that specific key in their mapkey field.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.report_references">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">report_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L368-L411"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.report_references" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">report_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L370-L429"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.report_references" title="Link to this definition">#</a></dt>
 <dd><p>Report all references for this calculation.</p>
 <p>This function can be called once, or more often - the result doesn’t
 look different (if there are no duplicate references between calls)</p>
@@ -913,7 +913,7 @@ run-defining parameters.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="GMAP.src.tools.reference_handler.sort_references">
-<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">sort_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">references</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L460-L493"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.sort_references" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">GMAP.src.tools.reference_handler.</span></span><span class="sig-name descname"><span class="pre">sort_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_pars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">references</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/lacourjansenlab/GMAP/blob/development/GMAP/src/tools/reference_handler.py#L478-L511"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#GMAP.src.tools.reference_handler.sort_references" title="Link to this definition">#</a></dt>
 <dd><p>Part of reference-reporting. Collect all applicable references.</p>
 <p>Not all references have to be printed every calculation. Each
 reference should have a reporttext field. Each time a listed method
