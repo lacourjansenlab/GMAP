@@ -6,7 +6,7 @@ on:
 
 jobs:
   smoke-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     # We need to know what branch to test. ref_name contains the name of the
     # triggering branch. Store it.
@@ -27,9 +27,6 @@ jobs:
         cd source
         python -m pip install -r requirements_py3-13.txt
         python -m pip install -e ".[testing]"
-        
-        cd GMAP/sourcefiles
-        g++ -fPIC -shared -o VEG_Linux.so VEG.cpp
     - name: Execute smoke test
       run: |
         cd source
@@ -42,10 +39,10 @@ jobs:
     strategy:
       fail-fast: false 
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-22.04, macos-latest, windows-latest]
         python-version: ["3.13"]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             python-version: "3.10"
     steps:
     - name: Determine current branch
@@ -72,12 +69,6 @@ jobs:
         cd source
         python -m pip install -r requirements_py3-13.txt
         python -m pip install -e ".[testing]"
-    - name: Install GMAP rebuild C
-      if: ${{ matrix.os == 'ubuntu-latest'}}
-      run: |
-        cd source
-        cd GMAP/sourcefiles
-        g++ -fPIC -shared -o VEG_Linux.so VEG.cpp
     - name: execute-tests
       run: |
         cd source
@@ -102,7 +93,7 @@ jobs:
 
   maps-pytest-run:
     needs: smoke-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Determine current branch
       run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
@@ -121,9 +112,6 @@ jobs:
         cd source
         python -m pip install -r requirements_py3-13.txt
         python -m pip install -e ".[testing]"
-
-        cd GMAP/sourcefiles
-        g++ -fPIC -shared -o VEG_Linux.so VEG.cpp
     - name: execute-tests
       run: |
         cd source
@@ -146,7 +134,7 @@ jobs:
     # The outputs are always merged. However, a new badge and viewable html
     # files are only created upon release, so that the badge will only ever
     # display information about a stable release, and not just any version.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # Wait for the test jobs to finish
     needs: [full-pytest-run, maps-pytest-run]
     # Run regardless of whether the tests passed.
