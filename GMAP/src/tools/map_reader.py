@@ -78,7 +78,7 @@ class Map:
         Multiple methods live here to avoid code duplication, but are
         not created by the class itself and require attributes not
         present/instantiated here either.
-        
+
         When subclassing this class, the subclass should do the
         following:
 
@@ -3297,10 +3297,11 @@ def scan_mapdirs(mapdirs, maptype):
 
     all_maps = {}
     for direc in mapdirs:
-        subdirs = [item for item in [*direc.iterdir()] if item.is_dir()]
+        subdirs = [
+            item for item in sorted([*direc.iterdir()]) if item.is_dir()]
 
         available_files = [
-            item for item in [*direc.iterdir()]
+            item for item in sorted([*direc.iterdir()])
             if item.is_file()
             and GM_fh.check_file_readability(item, doprint=False)
         ]
@@ -3308,12 +3309,12 @@ def scan_mapdirs(mapdirs, maptype):
         for subdir in subdirs:
             if subdir.name == maptype:
                 available_files_sub = [
-                    item for item in [*subdir.iterdir()]
+                    item for item in sorted([*subdir.iterdir()])
                     if item.is_file()
                     and GM_fh.check_file_readability(item, doprint=False)
                 ]
                 ssdirs = [
-                    item.resolve() for item in [*subdir.iterdir()]
+                    item.resolve() for item in sorted([*subdir.iterdir()])
                     if item.is_dir()
                 ]
 

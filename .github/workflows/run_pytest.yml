@@ -6,7 +6,7 @@ on:
 
 jobs:
   smoke-test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     # We need to know what branch to test. ref_name contains the name of the
     # triggering branch. Store it.
@@ -39,10 +39,10 @@ jobs:
     strategy:
       fail-fast: false 
       matrix:
-        os: [ubuntu-22.04, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.13"]
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             python-version: "3.10"
     steps:
     - name: Determine current branch
@@ -93,7 +93,7 @@ jobs:
 
   maps-pytest-run:
     needs: smoke-test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: Determine current branch
       run: echo "SOURCE_BRANCH=${{ github.head_ref || github.ref_name }}" >> $GITHUB_ENV
@@ -134,7 +134,7 @@ jobs:
     # The outputs are always merged. However, a new badge and viewable html
     # files are only created upon release, so that the badge will only ever
     # display information about a stable release, and not just any version.
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     # Wait for the test jobs to finish
     needs: [full-pytest-run, maps-pytest-run]
     # Run regardless of whether the tests passed.
