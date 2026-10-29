@@ -1050,7 +1050,7 @@ def GEM(callcommand):
     (
         run_pars, singles_mapdict, pairs_mapdict, cmd_pars, in_pars, def_pars,
         ref_pars
-    ) = GM_pp.get_parameters(in_parfile, argslist)
+    ) = GM_pp.get_parameters(in_parfile, argslist, "GEM")
 
     if run_pars.number_cores > 1:
         parallel(

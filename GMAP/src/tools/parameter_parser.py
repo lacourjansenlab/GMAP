@@ -2748,7 +2748,7 @@ class RunPars:
         return outdict
 
 
-def get_parameters(in_parfile, argslist):
+def get_parameters(in_parfile, argslist, caller):
     """Collect all provided parameters, and store them.
 
     Parameters are defined (along with default choices) in the reference
@@ -2766,6 +2766,9 @@ def get_parameters(in_parfile, argslist):
     argslist : list of str
         The slice of sys.argv containing all parameter choices given on
         the command line.
+    caller : str
+        The name of the program calling this function. Basically, the
+        job currently being executed by GMAP.
 
     Returns
     -------
@@ -2896,6 +2899,7 @@ def get_parameters(in_parfile, argslist):
 
     run_pars.defparfilename = def_pars.fname
     run_pars.inparfilename = in_pars.fname
+    run_pars.requested_job = [caller]
 
     return (
         run_pars, singles_mapdict, pairs_mapdict, cmd_pars, in_pars, def_pars,

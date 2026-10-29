@@ -14,7 +14,14 @@
 [![MDAnalysis](https://img.shields.io/badge/MDAnalysis-orange.svg?logoWidth=16&logo=data:image/x-icon;base64,AAABAAEAEBAAAAEAIAAoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJD+XwCY/fEAkf3uAJf97wGT/a+HfHaoiIWE7n9/f+6Hh4fvgICAjwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACT/yYAlP//AJ///wCg//8JjvOchXly1oaGhv+Ghob/j4+P/39/f3IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJH8aQCY/8wAkv2kfY+elJ6al/yVlZX7iIiI8H9/f7h/f38UAAAAAAAAAAAAAAAAAAAAAAAAAAB/f38egYF/noqAebF8gYaagnx3oFpUUtZpaWr/WFhY8zo6OmT///8BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAn46Ojv+Hh4b/jouJ/4iGhfcAAADnAAAA/wAAAP8AAADIAAAAAwCj/zIAnf2VAJD/PAAAAAAAAAAAAAAAAICAgNGHh4f/gICA/4SEhP+Xl5f/AwMD/wAAAP8AAAD/AAAA/wAAAB8Aov9/ALr//wCS/Z0AAAAAAAAAAAAAAACBgYGOjo6O/4mJif+Pj4//iYmJ/wAAAOAAAAD+AAAA/wAAAP8AAABhAP7+FgCi/38Axf4fAAAAAAAAAAAAAAAAiIiID4GBgYKCgoKogoB+fYSEgZhgYGDZXl5e/m9vb/9ISEjpEBAQxw8AAFQAAAAAAAAANQAAADcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjo6Mb5iYmP+cnJz/jY2N95CQkO4pKSn/AAAA7gAAAP0AAAD7AAAAhgAAAAEAAAAAAAAAAACL/gsAkv2uAJX/QQAAAAB9fX3egoKC/4CAgP+NjY3/c3Nz+wAAAP8AAAD/AAAA/wAAAPUAAAAcAAAAAAAAAAAAnP4NAJL9rgCR/0YAAAAAfX19w4ODg/98fHz/i4uL/4qKivwAAAD/AAAA/wAAAP8AAAD1AAAAGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALGxsVyqqqr/mpqa/6mpqf9KSUn/AAAA5QAAAPkAAAD5AAAAhQAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADkUFBSuZ2dn/3V1df8uLi7bAAAATgBGfyQAAAA2AAAAMwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB0AAADoAAAA/wAAAP8AAAD/AAAAWgC3/2AAnv3eAJ/+dgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9AAAA/wAAAP8AAAD/AAAA/wAKDzEAnP3WAKn//wCS/OgAf/8MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAANwAAADtAAAA7QAAAMAAABUMAJn9gwCe/e0Aj/2LAP//AQAAAAAAAAAA)](https://www.mdanalysis.org)
 
 
-# ![image](https://lacourjansenlab.github.io/GMAP/stable/_static/GMAP_banner_dark.png)
+<!-- # ![image](https://lacourjansenlab.github.io/GMAP/development/_static/GMAP_banner_green.png) -->
+
+<!-- https://github.blog/developer-skills/github/how-to-make-your-images-in-markdown-on-github-adjust-for-dark-mode-and-light-mode/ -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="sphinx_docs/Figures/GMAP_banner_dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="sphinx_docs/Figures/GMAP_banner_light.png">
+  <img alt="Fallback image description" src="sphinx_docs/_static/GMAP_banner_green.png">
+</picture>
 
 This is the main version of GMAP. Both the stable release version (main branch) and developments (other branches) can be found here.
 
@@ -25,9 +32,10 @@ GMAP is a package of tools for use in computing spectra from molecular dynamics 
 
 on this page:
 - [Where to download](#where-to-download)
-- [How to install](#how-to-install-general-users)
+- [How to install](#how-to-install)
 - [How to expand the program using maps](#how-to-expand-the-program-using-maps)
 - [How to compile C code](#how-to-compile-c-code)
+- [How to cite](#how-to-cite)
 - [Differences between GMAP and AIM](#differences-between-gmap-and-aim)
 - [Version information](#version-information)
 
@@ -57,8 +65,8 @@ While the instructions work without one, it is definitely good practice to use o
 
    This step is optional, because compiled versions of all files come with the program. If you'd rather compile yourself than using ours, this is the time to do so!
 6. Install GMAP:
-   * (general users, use wheel, windows) run ```python3 -m pip install dist\gmap-0.0.1-py3-none-any.whl```
-   * (general users, use wheel, unix) run ```python3 -m pip install dist/gmap-0.0.1-py3-none-any.whl```
+   <!-- * (general users, use wheel, windows) run ```python3 -m pip install dist\gmap-0.0.1-py3-none-any.whl```
+   * (general users, use wheel, unix) run ```python3 -m pip install dist/gmap-0.0.1-py3-none-any.whl``` -->
    * (general users, rebuild wheel) run ```python3 -m pip install .```
    * (developers) run ```python3 -m pip install -e ".[testing]"```
 7. now, from anywhere, typing ```GMAP``` will start the program. If not, something has gone wrong. However, we're not done yet.
@@ -140,6 +148,11 @@ Please note that depending on your mac version, the instructions are slightly di
   
 For example, the VEG library can be compiled with ```g++ -fPIC -shared -o VEG_MacOS.dylib VEG.cpp``` or ```cc -fPIC -dynamiclib -std=c++11 -stdlib=libc++ -o VEG_MacOS.dylib VEG.cpp```
 
+
+## How to cite
+When you use GMAP with any kind of map, make sure to cite the correct work/people! If a map has been constructed correctly, GMAP will tell you which references apply to a specific calculation when the calculation is run. Any references that do not apply are left out, and the ones that are mentioned, will have their role listed. That way, you do not only know who/what to cite, but also why.
+
+Please also cite GMAP itself, through [this](https://chemrxiv.org/doi/full/10.26434/chemrxiv.15010172) paper. This one will also be listed in the program output after a run.
 
 
 ## Differences between GMAP and AIM

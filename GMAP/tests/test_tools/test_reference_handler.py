@@ -75,7 +75,7 @@ class TestReference:
 
         ref = GM_rh.Reference(get_reference_string_bare())
         assert str(ref) == (
-            "unknown author. unknown title. In unknown journal vol. unknown "
+            "unknown author. unknown title. In unknown journal  "
             "(unknown year), issn: only an ISSN"
         )
 
@@ -95,8 +95,19 @@ def test_read_reference_file(tmp_path):
         "coolpaper2": [GM_rh.Reference(get_reference_string2())]}
 
 
-def test_report_references(capsys):
-    run_pars = GM_ct.CustomClass(**{"output_data": ["dip", "ham"]})
+def test_report_references(capsys, monkeypatch):
+
+    def mock_read_reference_file(filename):
+        return {"test_rh": GM_rh.Reference(get_reference_string_bare())}
+    monkeypatch.setattr(GM_rh, "read_reference_file", mock_read_reference_file)
+
+    run_pars = GM_ct.CustomClass(**{
+        "output_data": ["dip", "ham"],
+        "requested_job": ["test_rh"],
+        "references_file": GM_ct.CustomClass(**{
+            "is_file": lambda: True
+        })
+    })
     references = [
         GM_rh.Reference(get_reference_string1()),
         GM_rh.Reference(get_reference_string2()),
@@ -107,6 +118,9 @@ def test_report_references(capsys):
     captured = capsys.readouterr()
     assert captured.out.endswith(
         "The following reference was used for calculating the:\n"
+        " - dipole moment of ISSN\n"+
+        GM_pt.word_wrap(str(GM_rh.Reference(get_reference_string_bare()))) +
+        "\n\nThe following reference was used for calculating the:\n"
         " - dipole moment of Cool\n"
         " - hello!\n" +
         GM_pt.word_wrap(str(GM_rh.Reference(get_reference_string1()))) +
