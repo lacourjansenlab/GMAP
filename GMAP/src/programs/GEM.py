@@ -1078,7 +1078,7 @@ def main(callcommand):
     this function should never be called. Instead, the entrypoint is in
     the cmd_interface file, and it points directly to the GEM function
     above.
-    
+
     This function replicates the 'normal' behaviour so partial tests are
     possible.
 
