@@ -1,4 +1,4 @@
-
+.. _Quickstart_installation:
 
 ######################
 How to Install

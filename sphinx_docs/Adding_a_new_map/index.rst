@@ -16,6 +16,15 @@ object.
 
     .. grid-item-card::
         :margin: 0 3 0 0
+        :link: gettingstarted
+        :link-type: doc
+
+        **Getting Started**
+        ^^^^^^^^^^^^^^^^
+        A step-by-step guide explaining how to create and release a map.
+
+    .. grid-item-card::
+        :margin: 0 3 0 0
         :link: units
         :link-type: doc
 

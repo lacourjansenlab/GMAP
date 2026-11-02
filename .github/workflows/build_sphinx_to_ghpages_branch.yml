@@ -160,17 +160,16 @@ jobs:
         touch .nojekyll
         git add .nojekyll
         git add $CURRENT_VERSION
-        rm stable
         git commit -m "Built sphinx docs for version $CURRENT_VERSION"
     - name: Redirect stable to new release
-      # if: ${{ env.DO_SYMLINK == 'True'}}
+      if: ${{ env.DO_SYMLINK == 'True'}}
       # The below ln command will try to symlink to a (probably) non-existent
       # directory. Tests on our linux cluster showed that this does generate
       # a link without errors, the link will just be broken/nonfunctional.
       run: |
         echo "Redirecting stable to newly released version"
         cd destination
-        ln -sf $LATEST_VERSION stable
+        ln -sfT $LATEST_VERSION stable
         git add -v stable
         git status
         git commit -m "redirect stable to new version $LATEST_VERSION"

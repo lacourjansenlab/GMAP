@@ -149,7 +149,7 @@ def DEPICT(callcommand):
     )
 
     run_pars, mapdict, _, _, _, _ = GM_pp.get_parameters(
-        in_parfile, argslist
+        in_parfile, argslist, "DEPICT"
     )
     printer.add_time(3, "Parsed GMAP parameters", "ms")
 

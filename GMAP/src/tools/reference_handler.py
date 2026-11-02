@@ -35,6 +35,8 @@ print_references
 import GMAP.src.tools.exceptions as GM_ex
 import GMAP.src.tools.print_tools as GM_pt
 
+from GMAP.src.tools.print_tools import devprint as dpr
+
 
 class Reference:
     """The representation of a single reference.
@@ -196,7 +198,7 @@ class Reference:
             if hasattr(self, "number"):
                 outstr += "no. " + self.number
             else:
-                outstr += "vol. unknown"
+                outstr += ""
 
         # Report on publication date
         if hasattr(self, "year"):
@@ -319,7 +321,7 @@ def read_reference_file(fname):
         references that have that specific key in their mapkey field.
     """
 
-    with open(fname) as fhand:
+    with open(fname, encoding="utf-8") as fhand:
         alldata = fhand.read()
     allrefs = read_reference_string(alldata)
     return allrefs
@@ -399,11 +401,27 @@ def report_references(run_pars, iterable):
         All references that should be used for reporting.
     """
 
+    # obtain GMAP reference
+    references_filename = run_pars.references_file
+
+    if references_filename.is_file():
+        references = read_reference_file(references_filename)
+    else:
+        GM_pt.Printer.warning(
+            "\nCould not find the GMAP references file. Please don't forget to cite the GMAP paper along with the other references below!",
+            "RH_GR_1", False
+        )
+        references = {}
+
     # make list of ref objects
-    references = flatten_iterable(iterable)
+    references = flatten_iterable(references) + flatten_iterable(iterable)
+
+    # dpr(*[str(reference) + "\n" for reference in references])
 
     # list of ref objects with their reporttext (may haveduplicates)
     references = sort_references(run_pars, references)
+
+    # dpr(*references)
 
     # dict of str(ref obj): list of all reporttext
     references = merge_references(references)
@@ -484,7 +502,7 @@ def sort_references(run_pars, references):
     """
 
     used_references = []
-    for calc_mode in run_pars.output_data:
+    for calc_mode in run_pars.requested_job + run_pars.output_data:
         for reference in references:
             if calc_mode in reference.reporttext:
                 for text in reference.reporttext[calc_mode]:

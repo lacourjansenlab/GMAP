@@ -86,6 +86,7 @@ class TestRefPars:
             "source_directory": [Path("../../../sourcefiles")],
             "VEG_clib_file": [
                 Path("VEG" + GM_fh.FileLocations.clib_extension)],
+            "references_file": [Path("references.bib")],
             "log_filename": [Path("log.log")],
             "log_profiling_filename": [Path("prof.out")],
             "log_profiling_tempfile": [Path("prof.temp")],
@@ -229,7 +230,8 @@ class TestRefPars:
         assert ref_pars.organized_filepars == {
             "source_directory": [
                 "default_parameter_filename",
-                "VEG_clib_file"],
+                "VEG_clib_file",
+                "references_file"],
             "log_directory": [
                 "log_filename", "log_profiling_filename",
                 "log_profiling_tempfile", "log_profiling_graph_filename"],
@@ -259,6 +261,7 @@ class TestRefPars:
             "source_directory",
             "default_parameter_filename",
             "VEG_clib_file",
+            "references_file",
             "log_directory",
             "log_filename",
             "log_profiling_filename",
@@ -560,6 +563,7 @@ class TestRawPars:
             "source_directory": [sd],
             "VEG_clib_file": [
                 Path("VEG" + GM_fh.FileLocations.clib_extension)],
+            "references_file": [Path("references.bib")],
             "log_filename": [Path("log.log")],
             "log_profiling_filename": [Path("prof.out")],
             "log_profiling_tempfile": [Path("prof.temp")],
@@ -2327,7 +2331,7 @@ def test_get_parameters():
     (
         run_pars, mapdict, pairs_mapdict, cmd_pars, in_pars, def_pars, ref_pars
     ) = GM_pp.get_parameters(
-        in_parfile, argslist
+        in_parfile, argslist, "test_parameter_parser"
     )
 
     # A huuuuge amount of tests would be needed here, but all of GM_PP
@@ -2340,7 +2344,7 @@ def test_get_parameters():
     (
         run_pars, mapdict, pairs_mapdict, cmd_pars, in_pars, def_pars, ref_pars
     ) = GM_pp.get_parameters(
-        None, argslist
+        None, argslist, "test_parameter_parser"
     )
 
     assert in_pars.choices == {}
@@ -2350,7 +2354,7 @@ def test_get_parameters():
     (
         run_pars, mapdict, pairs_mapdict, cmd_pars, in_pars, def_pars, ref_pars
     ) = GM_pp.get_parameters(
-        in_parfile, argslist
+        in_parfile, argslist, "test_parameter_parser"
     )
 
     assert def_pars.fname.name == "default_parameters.txt"
@@ -2491,7 +2495,7 @@ def test_SU_FP_1():
 
     with pytest.raises(GM_ex.GmapNotImplementedError, match="SU_FP_1$"):
         _ = GM_pp.get_parameters(
-            in_parfile, argslist
+            in_parfile, argslist, "test_parameter_parser"
         )
 
 
@@ -2501,7 +2505,7 @@ def test_SU_GEM_1():
 
     with pytest.raises(GM_ex.GmapFileSyntaxError, match="SU_GEM_1$"):
         _ = GM_pp.get_parameters(
-            in_parfile, argslist
+            in_parfile, argslist, "test_parameter_parser"
         )
 
 

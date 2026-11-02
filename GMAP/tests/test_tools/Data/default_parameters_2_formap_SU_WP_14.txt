@@ -4,6 +4,7 @@ trajectory_file              ../../../sourcefiles/pdb_1AKI_50frame.xtc
 
 source_directory                ../../../sourcefiles
 VEG_clib_file                   VEG
+references_file                 references.bib
 
 log_directory
 log_filename                    log.log
