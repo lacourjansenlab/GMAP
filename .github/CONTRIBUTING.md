@@ -74,6 +74,7 @@ Depending on how large the project is, you may want to outsource the questioning
 
 A good bug report shouldn't leave others needing to chase you up for more information. Therefore, we ask you to investigate carefully, collect information and describe the issue in detail in your report. Please complete the following steps in advance to help us fix any potential bug as fast as possible.
 
+- Make sure your bug is with GMAP itself, and not with a map. If it is the latter, please submit your bug where you got your map files.
 - Make sure that you are using the latest version.
 - Determine if your bug is really a bug and not an error on your side e.g. using incompatible environment components/versions (Make sure that you have read the [documentation](https://lacourjansenlab.github.io/GMAP/). If you are looking for support, you might want to check [this section](#i-have-a-question)).
 - To see if other users have experienced (and potentially already solved) the same issue you are having, check if there is not already a bug report existing for your bug or error in the [bug tracker](https://github.com/lacourjansenlab/GMAP/issues?q=label%3Abug).
