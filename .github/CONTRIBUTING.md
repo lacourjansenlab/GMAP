@@ -28,7 +28,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 
 
 This project and everyone participating in it is governed by the
-[GMAP Code of Conduct](https://github.com/lacourjansenlab/GMAP/blob//CODE_OF_CONDUCT.md).
+[GMAP Code of Conduct](https://github.com/lacourjansenlab/GMAP/blob/main/.github/CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code. Please report unacceptable behavior
 to t.l.c.jansen@rug.nl.
 
