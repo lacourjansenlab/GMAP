@@ -396,6 +396,17 @@ class DiscreteRainbowGenerator:
     def __init__(self):
         pass
 
+    def get_color_list_by_id(self, id_list, dtype="hex"):
+        hexvals = [self.colors_many[id] for id in id_list]
+        match dtype:
+            case "hex":
+                return hexvals
+            case "rgbarruint8":
+                return (
+                    mpl_c.to_rgba_array(hexvals)[:, :3] * 255).astype("uint8")
+            case "rgbarrfloat32":
+                return mpl_c.to_rgba_array(hexvals)[:, :3]
+
     def get_color_list_from_int(self, des_length, dtype="hex"):
         """Get the requested amount of colors along the rainbow.
 
@@ -420,15 +431,7 @@ class DiscreteRainbowGenerator:
         """
 
         color_id = self.use_colors_many.get(des_length, [])
-        hexvals = [self.colors_many[id] for id in color_id]
-        match dtype:
-            case "hex":
-                return hexvals
-            case "rgbarruint8":
-                return (
-                    mpl_c.to_rgba_array(hexvals)[:, :3] * 255).astype("uint8")
-            case "rgbarrfloat32":
-                return mpl_c.to_rgba_array(hexvals)[:, :3]
+        return self.get_color_list_by_id(color_id, dtype)
 
     def get_color_list_from_iterable(self, datatoplot, dtype="hex"):
         """Get a matching amount of color based on input iterable size.
