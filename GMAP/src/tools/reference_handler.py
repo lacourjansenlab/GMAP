@@ -248,9 +248,13 @@ class Reference:
 
             # the author bib field needs some love
             elif linelist[0] == "author":
+                # strip everything, including 1 pair of brackets
+                authors = line.split("=")[1].strip("\t ,")[1:-1]
                 self.author_raw = [
-                    author.split(", ")
-                    for author in linelist[1].split(" and ")]
+                    [author]
+                    if author[0] == "{" and author[-1] == "}"
+                    else author.split(", ")
+                    for author in authors.split(" and ")]
 
             # keys that can be used by map authors to quickly identify any
             # references (in case they need to be sorted)
@@ -281,9 +285,13 @@ class Reference:
 
         self.author = []
         for author in self.author_raw:
-            # report only initials, not whole names
-            first_letters = [name[0] + "." for name in author[1].split(" ")]
-            self.author.append(author[0] + ", " + " ".join(first_letters))
+            # print(author)
+            if len(author) == 1:
+                self.author.append(author[0])
+            else:  # report only initials, not whole names
+                first_letters = [
+                    name[0] + "." for name in author[1].strip().split(" ")]
+                self.author.append(author[0] + ", " + " ".join(first_letters))
 
     def authorstr(self):
         """Prepares the author attribute for printing.
