@@ -1,6 +1,9 @@
 """
 Here, you can find my python adaptation of the color schemes found on
-the following website: https://personal.sron.nl/~pault/
+the following website: https://sronpersonalpages.nl/~pault/
+
+original adress before moving:
+https://personal.sron.nl/~pault/
 
 Currently, the following schemes are available:
 
@@ -12,7 +15,10 @@ muted (10),
 medium_contrast(8),
 pale(6),
 dark(6),
-light(9)
+light(9),
+banded_12_colors (12),
+banded_16_colors (16),
+banded_20_colors (20)
 
 Diverging schemes:
 sunset, nightfall, BuRd, PRGn
@@ -569,6 +575,57 @@ light = QualitativeColorScheme(
     "'#BBCC33', '#AAAA00', '#DDDDDD'",
     "light_blue light_cyan mint pear olive light_yellow orange pink pale_grey",
     name="light"
+)
+
+
+banded_12_colors = QualitativeColorScheme(
+    "A banded variation of the discrete rainbow limits the luminance range " +
+    "and picks samples from four colour bands with smoothly varying " +
+    "luminances, while optimizing colour distances for colour-blind people " +
+    "and keeping the scheme print-friendly. Use a scheme with fewer colors " +
+    "if possible. DO NOT INTERPOLATE",
+    "'#D2D1E2', '#C1A7C4', '#AD7BA4', '#93C7EC', '#6DA1D6', '#3E79BD', " +
+    "'#B8D29E', '#7BB47D', '#2C925B', '#F4A937', '#EB7121', '#D9070D'",
+    "pale_purple light_purple full_purple " +
+    "pale_blue light_blue full_blue " +
+    "pale_green light_green full_green " +
+    "yellow orange red",
+    name="banded_12_colors"
+)
+
+
+banded_16_colors = QualitativeColorScheme(
+    "A banded variation of the discrete rainbow limits the luminance range " +
+    "and picks samples from four colour bands with smoothly varying " +
+    "luminances, while optimizing colour distances for colour-blind people " +
+    "and keeping the scheme print-friendly. Use a scheme with fewer colors " +
+    "if possible. DO NOT INTERPOLATE",
+    "'#D2D1E2', '#C5B3CC', '#B893B5', '#A8719D', '#97CDEF', '#7DB1DF', " +
+    "'#5F94CE', '#3976BB', '#BCD4A0', '#90BE88', '#60A770', '#198D56', " +
+    "'#F5B43B', '#F08C2B', '#E85E1B', '#D9070D'",
+    "pale_purple light_purple medium_purple full_purple " +
+    "pale_blue light_blue medium_blue full_blue " +
+    "pale_green light_green medium_green full_green " +
+    "yellow amber orange red",
+    name="banded_16_colors"
+)
+
+
+banded_20_colors = QualitativeColorScheme(
+    "A banded variation of the discrete rainbow limits the luminance range " +
+    "and picks samples from four colour bands with smoothly varying " +
+    "luminances, while optimizing colour distances for colour-blind people " +
+    "and keeping the scheme print-friendly. Use a scheme with fewer colors " +
+    "if possible. DO NOT INTERPOLATE",
+    "'#D2D1E2', '#C8B9D1', '#BEA0BF', '#B287AD', '#A56B99', '#9ACFF1', " +
+    "'#85BAE4', '#6FA3D7', '#578DC9', '#3774BA', '#BFD6A1', '#9CC48E', " +
+    "'#78B27B', '#4F9F68', '#058A53', '#F6B93D', '#F29B31', '#ED7A24', " +
+    "'#E65318', '#D9070D'",
+    "pale_purple weak_purple light_purple medium_purple full_purple " +
+    "pale_blue weak_blue light_blue medium_blue full_blue " +
+    "pale_green weak_green light_green medium_green full_green " +
+    "yellow amber orange scarlet red",
+    name="banded_20_colors"
 )
 
 
